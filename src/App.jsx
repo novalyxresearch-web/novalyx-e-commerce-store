@@ -1987,12 +1987,32 @@ const goToStripeCheckout = async (cart) => {
 const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Bricolage+Grotesque:wght@600;700;800&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  body{overflow-x:hidden;}
+  html,body{overflow-x:hidden;max-width:100%;width:100%;}
+  #root{overflow-x:hidden;max-width:100vw;}
+  img,video,svg{max-width:100%;height:auto;}
   .hov{transition:transform .28s ease,box-shadow .28s ease;cursor:pointer;}
   .hov:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(0,0,0,0.5)!important;}
   .btn{cursor:pointer;transition:all .18s ease;outline:none;font-family:'DM Sans',sans-serif;}
   .g{border:1px solid rgba(74,222,128,0.45);color:#4ade80;background:transparent;}
   .g:hover{background:#4ade80;color:#080f1e;}
+  .announce-bar::-webkit-scrollbar{display:none;}
+  .announce-bar{-ms-overflow-style:none;scrollbar-width:none;}
+  @media (max-width:600px){
+    [style*="repeat(auto-fill,minmax(280px"]{grid-template-columns:1fr!important;}
+    [style*="repeat(auto-fill,minmax(300px"]{grid-template-columns:1fr!important;}
+    .nav-bar{padding:12px 16px!important;}
+    .nav-controls{order:2;}
+    .nav-links{width:100%;order:3;justify-content:center;gap:14px!important;font-size:12px;}
+    .nl{font-size:12px!important;}
+  }
+  @media (max-width:850px){
+    [style*="padding:\\"80px 40px"]{padding:48px 20px!important;}
+    [style*="padding:\\"60px 40px"]{padding:40px 18px!important;}
+    [style*="padding:\\"64px 40px"]{padding:40px 18px!important;}
+    [style*="padding:\\"48px 48px"]{padding:32px 20px!important;}
+    [style*="padding:\\"48px 40px"]{padding:32px 18px!important;}
+    [style*="padding:\\"56px 48px"]{padding:36px 20px!important;}
+  }
   .solid{background:#4ade80;color:#080f1e;border:none;}
   .solid:hover{background:#86efac;}
   .nl{cursor:pointer;color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:1.5px;transition:color .18s;}
@@ -2074,7 +2094,7 @@ const ProductIcon = ({ color = "#4ade80", size = 64 }) => {
 
 /* ─── NAV ────────────────────────────────────────────────── */
 const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
-  <nav style={{padding:"15px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid rgba(255,255,255,0.06)",position:"sticky",top:0,zIndex:100,background:"rgba(8,15,30,0.95)",backdropFilter:"blur(14px)"}}>
+  <nav className="nav-bar" style={{padding:"15px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid rgba(255,255,255,0.06)",position:"sticky",top:0,zIndex:100,background:"rgba(8,15,30,0.95)",backdropFilter:"blur(14px)",flexWrap:"wrap",gap:10}}>
     <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={()=>go("home")}>
       <Logo/>
       <div>
@@ -2082,12 +2102,12 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
         <div style={{fontSize:7,letterSpacing:2.5,color:"#4ade80",marginTop:1}}>RESEARCH</div>
       </div>
     </div>
-    <div style={{display:"flex",gap:24}}>
+    <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap"}}>
       {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
         <span key={p} className={`nl${page===p?" active":""}`} onClick={()=>go(p)}>{l}</span>
       ))}
     </div>
-    <div style={{display:"flex",alignItems:"center",gap:16}}>
+    <div className="nav-controls" style={{display:"flex",alignItems:"center",gap:10,flexWrap:"nowrap"}}>
       {/* Language toggle */}
       <div style={{display:"flex",gap:3,borderRight:"1px solid rgba(255,255,255,0.1)",paddingRight:12,marginRight:4}}>
         {["EN","FR"].map(l=>(
@@ -2292,7 +2312,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang="EN" }) => {
   return (
     <div style={{position:"fixed",inset:0,zIndex:200}}>
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.65)"}}/>
-      <div className="su" style={{position:"absolute",right:0,top:0,bottom:0,width:380,background:"#0c1c35",borderLeft:"1px solid rgba(255,255,255,0.07)",padding:32,display:"flex",flexDirection:"column",overflowY:"auto"}}>
+      <div className="su" style={{position:"absolute",right:0,top:0,bottom:0,width:380,maxWidth:"90vw",boxSizing:"border-box",background:"#0c1c35",borderLeft:"1px solid rgba(255,255,255,0.07)",padding:32,display:"flex",flexDirection:"column",overflowY:"auto"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:28}}>
           <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:20,fontWeight:800}}>{t(lang,"your_order")} ({count})</h2>
           <span onClick={onClose} style={{cursor:"pointer",fontSize:20,color:"rgba(255,255,255,0.3)"}}>✕</span>
@@ -2355,13 +2375,18 @@ const Cart = ({ cart, cur, onClose, onRemove, lang="EN" }) => {
    PAGES
 ═══════════════════════════════════════════════════════════ */
 
-const TrustBar = () => (
-  <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",borderBottom:"1px solid rgba(255,255,255,0.05)",background:"rgba(255,255,255,0.012)",padding:"18px 40px",display:"flex",justifyContent:"center",gap:14,flexWrap:"wrap"}}>
-    {["Third-party lab verified","COA with every order","Controlled fulfillment","Stripe secured","Cold-chain packaging","Research-grade returns"].map(t=>(
-      <span key={t} style={{fontSize:10,color:"rgba(255,255,255,0.55)",padding:"5px 12px",border:"1px solid rgba(255,255,255,0.1)",borderRadius:3,letterSpacing:0.8,fontWeight:500,background:"rgba(255,255,255,0.02)"}}>{t}</span>
+const TrustBar = ({ lang="EN" }) => {
+  const items = lang === "FR"
+    ? ["Vérifié par labo tiers","COA avec chaque commande","Expédition contrôlée","Sécurisé par Stripe","Emballage chaîne du froid","Retours qualité recherche"]
+    : ["Third-party lab verified","COA with every order","Controlled fulfillment","Stripe secured","Cold-chain packaging","Research-grade returns"];
+  return (
+  <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",borderBottom:"1px solid rgba(255,255,255,0.05)",background:"rgba(255,255,255,0.012)",padding:"16px 20px",display:"flex",justifyContent:"center",alignItems:"center",gap:10,flexWrap:"wrap",textAlign:"center"}}>
+    {items.map(txt=>(
+      <span key={txt} style={{fontSize:10,color:"rgba(255,255,255,0.55)",padding:"6px 12px",border:"1px solid rgba(255,255,255,0.1)",borderRadius:4,letterSpacing:0.5,fontWeight:500,background:"rgba(255,255,255,0.02)",whiteSpace:"nowrap",display:"inline-flex",alignItems:"center"}}>{txt}</span>
     ))}
   </div>
-);
+  );
+};
 
 const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
   const [email,setEmail] = useState("");
@@ -2376,7 +2401,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             <span style={{width:6,height:6,borderRadius:"50%",background:"#4ade80",display:"inline-block"}}/>
             <span style={{fontSize:9.5,letterSpacing:2.5,color:"#4ade80",fontWeight:600}}>{t(lang,"hero_sub")}</span>
           </div>
-          <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:58,fontWeight:800,lineHeight:1.06,marginBottom:20}}>
+          <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(32px,8vw,58px)",fontWeight:800,lineHeight:1.06,marginBottom:20,wordBreak:"break-word"}}>
             {t(lang,"hero_h1_1")}<br/><span style={{color:"#4ade80"}}>{t(lang,"hero_h1_2")}</span>
           </h1>
           <p style={{fontSize:15,color:"rgba(255,255,255,0.48)",lineHeight:1.8,maxWidth:500,marginBottom:36}}>
@@ -2397,7 +2422,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
         </div>
       </div>
 
-      <TrustBar/>
+      <TrustBar lang={lang}/>
 
       <div style={{padding:"64px 40px 80px"}}>
         <div style={{marginBottom:44}}>
@@ -2667,7 +2692,7 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
     <div style={{padding:"60px 40px 100px"}}>
       <div style={{marginBottom:40}}>
         <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{t(lang,"prod_sub")}</div>
-        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>{t(lang,"prod_h1")}</h1>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{t(lang,"prod_h1")}</h1>
         <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:520,lineHeight:1.6}}>{t(lang,"prod_desc")}</p>
       </div>
 
@@ -2732,7 +2757,7 @@ const COAPage = ({ lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{marginBottom:48}}>
       <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"TRANSPARENCY")}</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>{tg(lang,"COA Library")}</h1>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{tg(lang,"COA Library")}</h1>
       <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:540}}>{lang==="FR"?"Chaque lot est testé indépendamment par Janoshik Analytical. Le certificat d'analyse de chaque lot est publié ici avec son numéro de vérification unique, consultable sur le portail Janoshik.":"Every batch is independently tested by Janoshik Analytical. Each batch's Certificate of Analysis is published here with its unique verification number, checkable on the Janoshik portal."}</p>
     </div>
     {PRODUCTS.map(p=>(
@@ -2768,7 +2793,7 @@ const AboutPage = ({ go, lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
       <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"OUR STORY")}</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:28,lineHeight:1.1}}>{tg(lang,"Research-First.")}<br/>{tg(lang,"Transparency Always.")}</h1>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:28,lineHeight:1.1}}>{tg(lang,"Research-First.")}<br/>{tg(lang,"Transparency Always.")}</h1>
       <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>{lang==="FR"?"Novalyx a été fondé avec une mission : donner aux professionnels de la recherche accès aux peptides de plus haute pureté disponibles, avec une transparence totale à chaque étape. Aucun compromis sur la qualité. Aucune ambiguïté sur la documentation.":"Novalyx was founded with one mission: to give research professionals access to the highest-purity peptides available, with complete transparency at every step. No compromises on quality. No ambiguity on documentation."}</p>
       <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>{lang==="FR"?"Chaque produit que nous fournissons passe par des tests indépendants rigoureux avant d'atteindre nos clients. Nous publions chaque COA. Nous documentons chaque lot. La transparence n'est pas seulement une bonne pratique — c'est la seule norme acceptable.":"Every product we supply goes through rigorous independent testing before it reaches our customers. We publish every COA. We document every batch. Transparency isn't just good practice — it's the only acceptable standard."}</p>
       <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:48}}>{lang==="FR"?"Notre catalogue de lancement couvre la recherche régénérative, métabolique, de longévité, immunitaire, nootropique et sur le sommeil — avec des mélanges signature dédiés pour des protocoles intégrés. La qualité avant la quantité, toujours.":"Our launch catalog spans regenerative, metabolic, longevity, immune, nootropic, and sleep research — with dedicated signature blends for integrated protocols. Quality over quantity, always."}</p>
@@ -2813,7 +2838,7 @@ const FAQPage = ({ lang="EN" }) => {
     <div style={{padding:"60px 40px 100px"}}>
       <div style={{maxWidth:720,margin:"0 auto"}}>
         <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"SUPPORT")}</div>
-        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>FAQ</h1>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>FAQ</h1>
         <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>{tg(lang,"Common questions about products, ordering, and compliance.")}</p>
         {faqs.map(([q,a],i)=>(
           <div key={i} style={{borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
@@ -2837,7 +2862,7 @@ const ContactPage = ({ lang="EN" }) => {
     <div style={{padding:"60px 40px 100px"}}>
       <div style={{maxWidth:680,margin:"0 auto"}}>
         <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"GET IN TOUCH")}</div>
-        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>{tg(lang,"Contact Us")}</h1>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{tg(lang,"Contact Us")}</h1>
         <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>{tg(lang,"Questions about products, orders, or compliance? We respond within 1 business day.")}</p>
         {sent
           ? <div style={{background:"rgba(74,222,128,0.08)",border:"1px solid rgba(74,222,128,0.25)",borderRadius:12,padding:32,textAlign:"center"}}>
@@ -2868,12 +2893,12 @@ const ContactPage = ({ lang="EN" }) => {
               <div style={{fontSize:10.5,color:"rgba(255,255,255,0.22)",lineHeight:1.7}}>{tg(lang,"By submitting you agree to our Privacy Policy. We do not share your data with third parties.")}</div>
             </div>
         }
-        <div style={{marginTop:48,display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:16}}>
-          {[["📧","Email",CONFIG.EMAIL],["⏱","Response","Within 1 business day"],["📍","Based in","European Union"]].map(([icon,label,val])=>(
-            <div key={label} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"18px 18px"}}>
+        <div style={{marginTop:48,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:16}}>
+          {[["📧",lang==="FR"?"EMAIL":"EMAIL",CONFIG.EMAIL],["⏱",lang==="FR"?"RÉPONSE":"RESPONSE",lang==="FR"?"Sous 1 jour ouvré":"Within 1 business day"],["📍",lang==="FR"?"BASÉ EN":"BASED IN",lang==="FR"?"Union Européenne":"European Union"]].map(([icon,label,val])=>(
+            <div key={label} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"18px 18px",wordBreak:"break-word"}}>
               <div style={{fontSize:22,marginBottom:8}}>{icon}</div>
-              <div style={{fontSize:9.5,color:"rgba(255,255,255,0.3)",letterSpacing:1,marginBottom:4}}>{label.toUpperCase()}</div>
-              <div style={{fontSize:13,fontWeight:500}}>{val}</div>
+              <div style={{fontSize:9.5,color:"rgba(255,255,255,0.3)",letterSpacing:1,marginBottom:4}}>{label}</div>
+              <div style={{fontSize:13,fontWeight:500,wordBreak:"break-word"}}>{val}</div>
             </div>
           ))}
         </div>
@@ -2886,7 +2911,7 @@ const Legal = ({ title, children, lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
       <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"LEGAL")}</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:40,fontWeight:800,marginBottom:32}}>{title}</h1>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(26px,5.5vw,40px)",fontWeight:800,marginBottom:32}}>{title}</h1>
       <div style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.9}}>{children}</div>
     </div>
   </div>
@@ -2943,7 +2968,7 @@ const ShippingPage = ({ lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
       <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"SHIPPING & FULFILLMENT")}</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:40,fontWeight:800,marginBottom:32}}>{tg(lang,"Shipping & Fulfillment")}</h1>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(26px,5.5vw,40px)",fontWeight:800,marginBottom:32}}>{tg(lang,"Shipping & Fulfillment")}</h1>
       <div style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.9}}>
         <p style={{marginBottom:18}}>{tg(lang,"All orders are processed under a controlled fulfillment system to ensure product integrity and batch consistency.")}</p>
         <p style={{marginBottom:18}}>{lang==="FR"?<>Chaque commande est préparée après confirmation et expédiée dans notre délai de traitement standard. La livraison prend généralement <strong style={{color:"white"}}>2 à 3 semaines</strong>, car nos composés sont approvisionnés par commande auprès de nos partenaires de laboratoire vérifiés pour garantir la fraîcheur et la traçabilité des lots.</>:<>Each order is prepared following confirmation and dispatched within our standard processing timeframe. Delivery typically takes <strong style={{color:"white"}}>2–3 weeks</strong>, as our compounds are sourced per-order from our verified laboratory partners to ensure batch freshness and traceability.</>}</p>
@@ -3119,14 +3144,14 @@ export default function App() {
       )}
 
       {/* TOP ANNOUNCEMENT BAR */}
-      <div style={{background:"#050a15",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"8px 40px",display:"flex",justifyContent:"center",gap:28,flexWrap:"wrap",fontSize:10.5,letterSpacing:1.5,color:"rgba(255,255,255,0.55)",fontWeight:500}}>
-        <span>{t(lang,"ann1")}</span>
+      <div className="announce-bar" style={{background:"#050a15",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"8px 20px",display:"flex",justifyContent:"center",alignItems:"center",gap:16,fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.55)",fontWeight:500,overflowX:"auto",whiteSpace:"nowrap"}}>
+        <span style={{whiteSpace:"nowrap"}}>{t(lang,"ann1")}</span>
         <span style={{color:"rgba(255,255,255,0.15)"}}>|</span>
-        <span>{t(lang,"ann2")}</span>
+        <span style={{whiteSpace:"nowrap"}}>{t(lang,"ann2")}</span>
         <span style={{color:"rgba(255,255,255,0.15)"}}>|</span>
-        <span>{t(lang,"ann3")}</span>
+        <span style={{whiteSpace:"nowrap"}}>{t(lang,"ann3")}</span>
         <span style={{color:"rgba(255,255,255,0.15)"}}>|</span>
-        <span>{t(lang,"ann4")}</span>
+        <span style={{whiteSpace:"nowrap"}}>{t(lang,"ann4")}</span>
       </div>
       <Nav page={page} go={go} cur={cur} setCur={setCur} cartCount={cartCount} openCart={()=>setCartOpen(true)} lang={lang} setLang={setLang}/>
       <div className="fi" key={`${page}-${lang}`}>{pages[page]||pages.home}</div>

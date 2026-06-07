@@ -36,7 +36,7 @@ const TRANSLATIONS = {
     age_footer: "By entering you confirm compliance with all applicable laws in your jurisdiction.",
     // Product card
     available_in: "AVAILABLE IN:",
-    coa_dl: "COA: Downloadable after purchase",
+    coa_dl: "COA: Janoshik batch-tested",
     from: "FROM", per_vial: "PER VIAL",
     view_options: "VIEW OPTIONS →",
     // Product modal
@@ -128,7 +128,7 @@ const TRANSLATIONS = {
     age_footer: "En entrant, vous confirmez être en conformité avec toutes les lois applicables dans votre juridiction.",
     // Product card
     available_in: "DISPONIBLE EN :",
-    coa_dl: "COA : Téléchargeable après achat",
+    coa_dl: "COA : testé par lot Janoshik",
     from: "À PARTIR DE", per_vial: "PAR FIOLE",
     view_options: "VOIR LES OPTIONS →",
     // Product modal
@@ -211,6 +211,160 @@ const TRANSLATIONS = {
 
 const t = (lang, key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS.EN[key] || key;
 
+/* ─── PRODUCT TRANSLATION DICTIONARY (EN → FR) ───────────── */
+/* Traduit automatiquement les tags, catégories, specs et termes techniques des produits */
+const PRODUCT_FR = {
+  // Tags
+  "TISSUE REPAIR RESEARCH": "RECHERCHE RÉPARATION TISSULAIRE",
+  "RECOVERY RESEARCH": "RECHERCHE RÉCUPÉRATION",
+  "REGENERATIVE RESEARCH": "RECHERCHE RÉGÉNÉRATIVE",
+  "ANTI-INFLAMMATORY RESEARCH": "RECHERCHE ANTI-INFLAMMATOIRE",
+  "TRIPLE-RECEPTOR RESEARCH": "RECHERCHE TRIPLE-RÉCEPTEUR",
+  "DUAL-AGONIST RESEARCH": "RECHERCHE DOUBLE-AGONISTE",
+  "DUAL-RECEPTOR RESEARCH": "RECHERCHE DOUBLE-RÉCEPTEUR",
+  "AMYLIN RECEPTOR RESEARCH": "RECHERCHE RÉCEPTEUR AMYLINE",
+  "GROWTH HORMONE RESEARCH": "RECHERCHE HORMONE DE CROISSANCE",
+  "GH-SECRETAGOGUE RESEARCH": "RECHERCHE SÉCRÉTAGOGUE GH",
+  "GH SECRETAGOGUE RESEARCH": "RECHERCHE SÉCRÉTAGOGUE GH",
+  "GHRH RESEARCH": "RECHERCHE GHRH",
+  "GHRH ANALOG RESEARCH": "RECHERCHE ANALOGUE GHRH",
+  "CELLULAR ENERGY RESEARCH": "RECHERCHE ÉNERGIE CELLULAIRE",
+  "TELOMERE RESEARCH": "RECHERCHE TÉLOMÈRES",
+  "NEUROPROTECTIVE RESEARCH": "RECHERCHE NEUROPROTECTRICE",
+  "MITOCHONDRIAL RESEARCH": "RECHERCHE MITOCHONDRIALE",
+  "IMMUNE MODULATION RESEARCH": "RECHERCHE MODULATION IMMUNITAIRE",
+  "ANTIMICROBIAL RESEARCH": "RECHERCHE ANTIMICROBIENNE",
+  "NOOTROPIC RESEARCH": "RECHERCHE NOOTROPIQUE",
+  "NEUROMODULATION RESEARCH": "RECHERCHE NEUROMODULATION",
+  "NEUROTROPHIC RESEARCH": "RECHERCHE NEUROTROPHIQUE",
+  "SLEEP RESEARCH": "RECHERCHE SOMMEIL",
+  "MELANOCORTIN RECEPTOR RESEARCH": "RECHERCHE RÉCEPTEUR MÉLANOCORTINE",
+  "REPRODUCTIVE RESEARCH": "RECHERCHE REPRODUCTION",
+  "GLP-1 RECEPTOR RESEARCH": "RECHERCHE RÉCEPTEUR GLP-1",
+  "METABOLIC FRAGMENT RESEARCH": "RECHERCHE FRAGMENT MÉTABOLIQUE",
+  "METABOLIC RESEARCH": "RECHERCHE MÉTABOLIQUE",
+  "REGENERATIVE RESEARCH BLEND": "MÉLANGE RECHERCHE RÉGÉNÉRATIVE",
+  "GH-RELEASING RESEARCH BLEND": "MÉLANGE RECHERCHE LIBÉRATION GH",
+  "REGENERATIVE TRIPLE BLEND": "MÉLANGE TRIPLE RÉGÉNÉRATIF",
+  "COMPLETE RESEARCH COMPLEX": "COMPLEXE DE RECHERCHE COMPLET",
+  "LAB SUPPLY": "FOURNITURE LABORATOIRE",
+  // Categories
+  "Regenerative": "Régénératif",
+  "Metabolic": "Métabolique",
+  "GH Research": "Recherche GH",
+  "Growth & Recovery": "Croissance & Récupération",
+  "Longevity": "Longévité",
+  "Immune": "Immunité",
+  "Cognitive": "Cognitif",
+  "Specialized": "Spécialisé",
+  "Signature Blends": "Mélanges Signature",
+  "Lab Supplies": "Fournitures Labo",
+  // Badges
+  "BESTSELLER": "MEILLEURE VENTE",
+  "BEST SELLER": "MEILLEURE VENTE",
+  "POPULAR": "POPULAIRE",
+  "PREMIUM": "PREMIUM",
+  "NEW": "NOUVEAU",
+  "SIGNATURE": "SIGNATURE",
+  "ESSENTIAL": "ESSENTIEL",
+  // Spec labels
+  "Format": "Format",
+  "Purity": "Pureté",
+  "Storage": "Stockage",
+  "Shelf life": "Durée de conservation",
+  "COA": "COA",
+  "Composition": "Composition",
+  // Spec values
+  "Lyophilised vial": "Flacon lyophilisé",
+  "Janoshik (par lot)": "Janoshik (par lot)",
+  "24 months (sealed)": "24 mois (scellé)",
+  "−20°C / avoid light": "−20°C / à l'abri de la lumière",
+  "Janoshik HPLC verified": "Vérifié par Janoshik HPLC",
+  "≥99% (HPLC verified)": "≥99% (vérifié HPLC)",
+  "≥99% (Janoshik HPLC)": "≥99% (Janoshik HPLC)",
+  "Blend verified": "Mélange vérifié",
+  "Proprietary multi-peptide research blends for integrated protocols.": "Mélanges de recherche propriétaires multi-peptides pour protocoles intégrés.",
+  "GLP-1, GIP, glucagon and amylin receptor research.": "Recherche sur les récepteurs GLP-1, GIP, glucagon et amyline.",
+  "Tissue repair, wound healing, and angiogenesis research.": "Recherche sur la réparation tissulaire, la cicatrisation et l'angiogenèse.",
+  "Cellular energy, mitochondrial and telomere research.": "Recherche sur l'énergie cellulaire, mitochondriale et les télomères.",
+  "Growth hormone releasing and secretagogue research.": "Recherche sur la libération d'hormone de croissance et les sécrétagogues.",
+  "T-cell modulation, antimicrobial and thymic research.": "Recherche sur la modulation des lymphocytes T, antimicrobienne et thymique.",
+  "Nootropic, neuroprotective and neuromodulation research.": "Recherche nootropique, neuroprotectrice et de neuromodulation.",
+  "Sleep, reproductive, melanocortin and ERR research.": "Recherche sur le sommeil, la reproduction, la mélanocortine et ERR.",
+  "Pharmaceutical-grade bacteriostatic water and reconstitution supplies.": "Eau bactériostatique de qualité pharmaceutique et fournitures de reconstitution.",
+};
+
+const tp = (lang, txt) => (lang === "FR" && txt ? (PRODUCT_FR[txt] || txt) : txt);
+
+const GLOBAL_FR = {
+  "Explore Our Compounds": "Explorez Nos Composés",
+  "VERIFIED BY INDEPENDENT EU LABORATORY": "VÉRIFIÉ PAR UN LABORATOIRE INDÉPENDANT UE",
+  "Every batch. Every compound. Fully documented.": "Chaque lot. Chaque composé. Entièrement documenté.",
+  "CERTIFICATE OF ANALYSIS": "CERTIFICAT D'ANALYSE",
+  "Product:": "Produit :",
+  "Batch:": "Lot :",
+  "MS identity:": "Identité MS :",
+  "Confirmed": "Confirmé",
+  "Heavy metals:": "Métaux lourds :",
+  "Sterility:": "Stérilité :",
+  "Pass": "Conforme",
+  "LEAD ANALYTICAL CHEMIST": "CHIMISTE ANALYTIQUE PRINCIPAL",
+  "PROFESSIONAL PACKAGING": "EMBALLAGE PROFESSIONNEL",
+  "Shipped ready for the lab.": "Expédié prêt pour le laboratoire.",
+  "Built for researchers who demand more.": "Conçu pour les chercheurs qui exigent plus.",
+  "FOR LABS & BULK ORDERS": "POUR LABOS & COMMANDES EN GROS",
+  "Contact us for bulk pricing, long-term supply agreements, and dedicated account support for research institutions.": "Contactez-nous pour les tarifs en gros, les accords d'approvisionnement à long terme et un support dédié pour les institutions de recherche.",
+  "STAY INFORMED": "RESTEZ INFORMÉ",
+  "First Access. New Compounds. COA Alerts.": "Accès Prioritaire. Nouveaux Composés. Alertes COA.",
+  "Join the Novalyx research list for early product access and batch notifications.": "Rejoignez la liste de recherche Novalyx pour un accès anticipé aux produits et les notifications de lot.",
+  "SUBSCRIBE": "S'ABONNER",
+  "No spam. Research professionals only.": "Pas de spam. Professionnels de la recherche uniquement.",
+  "TRANSPARENCY": "TRANSPARENCE",
+  "COA Library": "Bibliothèque COA",
+  "Every batch tested. Every result published. Download COAs for all current Novalyx products.": "Chaque lot testé. Chaque résultat publié. Téléchargez les COA de tous les produits Novalyx actuels.",
+  "OUR STORY": "NOTRE HISTOIRE",
+  "VIEW OUR PRODUCTS": "VOIR NOS PRODUITS",
+  "SUPPORT": "SUPPORT",
+  "Common questions about products, ordering, and compliance.": "Questions fréquentes sur les produits, les commandes et la conformité.",
+  "GET IN TOUCH": "CONTACTEZ-NOUS",
+  "Contact Us": "Nous Contacter",
+  "Questions about products, orders, or compliance? We respond within 1 business day.": "Questions sur les produits, commandes ou conformité ? Nous répondons sous 1 jour ouvré.",
+  "Message received": "Message reçu",
+  "FULL NAME": "NOM COMPLET",
+  "EMAIL": "EMAIL",
+  "SUBJECT": "SUJET",
+  "MESSAGE": "MESSAGE",
+  "SEND MESSAGE": "ENVOYER LE MESSAGE",
+  "By submitting you agree to our Privacy Policy. We do not share your data with third parties.": "En soumettant, vous acceptez notre Politique de Confidentialité. Nous ne partageons pas vos données avec des tiers.",
+  "LEGAL": "LÉGAL",
+  "Within 1 business day": "Sous 1 jour ouvré",
+  "European Union": "Union Européenne",
+  "Email": "Email",
+  "Response": "Réponse",
+  "Based in": "Basé en",
+  "SHIPPING & FULFILLMENT": "LIVRAISON & EXPÉDITION",
+  "Shipping & Fulfillment": "Livraison & Expédition",
+  "All orders are processed under a controlled fulfillment system to ensure product integrity and batch consistency.": "Toutes les commandes sont traitées dans un système d'expédition contrôlé pour garantir l'intégrité du produit et la cohérence des lots.",
+  "You will receive a tracking confirmation once your order is processed and in transit.": "Vous recevrez une confirmation de suivi une fois votre commande traitée et expédiée.",
+  "Delivery Zones & Rates": "Zones de Livraison & Tarifs",
+  "Customs seizures, inspections, or delays": "Saisies douanières, inspections ou retards",
+  "Import duties, taxes, or clearance fees imposed by your country": "Droits d'importation, taxes ou frais de dédouanement imposés par votre pays",
+  "Compliance with local laws regulating research compounds": "Conformité aux lois locales régissant les composés de recherche",
+  "Packages refused, destroyed, or returned by customs authorities": "Colis refusés, détruits ou retournés par les autorités douanières",
+  "All products are supplied strictly for laboratory research use only and are handled according to professional standards.": "Tous les produits sont fournis strictement pour usage en recherche en laboratoire uniquement et sont manipulés selon les normes professionnelles.",
+  "By placing an order, you confirm that you are a qualified professional and that you comply with all applicable laws and regulations in your jurisdiction.": "En passant commande, vous confirmez que vous êtes un professionnel qualifié et que vous respectez toutes les lois et réglementations applicables dans votre juridiction.",
+  "Research-First.": "La Recherche d'Abord.",
+  "Transparency Always.": "Transparence Toujours.",
+};
+const tg = (lang, txt) => (lang === "FR" && txt && GLOBAL_FR[txt]) ? GLOBAL_FR[txt] : txt;
+GLOBAL_FR["BROWSE BY RESEARCH CATEGORY"] = "PARCOURIR PAR CATÉGORIE DE RECHERCHE";
+GLOBAL_FR["WHY NOVALYX"] = "POURQUOI NOVALYX";
+GLOBAL_FR["Purity (HPLC):"] = "Pureté (HPLC) :";
+GLOBAL_FR["Endotoxins:"] = "Endotoxines :";
+GLOBAL_FR["RESEARCH USE DECLARATION"] = "DÉCLARATION D'USAGE RECHERCHE";
+GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
+
+
 /* ─── PRODUCTS ───────────────────────────────────────────── */
 const PRODUCTS = [
   /* ─────────── REGENERATIVE RESEARCH ─────────── */
@@ -226,12 +380,21 @@ const PRODUCTS = [
     glow: "rgba(74,222,128,0.03)",
     shortDesc: "Pentadecapeptide fragment for research into tissue repair, gut integrity, and angiogenesis pathways.",
     desc: "BPC-157 (Body Protection Compound) is a synthetic pentadecapeptide supplied for research into tissue repair, angiogenesis, and gastrointestinal integrity. Each vial contains verified-purity lyophilized peptide, independently batch-tested by accredited third-party laboratories. Supplied exclusively for in-vitro and laboratory research purposes.",
+    shortDesc_fr: "Fragment pentadécapeptide pour la recherche sur la réparation tissulaire, l'intégrité intestinale et les voies de l'angiogenèse.",
+    desc_fr: "Le BPC-157 (Body Protection Compound) est un pentadécapeptide synthétique fourni pour la recherche sur la réparation tissulaire, l'angiogenèse et l'intégrité gastro-intestinale. Chaque flacon contient un peptide lyophilisé de pureté vérifiée, testé par lot de manière indépendante par des laboratoires tiers accrédités. Fourni exclusivement à des fins de recherche in-vitro et en laboratoire.",
     details: [
       "Synthetic pentadecapeptide fragment",
       "Research into tissue repair and angiogenesis pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independently verified by Janoshik Analytical (99.427% purity, 10mg batch)",
+      "Independent Janoshik batch testing on every production run",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Fragment pentadécapeptide synthétique",
+      "Recherche sur les voies de réparation tissulaire et d'angiogenèse",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "5mg",  price: 64.99, batch: "NVX-BPC5-0426",  stripePrice: "price_REPLACE_BPC157_5MG" },
@@ -239,19 +402,11 @@ const PRODUCTS = [
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "99.427% (Janoshik HPLC, 10mg)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
-    verification: {
-      lab: "Janoshik Analytical",
-      country: "Czech Republic",
-      task: "87633",
-      key: "66ZCR76MEWEQ",
-      purity: "99.427%",
-      appliesTo: "10mg",
-    },
   },
   {
     id: "tb500",
@@ -265,6 +420,8 @@ const PRODUCTS = [
     glow: "rgba(96,165,250,0.03)",
     shortDesc: "Thymosin Beta-4 fragment for research into cellular migration, recovery, and regenerative pathways.",
     desc: "TB-500 is a synthetic fragment of Thymosin Beta-4, supplied for research into cellular migration, angiogenesis, and tissue regeneration. Each vial contains verified-purity lyophilized peptide, independently batch-tested.",
+    shortDesc_fr: "Fragment de Thymosine Bêta-4 pour la recherche sur la migration cellulaire, la récupération et les voies régénératives.",
+    desc_fr: "Le TB-500 est un fragment synthétique de la Thymosine Bêta-4, fourni pour la recherche sur la migration cellulaire, l'angiogenèse et la régénération tissulaire. Chaque flacon contient un peptide lyophilisé de pureté vérifiée, testé par lot de manière indépendante.",
     details: [
       "Thymosin Beta-4 synthetic fragment",
       "Research into cellular migration and regeneration",
@@ -272,16 +429,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Fragment synthétique de Thymosine Bêta-4",
+      "Recherche sur la migration cellulaire et la régénération",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-TB5-0426",  stripePrice: "price_REPLACE_TB500_5MG" },
       { size: "10mg", price: 139.99, batch: "NVX-TB10-0426", stripePrice: "price_REPLACE_TB500_10MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -296,12 +460,21 @@ const PRODUCTS = [
     glow: "rgba(249,168,212,0.03)",
     shortDesc: "Copper-peptide complex for research into collagen synthesis, skin regeneration, and wound healing.",
     desc: "GHK-Copper (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. Each batch is independently tested by Janoshik Analytical (Czech Republic).",
+    shortDesc_fr: "Complexe cuivre-peptide pour la recherche sur la synthèse du collagène, la régénération cutanée et la cicatrisation.",
+    desc_fr: "Le GHK-Cuivre (complexe Glycyl-Histidyl-Lysine cuivre) est un tripeptide naturel lié au cuivre. Fourni pour la recherche sur la régénération cutanée, la synthèse du collagène et de l'élastine, et la réparation tissulaire. Chaque lot est testé indépendamment par Janoshik Analytical (République tchèque).",
     details: [
       "Glycyl-Histidyl-Lysine bound to copper",
       "Research into collagen and elastin synthesis",
-      "Independently tested by Janoshik Analytical (99.237% purity verified)",
+      "Independent Janoshik batch testing on every production run",
       "Lyophilized, high-stability formulation",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Glycyl-Histidyl-Lysine bound to copper",
+      "Recherche sur collagen and elastin synthesis",
+      "Independent Janoshik batch testing on every production run",
+      "Formulation lyophilisée haute stabilité",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "50mg",  price: 59.99, batch: "NVX-GHK50-0426",  stripePrice: "price_REPLACE_GHK_50MG" },
@@ -309,19 +482,11 @@ const PRODUCTS = [
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "99.237% (Janoshik HPLC)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
-    verification: {
-      lab: "Janoshik Analytical",
-      country: "Czech Republic",
-      task: "106407",
-      key: "SL4SJ19YHVZA",
-      purity: "99.237%",
-      appliesTo: "100mg",
-    },
   },
   {
     id: "kpv",
@@ -335,6 +500,8 @@ const PRODUCTS = [
     glow: "rgba(167,139,250,0.03)",
     shortDesc: "Tripeptide α-MSH fragment for research into inflammation, gut integrity, and dermal pathways.",
     desc: "KPV (Lysine-Proline-Valine) is the C-terminal tripeptide fragment of alpha-MSH. Supplied for research into inflammatory signalling, intestinal barrier function, and dermal health.",
+    shortDesc_fr: "Fragment tripeptide α-MSH pour la recherche sur l'inflammation, l'intégrité intestinale et les voies dermiques.",
+    desc_fr: "Le KPV (Lysine-Proline-Valine) est le fragment tripeptide C-terminal de l'alpha-MSH. Fourni pour la recherche sur la signalisation inflammatoire, la fonction de barrière intestinale et la santé dermique.",
     details: [
       "C-terminal tripeptide fragment of α-MSH",
       "Research into inflammation and gut integrity",
@@ -342,16 +509,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "C-terminal tripeptide fragment of α-MSH",
+      "Recherche sur inflammation and gut integrity",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 54.99, batch: "NVX-KPV5-0426",  stripePrice: "price_REPLACE_KPV_5MG" },
       { size: "10mg", price: 79.99, batch: "NVX-KPV10-0426", stripePrice: "price_REPLACE_KPV_10MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -368,12 +542,21 @@ const PRODUCTS = [
     glow: "rgba(251,191,36,0.03)",
     shortDesc: "Synthetic triple-receptor agonist research peptide for in-vitro laboratory investigation of GLP-1, GIP, and glucagon receptor pathways.",
     desc: "Retatrutide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1, GIP, and glucagon receptor signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide de recherche triple-agoniste synthétique pour l'investigation in-vitro en laboratoire des voies des récepteurs GLP-1, GIP et glucagon.",
+    desc_fr: "Le Retatrutide est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation des récepteurs GLP-1, GIP et glucagon. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     details: [
       "Synthetic triple-receptor agonist peptide",
       "Research into GLP-1, GIP, and glucagon pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independently verified by Janoshik Analytical (99.544% purity, batch RT10/2025-10)",
+      "Independent Janoshik batch testing on every production run",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Peptide triple-agoniste synthétique",
+      "Recherche sur les voies GLP-1, GIP et glucagon",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "5mg",  price: 149.99, batch: "NVX-RET5-0426",  stripePrice: "price_REPLACE_RETATRUTIDE_5MG" },
@@ -381,19 +564,11 @@ const PRODUCTS = [
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "99.544% (Janoshik HPLC)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
-    verification: {
-      lab: "Janoshik Analytical",
-      country: "Czech Republic",
-      task: "88137",
-      key: "Q1DGU4J5YYWI",
-      purity: "99.544%",
-      appliesTo: "10mg",
-    },
   },
   {
     id: "mazdutide",
@@ -407,6 +582,8 @@ const PRODUCTS = [
     glow: "rgba(251,146,60,0.03)",
     shortDesc: "Synthetic GLP-1/glucagon dual-agonist peptide for research into integrated metabolic signalling pathways.",
     desc: "Mazdutide is a synthetic dual-agonist peptide targeting both GLP-1 and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide double-agoniste GLP-1/glucagon synthétique pour la recherche sur les voies de signalisation métabolique intégrée.",
+    desc_fr: "Le Mazdutide est un peptide double-agoniste synthétique ciblant les récepteurs GLP-1 et glucagon. Fourni exclusivement pour la recherche in-vitro en laboratoire. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     details: [
       "Synthetic dual-receptor agonist peptide",
       "Research into GLP-1 and glucagon pathways",
@@ -414,15 +591,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Peptide double-agoniste synthétique",
+      "Recherche sur GLP-1 and glucagon pathways",
+      "Lyophilized for maximum stability",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 299.99, batch: "NVX-MZD10-0426", stripePrice: "price_REPLACE_MZD10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -437,6 +621,8 @@ const PRODUCTS = [
     glow: "rgba(245,158,11,0.03)",
     shortDesc: "Synthetic GLP-1/glucagon dual-agonist peptide for research into advanced metabolic pathways.",
     desc: "Survodutide is a synthetic dual-agonist research peptide targeting GLP-1 and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic.",
+    shortDesc_fr: "Peptide double-agoniste GLP-1/glucagon synthétique pour la recherche sur les voies métaboliques avancées.",
+    desc_fr: "Le Survodutide est un peptide de recherche double-agoniste synthétique ciblant les récepteurs GLP-1 et glucagon. Fourni exclusivement pour la recherche in-vitro en laboratoire. Pas un médicament, complément ou cosmétique.",
     details: [
       "Synthetic dual-agonist peptide",
       "Research into advanced metabolic signalling",
@@ -444,15 +630,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : dual-agonist peptide",
+      "Recherche sur advanced metabolic signalling",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 399.99, batch: "NVX-SUR10-0426", stripePrice: "price_REPLACE_SUR10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -467,6 +660,8 @@ const PRODUCTS = [
     glow: "rgba(234,179,8,0.03)",
     shortDesc: "Synthetic amylin analog for research into appetite regulation and satiety signalling pathways.",
     desc: "Cagrilintide is a synthetic long-acting amylin analog, supplied for research into amylin receptor pathways and satiety signalling. Each vial contains lyophilized peptide for in-vitro laboratory investigation.",
+    shortDesc_fr: "Analogue d'amyline synthétique pour la recherche sur la régulation de l'appétit et les voies de signalisation de la satiété.",
+    desc_fr: "Le Cagrilintide est un analogue d'amyline synthétique à action prolongée, fourni pour la recherche sur les voies des récepteurs de l'amyline et la signalisation de la satiété. Chaque flacon contient un peptide lyophilisé pour l'investigation in-vitro en laboratoire.",
     details: [
       "Synthetic long-acting amylin analog",
       "Research into amylin receptor pathways",
@@ -474,16 +669,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : long-acting amylin analog",
+      "Recherche sur amylin receptor pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 219.99, batch: "NVX-CGL5-0426",  stripePrice: "price_REPLACE_CGL5" },
       { size: "10mg", price: 379.99, batch: "NVX-CGL10-0426", stripePrice: "price_REPLACE_CGL10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -500,6 +702,8 @@ const PRODUCTS = [
     glow: "rgba(56,189,248,0.03)",
     shortDesc: "Synthetic GHRH analog for research into visceral adiposity and growth hormone axis signalling.",
     desc: "Tesamorelin is a synthetic analog of growth hormone-releasing hormone (GHRH), supplied for research into visceral fat metabolism and the GH/IGF-1 axis.",
+    shortDesc_fr: "Analogue de GHRH synthétique pour la recherche sur l'adiposité viscérale et la signalisation de l'axe de l'hormone de croissance.",
+    desc_fr: "Le Tesamorelin est un analogue synthétique de l'hormone de libération de l'hormone de croissance (GHRH), fourni pour la recherche sur le métabolisme des graisses viscérales et l'axe GH/IGF-1.",
     details: [
       "Synthetic GHRH analog",
       "Research into visceral fat metabolism",
@@ -507,16 +711,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : GHRH analog",
+      "Recherche sur visceral fat metabolism",
+      "Lyophilized for maximum stability",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 159.99, batch: "NVX-TES5-0426",  stripePrice: "price_REPLACE_TES_5MG" },
       { size: "10mg", price: 279.99, batch: "NVX-TES10-0426", stripePrice: "price_REPLACE_TES_10MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -531,6 +742,8 @@ const PRODUCTS = [
     glow: "rgba(34,211,238,0.03)",
     shortDesc: "Selective GH secretagogue for research into pulsatile growth hormone release pathways.",
     desc: "Ipamorelin is a selective synthetic growth hormone secretagogue, supplied for research into pulsatile GH release pathways. Lyophilized, high-stability formulation.",
+    shortDesc_fr: "Sécrétagogue GH sélectif pour la recherche sur les voies de libération pulsatile de l'hormone de croissance.",
+    desc_fr: "L'Ipamorelin est un sécrétagogue synthétique sélectif de l'hormone de croissance, fourni pour la recherche sur les voies de libération pulsatile de GH. Formulation lyophilisée haute stabilité.",
     details: [
       "Selective GH secretagogue peptide",
       "Research into pulsatile GH release",
@@ -538,16 +751,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Selective GH secretagogue peptide",
+      "Recherche sur pulsatile GH release",
+      "Lyophilized for maximum stability",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 64.99,  batch: "NVX-IPA5-0426",  stripePrice: "price_REPLACE_IPA5" },
       { size: "10mg", price: 109.99, batch: "NVX-IPA10-0426", stripePrice: "price_REPLACE_IPA10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -562,6 +782,8 @@ const PRODUCTS = [
     glow: "rgba(6,182,212,0.03)",
     shortDesc: "Synthetic GHRH 1-29 fragment for research into growth hormone releasing pathways.",
     desc: "Sermorelin Acetate is a synthetic GHRH 1-29 fragment, supplied for research into growth hormone releasing pathways. Lyophilized, high-stability formulation.",
+    shortDesc_fr: "Fragment GHRH 1-29 synthétique pour la recherche sur les voies de libération de l'hormone de croissance.",
+    desc_fr: "Le Sermorelin Acétate est un fragment synthétique GHRH 1-29, fourni pour la recherche sur les voies de libération de l'hormone de croissance. Formulation lyophilisée haute stabilité.",
     details: [
       "Synthetic GHRH 1-29 fragment",
       "Research into GH releasing pathways",
@@ -569,15 +791,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : GHRH 1-29 fragment",
+      "Recherche sur GH releasing pathways",
+      "Lyophilized for maximum stability",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg", price: 109.99, batch: "NVX-SER5-0426", stripePrice: "price_REPLACE_SER5" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -592,6 +821,8 @@ const PRODUCTS = [
     glow: "rgba(14,165,233,0.03)",
     shortDesc: "Synthetic GHRH analog for research into extended growth hormone releasing pathways.",
     desc: "CJC-1295 without DAC is a synthetic GHRH analog supplied for research into extended-duration GH release pathways. Lyophilized, high-stability formulation.",
+    shortDesc_fr: "Analogue de GHRH synthétique pour la recherche sur les voies prolongées de libération de l'hormone de croissance.",
+    desc_fr: "Le CJC-1295 sans DAC est un analogue synthétique de GHRH fourni pour la recherche sur les voies de libération de GH à durée prolongée. Formulation lyophilisée haute stabilité.",
     details: [
       "Synthetic GHRH analog (no DAC)",
       "Research into GH releasing pathways",
@@ -599,15 +830,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : GHRH analog (no DAC)",
+      "Recherche sur GH releasing pathways",
+      "Lyophilized for maximum stability",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 249.99, batch: "NVX-CJC10-0426", stripePrice: "price_REPLACE_CJC10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -624,6 +862,8 @@ const PRODUCTS = [
     glow: "rgba(192,132,252,0.03)",
     shortDesc: "Nicotinamide adenine dinucleotide for research into cellular energy metabolism, mitochondrial function and longevity pathways.",
     desc: "NAD+ (Nicotinamide Adenine Dinucleotide) is a coenzyme present in all living cells, supplied for research into cellular energy metabolism, sirtuin activity, and longevity pathways.",
+    shortDesc_fr: "Nicotinamide adénine dinucléotide pour la recherche sur le métabolisme énergétique cellulaire, la fonction mitochondriale et les voies de longévité.",
+    desc_fr: "Le NAD+ (Nicotinamide Adénine Dinucléotide) est une coenzyme présente dans toutes les cellules vivantes, fournie pour la recherche sur le métabolisme énergétique cellulaire, l'activité des sirtuines et les voies de longévité.",
     details: [
       "Naturally occurring coenzyme",
       "Research into cellular energy and longevity pathways",
@@ -631,16 +871,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Naturally occurring coenzyme",
+      "Recherche sur cellular energy and longevity pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "500mg",  price: 149.99, batch: "NVX-NAD500-0426",  stripePrice: "price_REPLACE_NAD_500" },
       { size: "1000mg", price: 269.99, batch: "NVX-NAD1000-0426", stripePrice: "price_REPLACE_NAD_1000" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -655,6 +902,8 @@ const PRODUCTS = [
     glow: "rgba(163,230,53,0.03)",
     shortDesc: "Synthetic tetrapeptide for research into telomerase activation, pineal signalling, and longevity pathways.",
     desc: "Epitalon is a synthetic tetrapeptide (Ala-Glu-Asp-Gly), supplied for research into telomerase activation, pineal gland signalling, and longevity pathways.",
+    shortDesc_fr: "Tétrapeptide synthétique pour la recherche sur l'activation de la télomérase, la signalisation pinéale et les voies de longévité.",
+    desc_fr: "L'Epitalon est un tétrapeptide synthétique (Ala-Glu-Asp-Gly), fourni pour la recherche sur l'activation de la télomérase, la signalisation de la glande pinéale et les voies de longévité.",
     details: [
       "Synthetic tetrapeptide (Ala-Glu-Asp-Gly)",
       "Research into telomerase and longevity pathways",
@@ -662,16 +911,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : tetrapeptide (Ala-Glu-Asp-Gly)",
+      "Recherche sur telomerase and longevity pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 89.99,  batch: "NVX-EPI10-0426", stripePrice: "price_REPLACE_EPI_10MG" },
       { size: "50mg", price: 299.99, batch: "NVX-EPI50-0426", stripePrice: "price_REPLACE_EPI_50MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -686,12 +942,21 @@ const PRODUCTS = [
     glow: "rgba(132,204,22,0.03)",
     shortDesc: "Synthetic tripeptide for research into neuroprotection and cognitive longevity pathways.",
     desc: "Pinealon is a synthetic tripeptide, supplied for research into neuroprotection and cognitive longevity signalling pathways.",
+    shortDesc_fr: "Tripeptide synthétique pour la recherche sur la neuroprotection et les voies de longévité cognitive.",
+    desc_fr: "Le Pinealon est un tripeptide synthétique, fourni pour la recherche sur la neuroprotection et les voies de signalisation de la longévité cognitive.",
     details: [
       "Synthetic tripeptide",
       "Research into neuroprotection and cognitive function",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Synthétique : tripeptide",
+      "Recherche sur neuroprotection and cognitive function",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "5mg",  price: 99.99,  batch: "NVX-PIN5-0426",  stripePrice: "price_REPLACE_PIN5" },
@@ -700,10 +965,10 @@ const PRODUCTS = [
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -718,6 +983,8 @@ const PRODUCTS = [
     glow: "rgba(244,114,182,0.03)",
     shortDesc: "Mitochondrial-derived peptide for research into metabolic homeostasis and cellular stress response.",
     desc: "MOTS-c is a 16-amino acid mitochondrial-derived peptide, supplied for research into metabolic homeostasis, insulin sensitivity, and cellular stress response pathways.",
+    shortDesc_fr: "Peptide d'origine mitochondriale pour la recherche sur l'homéostasie métabolique et la réponse au stress cellulaire.",
+    desc_fr: "Le MOTS-c est un peptide de 16 acides aminés d'origine mitochondriale, fourni pour la recherche sur l'homéostasie métabolique, la sensibilité à l'insuline et les voies de réponse au stress cellulaire.",
     details: [
       "Mitochondrial-derived peptide (MDP)",
       "Research into metabolic homeostasis",
@@ -725,16 +992,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Mitochondrial-derived peptide (MDP)",
+      "Recherche sur metabolic homeostasis",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 119.99, batch: "NVX-MOTS10-0426", stripePrice: "price_REPLACE_MOTS_10MG" },
       { size: "40mg", price: 299.99, batch: "NVX-MOTS40-0426", stripePrice: "price_REPLACE_MOTS_40MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -749,6 +1023,8 @@ const PRODUCTS = [
     glow: "rgba(236,72,153,0.03)",
     shortDesc: "Mitochondria-targeting peptide for research into cardiolipin binding and mitochondrial energetics.",
     desc: "SS-31 (Elamipretide) is a mitochondria-targeting peptide, supplied for research into cardiolipin binding and mitochondrial energetics pathways.",
+    shortDesc_fr: "Peptide ciblant les mitochondries pour la recherche sur la liaison à la cardiolipine et l'énergétique mitochondriale.",
+    desc_fr: "Le SS-31 (Elamipretide) est un peptide ciblant les mitochondries, fourni pour la recherche sur la liaison à la cardiolipine et les voies énergétiques mitochondriales.",
     details: [
       "Mitochondria-targeting peptide",
       "Research into cardiolipin and mitochondrial energetics",
@@ -756,16 +1032,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Mitochondria-targeting peptide",
+      "Recherche sur cardiolipin and mitochondrial energetics",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 149.99, batch: "NVX-SS31-10-0426", stripePrice: "price_REPLACE_SS31_10" },
       { size: "50mg", price: 499.99, batch: "NVX-SS31-50-0426", stripePrice: "price_REPLACE_SS31_50" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -782,6 +1065,8 @@ const PRODUCTS = [
     glow: "rgba(251,146,60,0.03)",
     shortDesc: "Synthetic 28-amino acid peptide for research into immune modulation and T-cell maturation pathways.",
     desc: "Thymosin Alpha-1 (TA1) is a synthetic 28-amino acid peptide, supplied for research into immune system modulation, T-cell signalling, and thymic function.",
+    shortDesc_fr: "Peptide synthétique de 28 acides aminés pour la recherche sur la modulation immunitaire et les voies de maturation des lymphocytes T.",
+    desc_fr: "La Thymosine Alpha-1 (TA1) est un peptide synthétique de 28 acides aminés, fourni pour la recherche sur la modulation du système immunitaire, la signalisation des lymphocytes T et la fonction thymique.",
     details: [
       "Synthetic 28-amino acid peptide",
       "Research into immune modulation and T-cell pathways",
@@ -789,16 +1074,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : 28-amino acid peptide",
+      "Recherche sur immune modulation and T-cell pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 169.99, batch: "NVX-TA1-5-0426",  stripePrice: "price_REPLACE_TA1_5MG" },
       { size: "10mg", price: 279.99, batch: "NVX-TA1-10-0426", stripePrice: "price_REPLACE_TA1_10MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -813,6 +1105,8 @@ const PRODUCTS = [
     glow: "rgba(249,115,22,0.03)",
     shortDesc: "Thymus-derived peptide complex for research into immune function and thymic regulation.",
     desc: "Thymalin is a thymus-derived peptide complex, supplied for research into immune function, thymic regulation, and age-related immunology.",
+    shortDesc_fr: "Complexe peptidique d'origine thymique pour la recherche sur la fonction immunitaire et la régulation thymique.",
+    desc_fr: "Le Thymalin est un complexe peptidique d'origine thymique, fourni pour la recherche sur la fonction immunitaire, la régulation thymique et l'immunologie liée à l'âge.",
     details: [
       "Thymus-derived peptide complex",
       "Research into immune regulation",
@@ -820,15 +1114,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Thymus-derived peptide complex",
+      "Recherche sur immune regulation",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 129.99, batch: "NVX-TYM10-0426", stripePrice: "price_REPLACE_TYM10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -843,6 +1144,8 @@ const PRODUCTS = [
     glow: "rgba(234,88,12,0.03)",
     shortDesc: "Cathelicidin-derived antimicrobial peptide for research into innate immunity and host defense.",
     desc: "LL-37 is a cathelicidin-derived antimicrobial peptide, supplied for research into innate immunity pathways and host defense mechanisms.",
+    shortDesc_fr: "Peptide antimicrobien dérivé de la cathélicidine pour la recherche sur l'immunité innée et la défense de l'hôte.",
+    desc_fr: "Le LL-37 est un peptide antimicrobien dérivé de la cathélicidine, fourni pour la recherche sur les voies de l'immunité innée et les mécanismes de défense de l'hôte.",
     details: [
       "Cathelicidin-derived antimicrobial peptide",
       "Research into innate immunity",
@@ -850,15 +1153,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Cathelicidin-derived antimicrobial peptide",
+      "Recherche sur innate immunity",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg", price: 169.99, batch: "NVX-LL37-0426", stripePrice: "price_REPLACE_LL37" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -875,6 +1185,8 @@ const PRODUCTS = [
     glow: "rgba(45,212,191,0.03)",
     shortDesc: "Synthetic heptapeptide for research into cognitive function, BDNF expression, and neuroprotection.",
     desc: "Semax is a synthetic heptapeptide analog of ACTH(4-10), supplied for research into cognitive function, BDNF expression, and neuroprotective signalling.",
+    shortDesc_fr: "Heptapeptide synthétique pour la recherche sur la fonction cognitive, l'expression du BDNF et la neuroprotection.",
+    desc_fr: "Le Semax est un analogue heptapeptide synthétique de l'ACTH(4-10), fourni pour la recherche sur la fonction cognitive, l'expression du BDNF et la signalisation neuroprotectrice.",
     details: [
       "Synthetic heptapeptide (ACTH 4-10 analog)",
       "Research into cognitive function and BDNF",
@@ -882,16 +1194,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : heptapeptide (ACTH 4-10 analog)",
+      "Recherche sur cognitive function and BDNF",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 79.99,  batch: "NVX-SMX5-0426",  stripePrice: "price_REPLACE_SMX5" },
       { size: "11mg", price: 149.99, batch: "NVX-SMX11-0426", stripePrice: "price_REPLACE_SMX11" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -906,6 +1225,8 @@ const PRODUCTS = [
     glow: "rgba(129,140,248,0.03)",
     shortDesc: "Synthetic heptapeptide for research into anxiolytic mechanisms and GABAergic signalling pathways.",
     desc: "Selank is a synthetic heptapeptide analog of tuftsin, supplied for research into anxiolytic mechanisms and GABAergic signalling pathways.",
+    shortDesc_fr: "Heptapeptide synthétique pour la recherche sur les mécanismes anxiolytiques et les voies de signalisation GABAergiques.",
+    desc_fr: "Le Selank est un analogue heptapeptide synthétique de la tuftsine, fourni pour la recherche sur les mécanismes anxiolytiques et les voies de signalisation GABAergiques.",
     details: [
       "Synthetic heptapeptide (tuftsin analog)",
       "Research into anxiolytic and GABAergic pathways",
@@ -913,16 +1234,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : heptapeptide (tuftsin analog)",
+      "Recherche sur anxiolytic and GABAergic pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-SEL5-0426",  stripePrice: "price_REPLACE_SEL5" },
       { size: "11mg", price: 149.99, batch: "NVX-SEL11-0426", stripePrice: "price_REPLACE_SEL11" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -937,6 +1265,8 @@ const PRODUCTS = [
     glow: "rgba(99,102,241,0.03)",
     shortDesc: "Neurotrophic peptide complex for research into neuroprotection and cognitive function.",
     desc: "Cerebrolysin is a neurotrophic peptide complex, supplied for research into neuroprotection, BDNF modulation, and cognitive signalling pathways.",
+    shortDesc_fr: "Complexe peptidique neurotrophique pour la recherche sur la neuroprotection et la fonction cognitive.",
+    desc_fr: "Le Cerebrolysin est un complexe peptidique neurotrophique, fourni pour la recherche sur la neuroprotection, la modulation du BDNF et les voies de signalisation cognitive.",
     details: [
       "Neurotrophic peptide complex",
       "Research into neuroprotection pathways",
@@ -944,15 +1274,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Neurotrophic peptide complex",
+      "Recherche sur neuroprotection pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "60mg", price: 129.99, batch: "NVX-CBL60-0426", stripePrice: "price_REPLACE_CBL60" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vials (6-pack)" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -969,6 +1306,8 @@ const PRODUCTS = [
     glow: "rgba(79,70,229,0.03)",
     shortDesc: "Delta sleep-inducing peptide for research into sleep regulation, delta wave activity, and circadian signalling.",
     desc: "DSIP (Delta Sleep-Inducing Peptide) is a synthetic nonapeptide, supplied for research into sleep regulation, delta wave activity, and circadian signalling pathways.",
+    shortDesc_fr: "Peptide inducteur du sommeil delta pour la recherche sur la régulation du sommeil, l'activité des ondes delta et la signalisation circadienne.",
+    desc_fr: "Le DSIP (Delta Sleep-Inducing Peptide) est un nonapeptide synthétique, fourni pour la recherche sur la régulation du sommeil, l'activité des ondes delta et les voies de signalisation circadienne.",
     details: [
       "Synthetic nonapeptide",
       "Research into sleep regulation and delta wave activity",
@@ -976,16 +1315,23 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : nonapeptide",
+      "Recherche sur sleep regulation and delta wave activity",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 79.99,  batch: "NVX-DSIP5-0426",  stripePrice: "price_REPLACE_DSIP5" },
       { size: "10mg", price: 119.99, batch: "NVX-DSIP10-0426", stripePrice: "price_REPLACE_DSIP10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -1000,6 +1346,8 @@ const PRODUCTS = [
     glow: "rgba(244,63,94,0.03)",
     shortDesc: "Synthetic melanocortin receptor agonist for research into MC3/MC4 receptor pathways and central nervous system signalling.",
     desc: "PT-141 (Bremelanotide) is a synthetic cyclic heptapeptide, supplied for research into melanocortin MC3 and MC4 receptor pathways and central nervous system signalling.",
+    shortDesc_fr: "Agoniste des récepteurs de la mélanocortine synthétique pour la recherche sur les voies des récepteurs MC3/MC4 et la signalisation du système nerveux central.",
+    desc_fr: "Le PT-141 (Bremelanotide) est un heptapeptide cyclique synthétique, fourni pour la recherche sur les voies des récepteurs de la mélanocortine MC3 et MC4 et la signalisation du système nerveux central.",
     details: [
       "Synthetic cyclic heptapeptide",
       "Research into MC3/MC4 receptor pathways",
@@ -1007,15 +1355,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : cyclic heptapeptide",
+      "Recherche sur MC3/MC4 receptor pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 119.99, batch: "NVX-PT10-0426", stripePrice: "price_REPLACE_PT10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -1030,6 +1385,8 @@ const PRODUCTS = [
     glow: "rgba(225,29,72,0.03)",
     shortDesc: "EPO-derived peptide for research into innate repair receptor pathways and neuroprotection.",
     desc: "Ara-290 is an 11-amino acid peptide derived from erythropoietin, supplied for research into innate repair receptor signalling and neuroprotection.",
+    shortDesc_fr: "Peptide dérivé de l'EPO pour la recherche sur les voies du récepteur de réparation innée et la neuroprotection.",
+    desc_fr: "L'Ara-290 est un peptide de 11 acides aminés dérivé de l'érythropoïétine, fourni pour la recherche sur la signalisation du récepteur de réparation innée et la neuroprotection.",
     details: [
       "EPO-derived 11-amino acid peptide",
       "Research into innate repair receptor pathways",
@@ -1037,15 +1394,22 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "EPO-derived 11-amino acid peptide",
+      "Recherche sur innate repair receptor pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "10mg", price: 159.99, batch: "NVX-ARA10-0426", stripePrice: "price_REPLACE_ARA10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -1060,6 +1424,8 @@ const PRODUCTS = [
     glow: "rgba(190,24,93,0.03)",
     shortDesc: "Synthetic decapeptide for research into GnRH regulation and reproductive endocrinology pathways.",
     desc: "Kisspeptin-10 is a synthetic decapeptide, supplied for research into GnRH regulation and reproductive endocrinology signalling pathways.",
+    shortDesc_fr: "Décapeptide synthétique pour la recherche sur la régulation de la GnRH et les voies de l'endocrinologie de la reproduction.",
+    desc_fr: "Le Kisspeptin-10 est un décapeptide synthétique, fourni pour la recherche sur la régulation de la GnRH et les voies de signalisation de l'endocrinologie de la reproduction.",
     details: [
       "Synthetic decapeptide",
       "Research into GnRH and reproductive pathways",
@@ -1067,46 +1433,300 @@ const PRODUCTS = [
       "Manufacturer HPLC testing included",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Synthétique : decapeptide",
+      "Recherche sur GnRH and reproductive pathways",
+      "Formulation lyophilisée haute stabilité",
+      "Test HPLC du fabricant inclus",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-KIS5-0426",  stripePrice: "price_REPLACE_KIS5" },
       { size: "10mg", price: 149.99, batch: "NVX-KIS10-0426", stripePrice: "price_REPLACE_KIS10" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
   {
     id: "slupp322",
-    name: "SLU-PP-322",
-    tag: "ERR AGONIST RESEARCH",
-    category: "Specialized",
-    tagColor: "#db2777",
-    badge: "NEW",
-    badgeColor: "#db2777",
+    name: "Tirzepatide",
+    tag: "DUAL-RECEPTOR RESEARCH",
+    category: "Metabolic",
+    tagColor: "#fbbf24",
+    badge: "BEST SELLER",
+    badgeColor: "#fbbf24",
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(219,39,119,0.03)",
-    shortDesc: "Estrogen-related receptor agonist for research into exercise mimetic and metabolic pathways.",
-    desc: "SLU-PP-322 is a synthetic estrogen-related receptor (ERR) pan-agonist, supplied for research into exercise mimetic signalling and metabolic pathways.",
+    glow: "rgba(251,191,36,0.03)",
+    shortDesc: "Synthetic dual-receptor agonist research peptide for in-vitro laboratory investigation of GLP-1 and GIP receptor pathways.",
+    desc: "Tirzepatide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 and GIP receptor signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     details: [
-      "Synthetic ERR pan-agonist",
-      "Research into exercise mimetic pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
+      "Synthetic dual-receptor agonist peptide",
+      "Research into GLP-1 and GIP pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Peptide double-agoniste synthétique",
+      "Recherche sur les voies GLP-1 et GIP",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
-      { size: "5mg", price: 249.99, batch: "NVX-SLU5-0426", stripePrice: "price_REPLACE_SLU5" },
+      { size: "5mg",  price: 129.99, batch: "NVX-TIRZ5-0426",  stripePrice: "price_REPLACE_TIRZEPATIDE_5MG" },
+      { size: "10mg", price: 189.99, batch: "NVX-TIRZ10-0426", stripePrice: "price_REPLACE_TIRZEPATIDE_10MG" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
-      { label: "Purity",     value: "≥99% (HPLC verified)" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
       { label: "Storage",    value: "−20°C / avoid light" },
       { label: "Shelf life", value: "24 months (sealed)" },
-      { label: "COA",        value: "Downloadable after purchase" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "semaglutide",
+    name: "Semaglutide",
+    tag: "GLP-1 RECEPTOR RESEARCH",
+    category: "Metabolic",
+    tagColor: "#fbbf24",
+    badge: "BEST SELLER",
+    badgeColor: "#fbbf24",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(251,191,36,0.03)",
+    shortDesc: "Synthetic GLP-1 receptor agonist research peptide for in-vitro laboratory investigation of incretin signalling pathways.",
+    desc: "Semaglutide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 receptor signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide de recherche agoniste du récepteur GLP-1 synthétique pour l'investigation in-vitro en laboratoire des voies de signalisation de l'incrétine.",
+    desc_fr: "Le Semaglutide est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du récepteur GLP-1. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Synthetic GLP-1 receptor agonist peptide",
+      "Research into incretin and metabolic pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Peptide agoniste du récepteur GLP-1 synthétique",
+      "Recherche sur les voies de l'incrétine et métaboliques",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "5mg",  price: 119.99, batch: "NVX-SEMA5-0426",  stripePrice: "price_REPLACE_SEMAGLUTIDE_5MG" },
+      { size: "10mg", price: 169.99, batch: "NVX-SEMA10-0426", stripePrice: "price_REPLACE_SEMAGLUTIDE_10MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "aod9604",
+    name: "AOD-9604",
+    tag: "METABOLIC FRAGMENT RESEARCH",
+    category: "Metabolic",
+    tagColor: "#fbbf24",
+    badge: "NEW",
+    badgeColor: "#fbbf24",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(251,191,36,0.03)",
+    shortDesc: "Modified growth hormone fragment (176-191) research peptide for in-vitro investigation of lipid metabolism pathways.",
+    desc: "AOD-9604 is a synthetic modified fragment of growth hormone (amino acids 176-191), supplied exclusively for in-vitro laboratory research into lipid metabolism signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide de recherche fragment modifié d'hormone de croissance (176-191) pour l'investigation in-vitro des voies du métabolisme lipidique.",
+    desc_fr: "L'AOD-9604 est un fragment modifié synthétique de l'hormone de croissance (acides aminés 176-191), fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du métabolisme lipidique. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Modified GH fragment (176-191)",
+      "Research into lipid metabolism pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Fragment GH modifié (176-191)",
+      "Recherche sur les voies du métabolisme lipidique",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "5mg",  price: 99.99,  batch: "NVX-AOD5-0426",  stripePrice: "price_REPLACE_AOD_5MG" },
+      { size: "10mg", price: 159.99, batch: "NVX-AOD10-0426", stripePrice: "price_REPLACE_AOD_10MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "ghrp2",
+    name: "GHRP-2",
+    tag: "GH SECRETAGOGUE RESEARCH",
+    category: "Growth & Recovery",
+    tagColor: "#34d399",
+    badge: "NEW",
+    badgeColor: "#34d399",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(52,211,153,0.03)",
+    shortDesc: "Growth hormone-releasing peptide for in-vitro research into GH secretagogue receptor signalling.",
+    desc: "GHRP-2 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide libérateur d'hormone de croissance pour la recherche in-vitro sur la signalisation du récepteur sécrétagogue GH.",
+    desc_fr: "Le GHRP-2 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Synthetic GH-releasing peptide",
+      "Research into GH secretagogue receptor pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Peptide synthétique libérateur de GH",
+      "Recherche sur les voies du récepteur sécrétagogue GH",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "5mg",  price: 59.99, batch: "NVX-GHRP2-5-0426",  stripePrice: "price_REPLACE_GHRP2_5MG" },
+      { size: "10mg", price: 89.99, batch: "NVX-GHRP2-10-0426", stripePrice: "price_REPLACE_GHRP2_10MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "ghrp6",
+    name: "GHRP-6",
+    tag: "GH SECRETAGOGUE RESEARCH",
+    category: "Growth & Recovery",
+    tagColor: "#34d399",
+    badge: "NEW",
+    badgeColor: "#34d399",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(52,211,153,0.03)",
+    shortDesc: "Growth hormone-releasing peptide for in-vitro research into GH secretagogue receptor and appetite signalling.",
+    desc: "GHRP-6 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Peptide libérateur d'hormone de croissance pour la recherche in-vitro sur le récepteur sécrétagogue GH et la signalisation de l'appétit.",
+    desc_fr: "Le GHRP-6 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Synthetic GH-releasing peptide",
+      "Research into GH secretagogue and appetite pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Peptide synthétique libérateur de GH",
+      "Recherche sur les voies sécrétagogue GH et de l'appétit",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "5mg",  price: 59.99, batch: "NVX-GHRP6-5-0426",  stripePrice: "price_REPLACE_GHRP6_5MG" },
+      { size: "10mg", price: 89.99, batch: "NVX-GHRP6-10-0426", stripePrice: "price_REPLACE_GHRP6_10MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "amino1mq",
+    name: "5-Amino-1MQ",
+    tag: "METABOLIC RESEARCH",
+    category: "Metabolic",
+    tagColor: "#fbbf24",
+    badge: "NEW",
+    badgeColor: "#fbbf24",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(251,191,36,0.03)",
+    shortDesc: "Small molecule NNMT inhibitor for in-vitro research into cellular metabolism and adipocyte pathways.",
+    desc: "5-Amino-1MQ is a synthetic small molecule NNMT inhibitor supplied exclusively for in-vitro laboratory research into cellular metabolism and adipocyte signalling. Each vial contains verified-purity lyophilized compound with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Inhibiteur NNMT petite molécule pour la recherche in-vitro sur le métabolisme cellulaire et les voies des adipocytes.",
+    desc_fr: "Le 5-Amino-1MQ est un inhibiteur NNMT synthétique petite molécule fourni exclusivement pour la recherche in-vitro en laboratoire sur le métabolisme cellulaire et la signalisation des adipocytes. Chaque flacon contient un composé lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Small molecule NNMT inhibitor",
+      "Research into cellular metabolism pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Inhibiteur NNMT petite molécule",
+      "Recherche sur les voies du métabolisme cellulaire",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "5mg", price: 129.99, batch: "NVX-5AMQ5-0426", stripePrice: "price_REPLACE_5AMINO_5MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "hexarelin",
+    name: "Hexarelin",
+    tag: "GH SECRETAGOGUE RESEARCH",
+    category: "Growth & Recovery",
+    tagColor: "#34d399",
+    badge: "NEW",
+    badgeColor: "#34d399",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "rgba(52,211,153,0.03)",
+    shortDesc: "Potent growth hormone-releasing hexapeptide for in-vitro research into GH secretagogue receptor signalling.",
+    desc: "Hexarelin is a synthetic growth hormone-releasing hexapeptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    shortDesc_fr: "Hexapeptide puissant libérateur d'hormone de croissance pour la recherche in-vitro sur la signalisation du récepteur sécrétagogue GH.",
+    desc_fr: "L'Hexarelin est un hexapeptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    details: [
+      "Synthetic GH-releasing hexapeptide",
+      "Research into GH secretagogue receptor pathways",
+      "Lyophilized for maximum stability and shelf life",
+      "Independent Janoshik batch testing on every production run",
+      "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Hexapeptide synthétique libérateur de GH",
+      "Recherche sur les voies du récepteur sécrétagogue GH",
+      "Lyophilisé pour une stabilité et une durée de conservation maximales",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
+    variants: [
+      { size: "2mg", price: 69.99, batch: "NVX-HEX2-0426",  stripePrice: "price_REPLACE_HEXARELIN_2MG" },
+      { size: "5mg", price: 99.99, batch: "NVX-HEX5-0426", stripePrice: "price_REPLACE_HEXARELIN_5MG" },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% (test par lot à venir)" },
+      { label: "Storage",    value: "−20°C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
     ],
   },
 
@@ -1123,12 +1743,21 @@ const PRODUCTS = [
     glow: "rgba(34,211,238,0.03)",
     shortDesc: "Proprietary dual-peptide research blend combining BPC-157 and TB-500 for integrated research into tissue repair and regenerative signalling pathways.",
     desc: "Novalyx Formula 01 is a proprietary research blend containing BPC-157 (10mg) and TB-500 (10mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. Independently verified by Janoshik Analytical.",
+    shortDesc_fr: "Mélange de recherche propriétaire à double peptide combinant BPC-157 et TB-500 pour la recherche intégrée sur la réparation tissulaire et les voies de signalisation régénératives.",
+    desc_fr: "Novalyx Formula 01 est un mélange de recherche propriétaire contenant BPC-157 (10mg) et TB-500 (10mg) combinés dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Vérifié indépendamment par Janoshik Analytical.",
     details: [
       "Contains BPC-157 and TB-500 in 1:1 ratio",
       "Research into combined regenerative signalling pathways",
       "Single-vial convenience for integrated protocols",
-      "Independently verified by Janoshik Analytical (blend purity confirmed)",
+      "Independent Janoshik batch testing on every production run",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "Contains BPC-157 and TB-500 in 1:1 ratio",
+      "Recherche sur combined regenerative signalling pathways",
+      "Single-vial convenience for integrated protocols",
+      "Test Janoshik indépendant sur chaque lot de production",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "10mg+10mg", price: 189.99, batch: "NVX-F01-0426", stripePrice: "price_REPLACE_FORMULA01" },
@@ -1139,16 +1768,8 @@ const PRODUCTS = [
       { label: "Purity",      value: "Janoshik HPLC verified" },
       { label: "Storage",     value: "−20°C / avoid light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Downloadable after purchase" },
+      { label: "COA",         value: "Janoshik (par lot)" },
     ],
-    verification: {
-      lab: "Janoshik Analytical",
-      country: "Czech Republic",
-      task: "89165",
-      key: "R2E1C4ZVA5YW",
-      purity: "Blend verified",
-      appliesTo: "10mg+10mg",
-    },
   },
   {
     id: "formula02",
@@ -1162,6 +1783,8 @@ const PRODUCTS = [
     glow: "rgba(52,211,153,0.03)",
     shortDesc: "Proprietary dual-peptide research blend combining CJC-1295 and Ipamorelin for integrated research into growth-hormone releasing pathways.",
     desc: "Novalyx Formula 02 is a proprietary research blend containing CJC-1295 (5mg, no DAC) and Ipamorelin (5mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.",
+    shortDesc_fr: "Mélange de recherche propriétaire à double peptide combinant CJC-1295 et Ipamorelin pour la recherche intégrée sur les voies de libération de l'hormone de croissance.",
+    desc_fr: "Novalyx Formula 02 est un mélange de recherche propriétaire contenant CJC-1295 (5mg, sans DAC) et Ipamorelin (5mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de libération de GH dans un protocole intégré.",
     details: [
       "Contains CJC-1295 and Ipamorelin in 1:1 ratio",
       "Research into growth hormone releasing pathways",
@@ -1169,16 +1792,23 @@ const PRODUCTS = [
       "Lyophilized, high-stability formulation",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Contains CJC-1295 and Ipamorelin in 1:1 ratio",
+      "Recherche sur growth hormone releasing pathways",
+      "Single-vial convenience for integrated protocols",
+      "Formulation lyophilisée haute stabilité",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "5mg+5mg", price: 149.99, batch: "NVX-F02-0426", stripePrice: "price_REPLACE_FORMULA02" },
     ],
     commonSpecs: [
       { label: "Composition", value: "CJC-1295 5mg + Ipamorelin 5mg" },
       { label: "Format",      value: "Lyophilised vial" },
-      { label: "Purity",      value: "≥99% (HPLC verified)" },
+      { label: "Purity",      value: "≥99% (test par lot à venir)" },
       { label: "Storage",     value: "−20°C / avoid light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Downloadable after purchase" },
+      { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -1193,6 +1823,8 @@ const PRODUCTS = [
     glow: "rgba(20,184,166,0.04)",
     shortDesc: "Flagship triple-peptide research blend combining BPC-157, GHK-Copper, and TB-500 for comprehensive regenerative research protocols.",
     desc: "Novalyx Formula 03 is our flagship triple-peptide research blend containing BPC-157 (10mg), GHK-Copper (50mg), and TB-500 (10mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.",
+    shortDesc_fr: "Mélange de recherche phare à triple peptide combinant BPC-157, GHK-Cuivre et TB-500 pour des protocoles de recherche régénérative complets.",
+    desc_fr: "Novalyx Formula 03 est notre mélange de recherche phare à triple peptide contenant BPC-157 (10mg), GHK-Cuivre (50mg) et TB-500 (10mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant la signalisation régénérative complète à travers plusieurs voies simultanément.",
     details: [
       "Contains BPC-157 + GHK-Copper + TB-500",
       "Research into comprehensive regenerative pathways",
@@ -1200,16 +1832,23 @@ const PRODUCTS = [
       "Lyophilized, high-stability formulation",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Contains BPC-157 + GHK-Copper + TB-500",
+      "Recherche sur comprehensive regenerative pathways",
+      "Triple-compound single-vial convenience",
+      "Formulation lyophilisée haute stabilité",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "70mg total", price: 329.99, batch: "NVX-F03-0426", stripePrice: "price_REPLACE_FORMULA03" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg" },
       { label: "Format",      value: "Lyophilised vial" },
-      { label: "Purity",      value: "≥99% (HPLC verified)" },
+      { label: "Purity",      value: "≥99% (test par lot à venir)" },
       { label: "Storage",     value: "−20°C / avoid light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Downloadable after purchase" },
+      { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
   /* ─────────── LAB SUPPLIES ─────────── */
@@ -1225,12 +1864,21 @@ const PRODUCTS = [
     glow: "rgba(103,232,249,0.03)",
     shortDesc: "Pharmaceutical-grade bacteriostatic water (0.9% benzyl alcohol) for reconstitution of lyophilised research peptides.",
     desc: "Novalyx Research Bacteriostatic Water is pharmaceutical-grade sterile water containing 0.9% benzyl alcohol as a bacteriostatic agent. Supplied exclusively for laboratory use in the reconstitution of lyophilised research peptides. Each vial is sealed, sterile, and ready for immediate laboratory use.",
+    shortDesc_fr: "Eau bactériostatique de qualité pharmaceutique (alcool benzylique 0,9%) pour la reconstitution des peptides de recherche lyophilisés.",
+    desc_fr: "L'Eau Bactériostatique Novalyx Research est une eau stérile de qualité pharmaceutique contenant 0,9% d'alcool benzylique comme agent bactériostatique. Fournie exclusivement pour usage en laboratoire dans la reconstitution des peptides de recherche lyophilisés. Chaque flacon est scellé, stérile et prêt à l'emploi immédiat en laboratoire.",
     details: [
       "0.9% benzyl alcohol bacteriostatic agent",
       "Pharmaceutical-grade sterile water for injection",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
       "Certificate of Analysis included with every order",
+    ],
+    details_fr: [
+      "0.9% benzyl alcohol bacteriostatic agent",
+      "Pharmaceutical-grade sterile water for injection",
+      "Multi-draw vial — compatible with all lyophilised peptides",
+      "Sealed tamper-evident vial",
+      "Certificat d'analyse inclus avec chaque commande",
     ],
     variants: [
       { size: "3ml vial",   price: 7.99,  batch: "NVX-BW3-0426",   stripePrice: "price_REPLACE_BW3" },
@@ -1243,7 +1891,7 @@ const PRODUCTS = [
       { label: "Grade",       value: "Pharmaceutical-grade" },
       { label: "Storage",     value: "Room temperature / avoid direct light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Downloadable after purchase" },
+      { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -1258,6 +1906,8 @@ const PRODUCTS = [
     glow: "rgba(13,148,136,0.04)",
     shortDesc: "Premium four-peptide research complex combining BPC-157, GHK-Copper, TB-500, and KPV for maximum-coverage regenerative protocols.",
     desc: "Novalyx Formula 04 is our premium four-peptide research complex containing BPC-157 (10mg), GHK-Copper (50mg), TB-500 (10mg), and KPV (10mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.",
+    shortDesc_fr: "Complexe de recherche premium à quatre peptides combinant BPC-157, GHK-Cuivre, TB-500 et KPV pour des protocoles régénératifs à couverture maximale.",
+    desc_fr: "Novalyx Formula 04 est notre complexe de recherche premium à quatre peptides contenant BPC-157 (10mg), GHK-Cuivre (50mg), TB-500 (10mg) et KPV (10mg) dans un seul flacon lyophilisé. Le mélange de recherche régénératif le plus complet de notre catalogue.",
     details: [
       "Contains BPC-157 + GHK-Copper + TB-500 + KPV",
       "Research into maximum-coverage regenerative pathways",
@@ -1265,16 +1915,23 @@ const PRODUCTS = [
       "Lyophilized, high-stability formulation",
       "Certificate of Analysis included with every order",
     ],
+    details_fr: [
+      "Contains BPC-157 + GHK-Copper + TB-500 + KPV",
+      "Recherche sur maximum-coverage regenerative pathways",
+      "Four-compound single-vial convenience",
+      "Formulation lyophilisée haute stabilité",
+      "Certificat d'analyse inclus avec chaque commande",
+    ],
     variants: [
       { size: "80mg total", price: 399.99, batch: "NVX-F04-0426", stripePrice: "price_REPLACE_FORMULA04" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg + KPV 10mg" },
       { label: "Format",      value: "Lyophilised vial" },
-      { label: "Purity",      value: "≥99% (HPLC verified)" },
+      { label: "Purity",      value: "≥99% (test par lot à venir)" },
       { label: "Storage",     value: "−20°C / avoid light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Downloadable after purchase" },
+      { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
 ];
@@ -1501,15 +2158,15 @@ const ProductCard = ({ p, cur, onClick, lang="EN" }) => {
       <div style={{position:"absolute",inset:0,background:p.glow,pointerEvents:"none"}}/>
       <div style={{padding:"24px 24px 0",position:"relative"}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:14}}>
-          <span style={{fontSize:9,letterSpacing:2,fontWeight:700,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{p.tag}</span>
-          {p.badge&&<span style={{fontSize:9,fontWeight:700,color:"#080f1e",background:p.badgeColor,borderRadius:3,padding:"3px 10px"}}>{p.badge}</span>}
+          <span style={{fontSize:9,letterSpacing:2,fontWeight:700,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.tag)}</span>
+          {p.badge&&<span style={{fontSize:9,fontWeight:700,color:"#080f1e",background:p.badgeColor,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.badge)}</span>}
         </div>
         <div style={{width:"100%",height:150,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,background:"rgba(0,0,0,0.18)",borderRadius:12,border:"1px solid rgba(255,255,255,0.06)"}}><ProductIcon color={p.tagColor} size={70}/></div>
       </div>
       <div style={{padding:"0 24px 24px",position:"relative"}}>
         <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:24,fontWeight:800,marginBottom:6}}>{p.name}</h3>
         <div style={{fontSize:10,color:p.tagColor,letterSpacing:1.5,marginBottom:10,fontWeight:600}}>{t(lang,"available_in")} {sizes}</div>
-        <p style={{fontSize:12.5,color:"rgba(255,255,255,0.48)",lineHeight:1.68,marginBottom:14}}>{p.shortDesc}</p>
+        <p style={{fontSize:12.5,color:"rgba(255,255,255,0.48)",lineHeight:1.68,marginBottom:14}}>{lang==="FR"&&p.shortDesc_fr?p.shortDesc_fr:p.shortDesc}</p>
         <p style={{fontSize:10.5,color:"rgba(255,255,255,0.4)",marginBottom:18,lineHeight:1.55}}>
           {t(lang,"coa_dl")}
         </p>
@@ -1540,14 +2197,14 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.78)",backdropFilter:"blur(6px)"}}/>
       <div className="su" style={{position:"relative",zIndex:1,background:"linear-gradient(145deg,#0f2240,#0c1830)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:40,maxWidth:560,width:"100%",maxHeight:"87vh",overflowY:"auto",boxShadow:"0 40px 80px rgba(0,0,0,0.6)"}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:22}}>
-          <span style={{fontSize:9,letterSpacing:2,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{p.tag}</span>
+          <span style={{fontSize:9,letterSpacing:2,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.tag)}</span>
           <span onClick={onClose} style={{cursor:"pointer",fontSize:20,color:"rgba(255,255,255,0.3)"}}>✕</span>
         </div>
         <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><ProductIcon color={p.tagColor} size={72}/></div>
         <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:28,fontWeight:800,marginBottom:10}}>{p.name}</h2>
-        <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.78,marginBottom:18}}>{p.desc}</p>
+        <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.78,marginBottom:18}}>{lang==="FR"&&p.desc_fr?p.desc_fr:p.desc}</p>
         <div style={{marginBottom:22}}>
-          {p.details.map(d=>(
+          {(lang==="FR"&&p.details_fr?p.details_fr:p.details).map(d=>(
             <div key={d} style={{display:"flex",gap:10,marginBottom:7}}>
               <span style={{color:"#4ade80",fontSize:13}}>✓</span>
               <span style={{fontSize:12.5,color:"rgba(255,255,255,0.55)"}}>{d}</span>
@@ -1578,8 +2235,8 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
               {t(lang,"purity_confirmed")} <strong style={{color:"white"}}>{p.verification.purity}</strong> {t(lang,"confirmed_by")} <strong style={{color:"white"}}>{p.verification.lab}</strong> ({p.verification.country}).
             </div>
             <div style={{display:"flex",gap:14,flexWrap:"wrap",fontSize:10,color:"rgba(255,255,255,0.5)",marginBottom:14}}>
-              <span>Task: <strong style={{color:"rgba(255,255,255,0.8)",fontFamily:"monospace"}}>#{p.verification.task}</strong></span>
-              <span>Key: <strong style={{color:"rgba(255,255,255,0.8)",fontFamily:"monospace"}}>{p.verification.key}</strong></span>
+              <span>{lang==="FR"?"Tâche : ":"Task: "}<strong style={{color:"rgba(255,255,255,0.8)",fontFamily:"monospace"}}>#{p.verification.task}</strong></span>
+              <span>{lang==="FR"?"Clé : ":"Key: "}<strong style={{color:"rgba(255,255,255,0.8)",fontFamily:"monospace"}}>{p.verification.key}</strong></span>
             </div>
             <a href="https://janoshik.com/verification" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",fontSize:11,color:"#4ade80",textDecoration:"none",borderBottom:"1px solid rgba(74,222,128,0.4)",paddingBottom:2,letterSpacing:0.5}}>
               {t(lang,"verify_link")}
@@ -1589,13 +2246,13 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
         <div style={{background:"rgba(0,0,0,0.2)",borderRadius:10,padding:18,marginBottom:22}}>
           <div style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
             <span style={{fontSize:11,color:"rgba(255,255,255,0.38)"}}>{t(lang,"size_label")}</span>
-            <span style={{fontSize:12,fontWeight:500}}>{variant.size} / vial</span>
+            <span style={{fontSize:12,fontWeight:500}}>{variant.size} / {lang==="FR"?"flacon":"vial"}</span>
           </div>
           <div style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
             <span style={{fontSize:11,color:"rgba(255,255,255,0.38)"}}>{t(lang,"batch_label")}</span>
             <span style={{fontSize:12,fontWeight:500}}>{variant.batch}</span>
           </div>
-          {p.commonSpecs.map(s=>(
+          {p.commonSpecs.map(s=>({label:tp(lang,s.label),value:tp(lang,s.value)})).map(s=>(
             <div key={s.label} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
               <span style={{fontSize:11,color:"rgba(255,255,255,0.38)"}}>{s.label}</span>
               <span style={{fontSize:12,fontWeight:500}}>{s.value}</span>
@@ -1744,9 +2401,9 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
 
       <div style={{padding:"64px 40px 80px"}}>
         <div style={{marginBottom:44}}>
-          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>BROWSE BY RESEARCH CATEGORY</div>
-          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:38,fontWeight:800,marginBottom:14}}>Explore Our Compounds</h2>
-          <p style={{fontSize:14,color:"rgba(255,255,255,0.45)",maxWidth:560,lineHeight:1.7}}>28 research compounds + lab supplies organized across 9 specialized categories. Click any category to explore.</p>
+          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"BROWSE BY RESEARCH CATEGORY")}</div>
+          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:38,fontWeight:800,marginBottom:14}}>{tg(lang,"Explore Our Compounds")}</h2>
+          <p style={{fontSize:14,color:"rgba(255,255,255,0.45)",maxWidth:560,lineHeight:1.7}}>{lang==="FR"?`${PRODUCTS.length} composés de recherche + fournitures de labo organisés en 9 catégories spécialisées. Cliquez sur une catégorie pour explorer.`:`${PRODUCTS.length} research compounds + lab supplies organized across 9 specialized categories. Click any category to explore.`}</p>
         </div>
 
         {/* CATEGORY TILES */}
@@ -1794,10 +2451,10 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
                   </div>
                 </div>
                 <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:700,color:"#fff",marginBottom:10,letterSpacing:-0.3}}>
-                  {cat.key}
+                  {tp(lang,cat.key)}
                 </h3>
                 <p style={{fontSize:13,color:"rgba(255,255,255,0.55)",lineHeight:1.65,marginBottom:20}}>
-                  {cat.desc}
+                  {tp(lang,cat.desc)}
                 </p>
                 <div style={{display:"flex",alignItems:"center",gap:7,fontSize:11,fontWeight:700,color:cat.color,letterSpacing:1.2}}>
                   EXPLORE
@@ -1811,7 +2468,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
         {/* CTA TO VIEW ALL */}
         <div style={{textAlign:"center",paddingTop:10}}>
           <button onClick={()=>go("products","All")} className="btn g" style={{padding:"14px 34px",borderRadius:10,fontWeight:700,fontSize:12,letterSpacing:1.5}}>
-            VIEW ALL 27 COMPOUNDS →
+            {lang==="FR"?`VOIR TOUS LES ${PRODUCTS.length} COMPOSÉS →`:`VIEW ALL ${PRODUCTS.length} COMPOUNDS →`}
           </button>
         </div>
       </div>
@@ -1820,8 +2477,8 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       <div style={{padding:"0 40px 70px"}}>
         <div style={{background:"#0a1322",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,padding:"48px 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
           <div>
-            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>VERIFIED BY INDEPENDENT EU LABORATORY</div>
-            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>Every batch. Every compound. Fully documented.</h2>
+            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"VERIFIED BY INDEPENDENT EU LABORATORY")}</div>
+            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>{tg(lang,"Every batch. Every compound. Fully documented.")}</h2>
             <p style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.8,marginBottom:24}}>
               Each Novalyx Research batch is analysed by an ISO-accredited European laboratory. HPLC purity, mass spectrometry identity confirmation, heavy-metal screening, sterility and endotoxin testing — included with every order.
             </p>
@@ -1836,25 +2493,26 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16,paddingBottom:12,borderBottom:"2px solid #0a1322"}}>
               <div>
                 <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:14,fontWeight:800,letterSpacing:2}}>NOVALYX RESEARCH</div>
-                <div style={{fontSize:8,letterSpacing:1,color:"#4ade80",marginTop:2}}>CERTIFICATE OF ANALYSIS</div>
+                <div style={{fontSize:8,letterSpacing:1,color:"#4ade80",marginTop:2}}>{tg(lang,"CERTIFICATE OF ANALYSIS")}</div>
+                <div style={{fontSize:7,letterSpacing:1,color:"#9ca3af",marginTop:2,fontWeight:700}}>{lang==="FR"?"EXEMPLE ILLUSTRATIF":"ILLUSTRATIVE SAMPLE"}</div>
               </div>
               <div style={{width:50,height:50,borderRadius:"50%",border:"2px solid #4ade80",display:"flex",alignItems:"center",justifyContent:"center",transform:"rotate(-12deg)"}}>
                 <div style={{fontSize:8,color:"#4ade80",fontWeight:800,textAlign:"center",letterSpacing:0.5,lineHeight:1.1}}>EU<br/>VERIFIED</div>
               </div>
             </div>
             <div style={{fontSize:10,lineHeight:1.9,color:"#0a1322"}}>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Product:</span><span style={{fontWeight:600}}>BPC-157 5mg</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Batch:</span><span style={{fontWeight:600}}>NVX-BPC-0426</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Purity (HPLC):</span><span style={{fontWeight:600,color:"#059669"}}>99.4%</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>MS identity:</span><span style={{fontWeight:600,color:"#059669"}}>Confirmed</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Heavy metals:</span><span style={{fontWeight:600,color:"#059669"}}>Pass</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Sterility:</span><span style={{fontWeight:600,color:"#059669"}}>Pass</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}><span style={{color:"#6b7280"}}>Endotoxins:</span><span style={{fontWeight:600,color:"#059669"}}>&lt; 0.5 EU/mg</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Product:")}</span><span style={{fontWeight:600}}>BPC-157 5mg</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Batch:")}</span><span style={{fontWeight:600}}>NVX-BPC-0426</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Purity (HPLC):")}</span><span style={{fontWeight:600,color:"#059669"}}>99.4%</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"MS identity:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Confirmed")}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Heavy metals:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Pass")}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Sterility:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Pass")}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Endotoxins:")}</span><span style={{fontWeight:600,color:"#059669"}}>&lt; 0.5 EU/mg</span></div>
             </div>
             <div style={{marginTop:"auto",paddingTop:18,borderTop:"1px solid #e5e7eb",display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
               <div>
                 <div style={{fontFamily:"'Brush Script MT',cursive",fontSize:18,color:"#0a1322",transform:"rotate(-4deg)",lineHeight:1}}>Dr. L. Moreau</div>
-                <div style={{fontSize:7,color:"#6b7280",marginTop:3,letterSpacing:0.5}}>LEAD ANALYTICAL CHEMIST</div>
+                <div style={{fontSize:7,color:"#6b7280",marginTop:3,letterSpacing:0.5}}>{tg(lang,"LEAD ANALYTICAL CHEMIST")}</div>
               </div>
               <div style={{fontSize:7,color:"#6b7280",textAlign:"right",lineHeight:1.4}}>Tested: 04/2026<br/>ISO 17025 Lab</div>
             </div>
@@ -1904,16 +2562,16 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             </div>
           </div>
           <div>
-            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>PROFESSIONAL PACKAGING</div>
-            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>Shipped ready for the lab.</h2>
+            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"PROFESSIONAL PACKAGING")}</div>
+            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>{tg(lang,"Shipped ready for the lab.")}</h2>
             <p style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.8,marginBottom:20}}>
-              Each Novalyx Research compound arrives in tamper-evident packaging, fully labelled for laboratory handling — product name, batch code, storage conditions, and regulatory markings all visible at a glance.
+              {lang==="FR"?"Chaque composé Novalyx Research arrive dans un emballage inviolable, entièrement étiqueté pour la manipulation en laboratoire — nom du produit, code de lot, conditions de stockage et marquages réglementaires visibles en un coup d'œil.":"Each Novalyx Research compound arrives in tamper-evident packaging, fully labelled for laboratory handling — product name, batch code, storage conditions, and regulatory markings all visible at a glance."}
             </p>
             <ul style={{listStyle:"none",fontSize:12.5,color:"rgba(255,255,255,0.55)",lineHeight:2}}>
-              <li>✓ Tamper-evident seals on every vial</li>
-              <li>✓ Cold-chain insulated shipping</li>
-              <li>✓ Batch code printed on label + packaging</li>
-              <li>✓ Full regulatory labelling (research use only)</li>
+              <li>{lang==="FR"?"✓ Sceaux inviolables sur chaque flacon":"✓ Tamper-evident seals on every vial"}</li>
+              <li>{lang==="FR"?"✓ Expédition isotherme chaîne du froid":"✓ Cold-chain insulated shipping"}</li>
+              <li>{lang==="FR"?"✓ Code de lot imprimé sur l'étiquette + emballage":"✓ Batch code printed on label + packaging"}</li>
+              <li>{lang==="FR"?"✓ Étiquetage réglementaire complet (usage recherche uniquement)":"✓ Full regulatory labelling (research use only)"}</li>
             </ul>
           </div>
         </div>
@@ -1922,8 +2580,8 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       {/* WHY NOVALYX — cleaner version */}
       <div style={{padding:"0 40px 80px"}}>
         <div style={{background:"#0a1322",borderRadius:14,padding:"48px 40px",border:"1px solid rgba(255,255,255,0.06)"}}>
-          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>WHY NOVALYX</div>
-          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:40,maxWidth:460}}>Built for researchers who demand more.</h2>
+          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"WHY NOVALYX")}</div>
+          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:40,maxWidth:460}}>{tg(lang,"Built for researchers who demand more.")}</h2>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:28}}>
             {[["Independent Testing","Every batch verified by accredited third-party labs."],["Full Transparency","COA available for every product, every batch."],["Controlled Fulfillment","Secure handling, batch traceability, cold-chain across Europe."],["Stripe Secured","All payments handled by Stripe. Your data is safe."]].map(([title,desc])=>(
               <div key={title} style={{paddingTop:20,borderTop:"1px solid rgba(74,222,128,0.25)"}}>
@@ -1939,9 +2597,9 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       <div style={{padding:"0 40px 80px"}}>
         <div style={{background:"linear-gradient(135deg,#0c1c2e,#0f2240)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:20,padding:"48px 48px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:28}}>
           <div style={{maxWidth:460}}>
-            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>FOR LABS & BULK ORDERS</div>
+            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"FOR LABS & BULK ORDERS")}</div>
             <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:28,fontWeight:800,marginBottom:12}}>B2B & Institutional Supply</h2>
-            <p style={{fontSize:13.5,color:"rgba(255,255,255,0.48)",lineHeight:1.75}}>Contact us for bulk pricing, long-term supply agreements, and dedicated account support for research institutions.</p>
+            <p style={{fontSize:13.5,color:"rgba(255,255,255,0.48)",lineHeight:1.75}}>{tg(lang,"Contact us for bulk pricing, long-term supply agreements, and dedicated account support for research institutions.")}</p>
           </div>
           <button className="btn g" onClick={()=>go("contact")} style={{padding:"14px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>REQUEST BULK PRICING →</button>
         </div>
@@ -1951,18 +2609,18 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
         <div style={{background:"linear-gradient(135deg,#0a1628,#0d1e38)",border:"1px solid rgba(74,222,128,0.15)",borderRadius:20,padding:"56px 48px",textAlign:"center",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",inset:0,opacity:0.02,backgroundImage:"linear-gradient(#4ade80 1px,transparent 1px),linear-gradient(90deg,#4ade80 1px,transparent 1px)",backgroundSize:"40px 40px"}}/>
           <div style={{position:"relative"}}>
-            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>STAY INFORMED</div>
-            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:34,fontWeight:800,marginBottom:14}}>First Access. New Compounds. COA Alerts.</h2>
-            <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:32,maxWidth:420,margin:"0 auto 32px"}}>Join the Novalyx research list for early product access and batch notifications.</p>
+            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"STAY INFORMED")}</div>
+            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:34,fontWeight:800,marginBottom:14}}>{tg(lang,"First Access. New Compounds. COA Alerts.")}</h2>
+            <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:32,maxWidth:420,margin:"0 auto 32px"}}>{tg(lang,"Join the Novalyx research list for early product access and batch notifications.")}</p>
             {subOk
               ? <div style={{color:"#4ade80",fontWeight:600,fontSize:15}}>✓ You're on the list.</div>
               : <div style={{display:"flex",gap:10,maxWidth:420,margin:"0 auto",justifyContent:"center",flexWrap:"wrap"}}>
                   <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="your@email.com"
                     style={{flex:1,minWidth:210,padding:"12px 16px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:8,color:"white",fontSize:13}}/>
-                  <button className="btn solid" onClick={()=>{if(email.includes("@"))setSubOk(true);}} style={{padding:"12px 24px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>SUBSCRIBE</button>
+                  <button className="btn solid" onClick={()=>{if(email.includes("@"))setSubOk(true);}} style={{padding:"12px 24px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>{tg(lang,"SUBSCRIBE")}</button>
                 </div>
             }
-            <div style={{fontSize:10,color:"rgba(255,255,255,0.2)",marginTop:14}}>No spam. Research professionals only.</div>
+            <div style={{fontSize:10,color:"rgba(255,255,255,0.2)",marginTop:14}}>{tg(lang,"No spam. Research professionals only.")}</div>
           </div>
         </div>
       </div>
@@ -2047,7 +2705,7 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
           <div key={g.category} style={{marginBottom:56}}>
             <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:22}}>
               <div style={{width:4,height:22,background:g.color,borderRadius:2}}/>
-              <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:700,letterSpacing:-0.3}}>{g.category}</h2>
+              <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:700,letterSpacing:-0.3}}>{tp(lang,g.category)}</h2>
               <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",letterSpacing:1}}>{g.products.length} {g.products.length>1?t(lang,"compounds"):t(lang,"compound")}</div>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:24}}>
@@ -2070,12 +2728,12 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
   );
 };
 
-const COAPage = () => (
+const COAPage = ({ lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{marginBottom:48}}>
-      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>TRANSPARENCY</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>COA Library</h1>
-      <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:500}}>Every batch tested. Every result published. Download COAs for all current Novalyx products.</p>
+      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"TRANSPARENCY")}</div>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>{tg(lang,"COA Library")}</h1>
+      <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:540}}>{lang==="FR"?"Chaque lot est testé indépendamment par Janoshik Analytical. Le certificat d'analyse de chaque lot est publié ici avec son numéro de vérification unique, consultable sur le portail Janoshik.":"Every batch is independently tested by Janoshik Analytical. Each batch's Certificate of Analysis is published here with its unique verification number, checkable on the Janoshik portal."}</p>
     </div>
     {PRODUCTS.map(p=>(
       <div key={p.id} style={{background:"linear-gradient(135deg,#0f2240,#0c1a2e)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"24px 28px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:18}}>
@@ -2083,34 +2741,37 @@ const COAPage = () => (
           <ProductIcon color={p.tagColor} size={40}/>
           <div>
             <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:18,fontWeight:700,marginBottom:4}}>{p.name}</h3>
-            <div style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>Batch #NVX-2026-{p.id.toUpperCase()}-001 · Tested April 2026</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>{lang==="FR"?"COA Janoshik publié par lot — vérification incluse":"Janoshik COA published per batch — verification included"}</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8}}>
-          {[["Purity","≥99%"],["Heavy Metals","Pass"],["Sterility","Pass"],["Endotoxins","Pass"]].map(([l,v])=>(
+          {[[lang==="FR"?"Pureté":"Purity","HPLC"],[lang==="FR"?"Identité":"Identity","MS"],[lang==="FR"?"Labo":"Lab","Janoshik"]].map(([l,v])=>(
             <div key={l} style={{textAlign:"center",background:"rgba(74,222,128,0.06)",border:"1px solid rgba(74,222,128,0.15)",borderRadius:8,padding:"7px 12px"}}>
               <div style={{fontSize:12,fontWeight:700,color:"#4ade80"}}>{v}</div>
               <div style={{fontSize:8.5,color:"rgba(255,255,255,0.35)",marginTop:2}}>{l}</div>
             </div>
           ))}
         </div>
-        <button className="btn g" style={{padding:"9px 18px",borderRadius:8,fontSize:11,fontWeight:700,letterSpacing:0.5}}>⬇ DOWNLOAD COA</button>
+        <div style={{textAlign:"center",background:"rgba(251,191,36,0.08)",border:"1px solid rgba(251,191,36,0.25)",borderRadius:8,padding:"9px 18px",fontSize:11,fontWeight:700,letterSpacing:0.3,color:"#fbbf24"}}>{lang==="FR"?"⏱ Disponible avec votre lot":"⏱ Available with your batch"}</div>
       </div>
     ))}
-    <div style={{marginTop:32,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"22px 28px",fontSize:12,color:"rgba(255,255,255,0.35)",lineHeight:1.8}}>
-      <strong style={{color:"rgba(255,255,255,0.5)"}}>About our testing:</strong> All products are independently tested by Janoshik Analytical (Czech Republic), a respected third-party peptide testing laboratory. Tests include HPLC purity and identity assessment. COAs are batch-specific and renewed with every production run.
+    <div style={{marginTop:32,background:"rgba(74,222,128,0.05)",border:"1px solid rgba(74,222,128,0.18)",borderRadius:12,padding:"22px 28px",fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.8}}>
+      <strong style={{color:"#4ade80"}}>{lang==="FR"?"Comment ça marche :":"How it works:"}</strong> {lang==="FR"?"Chaque lot est testé individuellement par Janoshik avant expédition. Le COA correspondant à VOTRE lot, avec son numéro de vérification unique, vous est fourni avec votre commande et publié sur cette page. Vous pouvez vérifier l'authenticité directement sur le portail Janoshik.":"Each batch is tested individually by Janoshik before dispatch. The COA matching YOUR batch, with its unique verification number, is provided with your order and published on this page. You can verify authenticity directly on the Janoshik portal."}
+    </div>
+    <div style={{marginTop:16,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"22px 28px",fontSize:12,color:"rgba(255,255,255,0.35)",lineHeight:1.8}}>
+      <strong style={{color:"rgba(255,255,255,0.5)"}}>{lang==="FR"?"À propos de nos tests :":"About our testing:"}</strong> {lang==="FR"?"Tous les produits sont testés indépendamment par Janoshik Analytical (République tchèque), un laboratoire tiers reconnu de test de peptides. Les tests incluent la pureté HPLC et l'évaluation de l'identité. Les COA sont spécifiques au lot et renouvelés à chaque production.":"All products are independently tested by Janoshik Analytical (Czech Republic), a respected third-party peptide testing laboratory. Tests include HPLC purity and identity assessment. COAs are batch-specific and renewed with every production run."}
     </div>
   </div>
 );
 
-const AboutPage = ({ go }) => (
+const AboutPage = ({ go, lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
-      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>OUR STORY</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:28,lineHeight:1.1}}>Research-First.<br/>Transparency Always.</h1>
-      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>Novalyx was founded with one mission: to give research professionals access to the highest-purity peptides available, with complete transparency at every step. No compromises on quality. No ambiguity on documentation.</p>
-      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>Every product we supply goes through rigorous independent testing before it reaches our customers. We publish every COA. We document every batch. Transparency isn't just good practice — it's the only acceptable standard.</p>
-      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:48}}>Our launch catalog spans regenerative, metabolic, longevity, immune, nootropic, and sleep research — with dedicated signature blends for integrated protocols. Quality over quantity, always.</p>
+      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"OUR STORY")}</div>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:28,lineHeight:1.1}}>{tg(lang,"Research-First.")}<br/>{tg(lang,"Transparency Always.")}</h1>
+      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>{lang==="FR"?"Novalyx a été fondé avec une mission : donner aux professionnels de la recherche accès aux peptides de plus haute pureté disponibles, avec une transparence totale à chaque étape. Aucun compromis sur la qualité. Aucune ambiguïté sur la documentation.":"Novalyx was founded with one mission: to give research professionals access to the highest-purity peptides available, with complete transparency at every step. No compromises on quality. No ambiguity on documentation."}</p>
+      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>{lang==="FR"?"Chaque produit que nous fournissons passe par des tests indépendants rigoureux avant d'atteindre nos clients. Nous publions chaque COA. Nous documentons chaque lot. La transparence n'est pas seulement une bonne pratique — c'est la seule norme acceptable.":"Every product we supply goes through rigorous independent testing before it reaches our customers. We publish every COA. We document every batch. Transparency isn't just good practice — it's the only acceptable standard."}</p>
+      <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:48}}>{lang==="FR"?"Notre catalogue de lancement couvre la recherche régénérative, métabolique, de longévité, immunitaire, nootropique et sur le sommeil — avec des mélanges signature dédiés pour des protocoles intégrés. La qualité avant la quantité, toujours.":"Our launch catalog spans regenerative, metabolic, longevity, immune, nootropic, and sleep research — with dedicated signature blends for integrated protocols. Quality over quantity, always."}</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:20,marginBottom:48}}>
         {[["🔬","Lab-First","Every decision starts with science, not marketing."],["📋","Open Docs","Full COA library, published for every batch."],["🤝","Researcher-Led","Built by and for serious research professionals."],["🌍","Global Delivery","EU-based fulfillment with international coverage."]].map(([icon,title,desc])=>(
           <div key={title} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"20px 18px"}}>
@@ -2120,14 +2781,24 @@ const AboutPage = ({ go }) => (
           </div>
         ))}
       </div>
-      <button className="btn solid" onClick={()=>go("products")} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>VIEW OUR PRODUCTS</button>
+      <button className="btn solid" onClick={()=>go("products")} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>{tg(lang,"VIEW OUR PRODUCTS")}</button>
     </div>
   </div>
 );
 
-const FAQPage = () => {
+const FAQPage = ({ lang="EN" }) => {
   const [open,setOpen] = useState(null);
-  const faqs = [
+  const faqs = lang === "FR" ? [
+    ["Que sont les peptides de recherche ?","Les peptides de recherche sont des substances fournies exclusivement pour la recherche scientifique et en laboratoire. Ils ne sont pas destinés à un usage humain ou vétérinaire, à la consommation ou à des fins thérapeutiques."],
+    ["Qui peut acheter chez Novalyx ?","Les produits Novalyx sont disponibles pour les chercheurs qualifiés et les professionnels de laboratoire opérant en conformité avec les lois et réglementations locales applicables."],
+    ["Qu'est-ce qu'un Certificat d'Analyse (COA) ?","Un COA est un document de laboratoire tiers confirmant l'identité, la pureté et le profil de sécurité d'un peptide. Novalyx inclut un COA spécifique au lot avec chaque commande."],
+    ["Comment les produits sont-ils expédiés ?","Les commandes sont traitées dans des conditions d'expédition contrôlées et approvisionnées par commande auprès de nos partenaires de laboratoire vérifiés. La livraison en Europe prend généralement 2 à 3 semaines selon la destination et la disponibilité du lot."],
+    ["Comment payer ?","Nous utilisons Stripe — l'un des processeurs de paiement les plus fiables au monde. Nous acceptons toutes les principales cartes de crédit et de débit. Vos données de paiement ne touchent jamais nos serveurs."],
+    ["Quelle est votre politique de retour ?","Si un produit ne correspond pas aux spécifications de son COA, contactez-nous dans les 7 jours. Nous enquêterons et organiserons un remplacement ou un remboursement le cas échéant."],
+    ["Vos produits sont-ils légaux dans mon pays ?","Le statut réglementaire varie selon la juridiction. Il est de votre responsabilité de vérifier la conformité avec les lois de votre pays avant d'acheter."],
+    ["Comment stocker ces peptides ?","Tous les peptides lyophilisés doivent être stockés à −20°C, à l'abri de la lumière. Des instructions spécifiques de stockage et de reconstitution accompagnent chaque commande."],
+    ["Expédiez-vous hors UE ?","Nous nous concentrons actuellement sur l'expédition UE. Contactez-nous à contact@novalyxresearch.com pour les demandes concernant d'autres régions."],
+  ] : [
     ["What are research peptides?","Research peptides are substances supplied exclusively for scientific and laboratory research. They are not intended for human or veterinary use, consumption, or therapeutic purposes."],
     ["Who can purchase from Novalyx?","Novalyx products are available to qualified researchers and laboratory professionals operating in compliance with applicable local laws and regulations."],
     ["What is a Certificate of Analysis (COA)?","A COA is a third-party laboratory document confirming the identity, purity, and safety profile of a peptide. Novalyx includes a batch-specific COA with every order."],
@@ -2136,14 +2807,14 @@ const FAQPage = () => {
     ["What is your returns policy?","If a product does not match its COA specifications, contact us within 7 days. We will investigate and arrange a replacement or refund where appropriate."],
     ["Are your products legal in my country?","Regulatory status varies by jurisdiction. It is your responsibility to verify compliance with the laws of your country before purchasing."],
     ["How do I store these peptides?","All lyophilized peptides should be stored at −20°C, away from light. Specific storage and reconstitution instructions accompany every order."],
-    ["Do you ship outside the EU?","We currently focus on EU dispatch. Contact us at info@novalyxresearch.com for enquiries about other regions."],
+    ["Do you ship outside the EU?","We currently focus on EU dispatch. Contact us at contact@novalyxresearch.com for enquiries about other regions."],
   ];
   return (
     <div style={{padding:"60px 40px 100px"}}>
       <div style={{maxWidth:720,margin:"0 auto"}}>
-        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>SUPPORT</div>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"SUPPORT")}</div>
         <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>FAQ</h1>
-        <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>Common questions about products, ordering, and compliance.</p>
+        <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>{tg(lang,"Common questions about products, ordering, and compliance.")}</p>
         {faqs.map(([q,a],i)=>(
           <div key={i} style={{borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
             <div onClick={()=>setOpen(open===i?null:i)} style={{padding:"18px 0",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -2158,43 +2829,43 @@ const FAQPage = () => {
   );
 };
 
-const ContactPage = () => {
+const ContactPage = ({ lang="EN" }) => {
   const [form,setForm] = useState({name:"",email:"",subject:"",message:""});
   const [sent,setSent] = useState(false);
   const inp = {width:"100%",padding:"12px 16px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,color:"white",fontSize:13};
   return (
     <div style={{padding:"60px 40px 100px"}}>
       <div style={{maxWidth:680,margin:"0 auto"}}>
-        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>GET IN TOUCH</div>
-        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>Contact Us</h1>
-        <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>Questions about products, orders, or compliance? We respond within 1 business day.</p>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"GET IN TOUCH")}</div>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:44,fontWeight:800,marginBottom:12}}>{tg(lang,"Contact Us")}</h1>
+        <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",marginBottom:44}}>{tg(lang,"Questions about products, orders, or compliance? We respond within 1 business day.")}</p>
         {sent
           ? <div style={{background:"rgba(74,222,128,0.08)",border:"1px solid rgba(74,222,128,0.25)",borderRadius:12,padding:32,textAlign:"center"}}>
               <div style={{fontSize:36,marginBottom:14}}>✅</div>
-              <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:20,fontWeight:700,marginBottom:8}}>Message received</div>
+              <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:20,fontWeight:700,marginBottom:8}}>{tg(lang,"Message received")}</div>
               <div style={{fontSize:13,color:"rgba(255,255,255,0.45)"}}>We'll be back within 1 business day.</div>
             </div>
           : <div style={{display:"flex",flexDirection:"column",gap:16}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
                 <div>
-                  <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>FULL NAME</div>
-                  <input style={inp} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Dr. Jane Smith"/>
+                  <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>{tg(lang,"FULL NAME")}</div>
+                  <input style={inp} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder={lang==="FR"?"Dr. Jean Dupont":"Dr. Jane Smith"}/>
                 </div>
                 <div>
-                  <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>EMAIL</div>
+                  <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>{tg(lang,"EMAIL")}</div>
                   <input style={inp} value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="jane@lab.eu"/>
                 </div>
               </div>
               <div>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>SUBJECT</div>
-                <input style={inp} value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})} placeholder="Product enquiry / Order / Other"/>
+                <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>{tg(lang,"SUBJECT")}</div>
+                <input style={inp} value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})} placeholder={lang==="FR"?"Demande produit / Commande / Autre":"Product enquiry / Order / Other"}/>
               </div>
               <div>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>MESSAGE</div>
-                <textarea style={{...inp,height:140,resize:"vertical"}} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="Your message..."/>
+                <div style={{fontSize:10,color:"rgba(255,255,255,0.38)",letterSpacing:1,marginBottom:7}}>{tg(lang,"MESSAGE")}</div>
+                <textarea style={{...inp,height:140,resize:"vertical"}} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder={lang==="FR"?"Votre message...":"Your message..."}/>
               </div>
-              <button className="btn solid" onClick={()=>{if(form.name&&form.email&&form.message)setSent(true);}} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1,alignSelf:"flex-start"}}>SEND MESSAGE</button>
-              <div style={{fontSize:10.5,color:"rgba(255,255,255,0.22)",lineHeight:1.7}}>By submitting you agree to our Privacy Policy. We do not share your data with third parties.</div>
+              <button className="btn solid" onClick={()=>{if(form.name&&form.email&&form.message)setSent(true);}} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1,alignSelf:"flex-start"}}>{tg(lang,"SEND MESSAGE")}</button>
+              <div style={{fontSize:10.5,color:"rgba(255,255,255,0.22)",lineHeight:1.7}}>{tg(lang,"By submitting you agree to our Privacy Policy. We do not share your data with third parties.")}</div>
             </div>
         }
         <div style={{marginTop:48,display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:16}}>
@@ -2211,10 +2882,10 @@ const ContactPage = () => {
   );
 };
 
-const Legal = ({ title, children }) => (
+const Legal = ({ title, children, lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
-      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>LEGAL</div>
+      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"LEGAL")}</div>
       <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:40,fontWeight:800,marginBottom:32}}>{title}</h1>
       <div style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.9}}>{children}</div>
     </div>
@@ -2222,54 +2893,63 @@ const Legal = ({ title, children }) => (
 );
 const S = ({t,children}) => <div style={{marginBottom:28}}><h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:17,fontWeight:700,color:"white",marginBottom:9}}>{t}</h3>{children}</div>;
 
-const PrivacyPage = () => (
-  <Legal title="Privacy Policy">
-    <p style={{marginBottom:14}}>Last updated: April 2026 · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
-    <S t="1. Who We Are"><p>Novalyx operates this website and is responsible for your personal data in accordance with the GDPR.</p></S>
-    <S t="2. Data We Collect"><p>Name, email, shipping address, and order details you provide directly. Anonymised usage data via analytics to improve our site.</p></S>
-    <S t="3. How We Use Your Data"><p>To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details.</p></S>
-    <S t="4. Data Sharing"><p>We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements.</p></S>
-    <S t="5. Your Rights"><p>Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email {CONFIG.EMAIL}.</p></S>
-    <S t="6. Cookies"><p>Essential cookies for functionality only. Analytics cookies placed with consent only.</p></S>
-    <S t="7. Contact"><p>Data enquiries: {CONFIG.EMAIL}</p></S>
+const PrivacyPage = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  return (
+  <Legal lang={lang} title={FR ? "Politique de Confidentialité" : "Privacy Policy"}>
+    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : avril 2026" : "Last updated: April 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
+    <S t={FR ? "1. Qui Sommes-Nous" : "1. Who We Are"}><p>{FR ? "Novalyx exploite ce site web et est responsable de vos données personnelles conformément au RGPD." : "Novalyx operates this website and is responsible for your personal data in accordance with the GDPR."}</p></S>
+    <S t={FR ? "2. Données Collectées" : "2. Data We Collect"}><p>{FR ? "Nom, email, adresse de livraison et détails de commande que vous fournissez directement. Données d'utilisation anonymisées via les analyses pour améliorer notre site." : "Name, email, shipping address, and order details you provide directly. Anonymised usage data via analytics to improve our site."}</p></S>
+    <S t={FR ? "3. Utilisation de Vos Données" : "3. How We Use Your Data"}><p>{FR ? "Pour traiter les commandes, fournir un support, envoyer des communications de commande et — avec consentement — des annonces de produits. Les données de paiement sont traitées par Stripe ; nous ne voyons ni ne stockons jamais les détails de votre carte." : "To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details."}</p></S>
+    <S t={FR ? "4. Partage des Données" : "4. Data Sharing"}><p>{FR ? "Nous ne vendons pas vos données. Nous les partageons uniquement avec les partenaires logistiques et de paiement (Stripe) dans le cadre d'accords de traitement stricts." : "We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements."}</p></S>
+    <S t={FR ? "5. Vos Droits" : "5. Your Rights"}><p>{FR ? "Selon le RGPD : accéder, rectifier, effacer, restreindre, porter vos données ou vous opposer au traitement. Email " : "Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email "}{CONFIG.EMAIL}.</p></S>
+    <S t={FR ? "6. Cookies" : "6. Cookies"}><p>{FR ? "Cookies essentiels pour la fonctionnalité uniquement. Cookies d'analyse placés avec consentement uniquement." : "Essential cookies for functionality only. Analytics cookies placed with consent only."}</p></S>
+    <S t={FR ? "7. Contact" : "7. Contact"}><p>{FR ? "Demandes relatives aux données : " : "Data enquiries: "}{CONFIG.EMAIL}</p></S>
   </Legal>
-);
+  );
+};
 
-const TermsPage = () => (
-  <Legal title="Terms & Conditions">
-    <p style={{marginBottom:14}}>Last updated: April 2026 · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
-    <S t="1. Acceptance"><p>By using this website or placing an order you agree to these Terms. If you disagree, do not use this site.</p></S>
-    <S t="2. Research Use Only"><p>All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully.</p></S>
-    <S t="3. Age Restriction"><p>You must be 18+ to purchase. Completing a purchase confirms you meet this requirement.</p></S>
-    <S t="4. Orders & Payment"><p>Prices are shown in EUR and do not include VAT (TVA non applicable, art. 293B du CGI — French micro-entrepreneur regime). Payment is processed securely by Stripe. We reserve the right to cancel orders, with a full refund issued.</p></S>
-    <S t="5. Shipping & International Orders"><p>Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Delivery across Europe typically takes 2–3 weeks; international destinations 3–5 weeks. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.</p><p>For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks.</p></S>
-    <S t="6. Returns"><p>Contact us within 7 days if products arrive damaged or do not match COA specs. Opened compounds cannot be returned for safety reasons.</p></S>
-    <S t="7. Limitation of Liability"><p>Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products.</p></S>
-    <S t="8. Governing Law"><p>Governed by French law and applicable EU regulations.</p></S>
+const TermsPage = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  return (
+  <Legal lang={lang} title={FR ? "Conditions Générales" : "Terms & Conditions"}>
+    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : avril 2026" : "Last updated: April 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
+    <S t={FR ? "1. Acceptation" : "1. Acceptance"}><p>{FR ? "En utilisant ce site web ou en passant une commande, vous acceptez ces Conditions. Si vous n'êtes pas d'accord, n'utilisez pas ce site." : "By using this website or placing an order you agree to these Terms. If you disagree, do not use this site."}</p></S>
+    <S t={FR ? "2. Usage Recherche Uniquement" : "2. Research Use Only"}><p>{FR ? "Tous les produits sont destinés exclusivement à la recherche in-vitro en laboratoire. Pas pour usage humain ou vétérinaire. En achetant, vous confirmez être un chercheur qualifié agissant légalement." : "All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully."}</p></S>
+    <S t={FR ? "3. Restriction d'Âge" : "3. Age Restriction"}><p>{FR ? "Vous devez avoir 18 ans ou plus pour acheter. Finaliser un achat confirme que vous remplissez cette condition." : "You must be 18+ to purchase. Completing a purchase confirms you meet this requirement."}</p></S>
+    <S t={FR ? "4. Commandes & Paiement" : "4. Orders & Payment"}><p>{FR ? "Les prix sont affichés en EUR et n'incluent pas la TVA (TVA non applicable, art. 293B du CGI — régime micro-entrepreneur français). Le paiement est traité de manière sécurisée par Stripe. Nous nous réservons le droit d'annuler des commandes, avec remboursement intégral." : "Prices are shown in EUR and do not include VAT (TVA non applicable, art. 293B du CGI — French micro-entrepreneur regime). Payment is processed securely by Stripe. We reserve the right to cancel orders, with a full refund issued."}</p></S>
+    <S t={FR ? "5. Livraison & Commandes Internationales" : "5. Shipping & International Orders"}><p>{FR ? "Les commandes sont traitées dans des conditions d'expédition contrôlées avec approvisionnement par lot et par commande auprès de nos partenaires de laboratoire vérifiés. La livraison en Europe prend généralement 2 à 3 semaines ; les destinations internationales 3 à 5 semaines. Les délais de livraison sont des estimations, pas des garanties. Le risque est transféré à l'acheteur dès l'expédition." : "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Delivery across Europe typically takes 2–3 weeks; international destinations 3–5 weeks. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch."}</p><p>{FR ? "Pour les commandes internationales (hors Union Européenne), l'acheteur est seul responsable de vérifier que les produits peuvent être légalement importés dans sa juridiction, de payer les droits de douane, taxes ou frais de dédouanement applicables, et de respecter toutes les lois locales régissant les composés de recherche. Novalyx Research n'agit pas en tant qu'importateur officiel. Les colis saisis, détruits, refusés ou retournés par les autorités douanières dans toute juridiction hors UE ne sont pas remboursables. En passant une commande internationale, l'acheteur reconnaît et accepte expressément ces risques." : "For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks."}</p></S>
+    <S t={FR ? "6. Retours" : "6. Returns"}><p>{FR ? "Contactez-nous dans les 7 jours si les produits arrivent endommagés ou ne correspondent pas aux spécifications du COA. Les composés ouverts ne peuvent pas être retournés pour des raisons de sécurité." : "Contact us within 7 days if products arrive damaged or do not match COA specs. Opened compounds cannot be returned for safety reasons."}</p></S>
+    <S t={FR ? "7. Limitation de Responsabilité" : "7. Limitation of Liability"}><p>{FR ? "Novalyx n'est pas responsable de la mauvaise utilisation des produits, ni des dommages indirects ou consécutifs résultant de l'utilisation de ce site web ou des produits." : "Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products."}</p></S>
+    <S t={FR ? "8. Droit Applicable" : "8. Governing Law"}><p>{FR ? "Régi par le droit français et les réglementations européennes applicables." : "Governed by French law and applicable EU regulations."}</p></S>
   </Legal>
-);
+  );
+};
 
-const DisclaimerPage = () => (
-  <Legal title="Disclaimer">
-    <S t="Research Use Only"><p>All products are intended exclusively for scientific research by qualified professionals in appropriate laboratory settings. They are not drugs, supplements, or food products.</p></S>
-    <S t="Not for Human Use"><p>No product sold by Novalyx is intended for human or veterinary administration. Novalyx expressly disclaims liability for any use contrary to this designation.</p></S>
-    <S t="No Medical Advice"><p>Nothing on this website constitutes medical advice. No claims are made regarding health benefits or therapeutic effects of any compound.</p></S>
-    <S t="Regulatory Compliance"><p>It is the purchaser's sole responsibility to verify that a compound is legal in their jurisdiction. Novalyx makes no representation regarding regulatory status in any country.</p></S>
-    <S t="Accuracy"><p>COA documents represent the definitive specification per batch. While we strive for accuracy, we do not warrant all website content is error-free.</p></S>
+const DisclaimerPage = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  return (
+  <Legal lang={lang} title={FR ? "Avertissement" : "Disclaimer"}>
+    <S t={FR ? "Usage Recherche Uniquement" : "Research Use Only"}><p>{FR ? "Tous les produits sont destinés exclusivement à la recherche scientifique par des professionnels qualifiés dans des environnements de laboratoire appropriés. Ce ne sont pas des médicaments, compléments ou produits alimentaires." : "All products are intended exclusively for scientific research by qualified professionals in appropriate laboratory settings. They are not drugs, supplements, or food products."}</p></S>
+    <S t={FR ? "Pas pour Usage Humain" : "Not for Human Use"}><p>{FR ? "Aucun produit vendu par Novalyx n'est destiné à une administration humaine ou vétérinaire. Novalyx décline expressément toute responsabilité pour tout usage contraire à cette désignation." : "No product sold by Novalyx is intended for human or veterinary administration. Novalyx expressly disclaims liability for any use contrary to this designation."}</p></S>
+    <S t={FR ? "Aucun Conseil Médical" : "No Medical Advice"}><p>{FR ? "Rien sur ce site web ne constitue un conseil médical. Aucune allégation n'est faite concernant les bienfaits pour la santé ou les effets thérapeutiques d'un quelconque composé." : "Nothing on this website constitutes medical advice. No claims are made regarding health benefits or therapeutic effects of any compound."}</p></S>
+    <S t={FR ? "Conformité Réglementaire" : "Regulatory Compliance"}><p>{FR ? "Il incombe au seul acheteur de vérifier qu'un composé est légal dans sa juridiction. Novalyx ne fait aucune représentation concernant le statut réglementaire dans un quelconque pays." : "It is the purchaser's sole responsibility to verify that a compound is legal in their jurisdiction. Novalyx makes no representation regarding regulatory status in any country."}</p></S>
+    <S t={FR ? "Exactitude" : "Accuracy"}><p>{FR ? "Les documents COA représentent la spécification définitive par lot. Bien que nous nous efforcions d'être exacts, nous ne garantissons pas que tout le contenu du site soit exempt d'erreurs." : "COA documents represent the definitive specification per batch. While we strive for accuracy, we do not warrant all website content is error-free."}</p></S>
   </Legal>
-);
+  );
+};
 
-const ShippingPage = () => (
+const ShippingPage = ({ lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{maxWidth:720,margin:"0 auto"}}>
-      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>SHIPPING & FULFILLMENT</div>
-      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:40,fontWeight:800,marginBottom:32}}>Shipping & Fulfillment</h1>
+      <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"SHIPPING & FULFILLMENT")}</div>
+      <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:40,fontWeight:800,marginBottom:32}}>{tg(lang,"Shipping & Fulfillment")}</h1>
       <div style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.9}}>
-        <p style={{marginBottom:18}}>All orders are processed under a controlled fulfillment system to ensure product integrity and batch consistency.</p>
-        <p style={{marginBottom:18}}>Each order is prepared following confirmation and dispatched within our standard processing timeframe. Delivery typically takes <strong style={{color:"white"}}>2–3 weeks</strong>, as our compounds are sourced per-order from our verified laboratory partners to ensure batch freshness and traceability.</p>
-        <p style={{marginBottom:32}}>You will receive a tracking confirmation once your order is processed and in transit.</p>
+        <p style={{marginBottom:18}}>{tg(lang,"All orders are processed under a controlled fulfillment system to ensure product integrity and batch consistency.")}</p>
+        <p style={{marginBottom:18}}>{lang==="FR"?<>Chaque commande est préparée après confirmation et expédiée dans notre délai de traitement standard. La livraison prend généralement <strong style={{color:"white"}}>2 à 3 semaines</strong>, car nos composés sont approvisionnés par commande auprès de nos partenaires de laboratoire vérifiés pour garantir la fraîcheur et la traçabilité des lots.</>:<>Each order is prepared following confirmation and dispatched within our standard processing timeframe. Delivery typically takes <strong style={{color:"white"}}>2–3 weeks</strong>, as our compounds are sourced per-order from our verified laboratory partners to ensure batch freshness and traceability.</>}</p>
+        <p style={{marginBottom:32}}>{tg(lang,"You will receive a tracking confirmation once your order is processed and in transit.")}</p>
 
-        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"white",marginBottom:20,marginTop:32}}>Delivery Zones & Rates</h2>
+        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"white",marginBottom:20,marginTop:32}}>{tg(lang,"Delivery Zones & Rates")}</h2>
 
         <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,overflow:"hidden",marginBottom:32}}>
           {[
@@ -2281,42 +2961,42 @@ const ShippingPage = () => (
             ["🌍 Rest of world",            "€29.90", "Variable"],
           ].map(([zone,rate,time])=>(
             <div key={zone} style={{padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,fontSize:13}}>
-              <div style={{flex:"1 1 45%",color:"white",fontWeight:500}}>{zone}</div>
+              <div style={{flex:"1 1 45%",color:"white",fontWeight:500}}>{lang==="FR"?zone.replace("European Union","Union Européenne").replace("Switzerland","Suisse").replace("New Zealand","Nouvelle-Zélande").replace("Rest of world","Reste du monde"):zone}</div>
               <div style={{flex:"0 0 80px",textAlign:"right",color:"#4ade80",fontWeight:700}}>{rate}</div>
-              <div style={{flex:"0 0 100px",textAlign:"right",color:"rgba(255,255,255,0.45)",fontSize:12}}>{time}</div>
+              <div style={{flex:"0 0 100px",textAlign:"right",color:"rgba(255,255,255,0.45)",fontSize:12}}>{lang==="FR"?time.replace("weeks","semaines").replace("Variable","Variable"):time}</div>
             </div>
           ))}
           <div style={{padding:"12px 20px",background:"rgba(74,222,128,0.05)",fontSize:12,color:"rgba(255,255,255,0.55)"}}>
-            ✓ Free shipping on EU orders over €100
+            {lang==="FR"?"✓ Livraison gratuite pour les commandes UE de plus de €100":"✓ Free shipping on EU orders over €100"}
           </div>
         </div>
 
         <div style={{background:"rgba(251,191,36,0.05)",border:"1px solid rgba(251,191,36,0.22)",borderRadius:10,padding:"22px 26px",marginBottom:32}}>
-          <div style={{fontSize:9.5,letterSpacing:2,color:"#fbbf24",fontWeight:700,marginBottom:12}}>⚠ INTERNATIONAL SHIPPING — BUYER RESPONSIBILITY</div>
+          <div style={{fontSize:9.5,letterSpacing:2,color:"#fbbf24",fontWeight:700,marginBottom:12}}>{lang==="FR"?"⚠ EXPÉDITION INTERNATIONALE — RESPONSABILITÉ DE L'ACHETEUR":"⚠ INTERNATIONAL SHIPPING — BUYER RESPONSIBILITY"}</div>
           <p style={{marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.65)",lineHeight:1.75}}>
-            Orders shipped outside the European Union are dispatched at the <strong style={{color:"white"}}>buyer's own risk and responsibility</strong>. Import regulations for research compounds vary significantly by country.
+            {lang==="FR"?<>Les commandes expédiées hors de l'Union Européenne sont envoyées aux <strong style={{color:"white"}}>risques et responsabilités de l'acheteur</strong>. Les réglementations d'importation des composés de recherche varient considérablement selon les pays.</>:<>Orders shipped outside the European Union are dispatched at the <strong style={{color:"white"}}>buyer's own risk and responsibility</strong>. Import regulations for research compounds vary significantly by country.</>}
           </p>
           <p style={{marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.65)",lineHeight:1.75}}>
-            It is the sole responsibility of the buyer to verify whether these products may be legally imported into their jurisdiction. Novalyx Research does not act as an importer of record and is not responsible for:
+            {lang==="FR"?"Il incombe au seul acheteur de vérifier si ces produits peuvent être légalement importés dans sa juridiction. Novalyx Research n'agit pas en tant qu'importateur officiel et n'est pas responsable de :":"It is the sole responsibility of the buyer to verify whether these products may be legally imported into their jurisdiction. Novalyx Research does not act as an importer of record and is not responsible for:"}
           </p>
           <ul style={{paddingLeft:20,marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.58)",lineHeight:1.85}}>
-            <li>Customs seizures, inspections, or delays</li>
-            <li>Import duties, taxes, or clearance fees imposed by your country</li>
-            <li>Compliance with local laws regulating research compounds</li>
-            <li>Packages refused, destroyed, or returned by customs authorities</li>
+            <li>{tg(lang,"Customs seizures, inspections, or delays")}</li>
+            <li>{tg(lang,"Import duties, taxes, or clearance fees imposed by your country")}</li>
+            <li>{tg(lang,"Compliance with local laws regulating research compounds")}</li>
+            <li>{tg(lang,"Packages refused, destroyed, or returned by customs authorities")}</li>
           </ul>
           <p style={{fontSize:13,color:"rgba(255,255,255,0.65)",lineHeight:1.75}}>
-            By placing an international order, you expressly acknowledge that you understand your local import regulations and accept all associated risks. <strong style={{color:"white"}}>Seized, refused, or destroyed packages are non-refundable.</strong>
+            {lang==="FR"?<>En passant une commande internationale, vous reconnaissez expressément comprendre vos réglementations d'importation locales et acceptez tous les risques associés. <strong style={{color:"white"}}>Les colis saisis, refusés ou détruits ne sont pas remboursables.</strong></>:<>By placing an international order, you expressly acknowledge that you understand your local import regulations and accept all associated risks. <strong style={{color:"white"}}>Seized, refused, or destroyed packages are non-refundable.</strong></>}
           </p>
         </div>
 
         <div style={{background:"rgba(74,222,128,0.04)",border:"1px solid rgba(74,222,128,0.15)",borderRadius:10,padding:"20px 24px",marginBottom:36}}>
-          <div style={{fontSize:9.5,letterSpacing:2,color:"#4ade80",fontWeight:700,marginBottom:10}}>RESEARCH USE DECLARATION</div>
-          <p style={{marginBottom:10,fontSize:13,color:"rgba(255,255,255,0.55)"}}>All products are supplied strictly for laboratory research use only and are handled according to professional standards.</p>
-          <p style={{fontSize:13,color:"rgba(255,255,255,0.55)"}}>By placing an order, you confirm that you are a qualified professional and that you comply with all applicable laws and regulations in your jurisdiction.</p>
+          <div style={{fontSize:9.5,letterSpacing:2,color:"#4ade80",fontWeight:700,marginBottom:10}}>{tg(lang,"RESEARCH USE DECLARATION")}</div>
+          <p style={{marginBottom:10,fontSize:13,color:"rgba(255,255,255,0.55)"}}>{tg(lang,"All products are supplied strictly for laboratory research use only and are handled according to professional standards.")}</p>
+          <p style={{fontSize:13,color:"rgba(255,255,255,0.55)"}}>{tg(lang,"By placing an order, you confirm that you are a qualified professional and that you comply with all applicable laws and regulations in your jurisdiction.")}</p>
         </div>
 
-        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"white",marginBottom:20,marginTop:32}}>FAQ — Shipping</h2>
+        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"white",marginBottom:20,marginTop:32}}>{lang==="FR"?"FAQ — Livraison":"FAQ — Shipping"}</h2>
 
         <div style={{borderTop:"1px solid rgba(255,255,255,0.08)"}}>
           {[

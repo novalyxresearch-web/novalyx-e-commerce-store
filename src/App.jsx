@@ -2006,8 +2006,9 @@ const CSS = `
     [style*="repeat(auto-fill,minmax(300px"]{grid-template-columns:1fr!important;}
     .nav-bar{padding:12px 16px!important;}
     .nav-controls{order:2;}
-    .nav-links{width:100%;order:3;justify-content:center;gap:14px!important;font-size:12px;}
+    .nav-links{position:static!important;transform:none!important;width:100%;order:3;justify-content:center;gap:14px!important;font-size:12px;}
     .nl{font-size:12px!important;}
+    .coa-showcase{grid-template-columns:1fr!important;padding:32px 20px!important;gap:28px!important;}
   }
   @media (max-width:850px){
     [style*="padding:\\"80px 40px"]{padding:48px 20px!important;}
@@ -2106,7 +2107,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
         <div style={{fontSize:7,letterSpacing:2.5,color:"#4ade80",marginTop:1}}>RESEARCH</div>
       </div>
     </div>
-    <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+    <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap",position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
       {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
         <span key={p} className={`nl${page===p?" active":""}`} onClick={()=>go(p)}>{l}</span>
       ))}
@@ -2541,7 +2542,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
 
       {/* VERIFIED BY EU LAB */}
       <div style={{padding:"0 40px 70px"}}>
-        <div style={{background:"#0a1322",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,padding:"48px 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
+        <div className="coa-showcase" style={{background:"#0a1322",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,padding:"48px 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
           <div>
             <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{lang==="FR"?"VALIDATION PAR LABORATOIRE INDÉPENDANT":"INDEPENDENT LABORATORY VALIDATION"}</div>
             <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>{lang==="FR"?"Chaque lot. Analysé. Documenté.":"Every batch. Analysed. Documented."}</h2>
@@ -2555,7 +2556,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             </div>
           </div>
           {/* COA MOCKUP */}
-          <div style={{background:"#ffffff",borderRadius:8,padding:28,color:"#0a1322",position:"relative",boxShadow:"0 24px 48px rgba(0,0,0,0.4)",aspectRatio:"1/1.3",display:"flex",flexDirection:"column"}}>
+          <div style={{background:"#ffffff",borderRadius:8,padding:24,color:"#0a1322",position:"relative",boxShadow:"0 24px 48px rgba(0,0,0,0.4)",display:"flex",flexDirection:"column",minHeight:340,width:"100%",boxSizing:"border-box"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16,paddingBottom:12,borderBottom:"2px solid #0a1322"}}>
               <div>
                 <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:14,fontWeight:800,letterSpacing:2}}>NOVALYX RESEARCH</div>
@@ -2567,10 +2568,10 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
               </div>
             </div>
             <div style={{fontSize:10,lineHeight:1.9,color:"#0a1322"}}>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Product:")}</span><span style={{fontWeight:600}}>BPC-157 5mg</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Batch:")}</span><span style={{fontWeight:600}}>{lang==="FR"?"exemple":"sample"}</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Purity (HPLC):")}</span><span style={{fontWeight:600,color:"#059669"}}>≥ 99%</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"MS identity:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Confirmed")}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,borderBottom:"1px solid #e5e7eb",padding:"4px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Product:")}</span><span style={{fontWeight:600,textAlign:"right"}}>BPC-157 5mg</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,borderBottom:"1px solid #e5e7eb",padding:"4px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Batch:")}</span><span style={{fontWeight:600,textAlign:"right"}}>{lang==="FR"?"exemple":"sample"}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,borderBottom:"1px solid #e5e7eb",padding:"4px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Purity (HPLC):")}</span><span style={{fontWeight:600,color:"#059669",textAlign:"right"}}>≥ 99%</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,padding:"4px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"MS identity:")}</span><span style={{fontWeight:600,color:"#059669",textAlign:"right"}}>{tg(lang,"Confirmed")}</span></div>
             </div>
             <div style={{marginTop:"auto",paddingTop:18,borderTop:"1px solid #e5e7eb",display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
               <div>

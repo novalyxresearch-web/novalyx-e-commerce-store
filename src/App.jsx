@@ -27,7 +27,7 @@ const TRANSLATIONS = {
     // Nav
     nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
-    ann1: "EU BASED", ann2: "BATCH TESTED", ann3: "SHIPS FROM EU", ann4: "CONTROLLED FULFILLMENT",
+    ann1: "FRANCE BASED", ann2: "BATCH TESTED", ann3: "WORLDWIDE SHIPPING", ann4: "CONTROLLED FULFILLMENT",
     // Age gate
     age_title: "Professional Access",
     age_desc: "Novalyx Research supplies compounds exclusively for laboratory research. Access is restricted to qualified professionals.",
@@ -36,7 +36,7 @@ const TRANSLATIONS = {
     age_footer: "By entering you confirm compliance with all applicable laws in your jurisdiction.",
     // Product card
     available_in: "AVAILABLE IN:",
-    coa_dl: "COA: Janoshik batch-tested",
+    coa_dl: "COA: published upon batch validation",
     from: "FROM", per_vial: "PER VIAL",
     view_options: "VIEW OPTIONS →",
     // Product modal
@@ -61,14 +61,16 @@ const TRANSLATIONS = {
     hero_sub: "ADVANCED RESEARCH COMPOUNDS",
     hero_h1_1: "Peptides engineered",
     hero_h1_2: "for science.",
-    hero_desc: "Independent third-party tested. Every batch. COA included. Shipped across Europe.",
+    hero_desc: "Novalyx Research supplies high-purity research peptides and laboratory compounds to researchers, laboratories, and biohackers across Europe. Each new batch is submitted for independent analysis by Janoshik — Certificates of Analysis are published as batches are validated.",
+    hero_tagline: "For researchers, laboratories & serious professionals — research use only.",
     hero_browse: "BROWSE COMPOUNDS →",
     hero_coa: "VIEW COA LIBRARY",
-    hero_stat1: "Research Compounds", hero_stat2: "Purity Guarantee", hero_stat3: "EU Shipping",
+    hero_contact: "CONTACT US",
+    hero_stat1: "Research Compounds", hero_stat2: "Purity Guarantee", hero_stat3: "International Shipping",
     // Products page
     prod_sub: "OUR COMPOUNDS",
     prod_h1: "Research Catalog",
-    prod_desc: "27 research compounds across 8 categories. Every batch independently tested. COA included with every order. Supplied for research use only.",
+    prod_desc: "Research compounds across specialized categories. Each new batch is submitted for independent analysis — COA published upon validation. Supplied for research use only.",
     compound: "COMPOUND", compounds: "COMPOUNDS",
     // COA page
     coa_sub: "TRANSPARENCY",
@@ -119,7 +121,7 @@ const TRANSLATIONS = {
     // Nav
     nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
-    ann1: "BASÉ EN UE", ann2: "TESTÉ PAR LOT", ann3: "EXPÉDIÉ DEPUIS L'UE", ann4: "FULFILLMENT CONTRÔLÉ",
+    ann1: "ENTREPRISE FRANÇAISE", ann2: "TESTÉ PAR LOT", ann3: "LIVRAISON INTERNATIONALE", ann4: "FULFILLMENT CONTRÔLÉ",
     // Age gate
     age_title: "Accès Professionnel",
     age_desc: "Novalyx Research fournit des composés exclusivement pour la recherche en laboratoire. L'accès est réservé aux professionnels qualifiés.",
@@ -128,7 +130,7 @@ const TRANSLATIONS = {
     age_footer: "En entrant, vous confirmez être en conformité avec toutes les lois applicables dans votre juridiction.",
     // Product card
     available_in: "DISPONIBLE EN :",
-    coa_dl: "COA : testé par lot Janoshik",
+    coa_dl: "COA : publié dès validation du lot",
     from: "À PARTIR DE", per_vial: "PAR FIOLE",
     view_options: "VOIR LES OPTIONS →",
     // Product modal
@@ -153,14 +155,16 @@ const TRANSLATIONS = {
     hero_sub: "COMPOSÉS DE RECHERCHE AVANCÉS",
     hero_h1_1: "Peptides conçus",
     hero_h1_2: "pour la science.",
-    hero_desc: "Testés par des tiers indépendants. Chaque lot. COA inclus. Expédiés dans toute l'Europe.",
+    hero_desc: "Novalyx Research fournit des peptides de recherche et composés de laboratoire haute pureté aux chercheurs, laboratoires et biohackers à travers l'Europe. Chaque nouveau lot est soumis à une analyse indépendante par Janoshik — les certificats sont publiés dès validation.",
+    hero_tagline: "Pour chercheurs, laboratoires & professionnels exigeants — usage recherche uniquement.",
+    hero_contact: "NOUS CONTACTER",
     hero_browse: "VOIR LES COMPOSÉS →",
     hero_coa: "VOIR LA BIBLIOTHÈQUE COA",
-    hero_stat1: "Composés de Recherche", hero_stat2: "Garantie de Pureté", hero_stat3: "Livraison UE",
+    hero_stat1: "Composés de Recherche", hero_stat2: "Garantie de Pureté", hero_stat3: "Livraison Internationale",
     // Products page
     prod_sub: "NOS COMPOSÉS",
     prod_h1: "Catalogue de Recherche",
-    prod_desc: "27 composés de recherche dans 8 catégories. Chaque lot testé indépendamment. COA inclus avec chaque commande. Fourni uniquement pour la recherche.",
+    prod_desc: "Composés de recherche dans des catégories spécialisées. Chaque nouveau lot est soumis à une analyse indépendante — COA publié dès validation. Fourni uniquement pour la recherche.",
     compound: "COMPOSÉ", compounds: "COMPOSÉS",
     // COA page
     coa_sub: "TRANSPARENCE",
@@ -279,7 +283,7 @@ const PRODUCT_FR = {
   "Janoshik (par lot)": "Janoshik (par lot)",
   "24 months (sealed)": "24 mois (scellé)",
   "−20°C / avoid light": "−20°C / à l'abri de la lumière",
-  "Janoshik HPLC verified": "Vérifié par Janoshik HPLC",
+  "Janoshik HPLC (per batch)": "Janoshik HPLC (par lot)",
   "≥99% (HPLC verified)": "≥99% (vérifié HPLC)",
   "≥99% (Janoshik HPLC)": "≥99% (Janoshik HPLC)",
   "Blend verified": "Mélange vérifié",
@@ -386,15 +390,15 @@ const PRODUCTS = [
       "Synthetic pentadecapeptide fragment",
       "Research into tissue repair and angiogenesis pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Fragment pentadécapeptide synthétique",
       "Recherche sur les voies de réparation tissulaire et d'angiogenèse",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 64.99, batch: "NVX-BPC5-0426",  stripePrice: "price_REPLACE_BPC157_5MG" },
@@ -427,14 +431,14 @@ const PRODUCTS = [
       "Research into cellular migration and regeneration",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Fragment synthétique de Thymosine Bêta-4",
       "Recherche sur la migration cellulaire et la régénération",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-TB5-0426",  stripePrice: "price_REPLACE_TB500_5MG" },
@@ -459,22 +463,22 @@ const PRODUCTS = [
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
     glow: "rgba(249,168,212,0.03)",
     shortDesc: "Copper-peptide complex for research into collagen synthesis, skin regeneration, and wound healing.",
-    desc: "GHK-Copper (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. Each batch is independently tested by Janoshik Analytical (Czech Republic).",
+    desc: "GHK-Copper (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. New batches are submitted for independent analysis by Janoshik.",
     shortDesc_fr: "Complexe cuivre-peptide pour la recherche sur la synthèse du collagène, la régénération cutanée et la cicatrisation.",
-    desc_fr: "Le GHK-Cuivre (complexe Glycyl-Histidyl-Lysine cuivre) est un tripeptide naturel lié au cuivre. Fourni pour la recherche sur la régénération cutanée, la synthèse du collagène et de l'élastine, et la réparation tissulaire. Chaque lot est testé indépendamment par Janoshik Analytical (République tchèque).",
+    desc_fr: "Le GHK-Cuivre (complexe Glycyl-Histidyl-Lysine cuivre) est un tripeptide naturel lié au cuivre. Fourni pour la recherche sur la régénération cutanée, la synthèse du collagène et de l'élastine, et la réparation tissulaire. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
     details: [
       "Glycyl-Histidyl-Lysine bound to copper",
       "Research into collagen and elastin synthesis",
-      "Independent Janoshik batch testing on every production run",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
       "Lyophilized, high-stability formulation",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Glycyl-Histidyl-Lysine bound to copper",
       "Recherche sur collagen and elastin synthesis",
-      "Independent Janoshik batch testing on every production run",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
       "Formulation lyophilisée haute stabilité",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "50mg",  price: 59.99, batch: "NVX-GHK50-0426",  stripePrice: "price_REPLACE_GHK_50MG" },
@@ -507,14 +511,14 @@ const PRODUCTS = [
       "Research into inflammation and gut integrity",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "C-terminal tripeptide fragment of α-MSH",
       "Recherche sur inflammation and gut integrity",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 54.99, batch: "NVX-KPV5-0426",  stripePrice: "price_REPLACE_KPV_5MG" },
@@ -548,15 +552,15 @@ const PRODUCTS = [
       "Synthetic triple-receptor agonist peptide",
       "Research into GLP-1, GIP, and glucagon pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide triple-agoniste synthétique",
       "Recherche sur les voies GLP-1, GIP et glucagon",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 149.99, batch: "NVX-RET5-0426",  stripePrice: "price_REPLACE_RETATRUTIDE_5MG" },
@@ -589,14 +593,14 @@ const PRODUCTS = [
       "Research into GLP-1 and glucagon pathways",
       "Lyophilized for maximum stability",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide double-agoniste synthétique",
       "Recherche sur GLP-1 and glucagon pathways",
       "Lyophilized for maximum stability",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 299.99, batch: "NVX-MZD10-0426", stripePrice: "price_REPLACE_MZD10" },
@@ -628,14 +632,14 @@ const PRODUCTS = [
       "Research into advanced metabolic signalling",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : dual-agonist peptide",
       "Recherche sur advanced metabolic signalling",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 399.99, batch: "NVX-SUR10-0426", stripePrice: "price_REPLACE_SUR10" },
@@ -667,14 +671,14 @@ const PRODUCTS = [
       "Research into amylin receptor pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : long-acting amylin analog",
       "Recherche sur amylin receptor pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 219.99, batch: "NVX-CGL5-0426",  stripePrice: "price_REPLACE_CGL5" },
@@ -709,14 +713,14 @@ const PRODUCTS = [
       "Research into visceral fat metabolism",
       "Lyophilized for maximum stability",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : GHRH analog",
       "Recherche sur visceral fat metabolism",
       "Lyophilized for maximum stability",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 159.99, batch: "NVX-TES5-0426",  stripePrice: "price_REPLACE_TES_5MG" },
@@ -749,14 +753,14 @@ const PRODUCTS = [
       "Research into pulsatile GH release",
       "Lyophilized for maximum stability",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Selective GH secretagogue peptide",
       "Recherche sur pulsatile GH release",
       "Lyophilized for maximum stability",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 64.99,  batch: "NVX-IPA5-0426",  stripePrice: "price_REPLACE_IPA5" },
@@ -789,14 +793,14 @@ const PRODUCTS = [
       "Research into GH releasing pathways",
       "Lyophilized for maximum stability",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : GHRH 1-29 fragment",
       "Recherche sur GH releasing pathways",
       "Lyophilized for maximum stability",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg", price: 109.99, batch: "NVX-SER5-0426", stripePrice: "price_REPLACE_SER5" },
@@ -828,14 +832,14 @@ const PRODUCTS = [
       "Research into GH releasing pathways",
       "Lyophilized for maximum stability",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : GHRH analog (no DAC)",
       "Recherche sur GH releasing pathways",
       "Lyophilized for maximum stability",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 249.99, batch: "NVX-CJC10-0426", stripePrice: "price_REPLACE_CJC10" },
@@ -869,14 +873,14 @@ const PRODUCTS = [
       "Research into cellular energy and longevity pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Naturally occurring coenzyme",
       "Recherche sur cellular energy and longevity pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "500mg",  price: 149.99, batch: "NVX-NAD500-0426",  stripePrice: "price_REPLACE_NAD_500" },
@@ -909,14 +913,14 @@ const PRODUCTS = [
       "Research into telomerase and longevity pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : tetrapeptide (Ala-Glu-Asp-Gly)",
       "Recherche sur telomerase and longevity pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 89.99,  batch: "NVX-EPI10-0426", stripePrice: "price_REPLACE_EPI_10MG" },
@@ -949,14 +953,14 @@ const PRODUCTS = [
       "Research into neuroprotection and cognitive function",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : tripeptide",
       "Recherche sur neuroprotection and cognitive function",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 99.99,  batch: "NVX-PIN5-0426",  stripePrice: "price_REPLACE_PIN5" },
@@ -990,14 +994,14 @@ const PRODUCTS = [
       "Research into metabolic homeostasis",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Mitochondrial-derived peptide (MDP)",
       "Recherche sur metabolic homeostasis",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 119.99, batch: "NVX-MOTS10-0426", stripePrice: "price_REPLACE_MOTS_10MG" },
@@ -1030,14 +1034,14 @@ const PRODUCTS = [
       "Research into cardiolipin and mitochondrial energetics",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Mitochondria-targeting peptide",
       "Recherche sur cardiolipin and mitochondrial energetics",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 149.99, batch: "NVX-SS31-10-0426", stripePrice: "price_REPLACE_SS31_10" },
@@ -1072,14 +1076,14 @@ const PRODUCTS = [
       "Research into immune modulation and T-cell pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : 28-amino acid peptide",
       "Recherche sur immune modulation and T-cell pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 169.99, batch: "NVX-TA1-5-0426",  stripePrice: "price_REPLACE_TA1_5MG" },
@@ -1112,14 +1116,14 @@ const PRODUCTS = [
       "Research into immune regulation",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Thymus-derived peptide complex",
       "Recherche sur immune regulation",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 129.99, batch: "NVX-TYM10-0426", stripePrice: "price_REPLACE_TYM10" },
@@ -1151,14 +1155,14 @@ const PRODUCTS = [
       "Research into innate immunity",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Cathelicidin-derived antimicrobial peptide",
       "Recherche sur innate immunity",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg", price: 169.99, batch: "NVX-LL37-0426", stripePrice: "price_REPLACE_LL37" },
@@ -1192,14 +1196,14 @@ const PRODUCTS = [
       "Research into cognitive function and BDNF",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : heptapeptide (ACTH 4-10 analog)",
       "Recherche sur cognitive function and BDNF",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 79.99,  batch: "NVX-SMX5-0426",  stripePrice: "price_REPLACE_SMX5" },
@@ -1232,14 +1236,14 @@ const PRODUCTS = [
       "Research into anxiolytic and GABAergic pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : heptapeptide (tuftsin analog)",
       "Recherche sur anxiolytic and GABAergic pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-SEL5-0426",  stripePrice: "price_REPLACE_SEL5" },
@@ -1272,14 +1276,14 @@ const PRODUCTS = [
       "Research into neuroprotection pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Neurotrophic peptide complex",
       "Recherche sur neuroprotection pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "60mg", price: 129.99, batch: "NVX-CBL60-0426", stripePrice: "price_REPLACE_CBL60" },
@@ -1313,14 +1317,14 @@ const PRODUCTS = [
       "Research into sleep regulation and delta wave activity",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : nonapeptide",
       "Recherche sur sleep regulation and delta wave activity",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 79.99,  batch: "NVX-DSIP5-0426",  stripePrice: "price_REPLACE_DSIP5" },
@@ -1353,14 +1357,14 @@ const PRODUCTS = [
       "Research into MC3/MC4 receptor pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : cyclic heptapeptide",
       "Recherche sur MC3/MC4 receptor pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 119.99, batch: "NVX-PT10-0426", stripePrice: "price_REPLACE_PT10" },
@@ -1392,14 +1396,14 @@ const PRODUCTS = [
       "Research into innate repair receptor pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "EPO-derived 11-amino acid peptide",
       "Recherche sur innate repair receptor pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg", price: 159.99, batch: "NVX-ARA10-0426", stripePrice: "price_REPLACE_ARA10" },
@@ -1431,14 +1435,14 @@ const PRODUCTS = [
       "Research into GnRH and reproductive pathways",
       "Lyophilized, high-stability formulation",
       "Manufacturer HPLC testing included",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Synthétique : decapeptide",
       "Recherche sur GnRH and reproductive pathways",
       "Formulation lyophilisée haute stabilité",
       "Test HPLC du fabricant inclus",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 89.99,  batch: "NVX-KIS5-0426",  stripePrice: "price_REPLACE_KIS5" },
@@ -1468,15 +1472,15 @@ const PRODUCTS = [
       "Synthetic dual-receptor agonist peptide",
       "Research into GLP-1 and GIP pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide double-agoniste synthétique",
       "Recherche sur les voies GLP-1 et GIP",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 129.99, batch: "NVX-TIRZ5-0426",  stripePrice: "price_REPLACE_TIRZEPATIDE_5MG" },
@@ -1508,15 +1512,15 @@ const PRODUCTS = [
       "Synthetic GLP-1 receptor agonist peptide",
       "Research into incretin and metabolic pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide agoniste du récepteur GLP-1 synthétique",
       "Recherche sur les voies de l'incrétine et métaboliques",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 119.99, batch: "NVX-SEMA5-0426",  stripePrice: "price_REPLACE_SEMAGLUTIDE_5MG" },
@@ -1548,15 +1552,15 @@ const PRODUCTS = [
       "Modified GH fragment (176-191)",
       "Research into lipid metabolism pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Fragment GH modifié (176-191)",
       "Recherche sur les voies du métabolisme lipidique",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 99.99,  batch: "NVX-AOD5-0426",  stripePrice: "price_REPLACE_AOD_5MG" },
@@ -1588,15 +1592,15 @@ const PRODUCTS = [
       "Synthetic GH-releasing peptide",
       "Research into GH secretagogue receptor pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide synthétique libérateur de GH",
       "Recherche sur les voies du récepteur sécrétagogue GH",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 59.99, batch: "NVX-GHRP2-5-0426",  stripePrice: "price_REPLACE_GHRP2_5MG" },
@@ -1628,15 +1632,15 @@ const PRODUCTS = [
       "Synthetic GH-releasing peptide",
       "Research into GH secretagogue and appetite pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Peptide synthétique libérateur de GH",
       "Recherche sur les voies sécrétagogue GH et de l'appétit",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg",  price: 59.99, batch: "NVX-GHRP6-5-0426",  stripePrice: "price_REPLACE_GHRP6_5MG" },
@@ -1668,15 +1672,15 @@ const PRODUCTS = [
       "Small molecule NNMT inhibitor",
       "Research into cellular metabolism pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Inhibiteur NNMT petite molécule",
       "Recherche sur les voies du métabolisme cellulaire",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg", price: 129.99, batch: "NVX-5AMQ5-0426", stripePrice: "price_REPLACE_5AMINO_5MG" },
@@ -1707,15 +1711,15 @@ const PRODUCTS = [
       "Synthetic GH-releasing hexapeptide",
       "Research into GH secretagogue receptor pathways",
       "Lyophilized for maximum stability and shelf life",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Hexapeptide synthétique libérateur de GH",
       "Recherche sur les voies du récepteur sécrétagogue GH",
       "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "2mg", price: 69.99, batch: "NVX-HEX2-0426",  stripePrice: "price_REPLACE_HEXARELIN_2MG" },
@@ -1742,22 +1746,22 @@ const PRODUCTS = [
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
     glow: "rgba(34,211,238,0.03)",
     shortDesc: "Proprietary dual-peptide research blend combining BPC-157 and TB-500 for integrated research into tissue repair and regenerative signalling pathways.",
-    desc: "Novalyx Formula 01 is a proprietary research blend containing BPC-157 (10mg) and TB-500 (10mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. Independently verified by Janoshik Analytical.",
+    desc: "Novalyx Formula 01 is a proprietary research blend containing BPC-157 (10mg) and TB-500 (10mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.",
     shortDesc_fr: "Mélange de recherche propriétaire à double peptide combinant BPC-157 et TB-500 pour la recherche intégrée sur la réparation tissulaire et les voies de signalisation régénératives.",
-    desc_fr: "Novalyx Formula 01 est un mélange de recherche propriétaire contenant BPC-157 (10mg) et TB-500 (10mg) combinés dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Vérifié indépendamment par Janoshik Analytical.",
+    desc_fr: "Novalyx Formula 01 est un mélange de recherche propriétaire contenant BPC-157 (10mg) et TB-500 (10mg) combinés dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
     details: [
       "Contains BPC-157 and TB-500 in 1:1 ratio",
       "Research into combined regenerative signalling pathways",
       "Single-vial convenience for integrated protocols",
-      "Independent Janoshik batch testing on every production run",
-      "Certificate of Analysis included with every order",
+      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Contains BPC-157 and TB-500 in 1:1 ratio",
       "Recherche sur combined regenerative signalling pathways",
       "Single-vial convenience for integrated protocols",
-      "Test Janoshik indépendant sur chaque lot de production",
-      "Certificat d'analyse inclus avec chaque commande",
+      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "10mg+10mg", price: 189.99, batch: "NVX-F01-0426", stripePrice: "price_REPLACE_FORMULA01" },
@@ -1765,7 +1769,7 @@ const PRODUCTS = [
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + TB-500 10mg" },
       { label: "Format",      value: "Lyophilised vial" },
-      { label: "Purity",      value: "Janoshik HPLC verified" },
+      { label: "Purity",      value: "Janoshik HPLC (per batch)" },
       { label: "Storage",     value: "−20°C / avoid light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
       { label: "COA",         value: "Janoshik (par lot)" },
@@ -1790,14 +1794,14 @@ const PRODUCTS = [
       "Research into growth hormone releasing pathways",
       "Single-vial convenience for integrated protocols",
       "Lyophilized, high-stability formulation",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Contains CJC-1295 and Ipamorelin in 1:1 ratio",
       "Recherche sur growth hormone releasing pathways",
       "Single-vial convenience for integrated protocols",
       "Formulation lyophilisée haute stabilité",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "5mg+5mg", price: 149.99, batch: "NVX-F02-0426", stripePrice: "price_REPLACE_FORMULA02" },
@@ -1830,14 +1834,14 @@ const PRODUCTS = [
       "Research into comprehensive regenerative pathways",
       "Triple-compound single-vial convenience",
       "Lyophilized, high-stability formulation",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Contains BPC-157 + GHK-Copper + TB-500",
       "Recherche sur comprehensive regenerative pathways",
       "Triple-compound single-vial convenience",
       "Formulation lyophilisée haute stabilité",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "70mg total", price: 329.99, batch: "NVX-F03-0426", stripePrice: "price_REPLACE_FORMULA03" },
@@ -1871,14 +1875,14 @@ const PRODUCTS = [
       "Pharmaceutical-grade sterile water for injection",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "0.9% benzyl alcohol bacteriostatic agent",
       "Pharmaceutical-grade sterile water for injection",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "3ml vial",   price: 7.99,  batch: "NVX-BW3-0426",   stripePrice: "price_REPLACE_BW3" },
@@ -1913,14 +1917,14 @@ const PRODUCTS = [
       "Research into maximum-coverage regenerative pathways",
       "Four-compound single-vial convenience",
       "Lyophilized, high-stability formulation",
-      "Certificate of Analysis included with every order",
+      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "Contains BPC-157 + GHK-Copper + TB-500 + KPV",
       "Recherche sur maximum-coverage regenerative pathways",
       "Four-compound single-vial convenience",
       "Formulation lyophilisée haute stabilité",
-      "Certificat d'analyse inclus avec chaque commande",
+      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "80mg total", price: 399.99, batch: "NVX-F04-0426", stripePrice: "price_REPLACE_FORMULA04" },
@@ -2144,6 +2148,7 @@ const Footer = ({ go, lang="EN" }) => (
         <div style={{fontSize:11.5,color:"rgba(255,255,255,0.28)",maxWidth:240,lineHeight:1.8}}>{t(lang,"footer_tagline")}</div>
         <div style={{marginTop:16,fontSize:11,color:"rgba(255,255,255,0.25)",lineHeight:1.8}}>
           <div>{CONFIG.BUSINESS_NAME}</div>
+          <div>{CONFIG.ADDRESS}</div>
           <div>SIRET: {CONFIG.SIRET}</div>
           <div style={{fontSize:10,fontStyle:"italic"}}>{CONFIG.VAT_STATUS}</div>
           <div>{CONFIG.EMAIL}</div>
@@ -2377,8 +2382,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang="EN" }) => {
 
 const TrustBar = ({ lang="EN" }) => {
   const items = lang === "FR"
-    ? ["Vérifié par labo tiers","COA avec chaque commande","Expédition contrôlée","Sécurisé par Stripe","Emballage chaîne du froid","Retours qualité recherche"]
-    : ["Third-party lab verified","COA with every order","Controlled fulfillment","Stripe secured","Cold-chain packaging","Research-grade returns"];
+    ? ["Vérifié par labo tiers","COA avec chaque commande","Expédition contrôlée","Sécurisé par Stripe","Emballage professionnel","Retours qualité recherche"]
+    : ["Third-party lab verified","COA with every order","Controlled fulfillment","Stripe secured","Professional packaging","Research-grade returns"];
   return (
   <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",borderBottom:"1px solid rgba(255,255,255,0.05)",background:"rgba(255,255,255,0.012)",padding:"16px 20px",display:"flex",justifyContent:"center",alignItems:"center",gap:10,flexWrap:"wrap",textAlign:"center"}}>
     {items.map(txt=>(
@@ -2404,15 +2409,19 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
           <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(32px,8vw,58px)",fontWeight:800,lineHeight:1.06,marginBottom:20,wordBreak:"break-word"}}>
             {t(lang,"hero_h1_1")}<br/><span style={{color:"#4ade80"}}>{t(lang,"hero_h1_2")}</span>
           </h1>
-          <p style={{fontSize:15,color:"rgba(255,255,255,0.48)",lineHeight:1.8,maxWidth:500,marginBottom:36}}>
+          <p style={{fontSize:15,color:"rgba(255,255,255,0.48)",lineHeight:1.8,maxWidth:520,marginBottom:14}}>
             {t(lang,"hero_desc")}
           </p>
-          <div style={{display:"flex",gap:12,marginBottom:44}}>
+          <p style={{fontSize:12.5,color:"#4ade80",lineHeight:1.6,maxWidth:480,marginBottom:32,fontWeight:500}}>
+            {t(lang,"hero_tagline")}
+          </p>
+          <div style={{display:"flex",gap:12,marginBottom:44,flexWrap:"wrap"}}>
             <button className="btn solid" onClick={()=>go("products")} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>{t(lang,"hero_browse")}</button>
             <button className="btn g" onClick={()=>go("coa")} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1}}>{t(lang,"hero_coa")}</button>
+            <button className="btn" onClick={()=>go("contact")} style={{padding:"13px 28px",borderRadius:8,fontWeight:700,fontSize:12,letterSpacing:1,border:"1px solid rgba(255,255,255,0.15)",color:"rgba(255,255,255,0.7)",background:"transparent"}}>{t(lang,"hero_contact")}</button>
           </div>
           <div style={{display:"flex",gap:36}}>
-            {[["≥99%",t(lang,"hero_stat2")],["COA",lang==="FR"?"Chaque lot":"Every Batch"],["2–3w",lang==="FR"?"Livraison EU":"EU Delivery"],["28+",t(lang,"hero_stat1")]].map(([v,l])=>(
+            {[["≥99%",t(lang,"hero_stat2")],["COA",lang==="FR"?"Chaque lot":"Every Batch"],["2–3w",lang==="FR"?"Livraison Int.":"Intl. Delivery"],["28+",t(lang,"hero_stat1")]].map(([v,l])=>(
               <div key={l}>
                 <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"#4ade80"}}>{v}</div>
                 <div style={{fontSize:9.5,color:"rgba(255,255,255,0.32)",letterSpacing:1.5}}>{l}</div>
@@ -2423,6 +2432,38 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       </div>
 
       <TrustBar lang={lang}/>
+
+      {/* ─── POURQUOI CHOISIR NOVALYX ─── */}
+      <div style={{padding:"64px 40px 24px",maxWidth:1200,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:44}}>
+          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{lang==="FR"?"POURQUOI NOVALYX":"WHY NOVALYX"}</div>
+          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(26px,5.5vw,36px)",fontWeight:800,marginBottom:12}}>{lang==="FR"?"Pourquoi choisir Novalyx Research ?":"Why choose Novalyx Research?"}</h2>
+          <p style={{fontSize:14,color:"rgba(255,255,255,0.45)",maxWidth:560,margin:"0 auto",lineHeight:1.7}}>{lang==="FR"?"La transparence et la qualité au cœur de chaque commande.":"Transparency and quality at the heart of every order."}</p>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:18}}>
+          {(lang==="FR"?[
+            ["🇫🇷","Société basée à Paris","Novalyx Research est une entreprise française, immatriculée et basée à Paris (SIRET 898 509 369 00028)."],
+            ["🔒","Paiement sécurisé","Paiements traités par Stripe, leader mondial. Vos données bancaires ne touchent jamais nos serveurs."],
+            ["🔬","Contrôle qualité indépendant","Chaque lot soumis à une analyse indépendante par Janoshik Analytical — laboratoire tiers reconnu."],
+            ["💬","Support client réactif","Une équipe disponible et réactive, réponse sous 1 jour ouvré à contact@novalyxresearch.com."],
+            ["📦","Expédition internationale suivie","Expédition internationale avec numéro de suivi et emballage professionnel inviolable."],
+            ["📋","Transparence des analyses","Certificats d'analyse (COA) publiés au fur et à mesure de la validation indépendante des lots."],
+          ]:[
+            ["🇫🇷","Paris-Based Company","Novalyx Research is a French company, registered and based in Paris (SIRET 898 509 369 00028)."],
+            ["🔒","Secure Payment","Payments handled by Stripe, a global leader. Your card data never touches our servers."],
+            ["🔬","Independent Quality Control","Every batch submitted for independent analysis by Janoshik Analytical — a recognised third-party lab."],
+            ["💬","Responsive Support","An available, responsive team — reply within 1 business day at contact@novalyxresearch.com."],
+            ["📦","Tracked International Shipping","Worldwide shipping with tracking number and professional tamper-evident packaging."],
+            ["📋","Transparent Analysis","Certificates of Analysis (COA) published as batches are independently validated."],
+          ]).map(([icon,title,desc])=>(
+            <div key={title} style={{background:"linear-gradient(145deg,#0f2240,#0c1830)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"26px 24px"}}>
+              <div style={{fontSize:30,marginBottom:14}}>{icon}</div>
+              <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:17,fontWeight:700,marginBottom:8}}>{title}</h3>
+              <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{padding:"64px 40px 80px"}}>
         <div style={{marginBottom:44}}>
@@ -2502,13 +2543,13 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       <div style={{padding:"0 40px 70px"}}>
         <div style={{background:"#0a1322",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,padding:"48px 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
           <div>
-            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{tg(lang,"VERIFIED BY INDEPENDENT EU LABORATORY")}</div>
-            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>{tg(lang,"Every batch. Every compound. Fully documented.")}</h2>
+            <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{lang==="FR"?"VALIDATION PAR LABORATOIRE INDÉPENDANT":"INDEPENDENT LABORATORY VALIDATION"}</div>
+            <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:16,lineHeight:1.15}}>{lang==="FR"?"Chaque lot. Analysé. Documenté.":"Every batch. Analysed. Documented."}</h2>
             <p style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.8,marginBottom:24}}>
-              Each Novalyx Research batch is analysed by an ISO-accredited European laboratory. HPLC purity, mass spectrometry identity confirmation, heavy-metal screening, sterility and endotoxin testing — included with every order.
+              {lang==="FR"?"Chaque nouveau lot Novalyx Research est soumis à une analyse indépendante par Janoshik Analytical : pureté HPLC, confirmation d'identité par spectrométrie de masse. Les certificats d'analyse (COA) sont publiés au fur et à mesure de la validation indépendante des lots.":"Each new Novalyx Research batch is submitted for independent analysis by Janoshik Analytical: HPLC purity, mass spectrometry identity confirmation. Certificates of Analysis (COA) are published as batches are independently validated."}
             </p>
             <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:24}}>
-              {["HPLC Purity","Mass Spectrometry","Heavy Metals","Sterility","Endotoxins"].map(t=>(
+              {["HPLC Purity","Mass Spectrometry","Janoshik Verified"].map(t=>(
                 <span key={t} style={{fontSize:10,padding:"4px 10px",borderRadius:3,background:"rgba(74,222,128,0.05)",border:"1px solid rgba(74,222,128,0.18)",color:"#4ade80",letterSpacing:0.5}}>{t}</span>
               ))}
             </div>
@@ -2527,12 +2568,9 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             </div>
             <div style={{fontSize:10,lineHeight:1.9,color:"#0a1322"}}>
               <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Product:")}</span><span style={{fontWeight:600}}>BPC-157 5mg</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Batch:")}</span><span style={{fontWeight:600}}>NVX-BPC-0426</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Purity (HPLC):")}</span><span style={{fontWeight:600,color:"#059669"}}>99.4%</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"MS identity:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Confirmed")}</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Heavy metals:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Pass")}</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Sterility:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Pass")}</span></div>
-              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Endotoxins:")}</span><span style={{fontWeight:600,color:"#059669"}}>&lt; 0.5 EU/mg</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Batch:")}</span><span style={{fontWeight:600}}>{lang==="FR"?"exemple":"sample"}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",borderBottom:"1px solid #e5e7eb",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"Purity (HPLC):")}</span><span style={{fontWeight:600,color:"#059669"}}>≥ 99%</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}><span style={{color:"#6b7280"}}>{tg(lang,"MS identity:")}</span><span style={{fontWeight:600,color:"#059669"}}>{tg(lang,"Confirmed")}</span></div>
             </div>
             <div style={{marginTop:"auto",paddingTop:18,borderTop:"1px solid #e5e7eb",display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
               <div>
@@ -2594,7 +2632,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
             </p>
             <ul style={{listStyle:"none",fontSize:12.5,color:"rgba(255,255,255,0.55)",lineHeight:2}}>
               <li>{lang==="FR"?"✓ Sceaux inviolables sur chaque flacon":"✓ Tamper-evident seals on every vial"}</li>
-              <li>{lang==="FR"?"✓ Expédition isotherme chaîne du froid":"✓ Cold-chain insulated shipping"}</li>
+              <li>{lang==="FR"?"✓ Emballage professionnel inviolable":"✓ Professional tamper-evident packaging"}</li>
               <li>{lang==="FR"?"✓ Code de lot imprimé sur l'étiquette + emballage":"✓ Batch code printed on label + packaging"}</li>
               <li>{lang==="FR"?"✓ Étiquetage réglementaire complet (usage recherche uniquement)":"✓ Full regulatory labelling (research use only)"}</li>
             </ul>
@@ -2608,7 +2646,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
           <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{tg(lang,"WHY NOVALYX")}</div>
           <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:30,fontWeight:800,marginBottom:40,maxWidth:460}}>{tg(lang,"Built for researchers who demand more.")}</h2>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:28}}>
-            {[["Independent Testing","Every batch verified by accredited third-party labs."],["Full Transparency","COA available for every product, every batch."],["Controlled Fulfillment","Secure handling, batch traceability, cold-chain across Europe."],["Stripe Secured","All payments handled by Stripe. Your data is safe."]].map(([title,desc])=>(
+            {[["Independent Testing","Every batch verified by accredited third-party labs."],["Full Transparency","COA available for every product, every batch."],["Controlled Fulfillment","Secure handling, batch traceability, professional packaging."],["Stripe Secured","All payments handled by Stripe. Your data is safe."]].map(([title,desc])=>(
               <div key={title} style={{paddingTop:20,borderTop:"1px solid rgba(74,222,128,0.25)"}}>
                 <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:15,fontWeight:700,marginBottom:10,color:"#4ade80"}}>{title}</div>
                 <div style={{fontSize:12,color:"rgba(255,255,255,0.45)",lineHeight:1.75}}>{desc}</div>
@@ -2798,7 +2836,7 @@ const AboutPage = ({ go, lang="EN" }) => (
       <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:24}}>{lang==="FR"?"Chaque produit que nous fournissons passe par des tests indépendants rigoureux avant d'atteindre nos clients. Nous publions chaque COA. Nous documentons chaque lot. La transparence n'est pas seulement une bonne pratique — c'est la seule norme acceptable.":"Every product we supply goes through rigorous independent testing before it reaches our customers. We publish every COA. We document every batch. Transparency isn't just good practice — it's the only acceptable standard."}</p>
       <p style={{fontSize:15,color:"rgba(255,255,255,0.55)",lineHeight:1.85,marginBottom:48}}>{lang==="FR"?"Notre catalogue de lancement couvre la recherche régénérative, métabolique, de longévité, immunitaire, nootropique et sur le sommeil — avec des mélanges signature dédiés pour des protocoles intégrés. La qualité avant la quantité, toujours.":"Our launch catalog spans regenerative, metabolic, longevity, immune, nootropic, and sleep research — with dedicated signature blends for integrated protocols. Quality over quantity, always."}</p>
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:20,marginBottom:48}}>
-        {[["🔬","Lab-First","Every decision starts with science, not marketing."],["📋","Open Docs","Full COA library, published for every batch."],["🤝","Researcher-Led","Built by and for serious research professionals."],["🌍","Global Delivery","EU-based fulfillment with international coverage."]].map(([icon,title,desc])=>(
+        {[["🔬","Lab-First","Every decision starts with science, not marketing."],["📋","Open Docs","Full COA library, published for every batch."],["🤝","Researcher-Led","Built by and for serious research professionals."],["🌍","Worldwide Delivery","Professional fulfillment with international shipping and tracking."]].map(([icon,title,desc])=>(
           <div key={title} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"20px 18px"}}>
             <div style={{fontSize:24,marginBottom:10}}>{icon}</div>
             <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:14,fontWeight:700,marginBottom:7}}>{title}</div>
@@ -2894,7 +2932,7 @@ const ContactPage = ({ lang="EN" }) => {
             </div>
         }
         <div style={{marginTop:48,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:16}}>
-          {[["📧",lang==="FR"?"EMAIL":"EMAIL",CONFIG.EMAIL],["⏱",lang==="FR"?"RÉPONSE":"RESPONSE",lang==="FR"?"Sous 1 jour ouvré":"Within 1 business day"],["📍",lang==="FR"?"BASÉ EN":"BASED IN",lang==="FR"?"Union Européenne":"European Union"]].map(([icon,label,val])=>(
+          {[["📧",lang==="FR"?"EMAIL":"EMAIL",CONFIG.EMAIL],["⏱",lang==="FR"?"RÉPONSE":"RESPONSE",lang==="FR"?"Sous 1 jour ouvré":"Within 1 business day"],["📍",lang==="FR"?"ADRESSE":"ADDRESS",CONFIG.ADDRESS]].map(([icon,label,val])=>(
             <div key={label} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"18px 18px",wordBreak:"break-word"}}>
               <div style={{fontSize:22,marginBottom:8}}>{icon}</div>
               <div style={{fontSize:9.5,color:"rgba(255,255,255,0.3)",letterSpacing:1,marginBottom:4}}>{label}</div>

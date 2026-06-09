@@ -401,8 +401,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 64.99, batch: "NVX-BPC5-0426",  stripePrice: "price_REPLACE_BPC157_5MG" },
-      { size: "10mg", price: 99.99, batch: "NVX-BPC10-0426", stripePrice: "price_REPLACE_BPC157_10MG" },
+      { size: "5mg",  price: 64.99, batch: "NVX-BPC5-0426",  stripeLink: "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01" },
+      { size: "10mg", price: 99.99, batch: "NVX-BPC10-0426", stripeLink: "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -441,8 +441,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-TB5-0426",  stripePrice: "price_REPLACE_TB500_5MG" },
-      { size: "10mg", price: 139.99, batch: "NVX-TB10-0426", stripePrice: "price_REPLACE_TB500_10MG" },
+      { size: "5mg",  price: 89.99,  batch: "NVX-TB5-0426",  stripeLink: "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09" },
+      { size: "10mg", price: 139.99, batch: "NVX-TB10-0426", stripeLink: "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -481,8 +481,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "50mg",  price: 59.99, batch: "NVX-GHK50-0426",  stripePrice: "price_REPLACE_GHK_50MG" },
-      { size: "100mg", price: 89.99, batch: "NVX-GHK100-0426", stripePrice: "price_REPLACE_GHK_100MG" },
+      { size: "50mg",  price: 59.99, batch: "NVX-GHK50-0426",  stripeLink: "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g" },
+      { size: "100mg", price: 89.99, batch: "NVX-GHK100-0426", stripeLink: "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -521,8 +521,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 54.99, batch: "NVX-KPV5-0426",  stripePrice: "price_REPLACE_KPV_5MG" },
-      { size: "10mg", price: 79.99, batch: "NVX-KPV10-0426", stripePrice: "price_REPLACE_KPV_10MG" },
+      { size: "5mg",  price: 54.99, batch: "NVX-KPV5-0426",  stripeLink: "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12" },
+      { size: "10mg", price: 79.99, batch: "NVX-KPV10-0426", stripeLink: "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -563,8 +563,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 149.99, batch: "NVX-RET5-0426",  stripePrice: "price_REPLACE_RETATRUTIDE_5MG" },
-      { size: "10mg", price: 229.99, batch: "NVX-RET10-0426", stripePrice: "price_REPLACE_RETATRUTIDE_10MG" },
+      { size: "5mg",  price: 149.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04" },
+      { size: "10mg", price: 229.99, batch: "NVX-RET10-0426", stripeLink: "https://buy.stripe.com/9B65kDd4n8Bc1rg9882Ry03" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -603,7 +603,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 299.99, batch: "NVX-MZD10-0426", stripePrice: "price_REPLACE_MZD10" },
+      { size: "10mg", price: 299.99, batch: "NVX-MZD10-0426", stripeLink: "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -642,7 +642,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 399.99, batch: "NVX-SUR10-0426", stripePrice: "price_REPLACE_SUR10" },
+      { size: "10mg", price: 399.99, batch: "NVX-SUR10-0426", stripeLink: "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -681,8 +681,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 219.99, batch: "NVX-CGL5-0426",  stripePrice: "price_REPLACE_CGL5" },
-      { size: "10mg", price: 379.99, batch: "NVX-CGL10-0426", stripePrice: "price_REPLACE_CGL10" },
+      { size: "5mg",  price: 219.99, batch: "NVX-CGL5-0426",  stripeLink: "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c" },
+      { size: "10mg", price: 379.99, batch: "NVX-CGL10-0426", stripeLink: "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -723,8 +723,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 159.99, batch: "NVX-TES5-0426",  stripePrice: "price_REPLACE_TES_5MG" },
-      { size: "10mg", price: 279.99, batch: "NVX-TES10-0426", stripePrice: "price_REPLACE_TES_10MG" },
+      { size: "5mg",  price: 159.99, batch: "NVX-TES5-0426",  stripeLink: "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e" },
+      { size: "10mg", price: 279.99, batch: "NVX-TES10-0426", stripeLink: "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -763,8 +763,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 64.99,  batch: "NVX-IPA5-0426",  stripePrice: "price_REPLACE_IPA5" },
-      { size: "10mg", price: 109.99, batch: "NVX-IPA10-0426", stripePrice: "price_REPLACE_IPA10" },
+      { size: "5mg",  price: 64.99,  batch: "NVX-IPA5-0426",  stripeLink: "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i" },
+      { size: "10mg", price: 109.99, batch: "NVX-IPA10-0426", stripeLink: "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -803,7 +803,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 109.99, batch: "NVX-SER5-0426", stripePrice: "price_REPLACE_SER5" },
+      { size: "5mg", price: 109.99, batch: "NVX-SER5-0426", stripeLink: "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -842,7 +842,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 249.99, batch: "NVX-CJC10-0426", stripePrice: "price_REPLACE_CJC10" },
+      { size: "10mg", price: 249.99, batch: "NVX-CJC10-0426", stripeLink: "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -883,8 +883,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "500mg",  price: 149.99, batch: "NVX-NAD500-0426",  stripePrice: "price_REPLACE_NAD_500" },
-      { size: "1000mg", price: 269.99, batch: "NVX-NAD1000-0426", stripePrice: "price_REPLACE_NAD_1000" },
+      { size: "500mg",  price: 149.99, batch: "NVX-NAD500-0426",  stripeLink: "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m" },
+      { size: "1000mg", price: 269.99, batch: "NVX-NAD1000-0426", stripeLink: "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -923,8 +923,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 89.99,  batch: "NVX-EPI10-0426", stripePrice: "price_REPLACE_EPI_10MG" },
-      { size: "50mg", price: 299.99, batch: "NVX-EPI50-0426", stripePrice: "price_REPLACE_EPI_50MG" },
+      { size: "10mg", price: 89.99,  batch: "NVX-EPI10-0426", stripeLink: "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o" },
+      { size: "50mg", price: 299.99, batch: "NVX-EPI50-0426", stripeLink: "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -963,9 +963,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 99.99,  batch: "NVX-PIN5-0426",  stripePrice: "price_REPLACE_PIN5" },
-      { size: "10mg", price: 149.99, batch: "NVX-PIN10-0426", stripePrice: "price_REPLACE_PIN10" },
-      { size: "20mg", price: 219.99, batch: "NVX-PIN20-0426", stripePrice: "price_REPLACE_PIN20" },
+      { size: "5mg",  price: 99.99,  batch: "NVX-PIN5-0426",  stripeLink: "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q" },
+      { size: "10mg", price: 149.99, batch: "NVX-PIN10-0426", stripeLink: "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r" },
+      { size: "20mg", price: 219.99, batch: "NVX-PIN20-0426", stripeLink: "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1004,8 +1004,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 119.99, batch: "NVX-MOTS10-0426", stripePrice: "price_REPLACE_MOTS_10MG" },
-      { size: "40mg", price: 299.99, batch: "NVX-MOTS40-0426", stripePrice: "price_REPLACE_MOTS_40MG" },
+      { size: "10mg", price: 119.99, batch: "NVX-MOTS10-0426", stripeLink: "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t" },
+      { size: "40mg", price: 299.99, batch: "NVX-MOTS40-0426", stripeLink: "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1044,8 +1044,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 149.99, batch: "NVX-SS31-10-0426", stripePrice: "price_REPLACE_SS31_10" },
-      { size: "50mg", price: 499.99, batch: "NVX-SS31-50-0426", stripePrice: "price_REPLACE_SS31_50" },
+      { size: "10mg", price: 149.99, batch: "NVX-SS31-10-0426", stripeLink: "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v" },
+      { size: "50mg", price: 499.99, batch: "NVX-SS31-50-0426", stripeLink: "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1086,8 +1086,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 169.99, batch: "NVX-TA1-5-0426",  stripePrice: "price_REPLACE_TA1_5MG" },
-      { size: "10mg", price: 279.99, batch: "NVX-TA1-10-0426", stripePrice: "price_REPLACE_TA1_10MG" },
+      { size: "5mg",  price: 169.99, batch: "NVX-TA1-5-0426",  stripeLink: "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x" },
+      { size: "10mg", price: 279.99, batch: "NVX-TA1-10-0426", stripeLink: "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1126,7 +1126,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 129.99, batch: "NVX-TYM10-0426", stripePrice: "price_REPLACE_TYM10" },
+      { size: "10mg", price: 129.99, batch: "NVX-TYM10-0426", stripeLink: "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1165,7 +1165,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 169.99, batch: "NVX-LL37-0426", stripePrice: "price_REPLACE_LL37" },
+      { size: "5mg", price: 169.99, batch: "NVX-LL37-0426", stripeLink: "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1206,8 +1206,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 79.99,  batch: "NVX-SMX5-0426",  stripePrice: "price_REPLACE_SMX5" },
-      { size: "11mg", price: 149.99, batch: "NVX-SMX11-0426", stripePrice: "price_REPLACE_SMX11" },
+      { size: "5mg",  price: 79.99,  batch: "NVX-SMX5-0426",  stripeLink: "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B" },
+      { size: "11mg", price: 149.99, batch: "NVX-SMX11-0426", stripeLink: "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1246,8 +1246,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-SEL5-0426",  stripePrice: "price_REPLACE_SEL5" },
-      { size: "11mg", price: 149.99, batch: "NVX-SEL11-0426", stripePrice: "price_REPLACE_SEL11" },
+      { size: "5mg",  price: 89.99,  batch: "NVX-SEL5-0426",  stripeLink: "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D" },
+      { size: "11mg", price: 149.99, batch: "NVX-SEL11-0426", stripeLink: "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1286,7 +1286,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "60mg", price: 129.99, batch: "NVX-CBL60-0426", stripePrice: "price_REPLACE_CBL60" },
+      { size: "60mg", price: 129.99, batch: "NVX-CBL60-0426", stripeLink: "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vials (6-pack)" },
@@ -1327,8 +1327,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 79.99,  batch: "NVX-DSIP5-0426",  stripePrice: "price_REPLACE_DSIP5" },
-      { size: "10mg", price: 119.99, batch: "NVX-DSIP10-0426", stripePrice: "price_REPLACE_DSIP10" },
+      { size: "5mg",  price: 79.99,  batch: "NVX-DSIP5-0426",  stripeLink: "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G" },
+      { size: "10mg", price: 119.99, batch: "NVX-DSIP10-0426", stripeLink: "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1367,7 +1367,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 119.99, batch: "NVX-PT10-0426", stripePrice: "price_REPLACE_PT10" },
+      { size: "10mg", price: 119.99, batch: "NVX-PT10-0426", stripeLink: "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1406,7 +1406,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 159.99, batch: "NVX-ARA10-0426", stripePrice: "price_REPLACE_ARA10" },
+      { size: "10mg", price: 159.99, batch: "NVX-ARA10-0426", stripeLink: "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1445,8 +1445,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-KIS5-0426",  stripePrice: "price_REPLACE_KIS5" },
-      { size: "10mg", price: 149.99, batch: "NVX-KIS10-0426", stripePrice: "price_REPLACE_KIS10" },
+      { size: "5mg",  price: 89.99,  batch: "NVX-KIS5-0426",  stripeLink: "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K" },
+      { size: "10mg", price: 149.99, batch: "NVX-KIS10-0426", stripeLink: "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1483,8 +1483,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 129.99, batch: "NVX-TIRZ5-0426",  stripePrice: "price_REPLACE_TIRZEPATIDE_5MG" },
-      { size: "10mg", price: 189.99, batch: "NVX-TIRZ10-0426", stripePrice: "price_REPLACE_TIRZEPATIDE_10MG" },
+      { size: "5mg",  price: 129.99, batch: "NVX-TIRZ5-0426",  stripeLink: "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05" },
+      { size: "10mg", price: 189.99, batch: "NVX-TIRZ10-0426", stripeLink: "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1523,8 +1523,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 119.99, batch: "NVX-SEMA5-0426",  stripePrice: "price_REPLACE_SEMAGLUTIDE_5MG" },
-      { size: "10mg", price: 169.99, batch: "NVX-SEMA10-0426", stripePrice: "price_REPLACE_SEMAGLUTIDE_10MG" },
+      { size: "5mg",  price: 119.99, batch: "NVX-SEMA5-0426",  stripeLink: "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07" },
+      { size: "10mg", price: 169.99, batch: "NVX-SEMA10-0426", stripeLink: "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1563,8 +1563,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 99.99,  batch: "NVX-AOD5-0426",  stripePrice: "price_REPLACE_AOD_5MG" },
-      { size: "10mg", price: 159.99, batch: "NVX-AOD10-0426", stripePrice: "price_REPLACE_AOD_10MG" },
+      { size: "5mg",  price: 99.99,  batch: "NVX-AOD5-0426",  stripeLink: "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M" },
+      { size: "10mg", price: 159.99, batch: "NVX-AOD10-0426", stripeLink: "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1603,8 +1603,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-GHRP2-5-0426",  stripePrice: "price_REPLACE_GHRP2_5MG" },
-      { size: "10mg", price: 89.99, batch: "NVX-GHRP2-10-0426", stripePrice: "price_REPLACE_GHRP2_10MG" },
+      { size: "5mg",  price: 59.99, batch: "NVX-GHRP2-5-0426",  stripeLink: "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O" },
+      { size: "10mg", price: 89.99, batch: "NVX-GHRP2-10-0426", stripeLink: "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1643,8 +1643,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-GHRP6-5-0426",  stripePrice: "price_REPLACE_GHRP6_5MG" },
-      { size: "10mg", price: 89.99, batch: "NVX-GHRP6-10-0426", stripePrice: "price_REPLACE_GHRP6_10MG" },
+      { size: "5mg",  price: 59.99, batch: "NVX-GHRP6-5-0426",  stripeLink: "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q" },
+      { size: "10mg", price: 89.99, batch: "NVX-GHRP6-10-0426", stripeLink: "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1683,7 +1683,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 129.99, batch: "NVX-5AMQ5-0426", stripePrice: "price_REPLACE_5AMINO_5MG" },
+      { size: "5mg", price: 129.99, batch: "NVX-5AMQ5-0426", stripeLink: "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1722,8 +1722,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "2mg", price: 69.99, batch: "NVX-HEX2-0426",  stripePrice: "price_REPLACE_HEXARELIN_2MG" },
-      { size: "5mg", price: 99.99, batch: "NVX-HEX5-0426", stripePrice: "price_REPLACE_HEXARELIN_5MG" },
+      { size: "2mg", price: 69.99, batch: "NVX-HEX2-0426",  stripeLink: "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T" },
+      { size: "5mg", price: 99.99, batch: "NVX-HEX5-0426", stripeLink: "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1764,7 +1764,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg+10mg", price: 189.99, batch: "NVX-F01-0426", stripePrice: "price_REPLACE_FORMULA01" },
+      { size: "10mg+10mg", price: 189.99, batch: "NVX-F01-0426", stripeLink: "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + TB-500 10mg" },
@@ -1804,7 +1804,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg+5mg", price: 149.99, batch: "NVX-F02-0426", stripePrice: "price_REPLACE_FORMULA02" },
+      { size: "5mg+5mg", price: 149.99, batch: "NVX-F02-0426", stripeLink: "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W" },
     ],
     commonSpecs: [
       { label: "Composition", value: "CJC-1295 5mg + Ipamorelin 5mg" },
@@ -1844,7 +1844,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "70mg total", price: 329.99, batch: "NVX-F03-0426", stripePrice: "price_REPLACE_FORMULA03" },
+      { size: "70mg total", price: 329.99, batch: "NVX-F03-0426", stripeLink: "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg" },
@@ -1885,9 +1885,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "3ml vial",   price: 7.99,  batch: "NVX-BW3-0426",   stripePrice: "price_REPLACE_BW3" },
-      { size: "10ml vial",  price: 12.99, batch: "NVX-BW10-0426",  stripePrice: "price_REPLACE_BW10" },
-      { size: "5 × 10ml",   price: 54.99, batch: "NVX-BW10X5-0426",stripePrice: "price_REPLACE_BW10X5" },
+      { size: "3ml vial",   price: 7.99,  batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z" },
+      { size: "10ml vial",  price: 12.99, batch: "NVX-BW10-0426",  stripeLink: "https://buy.stripe.com/cNieVd5BV2cOb1Q2JK2Ry10" },
+      { size: "5 × 10ml",   price: 54.99, batch: "NVX-BW10X5-0426",stripeLink: "https://buy.stripe.com/aFa3cve8r04Ggma1FG2Ry11" },
     ],
     commonSpecs: [
       { label: "Composition", value: "Water for injection + 0.9% benzyl alcohol" },
@@ -1927,7 +1927,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "80mg total", price: 399.99, batch: "NVX-F04-0426", stripePrice: "price_REPLACE_FORMULA04" },
+      { size: "80mg total", price: 399.99, batch: "NVX-F04-0426", stripeLink: "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg + KPV 10mg" },
@@ -1955,36 +1955,43 @@ const hexToRgb = (hex) => {
 };
 
 const goToStripeCheckout = async (cart) => {
-  if (!CONFIG.STRIPE_ENABLED) {
-    alert("Stripe not yet configured. Add your publishable key and wire up /api/checkout endpoint.");
+  if (!cart || cart.length === 0) return;
+
+  // Find items that have a Stripe payment link
+  const withLink = cart.filter(item => item.stripeLink && item.stripeLink.startsWith("https"));
+  const withoutLink = cart.filter(item => !item.stripeLink || !item.stripeLink.startsWith("https"));
+
+  if (withLink.length === 0) {
+    alert("Ce produit n'est pas encore disponible à l'achat en ligne. Contactez-nous à contact@novalyxresearch.com / This product is not yet available for online purchase. Contact us at contact@novalyxresearch.com");
     return;
   }
-  try {
-    // Proper production pattern: POST cart to your own backend,
-    // which creates a Stripe Checkout Session and returns the redirect URL.
-    // The backend endpoint (/api/checkout) must be implemented server-side
-    // using your Stripe secret key — NEVER in client code.
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: cart.map(item => ({
-          priceId:  item.stripePrice,
-          quantity: item.qty,
-        })),
-      }),
-    });
-    if (!res.ok) throw new Error("Checkout request failed");
-    const data = await res.json();
-    if (data.url) {
-      window.location = data.url;
-    } else {
-      throw new Error("No redirect URL returned");
+
+  // Payment Links handle one product each. If the cart has a single distinct product, go straight to it.
+  if (cart.length === 1 && withLink.length === 1) {
+    const item = withLink[0];
+    let url = item.stripeLink;
+    // Pass quantity via URL param supported by Stripe Payment Links
+    if (item.qty && item.qty > 1) {
+      url += (url.includes("?") ? "&" : "?") + "quantity=" + item.qty;
     }
-  } catch (err) {
-    console.error("Stripe error:", err);
-    alert("Checkout error. Please try again or contact support.");
+    window.location = url;
+    return;
   }
+
+  // Multiple distinct products: Stripe Payment Links can't combine them in one link.
+  // Open the first product's link and inform the user to check out remaining items after.
+  if (withoutLink.length > 0) {
+    alert("Certains articles ne sont pas encore disponibles en ligne. / Some items are not yet available online. Contact: contact@novalyxresearch.com");
+  }
+  const first = withLink[0];
+  let url = first.stripeLink;
+  if (first.qty && first.qty > 1) {
+    url += (url.includes("?") ? "&" : "?") + "quantity=" + first.qty;
+  }
+  if (withLink.length > 1) {
+    alert("Pour le moment, merci de régler un produit à la fois. Vous allez payer : " + first.name + ". / Please check out one product at a time for now. You'll pay for: " + first.name);
+  }
+  window.location = url;
 };
 
 /* ─── GLOBAL CSS ─────────────────────────────────────────── */
@@ -3137,7 +3144,7 @@ export default function App() {
         size: variant.size,
         batch: variant.batch,
         price: variant.price,
-        stripePrice: variant.stripePrice,
+        stripeLink: variant.stripeLink,
         qty: q,
       }];
     });

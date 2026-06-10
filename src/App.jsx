@@ -3,6 +3,121 @@ import { useState, useEffect } from "react";
 /* ═══════════════════════════════════════════════════════════
    🔧 CONFIG — swap these when you have your details
 ═══════════════════════════════════════════════════════════ */
+// ============================================================
+//  MAPPING CENTRALISÉ DES LIENS DE PAIEMENT STRIPE
+//  Pour modifier un lien : change juste l'URL ici, rien d'autre.
+//  Clé = "idproduit_dosage". Vide "" = bouton "contactez-nous".
+//  Le SITE affiche les vrais noms ; Stripe peut afficher des codes.
+// ============================================================
+const STRIPE_LINKS = {
+  // BPC-157
+  "bpc157_5mg": "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01",
+  "bpc157_10mg": "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02",
+  // TB-500
+  "tb500_5mg": "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09",
+  "tb500_10mg": "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a",
+  // GHK-Copper
+  "ghk_50mg": "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g",
+  "ghk_100mg": "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h",
+  // KPV
+  "kpv_5mg": "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12",
+  "kpv_10mg": "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13",
+  // Retatrutide
+  "retatrutide_5mg": "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04",
+  "retatrutide_10mg": "https://buy.stripe.com/9B65kDd4n8Bc1rg9882Ry03",
+  // Mazdutide
+  "mazdutide_10mg": "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14",
+  // Survodutide
+  "survodutide_10mg": "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15",
+  // Cagrilintide
+  "cagrilintide_5mg": "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c",
+  "cagrilintide_10mg": "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d",
+  // Tesamorelin
+  "tesamorelin_5mg": "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e",
+  "tesamorelin_10mg": "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f",
+  // Ipamorelin
+  "ipamorelin_5mg": "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i",
+  "ipamorelin_10mg": "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j",
+  // Sermorelin
+  "sermorelin_5mg": "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l",
+  // CJC-1295 (no DAC)
+  "cjc1295_10mg": "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k",
+  // NAD+
+  "nad_500mg": "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m",
+  "nad_1000mg": "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n",
+  // Epitalon
+  "epitalon_10mg": "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o",
+  "epitalon_50mg": "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p",
+  // Pinealon
+  "pinealon_5mg": "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q",
+  "pinealon_10mg": "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r",
+  "pinealon_20mg": "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s",
+  // MOTS-c
+  "motsc_10mg": "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t",
+  "motsc_40mg": "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u",
+  // SS-31
+  "ss31_10mg": "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v",
+  "ss31_50mg": "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w",
+  // Thymosin Alpha-1
+  "thymosinalpha1_5mg": "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x",
+  "thymosinalpha1_10mg": "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y",
+  // Thymalin
+  "thymalin_10mg": "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z",
+  // LL-37
+  "ll37_5mg": "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A",
+  // Semax
+  "semax_5mg": "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B",
+  "semax_11mg": "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C",
+  // Selank
+  "selank_5mg": "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D",
+  "selank_11mg": "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E",
+  // Cerebrolysin
+  "cerebrolysin_60mg": "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F",
+  // DSIP
+  "dsip_5mg": "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G",
+  "dsip_10mg": "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H",
+  // PT-141
+  "pt141_10mg": "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I",
+  // Ara-290
+  "ara290_10mg": "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J",
+  // Kisspeptin-10
+  "kisspeptin_5mg": "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K",
+  "kisspeptin_10mg": "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L",
+  // Tirzepatide
+  "slupp322_5mg": "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05",
+  "slupp322_10mg": "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06",
+  // Semaglutide
+  "semaglutide_5mg": "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07",
+  "semaglutide_10mg": "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08",
+  // AOD-9604
+  "aod9604_5mg": "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M",
+  "aod9604_10mg": "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N",
+  // GHRP-2
+  "ghrp2_5mg": "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O",
+  "ghrp2_10mg": "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P",
+  // GHRP-6
+  "ghrp6_5mg": "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q",
+  "ghrp6_10mg": "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R",
+  // 5-Amino-1MQ
+  "amino1mq_5mg": "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S",
+  // Hexarelin
+  "hexarelin_2mg": "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T",
+  "hexarelin_5mg": "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U",
+  // Novalyx Formula 01
+  "formula01_10mg+10mg": "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V",
+  // Novalyx Formula 02
+  "formula02_5mg+5mg": "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W",
+  // Novalyx Formula 03
+  "formula03_70mg total": "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X",
+  // Bacteriostatic Water
+  "bac-water_3ml vial": "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z",
+  "bac-water_10ml vial": "https://buy.stripe.com/cNieVd5BV2cOb1Q2JK2Ry10",
+  "bac-water_5 × 10ml": "https://buy.stripe.com/aFa3cve8r04Ggma1FG2Ry11",
+  // Novalyx Formula 04
+  "formula04_80mg total": "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y",
+};
+const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
+
 const CONFIG = {
   STRIPE_PUBLISHABLE_KEY: "pk_live_51TexuAEynlu0HG7FDZS29RRn4GgrhdpGZ9ucl83bNQm1gAi3uHi5JGAPfGkJzHvhoeWB42NXO0cQcwUt6vT8QGqi00W6VFqyXX",
   BUSINESS_NAME:          "Novalyx Research",
@@ -25,7 +140,7 @@ const CURRENCIES = {
 const TRANSLATIONS = {
   EN: {
     // Nav
-    nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
+    nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_calc: "CALCULATOR", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
     ann1: "FRANCE BASED", ann2: "BATCH TESTED", ann3: "WORLDWIDE SHIPPING", ann4: "CONTROLLED FULFILLMENT",
     // Age gate
@@ -119,7 +234,7 @@ const TRANSLATIONS = {
   },
   FR: {
     // Nav
-    nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
+    nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_calc: "CALCULATEUR", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
     ann1: "ENTREPRISE FRANÇAISE", ann2: "TESTÉ PAR LOT", ann3: "LIVRAISON INTERNATIONALE", ann4: "FULFILLMENT CONTRÔLÉ",
     // Age gate
@@ -2016,6 +2131,7 @@ const CSS = `
     .nav-links{position:static!important;transform:none!important;width:100%;order:3;justify-content:center;gap:14px!important;font-size:12px;}
     .nl{font-size:12px!important;}
     .coa-showcase{grid-template-columns:1fr!important;padding:32px 20px!important;gap:28px!important;}
+    .calc-grid{grid-template-columns:1fr!important;gap:20px!important;}
   }
   @media (max-width:850px){
     [style*="padding:\\"80px 40px"]{padding:48px 20px!important;}
@@ -2115,7 +2231,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
       </div>
     </div>
     <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap",position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
-      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
+      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_calc"),"calculator"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
         <span key={p} className={`nl${page===p?" active":""}`} onClick={()=>go(p)}>{l}</span>
       ))}
     </div>
@@ -2173,6 +2289,38 @@ const Footer = ({ go, lang="EN" }) => (
             {links.map(([l,p])=><div key={l} className="fl" style={{marginBottom:9}} onClick={()=>go(p)}>{l}</div>)}
           </div>
         ))}
+      </div>
+    </div>
+    <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:22,paddingBottom:18,display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
+      <div style={{fontSize:9,letterSpacing:2,color:"rgba(255,255,255,0.3)",display:"flex",alignItems:"center",gap:6}}>
+        <span style={{color:"#4ade80"}}>🔒</span> {lang==="FR"?"PAIEMENT 100% SÉCURISÉ":"100% SECURE PAYMENT"}
+      </div>
+      <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap",justifyContent:"center"}}>
+        {/* VISA */}
+        <div style={{background:"#fff",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",height:30,boxSizing:"border-box"}}>
+          <span style={{color:"#1a1f71",fontWeight:800,fontStyle:"italic",fontSize:14,letterSpacing:0.5,fontFamily:"Arial,sans-serif"}}>VISA</span>
+        </div>
+        {/* Mastercard */}
+        <div style={{background:"#fff",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",gap:-4,height:30,boxSizing:"border-box"}}>
+          <span style={{width:16,height:16,borderRadius:"50%",background:"#eb001b",display:"inline-block"}}></span>
+          <span style={{width:16,height:16,borderRadius:"50%",background:"#f79e1b",display:"inline-block",marginLeft:-6,opacity:0.9}}></span>
+        </div>
+        {/* Amex */}
+        <div style={{background:"#006fcf",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",height:30,boxSizing:"border-box"}}>
+          <span style={{color:"#fff",fontWeight:800,fontSize:9,letterSpacing:0.3,fontFamily:"Arial,sans-serif"}}>AMEX</span>
+        </div>
+        {/* Apple Pay */}
+        <div style={{background:"#000",border:"1px solid rgba(255,255,255,0.2)",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",height:30,boxSizing:"border-box"}}>
+          <span style={{color:"#fff",fontWeight:600,fontSize:12,fontFamily:"Arial,sans-serif"}}> Pay</span>
+        </div>
+        {/* Google Pay */}
+        <div style={{background:"#fff",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",height:30,boxSizing:"border-box"}}>
+          <span style={{fontWeight:600,fontSize:12,fontFamily:"Arial,sans-serif"}}><span style={{color:"#4285f4"}}>G</span><span style={{color:"#ea4335"}}>o</span><span style={{color:"#fbbc04"}}>o</span><span style={{color:"#4285f4"}}>g</span><span style={{color:"#34a853"}}>l</span><span style={{color:"#ea4335"}}>e</span> <span style={{color:"#5f6368"}}>Pay</span></span>
+        </div>
+        {/* Stripe */}
+        <div style={{background:"#635bff",borderRadius:5,padding:"6px 10px",display:"flex",alignItems:"center",height:30,boxSizing:"border-box"}}>
+          <span style={{color:"#fff",fontWeight:700,fontSize:11,fontStyle:"italic",fontFamily:"Arial,sans-serif"}}>stripe</span>
+        </div>
       </div>
     </div>
     <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:18,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
@@ -2799,6 +2947,100 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
   );
 };
 
+const CalculatorPage = ({ lang="EN" }) => {
+  const [peptideMg, setPeptideMg] = useState(10);
+  const [waterMl, setWaterMl] = useState(2);
+  const [doseMcg, setDoseMcg] = useState(250);
+  const [syringeType, setSyringeType] = useState(100); // 100 = U-100 (1ml=100u)
+
+  const FR = lang === "FR";
+
+  // Concentration in mcg per ml
+  const totalMcg = peptideMg * 1000;
+  const concMcgPerMl = waterMl > 0 ? totalMcg / waterMl : 0;
+  // Volume to draw for the target dose (ml)
+  const drawMl = concMcgPerMl > 0 ? doseMcg / concMcgPerMl : 0;
+  // Units on insulin syringe
+  const units = drawMl * syringeType;
+  // Number of doses in the vial
+  const totalDoses = doseMcg > 0 ? totalMcg / doseMcg : 0;
+
+  const L = (fr, en) => FR ? fr : en;
+  const inp = {width:"100%",padding:"12px 14px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:8,color:"white",fontSize:15,boxSizing:"border-box",outline:"none"};
+  const lbl = {fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.45)",marginBottom:7,display:"block",textTransform:"uppercase"};
+
+  return (
+    <div style={{padding:"60px 40px 100px",maxWidth:1000,margin:"0 auto"}}>
+      <div style={{marginBottom:40}}>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{L("OUTIL LABORATOIRE","LABORATORY TOOL")}</div>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{L("Calculateur de reconstitution","Reconstitution Calculator")}</h1>
+        <p style={{fontSize:14,color:"rgba(255,255,255,0.45)",maxWidth:600,lineHeight:1.7}}>{L("Outil de calcul pour cadrer les volumes et concentrations en contexte laboratoire. Usage recherche uniquement.","Calculation tool to determine volumes and concentrations in a laboratory context. Research use only.")}</p>
+      </div>
+
+      <div className="calc-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}>
+        {/* INPUTS */}
+        <div style={{background:"linear-gradient(145deg,#0f2240,#0c1830)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:16,padding:"28px 26px"}}>
+          <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:16,fontWeight:700,marginBottom:22}}>{L("Paramètres","Parameters")}</h3>
+
+          <div style={{marginBottom:18}}>
+            <label style={lbl}>{L("Quantité de peptide dans le flacon (mg)","Peptide amount in vial (mg)")}</label>
+            <input style={inp} type="number" min="0" step="0.5" value={peptideMg} onChange={e=>setPeptideMg(parseFloat(e.target.value)||0)}/>
+          </div>
+
+          <div style={{marginBottom:18}}>
+            <label style={lbl}>{L("Eau bactériostatique ajoutée (ml)","Bacteriostatic water added (ml)")}</label>
+            <input style={inp} type="number" min="0" step="0.1" value={waterMl} onChange={e=>setWaterMl(parseFloat(e.target.value)||0)}/>
+          </div>
+
+          <div style={{marginBottom:18}}>
+            <label style={lbl}>{L("Dose cible souhaitée (mcg)","Target dose (mcg)")}</label>
+            <input style={inp} type="number" min="0" step="10" value={doseMcg} onChange={e=>setDoseMcg(parseFloat(e.target.value)||0)}/>
+          </div>
+
+          <div>
+            <label style={lbl}>{L("Type de seringue","Syringe type")}</label>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {[[100,"U-100 (1ml)"],[50,"U-50 (0.5ml)"],[30,"U-30 (0.3ml)"]].map(([v,label])=>(
+                <button key={v} onClick={()=>setSyringeType(v)} style={{flex:"1 1 auto",padding:"10px 8px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",border:syringeType===v?"1px solid #4ade80":"1px solid rgba(255,255,255,0.12)",background:syringeType===v?"rgba(74,222,128,0.12)":"transparent",color:syringeType===v?"#4ade80":"rgba(255,255,255,0.6)"}}>{label}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* RESULTS */}
+        <div style={{background:"#0a1322",border:"1px solid rgba(74,222,128,0.18)",borderRadius:16,padding:"28px 26px"}}>
+          <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:16,fontWeight:700,marginBottom:22}}>{L("Résultats","Results")}</h3>
+
+          <div style={{marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+            <div style={{fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.4)",marginBottom:6,textTransform:"uppercase"}}>{L("Concentration","Concentration")}</div>
+            <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:26,fontWeight:800,color:"#4ade80"}}>{concMcgPerMl>0?Math.round(concMcgPerMl).toLocaleString():"—"} <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>mcg/ml</span></div>
+          </div>
+
+          <div style={{marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+            <div style={{fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.4)",marginBottom:6,textTransform:"uppercase"}}>{L("Volume à prélever","Volume to draw")}</div>
+            <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:26,fontWeight:800,color:"white"}}>{drawMl>0?drawMl.toFixed(3):"—"} <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>ml</span></div>
+          </div>
+
+          <div style={{marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+            <div style={{fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.4)",marginBottom:6,textTransform:"uppercase"}}>{L("Sur la seringue","On the syringe")}</div>
+            <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:26,fontWeight:800,color:"#4ade80"}}>{units>0?Math.round(units):"—"} <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>{L("unités","units")}</span></div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",marginTop:4}}>{L(`Tirez jusqu'au trait ${units>0?Math.round(units):"—"} (seringue U-${syringeType})`,`Draw to the ${units>0?Math.round(units):"—"} mark (U-${syringeType} syringe)`)}</div>
+          </div>
+
+          <div>
+            <div style={{fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.4)",marginBottom:6,textTransform:"uppercase"}}>{L("Nombre de doses par flacon","Doses per vial")}</div>
+            <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:26,fontWeight:800,color:"white"}}>{totalDoses>0?Math.floor(totalDoses):"—"} <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>{L("doses","doses")}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{marginTop:28,background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.2)",borderRadius:12,padding:"18px 22px",fontSize:12,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
+        ⚠️ {L("Cet outil est fourni à titre indicatif pour le cadrage de calculs en laboratoire de recherche uniquement. Les produits ne sont pas destinés à une utilisation humaine ou animale.","This tool is provided for reference, to assist with calculations in a research laboratory context only. Products are not intended for human or animal use.")}
+      </div>
+    </div>
+  );
+};
+
 const COAPage = ({ lang="EN" }) => (
   <div style={{padding:"60px 40px 100px"}}>
     <div style={{marginBottom:48}}>
@@ -3144,7 +3386,7 @@ export default function App() {
         size: variant.size,
         batch: variant.batch,
         price: variant.price,
-        stripeLink: variant.stripeLink,
+        stripeLink: getStripeLink(product.id, variant.size),
         qty: q,
       }];
     });
@@ -3156,6 +3398,7 @@ export default function App() {
     home:       <Home go={go} cur={cur} addToCart={addToCart} added={added} lang={lang}/>,
     products:   <ProductsPage cur={cur} addToCart={addToCart} added={added} initialFilter={productFilter} setProductFilter={setProductFilter} lang={lang}/>,
     coa:        <COAPage lang={lang}/>,
+    calculator: <CalculatorPage lang={lang}/>,
     about:      <AboutPage go={go} lang={lang}/>,
     faq:        <FAQPage lang={lang}/>,
     contact:    <ContactPage lang={lang}/>,

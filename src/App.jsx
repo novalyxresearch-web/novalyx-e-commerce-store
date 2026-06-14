@@ -118,6 +118,7 @@ const STRIPE_LINKS = {
 };
 const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
 
+
 const CONFIG = {
   STRIPE_PUBLISHABLE_KEY: "pk_live_51TexuAEynlu0HG7FDZS29RRn4GgrhdpGZ9ucl83bNQm1gAi3uHi5JGAPfGkJzHvhoeWB42NXO0cQcwUt6vT8QGqi00W6VFqyXX",
   BUSINESS_NAME:          "Novalyx Research",
@@ -140,7 +141,7 @@ const CURRENCIES = {
 const TRANSLATIONS = {
   EN: {
     // Nav
-    nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_calc: "CALCULATOR", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
+    nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_calc: "CALCULATOR", nav_learn: "LEARNING CENTER", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
     ann1: "FRANCE BASED", ann2: "BATCH TESTED", ann3: "WORLDWIDE SHIPPING", ann4: "CONTROLLED FULFILLMENT",
     // Age gate
@@ -234,7 +235,7 @@ const TRANSLATIONS = {
   },
   FR: {
     // Nav
-    nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_calc: "CALCULATEUR", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
+    nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_calc: "CALCULATEUR", nav_learn: "CENTRE D'APPRENTISSAGE", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
     // Announcement bar
     ann1: "ENTREPRISE FRANÇAISE", ann2: "TESTÉ PAR LOT", ann3: "LIVRAISON INTERNATIONALE", ann4: "FULFILLMENT CONTRÔLÉ",
     // Age gate
@@ -2231,7 +2232,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
       </div>
     </div>
     <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap",position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
-      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_calc"),"calculator"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
+      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_calc"),"calculator"],[t(lang,"nav_learn"),"learning"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
         <span key={p} className={`nl${page===p?" active":""}`} onClick={()=>go(p)}>{l}</span>
       ))}
     </div>
@@ -2260,6 +2261,55 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
     </div>
   </nav>
 );
+
+/* ─── EMAIL SIGNUP ───────────────────────────────────────── */
+const EmailSignup = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  const L = (fr,en)=>FR?fr:en;
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const submit = () => {
+    if (email && email.includes("@")) {
+      // Opens the user's mail client to register the lead (no backend needed)
+      window.location = `mailto:contact@novalyxresearch.com?subject=${encodeURIComponent("Newsletter signup")}&body=${encodeURIComponent("Inscription newsletter / newsletter signup: "+email)}`;
+      setDone(true);
+    }
+  };
+  return (
+    <div style={{padding:"50px 40px",background:"#080f1d",borderTop:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{maxWidth:620,margin:"0 auto",textAlign:"center"}}>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{L("NEWSLETTER","NEWSLETTER")}</div>
+        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(20px,4vw,28px)",fontWeight:800,marginBottom:10}}>{L("Recevez 10% sur votre première commande","Get 10% off your first order")}</h2>
+        <p style={{fontSize:13,color:"rgba(255,255,255,0.45)",lineHeight:1.7,marginBottom:22}}>{L("Inscrivez-vous pour recevoir nos nouveautés, la publication des COA et des offres réservées.","Sign up for new arrivals, COA releases and exclusive offers.")}</p>
+        {done ? (
+          <div style={{color:"#4ade80",fontSize:14,fontWeight:600}}>{L("Merci ! Vérifiez votre messagerie.","Thank you! Please check your mail app.")}</div>
+        ) : (
+          <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
+            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder={L("Votre email","Your email")} style={{flex:"1 1 240px",maxWidth:300,padding:"13px 16px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,color:"white",fontSize:14,outline:"none",boxSizing:"border-box"}}/>
+            <button onClick={submit} style={{padding:"13px 26px",background:"#4ade80",color:"#05210f",border:"none",borderRadius:10,fontSize:13,fontWeight:700,letterSpacing:0.5,cursor:"pointer"}}>{L("S'inscrire","Sign up")}</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ─── B2B BAND ───────────────────────────────────────────── */
+const B2BBand = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  const L = (fr,en)=>FR?fr:en;
+  return (
+    <div style={{padding:"56px 40px",background:"linear-gradient(145deg,#0a1830,#0c1f3a)",borderTop:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:12}}>{L("PROFESSIONNELS & REVENDEURS","PROFESSIONALS & RESELLERS")}</div>
+        <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(24px,5vw,34px)",fontWeight:800,marginBottom:14}}>{L("Vous êtes un laboratoire ou un revendeur ?","Are you a laboratory or reseller?")}</h2>
+        <p style={{fontSize:14,color:"rgba(255,255,255,0.5)",lineHeight:1.8,maxWidth:620,margin:"0 auto 24px"}}>{L("Nous proposons des tarifs dégressifs pour les commandes en gros, les laboratoires de recherche et les revendeurs professionnels. Chaque lot est analysé en laboratoire indépendant avec COA fourni.","We offer volume pricing for bulk orders, research laboratories and professional resellers. Every batch is independently lab-tested with COA provided.")}</p>
+        <a href="mailto:contact@novalyxresearch.com?subject=Demande%20tarifs%20B2B%20-%20Novalyx%20Research" style={{display:"inline-block",padding:"14px 28px",background:"#4ade80",color:"#05210f",borderRadius:10,fontSize:13,fontWeight:700,letterSpacing:0.5,textDecoration:"none"}}>{L("Demander un tarif revendeur","Request reseller pricing")}</a>
+        <a href="/novalyx-catalogue.pdf" download style={{display:"inline-block",marginLeft:12,padding:"14px 28px",background:"transparent",color:"#4ade80",border:"1px solid #4ade80",borderRadius:10,fontSize:13,fontWeight:700,letterSpacing:0.5,textDecoration:"none"}}>{L("Télécharger le catalogue PDF","Download PDF catalog")}</a>
+      </div>
+    </div>
+  );
+};
 
 /* ─── FOOTER ─────────────────────────────────────────────── */
 const Footer = ({ go, lang="EN" }) => (
@@ -2947,6 +2997,71 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
   );
 };
 
+const LEARNING_DATA = [
+  { id:"bpc157", name:"BPC-157", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
+    en:"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in wound-healing assays.",
+    fr:"Fragment peptidique synthétique étudié en modèles de laboratoire pour son rôle dans la recherche sur la réparation tissulaire et l'angiogenèse. Fréquemment utilisé comme composé de référence dans les essais de cicatrisation." },
+  { id:"tb500", name:"TB-500", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
+    en:"A synthetic version of a naturally occurring peptide region studied for cell-migration and actin-regulation research in controlled settings.",
+    fr:"Version synthétique d'une région peptidique naturelle, étudiée pour la recherche sur la migration cellulaire et la régulation de l'actine en milieu contrôlé." },
+  { id:"ghk", name:"GHK-Cu (GHK-Cuivre)", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
+    en:"A copper-binding tripeptide investigated in skin-biology and extracellular-matrix research models.",
+    fr:"Tripeptide liant le cuivre, étudié dans les modèles de recherche en biologie cutanée et sur la matrice extracellulaire." },
+  { id:"retatrutide", name:"Retatrutide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
+    en:"A multi-receptor research compound studied in metabolic-pathway investigations. Of interest in laboratory studies examining receptor signalling.",
+    fr:"Composé de recherche multi-récepteurs étudié dans les investigations sur les voies métaboliques. D'intérêt dans les études de laboratoire examinant la signalisation des récepteurs." },
+  { id:"tirzepatide", name:"Tirzepatide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
+    en:"A dual-receptor research peptide used as a reference compound in metabolic signalling studies.",
+    fr:"Peptide de recherche à double récepteur utilisé comme composé de référence dans les études de signalisation métabolique." },
+  { id:"semaglutide", name:"Semaglutide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
+    en:"A research peptide widely referenced in receptor-binding and metabolic-pathway laboratory studies.",
+    fr:"Peptide de recherche largement référencé dans les études de laboratoire sur la liaison aux récepteurs et les voies métaboliques." },
+  { id:"nad", name:"NAD+", cat:{EN:"Longevity research",FR:"Recherche longévité"},
+    en:"A coenzyme central to cellular-energy and mitochondrial research, used in a wide range of biochemical assays.",
+    fr:"Coenzyme central de la recherche sur l'énergie cellulaire et les mitochondries, utilisé dans de nombreux essais biochimiques." },
+  { id:"epitalon", name:"Epitalon", cat:{EN:"Longevity research",FR:"Recherche longévité"},
+    en:"A synthetic tetrapeptide studied in telomere-biology and cellular-ageing research models.",
+    fr:"Tétrapeptide synthétique étudié dans les modèles de recherche sur la biologie des télomères et le vieillissement cellulaire." },
+  { id:"motsc", name:"MOTS-c", cat:{EN:"Longevity research",FR:"Recherche longévité"},
+    en:"A mitochondrial-derived peptide investigated in metabolic and cellular-energy research.",
+    fr:"Peptide d'origine mitochondriale étudié dans la recherche métabolique et sur l'énergie cellulaire." },
+  { id:"ipamorelin", name:"Ipamorelin", cat:{EN:"GH research",FR:"Recherche hormone de croissance"},
+    en:"A research peptide referenced in growth-hormone secretagogue and receptor-signalling studies.",
+    fr:"Peptide de recherche référencé dans les études sur les sécrétagogues de l'hormone de croissance et la signalisation des récepteurs." },
+  { id:"thymosinalpha1", name:"Thymosin Alpha-1", cat:{EN:"Immune research",FR:"Recherche immunitaire"},
+    en:"A peptide studied in immune-modulation and T-cell research models.",
+    fr:"Peptide étudié dans les modèles de recherche sur la modulation immunitaire et les lymphocytes T." },
+  { id:"semax", name:"Semax", cat:{EN:"Cognitive research",FR:"Recherche cognitive"},
+    en:"A synthetic peptide investigated in neuromodulation and neuroprotection research.",
+    fr:"Peptide synthétique étudié dans la recherche sur la neuromodulation et la neuroprotection." },
+];
+
+const LearningPage = ({ lang="EN" }) => {
+  const FR = lang === "FR";
+  const L = (fr,en)=>FR?fr:en;
+  return (
+    <div style={{padding:"60px 40px 100px",maxWidth:1000,margin:"0 auto"}}>
+      <div style={{marginBottom:40}}>
+        <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{L("CENTRE DE RECHERCHE","RESEARCH CENTER")}</div>
+        <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{L("Centre d'apprentissage","Learning Center")}</h1>
+        <p style={{fontSize:14,color:"rgba(255,255,255,0.45)",maxWidth:640,lineHeight:1.7}}>{L("Informations factuelles sur les composés de recherche de notre catalogue. Contenu strictement éducatif, destiné à la recherche en laboratoire uniquement.","Factual information on the research compounds in our catalog. Strictly educational content, intended for laboratory research only.")}</p>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:20}}>
+        {LEARNING_DATA.map(item=>(
+          <div key={item.id} style={{background:"linear-gradient(145deg,#0f2240,#0c1830)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"22px 22px"}}>
+            <div style={{fontSize:9,letterSpacing:1.5,color:"#4ade80",marginBottom:8,textTransform:"uppercase"}}>{FR?item.cat.FR:item.cat.EN}</div>
+            <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:19,fontWeight:800,marginBottom:10}}>{item.name}</h3>
+            <p style={{fontSize:12.5,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>{FR?item.fr:item.en}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{marginTop:32,background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.2)",borderRadius:12,padding:"18px 22px",fontSize:12,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
+        ⚠️ {L("Toutes les informations sont fournies à titre purement éducatif et scientifique. Les produits sont destinés à la recherche en laboratoire uniquement — pas pour usage humain ou animal. Aucune allégation médicale n'est faite.","All information is provided for purely educational and scientific purposes. Products are for laboratory research use only — not for human or animal use. No medical claims are made.")}
+      </div>
+    </div>
+  );
+};
+
 const CalculatorPage = ({ lang="EN" }) => {
   const [peptideMg, setPeptideMg] = useState(10);
   const [waterMl, setWaterMl] = useState(2);
@@ -3399,6 +3514,7 @@ export default function App() {
     products:   <ProductsPage cur={cur} addToCart={addToCart} added={added} initialFilter={productFilter} setProductFilter={setProductFilter} lang={lang}/>,
     coa:        <COAPage lang={lang}/>,
     calculator: <CalculatorPage lang={lang}/>,
+    learning:   <LearningPage lang={lang}/>,
     about:      <AboutPage go={go} lang={lang}/>,
     faq:        <FAQPage lang={lang}/>,
     contact:    <ContactPage lang={lang}/>,
@@ -3444,6 +3560,8 @@ export default function App() {
       </div>
       <Nav page={page} go={go} cur={cur} setCur={setCur} cartCount={cartCount} openCart={()=>setCartOpen(true)} lang={lang} setLang={setLang}/>
       <div className="fi" key={`${page}-${lang}`}>{pages[page]||pages.home}</div>
+      {(page==="home"||page==="products")&&<EmailSignup lang={lang}/>}
+      {(page==="home"||page==="products")&&<B2BBand lang={lang}/>}
       <Footer go={go} lang={lang}/>
       {cartOpen&&<Cart cart={cart} cur={cur} onClose={()=>setCartOpen(false)} onRemove={lineId=>setCart(p=>p.filter(i=>i.lineId!==lineId))} lang={lang}/>}
     </div>

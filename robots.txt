@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /panier
+
+User-agent: Googlebot
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /panier
+
+User-agent: AdsBot-Google
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /panier
+
+Sitemap: https://novalyxresearch.com/sitemap.xml

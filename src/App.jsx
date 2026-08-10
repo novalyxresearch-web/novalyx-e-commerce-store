@@ -2840,6 +2840,15 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
             ))}
           </div>
         </div>
+        {p.id === "bac-water" && (
+          <div style={{marginBottom:22,background:"rgba(103,232,249,0.06)",border:"1px solid rgba(103,232,249,0.22)",borderRadius:10,padding:"14px 16px"}}>
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.6}}>
+              {lang==="FR"
+                ? <>📦 Livraison réduite pour ce produit — <strong style={{color:"#67e8f9"}}>3,99€</strong> (France/UE). Expédiée séparément des peptides — voir notre politique de conformité.</>
+                : <>📦 Reduced shipping for this product — <strong style={{color:"#67e8f9"}}>€3.99</strong> (France/EU). Shipped separately from peptides — see our compliance policy.</>}
+            </div>
+          </div>
+        )}
         {p.verification && variant.size === p.verification.appliesTo && (
           <div style={{background:"linear-gradient(135deg,rgba(74,222,128,0.08),rgba(74,222,128,0.02))",border:"1px solid rgba(74,222,128,0.3)",borderRadius:10,padding:"18px 20px",marginBottom:22}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
@@ -2936,8 +2945,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang="EN" }) => {
                   <span style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:26,fontWeight:800}}>{fmt(total,cur)}</span>
                 </div>
                 <div style={{fontSize:10,color:"rgba(255,255,255,0.22)",marginBottom:18}}>{lang==="FR"?"Livraison calculée au moment du paiement":"Shipping calculated at checkout"}</div>
-                <div style={{marginBottom:12,padding:"10px 12px",background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.2)",borderRadius:8,fontSize:11,color:"rgba(251,191,36,0.9)",lineHeight:1.5}}>
-                  ⚠ {lang==="FR"?"Livraison estimée : <strong>2–3 semaines</strong> · Approvisionnement par lot":"Expected delivery: <strong>2–3 weeks</strong> · Per-order batch sourcing"}
+                <div style={{marginBottom:12,padding:"10px 12px",background:"rgba(74,222,128,0.06)",border:"1px solid rgba(74,222,128,0.2)",borderRadius:8,fontSize:11,color:"rgba(74,222,128,0.9)",lineHeight:1.5}}>
+                  ✓ {lang==="FR"?"Expédié sous 24h · France/UE 1–4 jours, hors UE 7–12 jours ouvrés":"Shipped within 24h · France/EU 1–4 days, outside EU 7–12 business days"}
                 </div>
                 <div style={{marginBottom:10,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,padding:"10px 12px"}}>
                   <label style={{fontSize:11,color:"rgba(255,255,255,0.55)",lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:8,cursor:"pointer"}}>
@@ -3777,28 +3786,29 @@ const ShippingPage = ({ lang="EN" }) => (
       <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(26px,5.5vw,40px)",fontWeight:800,marginBottom:32}}>{tg(lang,"Shipping & Fulfillment")}</h1>
       <div style={{fontSize:13.5,color:"rgba(255,255,255,0.5)",lineHeight:1.9}}>
         <p style={{marginBottom:18}}>{tg(lang,"All orders are processed under a controlled fulfillment system to ensure product integrity and batch consistency.")}</p>
-        <p style={{marginBottom:18}}>{lang==="FR"?<>Chaque commande est préparée après confirmation et expédiée dans notre délai de traitement standard. La livraison prend généralement <strong style={{color:"white"}}>2 à 3 semaines</strong>, car nos composés sont approvisionnés par commande auprès de nos partenaires de laboratoire vérifiés pour garantir la fraîcheur et la traçabilité des lots.</>:<>Each order is prepared following confirmation and dispatched within our standard processing timeframe. Delivery typically takes <strong style={{color:"white"}}>2–3 weeks</strong>, as our compounds are sourced per-order from our verified laboratory partners to ensure batch freshness and traceability.</>}</p>
+        <p style={{marginBottom:18}}>{lang==="FR"?<>Chaque commande en stock est <strong style={{color:"white"}}>expédiée sous 24h</strong> après confirmation du paiement. La livraison prend ensuite <strong style={{color:"white"}}>1 à 4 jours en France/UE</strong>, et <strong style={{color:"white"}}>7 à 14 jours ouvrés</strong> hors UE selon la destination et les douanes.</>:<>Every in-stock order is <strong style={{color:"white"}}>dispatched within 24h</strong> of payment confirmation. Delivery then takes <strong style={{color:"white"}}>1–4 days within France/EU</strong>, and <strong style={{color:"white"}}>7–14 business days</strong> outside the EU depending on destination and customs.</>}</p>
         <p style={{marginBottom:32}}>{tg(lang,"You will receive a tracking confirmation once your order is processed and in transit.")}</p>
 
         <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,color:"white",marginBottom:20,marginTop:32}}>{tg(lang,"Delivery Zones & Rates")}</h2>
 
         <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,overflow:"hidden",marginBottom:32}}>
           {[
-            ["🇫🇷 France",                  "€6.90",  "2–3 weeks"],
-            ["🇪🇺 European Union",           "€9.90",  "2–3 weeks"],
-            ["🇨🇭 Switzerland, 🇬🇧 UK",       "€14.90", "3–4 weeks"],
-            ["🇺🇸 USA, 🇨🇦 Canada",           "€24.90", "3–5 weeks"],
-            ["🇦🇺 Australia, 🇳🇿 New Zealand","€29.90", "3–5 weeks"],
-            ["🌍 Rest of world",            "€29.90", "Variable"],
+            ["🇫🇷 France",                  "€6.90",  "1–2 days"],
+            ["🇪🇺 European Union",           "€6.90",  "2–4 days"],
+            ["🇨🇭 Switzerland, 🇬🇧 UK",       "€14.90", "4–7 business days"],
+            ["🇺🇸 USA",                     "€59.99", "2–4 business days (Chronopost express)"],
+            ["🇨🇦 Canada",                  "€34.99", "7–12 business days"],
+            ["🇦🇺 Australia, 🇳🇿 New Zealand","€34.99", "7–14 business days"],
+            ["🌍 Rest of world",            "€34.99", "7–14 business days"],
           ].map(([zone,rate,time])=>(
             <div key={zone} style={{padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,fontSize:13}}>
               <div style={{flex:"1 1 45%",color:"white",fontWeight:500}}>{lang==="FR"?zone.replace("European Union","Union Européenne").replace("Switzerland","Suisse").replace("New Zealand","Nouvelle-Zélande").replace("Rest of world","Reste du monde"):zone}</div>
               <div style={{flex:"0 0 80px",textAlign:"right",color:"#4ade80",fontWeight:700}}>{rate}</div>
-              <div style={{flex:"0 0 100px",textAlign:"right",color:"rgba(255,255,255,0.45)",fontSize:12}}>{lang==="FR"?time.replace("weeks","semaines").replace("Variable","Variable"):time}</div>
+              <div style={{flex:"0 0 100px",textAlign:"right",color:"rgba(255,255,255,0.45)",fontSize:12}}>{lang==="FR"?time.replace("business days","jours ouvrés").replace("days","jours"):time}</div>
             </div>
           ))}
           <div style={{padding:"12px 20px",background:"rgba(74,222,128,0.05)",fontSize:12,color:"rgba(255,255,255,0.55)"}}>
-            {lang==="FR"?"✓ Livraison gratuite pour les commandes UE de plus de €100":"✓ Free shipping on EU orders over €100"}
+            {lang==="FR"?"✓ Livraison gratuite incluse sur les Packs de 2 et 3":"✓ Free shipping included on Pack of 2 and Pack of 3"}
           </div>
         </div>
 
@@ -3809,6 +3819,9 @@ const ShippingPage = ({ lang="EN" }) => (
           </p>
           <p style={{marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.65)",lineHeight:1.75}}>
             {lang==="FR"?"Il incombe au seul acheteur de vérifier si ces produits peuvent être légalement importés dans sa juridiction. Novalyx Research n'agit pas en tant qu'importateur officiel et n'est pas responsable de :":"It is the sole responsibility of the buyer to verify whether these products may be legally imported into their jurisdiction. Novalyx Research does not act as an importer of record and is not responsible for:"}
+          </p>
+          <p style={{marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.65)",lineHeight:1.75}}>
+            {lang==="FR"?<>🇺🇸 <strong style={{color:"white"}}>Spécifique aux États-Unis :</strong> suite à un changement réglementaire douanier américain, des droits de douane s'appliquent désormais dès le premier dollar (plus d'exemption pour les petits montants). Ces frais sont facturés séparément par les autorités douanières à la réception, en plus du prix affiché sur ce site.</>:<>🇺🇸 <strong style={{color:"white"}}>US-specific:</strong> following a change in US customs regulations, import duties now apply from the first dollar (no small-value exemption). These fees are charged separately by customs authorities upon delivery, in addition to the price shown on this site.</>}
           </p>
           <ul style={{paddingLeft:20,marginBottom:12,fontSize:13,color:"rgba(255,255,255,0.58)",lineHeight:1.85}}>
             <li>{tg(lang,"Customs seizures, inspections, or delays")}</li>

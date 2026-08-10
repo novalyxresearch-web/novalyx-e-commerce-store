@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import retatrutide_5mg from "./F54968B7-8165-405C-880B-FDE36A651BB3.png";
+import bacwater_3ml from "./7AE1FE68-8FBE-4D4A-B80F-9342D2C94503.png";
 
 /* ═══════════════════════════════════════════════════════════
    🔧 CONFIG — swap these when you have your details
@@ -336,7 +338,7 @@ const t = (lang, key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS.EN[key] || ke
 const PRODUCT_FR = {
   // Tags
   "TISSUE REPAIR RESEARCH": "RECHERCHE RÉPARATION TISSULAIRE",
-  "RECOVERY RESEARCH": "RECHERCHE RÉCUPÉRATION",
+  "CELLULAR RESEARCH": "RECHERCHE CELLULAIRE",
   "REGENERATIVE RESEARCH": "RECHERCHE RÉGÉNÉRATIVE",
   "ANTI-INFLAMMATORY RESEARCH": "RECHERCHE ANTI-INFLAMMATOIRE",
   "TRIPLE-RECEPTOR RESEARCH": "RECHERCHE TRIPLE-RÉCEPTEUR",
@@ -372,7 +374,7 @@ const PRODUCT_FR = {
   "Regenerative": "Régénératif",
   "Metabolic": "Métabolique",
   "GH Research": "Recherche GH",
-  "Growth & Recovery": "Croissance & Récupération",
+  "Growth & Cellular": "Croissance & Cellulaire",
   "Longevity": "Longévité",
   "Immune": "Immunité",
   "Cognitive": "Cognitif",
@@ -405,7 +407,7 @@ const PRODUCT_FR = {
   "Blend verified": "Mélange vérifié",
   "Proprietary multi-peptide research blends for integrated protocols.": "Mélanges de recherche propriétaires multi-peptides pour protocoles intégrés.",
   "GLP-1, GIP, glucagon and amylin receptor research.": "Recherche sur les récepteurs GLP-1, GIP, glucagon et amyline.",
-  "Tissue repair, wound healing, and angiogenesis research.": "Recherche sur la réparation tissulaire, la cicatrisation et l'angiogenèse.",
+  "Tissue-repair and angiogenesis research applications.": "Applications de recherche sur la réparation tissulaire et l'angiogenèse.",
   "Cellular energy, mitochondrial and telomere research.": "Recherche sur l'énergie cellulaire, mitochondriale et les télomères.",
   "Growth hormone releasing and secretagogue research.": "Recherche sur la libération d'hormone de croissance et les sécrétagogues.",
   "T-cell modulation, antimicrobial and thymic research.": "Recherche sur la modulation des lymphocytes T, antimicrobienne et thymique.",
@@ -486,6 +488,11 @@ GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
 
 
 /* ─── PRODUCTS ───────────────────────────────────────────── */
+/* ─── PRODUITS ACTUELLEMENT EN STOCK ───────────────────────
+   Tous les autres affichent "Bientôt disponible" et ne peuvent pas être commandés.
+   Pour rendre un produit disponible : ajoute juste son id ici. */
+const AVAILABLE_PRODUCTS = ["retatrutide", "bac-water"];
+
 const PRODUCTS = [
   /* ─────────── REGENERATIVE RESEARCH ─────────── */
   {
@@ -517,8 +524,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 64.99, batch: "NVX-BPC5-0426",  stripeLink: "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01" },
-      { size: "10mg", price: 99.99, batch: "NVX-BPC10-0426", stripeLink: "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02" },
+      { size: "5mg",  price: 30.99, batch: "NVX-BPC5-0426",  stripeLink: "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01" },
+      { size: "10mg", price: 49.99, batch: "NVX-BPC10-0426", stripeLink: "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -531,16 +538,16 @@ const PRODUCTS = [
   {
     id: "tb500",
     name: "TB-500",
-    tag: "RECOVERY RESEARCH",
+    tag: "CELLULAR RESEARCH",
     category: "Regenerative",
     tagColor: "#60a5fa",
     badge: "POPULAR",
     badgeColor: "#60a5fa",
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
     glow: "rgba(96,165,250,0.03)",
-    shortDesc: "Thymosin Beta-4 fragment for research into cellular migration, recovery, and regenerative pathways.",
+    shortDesc: "Thymosin Beta-4 fragment for research into cellular migration and regenerative pathways.",
     desc: "TB-500 is a synthetic fragment of Thymosin Beta-4, supplied for research into cellular migration, angiogenesis, and tissue regeneration. Each vial contains verified-purity lyophilized peptide, independently batch-tested.",
-    shortDesc_fr: "Fragment de Thymosine Bêta-4 pour la recherche sur la migration cellulaire, la récupération et les voies régénératives.",
+    shortDesc_fr: "Fragment de Thymosine Bêta-4 pour la recherche sur la migration cellulaire et les voies régénératives.",
     desc_fr: "Le TB-500 est un fragment synthétique de la Thymosine Bêta-4, fourni pour la recherche sur la migration cellulaire, l'angiogenèse et la régénération tissulaire. Chaque flacon contient un peptide lyophilisé de pureté vérifiée, testé par lot de manière indépendante.",
     details: [
       "Thymosin Beta-4 synthetic fragment",
@@ -557,8 +564,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-TB5-0426",  stripeLink: "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09" },
-      { size: "10mg", price: 139.99, batch: "NVX-TB10-0426", stripeLink: "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a" },
+      { size: "5mg",  price: 45.99,  batch: "NVX-TB5-0426",  stripeLink: "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09" },
+      { size: "10mg", price: 76.99, batch: "NVX-TB10-0426", stripeLink: "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -578,7 +585,7 @@ const PRODUCTS = [
     badgeColor: "#f9a8d4",
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
     glow: "rgba(249,168,212,0.03)",
-    shortDesc: "Copper-peptide complex for research into collagen synthesis, skin regeneration, and wound healing.",
+    shortDesc: "Copper-peptide complex for research into collagen synthesis and skin-biology pathways.",
     desc: "GHK-Copper (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. New batches are submitted for independent analysis by Janoshik.",
     shortDesc_fr: "Complexe cuivre-peptide pour la recherche sur la synthèse du collagène, la régénération cutanée et la cicatrisation.",
     desc_fr: "Le GHK-Cuivre (complexe Glycyl-Histidyl-Lysine cuivre) est un tripeptide naturel lié au cuivre. Fourni pour la recherche sur la régénération cutanée, la synthèse du collagène et de l'élastine, et la réparation tissulaire. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
@@ -597,8 +604,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "50mg",  price: 59.99, batch: "NVX-GHK50-0426",  stripeLink: "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g" },
-      { size: "100mg", price: 89.99, batch: "NVX-GHK100-0426", stripeLink: "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h" },
+      { size: "50mg",  price: 22.99, batch: "NVX-GHK50-0426",  stripeLink: "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g" },
+      { size: "100mg", price: 35.99, batch: "NVX-GHK100-0426", stripeLink: "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -637,8 +644,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 54.99, batch: "NVX-KPV5-0426",  stripeLink: "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12" },
-      { size: "10mg", price: 79.99, batch: "NVX-KPV10-0426", stripeLink: "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13" },
+      { size: "5mg",  price: 27.99, batch: "NVX-KPV5-0426",  stripeLink: "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12" },
+      { size: "10mg", price: 38.99, batch: "NVX-KPV10-0426", stripeLink: "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -652,7 +659,7 @@ const PRODUCTS = [
   /* ─────────── METABOLIC RESEARCH ─────────── */
   {
     id: "retatrutide",
-    name: "Retatrutide",
+    name: "GLP-3RT",
     tag: "TRIPLE-RECEPTOR RESEARCH",
     category: "Metabolic",
     tagColor: "#fbbf24",
@@ -661,9 +668,9 @@ const PRODUCTS = [
     gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
     glow: "rgba(251,191,36,0.03)",
     shortDesc: "Synthetic triple-receptor agonist research peptide for in-vitro laboratory investigation of GLP-1, GIP, and glucagon receptor pathways.",
-    desc: "Retatrutide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1, GIP, and glucagon receptor signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc: "GLP-3RT is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1, GIP, and glucagon receptor signalling. Each vial contains verified-purity lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     shortDesc_fr: "Peptide de recherche triple-agoniste synthétique pour l'investigation in-vitro en laboratoire des voies des récepteurs GLP-1, GIP et glucagon.",
-    desc_fr: "Le Retatrutide est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation des récepteurs GLP-1, GIP et glucagon. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    desc_fr: "Le GLP-3RT est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation des récepteurs GLP-1, GIP et glucagon. Chaque flacon contient un peptide lyophilisé de pureté vérifiée avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     details: [
       "Synthetic triple-receptor agonist peptide",
       "Research into GLP-1, GIP, and glucagon pathways",
@@ -679,8 +686,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 149.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04" },
-      { size: "10mg", price: 229.99, batch: "NVX-RET10-0426", stripeLink: "https://buy.stripe.com/9B65kDd4n8Bc1rg9882Ry03" },
+      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04", image: retatrutide_5mg },
+      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "", image: retatrutide_5mg },
+      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "", image: retatrutide_5mg },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -719,7 +727,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 299.99, batch: "NVX-MZD10-0426", stripeLink: "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14" },
+      { size: "10mg", price: 114.99, batch: "NVX-MZD10-0426", stripeLink: "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -758,7 +766,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 399.99, batch: "NVX-SUR10-0426", stripeLink: "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15" },
+      { size: "10mg", price: 151.99, batch: "NVX-SUR10-0426", stripeLink: "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -797,8 +805,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 219.99, batch: "NVX-CGL5-0426",  stripeLink: "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c" },
-      { size: "10mg", price: 379.99, batch: "NVX-CGL10-0426", stripeLink: "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d" },
+      { size: "5mg",  price: 81.99, batch: "NVX-CGL5-0426",  stripeLink: "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c" },
+      { size: "10mg", price: 141.99, batch: "NVX-CGL10-0426", stripeLink: "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -839,8 +847,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 159.99, batch: "NVX-TES5-0426",  stripeLink: "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e" },
-      { size: "10mg", price: 279.99, batch: "NVX-TES10-0426", stripeLink: "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f" },
+      { size: "5mg",  price: 59.99, batch: "NVX-TES5-0426",  stripeLink: "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e" },
+      { size: "10mg", price: 108.99, batch: "NVX-TES10-0426", stripeLink: "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -879,8 +887,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 64.99,  batch: "NVX-IPA5-0426",  stripeLink: "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i" },
-      { size: "10mg", price: 109.99, batch: "NVX-IPA10-0426", stripeLink: "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j" },
+      { size: "5mg",  price: 25.99,  batch: "NVX-IPA5-0426",  stripeLink: "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i" },
+      { size: "10mg", price: 41.99, batch: "NVX-IPA10-0426", stripeLink: "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -919,7 +927,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 109.99, batch: "NVX-SER5-0426", stripeLink: "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l" },
+      { size: "5mg", price: 43.99, batch: "NVX-SER5-0426", stripeLink: "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -958,7 +966,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 249.99, batch: "NVX-CJC10-0426", stripeLink: "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k" },
+      { size: "10mg", price: 103.99, batch: "NVX-CJC10-0426", stripeLink: "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -999,8 +1007,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "500mg",  price: 149.99, batch: "NVX-NAD500-0426",  stripeLink: "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m" },
-      { size: "1000mg", price: 269.99, batch: "NVX-NAD1000-0426", stripeLink: "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n" },
+      { size: "500mg",  price: 54.99, batch: "NVX-NAD500-0426",  stripeLink: "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m" },
+      { size: "1000mg", price: 99.99, batch: "NVX-NAD1000-0426", stripeLink: "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1039,8 +1047,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 89.99,  batch: "NVX-EPI10-0426", stripeLink: "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o" },
-      { size: "50mg", price: 299.99, batch: "NVX-EPI50-0426", stripeLink: "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p" },
+      { size: "10mg", price: 30.99,  batch: "NVX-EPI10-0426", stripeLink: "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o" },
+      { size: "50mg", price: 116.99, batch: "NVX-EPI50-0426", stripeLink: "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1079,9 +1087,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 99.99,  batch: "NVX-PIN5-0426",  stripeLink: "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q" },
-      { size: "10mg", price: 149.99, batch: "NVX-PIN10-0426", stripeLink: "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r" },
-      { size: "20mg", price: 219.99, batch: "NVX-PIN20-0426", stripeLink: "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s" },
+      { size: "5mg",  price: 38.99,  batch: "NVX-PIN5-0426",  stripeLink: "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q" },
+      { size: "10mg", price: 49.99, batch: "NVX-PIN10-0426", stripeLink: "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r" },
+      { size: "20mg", price: 65.99, batch: "NVX-PIN20-0426", stripeLink: "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1120,8 +1128,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 119.99, batch: "NVX-MOTS10-0426", stripeLink: "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t" },
-      { size: "40mg", price: 299.99, batch: "NVX-MOTS40-0426", stripeLink: "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u" },
+      { size: "10mg", price: 41.99, batch: "NVX-MOTS10-0426", stripeLink: "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t" },
+      { size: "40mg", price: 114.99, batch: "NVX-MOTS40-0426", stripeLink: "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1160,8 +1168,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 149.99, batch: "NVX-SS31-10-0426", stripeLink: "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v" },
-      { size: "50mg", price: 499.99, batch: "NVX-SS31-50-0426", stripeLink: "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w" },
+      { size: "10mg", price: 51.99, batch: "NVX-SS31-10-0426", stripeLink: "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v" },
+      { size: "50mg", price: 189.99, batch: "NVX-SS31-50-0426", stripeLink: "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1202,8 +1210,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 169.99, batch: "NVX-TA1-5-0426",  stripeLink: "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x" },
-      { size: "10mg", price: 279.99, batch: "NVX-TA1-10-0426", stripeLink: "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y" },
+      { size: "5mg",  price: 62.99, batch: "NVX-TA1-5-0426",  stripeLink: "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x" },
+      { size: "10mg", price: 103.99, batch: "NVX-TA1-10-0426", stripeLink: "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1242,7 +1250,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 129.99, batch: "NVX-TYM10-0426", stripeLink: "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z" },
+      { size: "10mg", price: 43.99, batch: "NVX-TYM10-0426", stripeLink: "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1281,7 +1289,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 169.99, batch: "NVX-LL37-0426", stripeLink: "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A" },
+      { size: "5mg", price: 54.99, batch: "NVX-LL37-0426", stripeLink: "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1322,8 +1330,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 79.99,  batch: "NVX-SMX5-0426",  stripeLink: "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B" },
-      { size: "11mg", price: 149.99, batch: "NVX-SMX11-0426", stripeLink: "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C" },
+      { size: "5mg",  price: 35.99,  batch: "NVX-SMX5-0426",  stripeLink: "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B" },
+      { size: "11mg", price: 57.99, batch: "NVX-SMX11-0426", stripeLink: "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1362,8 +1370,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-SEL5-0426",  stripeLink: "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D" },
-      { size: "11mg", price: 149.99, batch: "NVX-SEL11-0426", stripeLink: "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E" },
+      { size: "5mg",  price: 41.99,  batch: "NVX-SEL5-0426",  stripeLink: "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D" },
+      { size: "11mg", price: 59.99, batch: "NVX-SEL11-0426", stripeLink: "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1402,7 +1410,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "60mg", price: 129.99, batch: "NVX-CBL60-0426", stripeLink: "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F" },
+      { size: "60mg", price: 41.99, batch: "NVX-CBL60-0426", stripeLink: "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vials (6-pack)" },
@@ -1443,8 +1451,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 79.99,  batch: "NVX-DSIP5-0426",  stripeLink: "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G" },
-      { size: "10mg", price: 119.99, batch: "NVX-DSIP10-0426", stripeLink: "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H" },
+      { size: "5mg",  price: 30.99,  batch: "NVX-DSIP5-0426",  stripeLink: "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G" },
+      { size: "10mg", price: 43.99, batch: "NVX-DSIP10-0426", stripeLink: "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1483,7 +1491,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 119.99, batch: "NVX-PT10-0426", stripeLink: "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I" },
+      { size: "10mg", price: 43.99, batch: "NVX-PT10-0426", stripeLink: "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1522,7 +1530,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg", price: 159.99, batch: "NVX-ARA10-0426", stripeLink: "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J" },
+      { size: "10mg", price: 45.99, batch: "NVX-ARA10-0426", stripeLink: "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1561,8 +1569,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 89.99,  batch: "NVX-KIS5-0426",  stripeLink: "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K" },
-      { size: "10mg", price: 149.99, batch: "NVX-KIS10-0426", stripeLink: "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L" },
+      { size: "5mg",  price: 27.99,  batch: "NVX-KIS5-0426",  stripeLink: "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K" },
+      { size: "10mg", price: 51.99, batch: "NVX-KIS10-0426", stripeLink: "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1599,8 +1607,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 129.99, batch: "NVX-TIRZ5-0426",  stripeLink: "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05" },
-      { size: "10mg", price: 189.99, batch: "NVX-TIRZ10-0426", stripeLink: "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06" },
+      { size: "5mg",  price: 45.99, batch: "NVX-TIRZ5-0426",  stripeLink: "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05" },
+      { size: "10mg", price: 51.99, batch: "NVX-TIRZ10-0426", stripeLink: "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1639,8 +1647,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 119.99, batch: "NVX-SEMA5-0426",  stripeLink: "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07" },
-      { size: "10mg", price: 169.99, batch: "NVX-SEMA10-0426", stripeLink: "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08" },
+      { size: "5mg",  price: 44.99, batch: "NVX-SEMA5-0426",  stripeLink: "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07" },
+      { size: "10mg", price: 49.99, batch: "NVX-SEMA10-0426", stripeLink: "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1679,8 +1687,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 99.99,  batch: "NVX-AOD5-0426",  stripeLink: "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M" },
-      { size: "10mg", price: 159.99, batch: "NVX-AOD10-0426", stripeLink: "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N" },
+      { size: "5mg",  price: 57.99,  batch: "NVX-AOD5-0426",  stripeLink: "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M" },
+      { size: "10mg", price: 114.99, batch: "NVX-AOD10-0426", stripeLink: "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1694,7 +1702,7 @@ const PRODUCTS = [
     id: "ghrp2",
     name: "GHRP-2",
     tag: "GH SECRETAGOGUE RESEARCH",
-    category: "Growth & Recovery",
+    category: "Growth & Cellular",
     tagColor: "#34d399",
     badge: "NEW",
     badgeColor: "#34d399",
@@ -1719,8 +1727,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-GHRP2-5-0426",  stripeLink: "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O" },
-      { size: "10mg", price: 89.99, batch: "NVX-GHRP2-10-0426", stripeLink: "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P" },
+      { size: "5mg",  price: 18.99, batch: "NVX-GHRP2-5-0426",  stripeLink: "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O" },
+      { size: "10mg", price: 30.99, batch: "NVX-GHRP2-10-0426", stripeLink: "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1734,7 +1742,7 @@ const PRODUCTS = [
     id: "ghrp6",
     name: "GHRP-6",
     tag: "GH SECRETAGOGUE RESEARCH",
-    category: "Growth & Recovery",
+    category: "Growth & Cellular",
     tagColor: "#34d399",
     badge: "NEW",
     badgeColor: "#34d399",
@@ -1759,8 +1767,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-GHRP6-5-0426",  stripeLink: "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q" },
-      { size: "10mg", price: 89.99, batch: "NVX-GHRP6-10-0426", stripeLink: "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R" },
+      { size: "5mg",  price: 18.99, batch: "NVX-GHRP6-5-0426",  stripeLink: "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q" },
+      { size: "10mg", price: 30.99, batch: "NVX-GHRP6-10-0426", stripeLink: "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1799,7 +1807,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg", price: 129.99, batch: "NVX-5AMQ5-0426", stripeLink: "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S" },
+      { size: "5mg", price: 43.99, batch: "NVX-5AMQ5-0426", stripeLink: "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1813,7 +1821,7 @@ const PRODUCTS = [
     id: "hexarelin",
     name: "Hexarelin",
     tag: "GH SECRETAGOGUE RESEARCH",
-    category: "Growth & Recovery",
+    category: "Growth & Cellular",
     tagColor: "#34d399",
     badge: "NEW",
     badgeColor: "#34d399",
@@ -1838,8 +1846,8 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "2mg", price: 69.99, batch: "NVX-HEX2-0426",  stripeLink: "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T" },
-      { size: "5mg", price: 99.99, batch: "NVX-HEX5-0426", stripeLink: "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U" },
+      { size: "2mg", price: 32.99, batch: "NVX-HEX2-0426",  stripeLink: "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T" },
+      { size: "5mg", price: 51.99, batch: "NVX-HEX5-0426", stripeLink: "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U" },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1880,7 +1888,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "10mg+10mg", price: 189.99, batch: "NVX-F01-0426", stripeLink: "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V" },
+      { size: "10mg+10mg", price: 59.99, batch: "NVX-F01-0426", stripeLink: "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + TB-500 10mg" },
@@ -1920,7 +1928,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg+5mg", price: 149.99, batch: "NVX-F02-0426", stripeLink: "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W" },
+      { size: "5mg+5mg", price: 65.99, batch: "NVX-F02-0426", stripeLink: "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W" },
     ],
     commonSpecs: [
       { label: "Composition", value: "CJC-1295 5mg + Ipamorelin 5mg" },
@@ -1960,7 +1968,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "70mg total", price: 329.99, batch: "NVX-F03-0426", stripeLink: "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X" },
+      { size: "70mg total", price: 135.99, batch: "NVX-F03-0426", stripeLink: "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg" },
@@ -1988,25 +1996,25 @@ const PRODUCTS = [
     desc_fr: "L'Eau Bactériostatique Novalyx Research est une eau stérile de qualité pharmaceutique contenant 0,9% d'alcool benzylique comme agent bactériostatique. Fournie exclusivement pour usage en laboratoire dans la reconstitution des peptides de recherche lyophilisés. Chaque flacon est scellé, stérile et prêt à l'emploi immédiat en laboratoire.",
     details: [
       "0.9% benzyl alcohol bacteriostatic agent",
-      "Pharmaceutical-grade sterile water for injection",
+      "Laboratory-grade sterile reconstitution solvent",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
       "COA published once the batch is independently validated",
     ],
     details_fr: [
       "0.9% benzyl alcohol bacteriostatic agent",
-      "Pharmaceutical-grade sterile water for injection",
+      "Laboratory-grade sterile reconstitution solvent",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "3ml vial",   price: 7.99,  batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z" },
-      { size: "10ml vial",  price: 12.99, batch: "NVX-BW10-0426",  stripeLink: "https://buy.stripe.com/cNieVd5BV2cOb1Q2JK2Ry10" },
-      { size: "5 × 10ml",   price: 54.99, batch: "NVX-BW10X5-0426",stripeLink: "https://buy.stripe.com/aFa3cve8r04Ggma1FG2Ry11" },
+      { size: "3ml vial",   price: 6.99, batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z", image: bacwater_3ml },
+      { size: "3ml · Pack de 2", price: 12.99, batch: "NVX-BW3-PACK2-0526", stripeLink: "", image: bacwater_3ml },
+      { size: "3ml · Pack de 3", price: 18.99, batch: "NVX-BW3-PACK3-0526", stripeLink: "", image: bacwater_3ml },
     ],
     commonSpecs: [
-      { label: "Composition", value: "Water for injection + 0.9% benzyl alcohol" },
+      { label: "Composition", value: "Sterile reconstitution solvent + 0.9% benzyl alcohol" },
       { label: "Format",      value: "Sterile sealed vial" },
       { label: "Grade",       value: "Pharmaceutical-grade" },
       { label: "Storage",     value: "Room temperature / avoid direct light" },
@@ -2043,7 +2051,7 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "80mg total", price: 399.99, batch: "NVX-F04-0426", stripeLink: "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y" },
+      { size: "80mg total", price: 164.99, batch: "NVX-F04-0426", stripeLink: "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y" },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg + KPV 10mg" },
@@ -2054,9 +2062,371 @@ const PRODUCTS = [
       { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
+  {
+    id: "melanotanii",
+    name: "Melanotan II",
+    tag: "MELANOCORTIN RECEPTOR RESEARCH",
+    category: "Specialized",
+    tagColor: "#f43f5e",
+    badge: "NEW",
+    badgeColor: "#f43f5e",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#f43f5e0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Melanotan II is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Melanotan II est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "10mg", price: 24.99, batch: "NVX-ML10-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "melanotani",
+    name: "Melanotan I",
+    tag: "MELANOCORTIN RECEPTOR RESEARCH",
+    category: "Specialized",
+    tagColor: "#f43f5e",
+    badge: "NEW",
+    badgeColor: "#f43f5e",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#f43f5e0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Melanotan I is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Melanotan I est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "10mg", price: 27.99, batch: "NVX-MT1-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "novalyxformula06",
+    name: "Novalyx Formula 06",
+    tag: "REGENERATIVE RESEARCH BLEND",
+    category: "Signature Blends",
+    tagColor: "#22d3ee",
+    badge: "NEW",
+    badgeColor: "#22d3ee",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#22d3ee0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Novalyx Formula 06 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Novalyx Formula 06 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "10mg total (BPC5+TB5)", price: 59.99, batch: "NVX-BB10-0526", stripeLink: "" },
+      { size: "20mg total (BPC10+TB10)", price: 99.99, batch: "NVX-BB20-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "novalyxformula07cagrisema",
+    name: "Novalyx Formula 07 (Cagri+Sema)",
+    tag: "REGENERATIVE RESEARCH BLEND",
+    category: "Signature Blends",
+    tagColor: "#22d3ee",
+    badge: "NEW",
+    badgeColor: "#22d3ee",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#22d3ee0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Novalyx Formula 07 (Cagri+Sema) is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Novalyx Formula 07 (Cagri+Sema) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "2.5mg+2.5mg", price: 51.99, batch: "NVX-CS5-0526", stripeLink: "" },
+      { size: "5mg+5mg", price: 124.99, batch: "NVX-CS10-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "igf1lr3",
+    name: "IGF-1 LR3",
+    tag: "GROWTH HORMONE RESEARCH",
+    category: "Growth & Cellular",
+    tagColor: "#38bdf8",
+    badge: "NEW",
+    badgeColor: "#38bdf8",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#38bdf80A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "IGF-1 LR3 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le IGF-1 LR3 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "1mg", price: 108.99, batch: "NVX-IG1-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "igfdes",
+    name: "IGF-DES",
+    tag: "GROWTH HORMONE RESEARCH",
+    category: "Growth & Cellular",
+    tagColor: "#38bdf8",
+    badge: "NEW",
+    badgeColor: "#38bdf8",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#38bdf80A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "IGF-DES is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le IGF-DES est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "0.1mg", price: 35.99, batch: "NVX-IGD-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "novalyxformula05",
+    name: "Novalyx Formula 05",
+    tag: "REGENERATIVE RESEARCH BLEND",
+    category: "Signature Blends",
+    tagColor: "#22d3ee",
+    badge: "NEW",
+    badgeColor: "#22d3ee",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#22d3ee0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Novalyx Formula 05 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Novalyx Formula 05 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "70mg total", price: 135.99, batch: "NVX-BBG70-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "snap8",
+    name: "Snap-8",
+    tag: "ANTI-AGING RESEARCH",
+    category: "Specialized",
+    tagColor: "#a78bfa",
+    badge: "NEW",
+    badgeColor: "#a78bfa",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#a78bfa0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Snap-8 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Snap-8 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "10mg", price: 30.99, batch: "NVX-NP810-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "vip",
+    name: "VIP",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Specialized",
+    tagColor: "#f43f5e",
+    badge: "NEW",
+    badgeColor: "#f43f5e",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#f43f5e0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "VIP is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le VIP est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "5mg", price: 51.99, batch: "NVX-VIP5-0526", stripeLink: "" },
+      { size: "10mg", price: 95.99, batch: "NVX-VIP10-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
+  {
+    id: "novalyxformula08cjcipa",
+    name: "Novalyx Formula 08 (CJC+IPA)",
+    tag: "REGENERATIVE RESEARCH BLEND",
+    category: "Signature Blends",
+    tagColor: "#22d3ee",
+    badge: "NEW",
+    badgeColor: "#22d3ee",
+    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
+    glow: "#22d3ee0A",
+    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
+    shortDesc_fr: "Compos\u00e9 de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
+    desc: "Novalyx Formula 08 (CJC+IPA) is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Novalyx Formula 08 (CJC+IPA) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un compos\u00e9 lyophilis\u00e9. Pas un m\u00e9dicament, compl\u00e9ment ou cosm\u00e9tique. Pas pour usage humain ou v\u00e9t\u00e9rinaire.",
+    details: [
+      "Supplied for in-vitro laboratory research only",
+      "Lyophilized for maximum stability and shelf life",
+      "COA published once the batch is independently validated",
+    ],
+    details_fr: [
+      "Fourni pour la recherche in-vitro en laboratoire uniquement",
+      "Lyophilis\u00e9 pour une stabilit\u00e9 et une dur\u00e9e de conservation maximales",
+      "COA publi\u00e9 d\u00e8s la validation ind\u00e9pendante du lot",
+    ],
+    variants: [
+      { size: "5mg+5mg", price: 65.99, batch: "NVX-CP10-0526", stripeLink: "" }
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "\u226599% (test par lot \u00e0 venir)" },
+      { label: "Storage",    value: "\u221220\u00b0C / avoid light" },
+      { label: "Shelf life", value: "24 months (sealed)" },
+      { label: "COA",        value: "Janoshik (par lot)" },
+    ],
+  },
 ];
 
 /* ─── HELPERS ────────────────────────────────────────────── */
+/* Choisit l'image du variant selon la langue (image_fr / image_en si présentes,
+   sinon retombe sur l'image unique "image" pour les produits sans version bilingue) */
+const getVariantImage = (variant, lang) => {
+  if (!variant) return null;
+  if (lang === "FR" && variant.image_fr) return variant.image_fr;
+  if (lang === "EN" && variant.image_en) return variant.image_en;
+  return variant.image || variant.image_fr || variant.image_en || null;
+};
+
 const fmt = (eurPrice, cur) => {
   const c = CURRENCIES[cur];
   return `${c.symbol}${(eurPrice * c.rate).toFixed(2)}`;
@@ -2232,7 +2602,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => (
       </div>
     </div>
     <div className="nav-links" style={{display:"flex",gap:24,flexWrap:"wrap",position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
-      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_calc"),"calculator"],[t(lang,"nav_learn"),"learning"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
+      {[[t(lang,"nav_products"),"products"],[t(lang,"nav_coa"),"coa"],[t(lang,"nav_learn"),"learning"],[t(lang,"nav_about"),"about"],[t(lang,"nav_faq"),"faq"],[t(lang,"nav_contact"),"contact"]].map(([l,p])=>(
         <span key={p} className={`nl${page===p?" active":""}`} onClick={()=>go(p)}>{l}</span>
       ))}
     </div>
@@ -2384,15 +2754,25 @@ const Footer = ({ go, lang="EN" }) => (
 const ProductCard = ({ p, cur, onClick, lang="EN" }) => {
   const minPrice = Math.min(...p.variants.map(v => v.price));
   const sizes = p.variants.map(v => v.size).join(" · ");
+  const available = AVAILABLE_PRODUCTS.includes(p.id);
   return (
-    <div className="hov" onClick={onClick} style={{background:p.gradient,border:"1px solid rgba(255,255,255,0.07)",borderRadius:16,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,0.35)",position:"relative"}}>
+    <div className="hov" onClick={onClick} style={{background:p.gradient,border:"1px solid rgba(255,255,255,0.07)",borderRadius:16,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,0.35)",position:"relative",opacity:available?1:0.72}}>
       <div style={{position:"absolute",inset:0,background:p.glow,pointerEvents:"none"}}/>
+      {!available&&<div style={{position:"absolute",top:14,right:14,zIndex:2,background:"rgba(8,15,30,0.9)",border:"1px solid rgba(251,191,36,0.4)",color:"#fbbf24",fontSize:9,fontWeight:700,letterSpacing:1,padding:"5px 10px",borderRadius:4}}>{lang==="FR"?"BIENTÔT DISPONIBLE":"COMING SOON"}</div>}
       <div style={{padding:"24px 24px 0",position:"relative"}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:14}}>
           <span style={{fontSize:9,letterSpacing:2,fontWeight:700,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.tag)}</span>
           {p.badge&&<span style={{fontSize:9,fontWeight:700,color:"#080f1e",background:p.badgeColor,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.badge)}</span>}
         </div>
-        <div style={{width:"100%",height:150,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,background:"rgba(0,0,0,0.18)",borderRadius:12,border:"1px solid rgba(255,255,255,0.06)"}}><ProductIcon color={p.tagColor} size={70}/></div>
+        <div style={{width:"100%",height:150,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,background:"rgba(0,0,0,0.18)",borderRadius:12,border:"1px solid rgba(255,255,255,0.06)",overflow:"hidden"}}>
+          {(() => {
+            const imgVariant = p.variants.find(v=>v.image||v.image_fr||v.image_en);
+            const src = getVariantImage(imgVariant, lang);
+            return src
+              ? <img src={src} alt={p.name} style={{height:"100%",width:"100%",objectFit:"cover"}}/>
+              : <ProductIcon color={p.tagColor} size={70}/>;
+          })()}
+        </div>
       </div>
       <div style={{padding:"0 24px 24px",position:"relative"}}>
         <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:24,fontWeight:800,marginBottom:6}}>{p.name}</h3>
@@ -2409,8 +2789,9 @@ const ProductCard = ({ p, cur, onClick, lang="EN" }) => {
           </div>
           <button className="btn g"
             onClick={e=>{e.stopPropagation();onClick();}}
-            style={{padding:"10px 18px",borderRadius:8,fontSize:11,fontWeight:700,letterSpacing:0.5}}>
-            {t(lang,"view_options")}
+            disabled={!available}
+            style={{padding:"10px 18px",borderRadius:8,fontSize:11,fontWeight:700,letterSpacing:0.5,opacity:available?1:0.5,cursor:available?"pointer":"not-allowed"}}>
+            {available ? t(lang,"view_options") : (lang==="FR"?"BIENTÔT →":"SOON →")}
           </button>
         </div>
       </div>
@@ -2423,6 +2804,7 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
   const [qty,setQty] = useState(1);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const variant = p.variants[selectedIdx];
+  const available = AVAILABLE_PRODUCTS.includes(p.id);
   return (
     <div className="fi" style={{position:"fixed",inset:0,zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
       <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.78)",backdropFilter:"blur(6px)"}}/>
@@ -2431,7 +2813,11 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
           <span style={{fontSize:9,letterSpacing:2,color:p.tagColor,border:`1px solid ${p.tagColor}44`,background:`${p.tagColor}11`,borderRadius:3,padding:"3px 10px"}}>{tp(lang,p.tag)}</span>
           <span onClick={onClose} style={{cursor:"pointer",fontSize:20,color:"rgba(255,255,255,0.3)"}}>✕</span>
         </div>
-        <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><ProductIcon color={p.tagColor} size={72}/></div>
+        <div style={{display:"flex",justifyContent:"center",marginBottom:14}}>
+          {getVariantImage(variant, lang)
+            ? <img src={getVariantImage(variant, lang)} alt={`${p.name} ${variant.size}`} style={{width:180,height:"auto",borderRadius:12,boxShadow:"0 16px 40px rgba(0,0,0,0.5)"}}/>
+            : <ProductIcon color={p.tagColor} size={72}/>}
+        </div>
         <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:28,fontWeight:800,marginBottom:10}}>{p.name}</h2>
         <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.78,marginBottom:18}}>{lang==="FR"&&p.desc_fr?p.desc_fr:p.desc}</p>
         <div style={{marginBottom:22}}>
@@ -2497,7 +2883,9 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
             <button onClick={()=>setQty(qty+1)} style={{width:38,height:46,background:"transparent",border:"none",color:"white",fontSize:18,cursor:"pointer"}}>+</button>
           </div>
           <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,flex:1}}>{fmt(variant.price*qty,cur)}</div>
-          <button className="btn g" onClick={()=>{onAdd(p,variant,qty);onClose();}} style={{padding:"12px 20px",borderRadius:8,fontSize:11,fontWeight:700}}>{t(lang,"add_to_cart")}</button>
+          <button className="btn g" disabled={!available} onClick={()=>{if(available){onAdd(p,variant,qty);onClose();}}} style={{padding:"12px 20px",borderRadius:8,fontSize:11,fontWeight:700,opacity:available?1:0.5,cursor:available?"pointer":"not-allowed"}}>
+            {available ? t(lang,"add_to_cart") : (lang==="FR"?"BIENTÔT DISPONIBLE":"COMING SOON")}
+          </button>
         </div>
       </div>
     </div>
@@ -2602,6 +2990,7 @@ const TrustBar = ({ lang="EN" }) => {
 const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
   const [email,setEmail] = useState("");
   const [subOk,setSubOk] = useState(false);
+  const [selPopular,setSelPopular] = useState(null);
   return (
     <div>
       <div style={{padding:"80px 40px 68px",position:"relative",overflow:"hidden",background:"linear-gradient(180deg,#080f1e 0%,#0a1425 100%)",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
@@ -2638,6 +3027,20 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
       </div>
 
       <TrustBar lang={lang}/>
+
+      {/* PRODUITS POPULAIRES */}
+      <div style={{padding:"64px 40px"}}>
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{fontSize:9.5,letterSpacing:3,color:"#4ade80",marginBottom:10}}>{lang==="FR"?"MEILLEURES VENTES":"POPULAR PEPTIDES"}</div>
+          <h2 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(26px,5.5vw,36px)",fontWeight:800}}>{lang==="FR"?"Nos composés les plus demandés":"Our most requested compounds"}</h2>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:20}}>
+          {["retatrutide","bac-water"].map(id=>PRODUCTS.find(p=>p.id===id)).filter(Boolean).map(p=>(
+            <ProductCard key={p.id} p={p} cur={cur} onClick={()=>setSelPopular(p)} lang={lang}/>
+          ))}
+        </div>
+        {selPopular&&<ProductModal p={selPopular} cur={cur} onAdd={addToCart} onClose={()=>setSelPopular(null)} lang={lang}/>}
+      </div>
 
       {/* ─── POURQUOI CHOISIR NOVALYX ─── */}
       <div style={{padding:"64px 40px 24px",maxWidth:1200,margin:"0 auto"}}>
@@ -2683,7 +3086,7 @@ const Home = ({ go, cur, addToCart, added, lang="EN" }) => {
           {[
             { key:"Signature Blends", color:"#22d3ee", desc:"Proprietary multi-peptide research blends for integrated protocols.", icon:"⚗️" },
             { key:"Metabolic",        color:"#fbbf24", desc:"GLP-1, GIP, glucagon and amylin receptor research.", icon:"🔬" },
-            { key:"Regenerative",     color:"#4ade80", desc:"Tissue repair, wound healing, and angiogenesis research.", icon:"🧬" },
+            { key:"Regenerative",     color:"#4ade80", desc:"Tissue-repair and angiogenesis research applications.", icon:"🧬" },
             { key:"Longevity",        color:"#c084fc", desc:"Cellular energy, mitochondrial and telomere research.", icon:"⚡" },
             { key:"GH Research",      color:"#38bdf8", desc:"Growth hormone releasing and secretagogue research.", icon:"🧬" },
             { key:"Immune",           color:"#fb923c", desc:"T-cell modulation, antimicrobial and thymic research.", icon:"🛡️" },
@@ -2999,7 +3402,7 @@ const ProductsPage = ({ cur, addToCart, added, initialFilter, setProductFilter, 
 
 const LEARNING_DATA = [
   { id:"bpc157", name:"BPC-157", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
-    en:"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in wound-healing assays.",
+    en:"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in tissue-repair assays.",
     fr:"Fragment peptidique synthétique étudié en modèles de laboratoire pour son rôle dans la recherche sur la réparation tissulaire et l'angiogenèse. Fréquemment utilisé comme composé de référence dans les essais de cicatrisation." },
   { id:"tb500", name:"TB-500", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
     en:"A synthetic version of a naturally occurring peptide region studied for cell-migration and actin-regulation research in controlled settings.",
@@ -3007,7 +3410,7 @@ const LEARNING_DATA = [
   { id:"ghk", name:"GHK-Cu (GHK-Cuivre)", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
     en:"A copper-binding tripeptide investigated in skin-biology and extracellular-matrix research models.",
     fr:"Tripeptide liant le cuivre, étudié dans les modèles de recherche en biologie cutanée et sur la matrice extracellulaire." },
-  { id:"retatrutide", name:"Retatrutide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
+  { id:"retatrutide", name:"GLP-3RT", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
     en:"A multi-receptor research compound studied in metabolic-pathway investigations. Of interest in laboratory studies examining receptor signalling.",
     fr:"Composé de recherche multi-récepteurs étudié dans les investigations sur les voies métaboliques. D'intérêt dans les études de laboratoire examinant la signalisation des récepteurs." },
   { id:"tirzepatide", name:"Tirzepatide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
@@ -3458,7 +3861,7 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [added,    setAdded]    = useState(null);
   const [productFilter, setProductFilter] = useState("All");
-  const [lang,     setLang]     = useState("EN");
+  const [lang,     setLang]     = useState("FR");
 
   // Load cart + currency from localStorage on mount (persists across sessions).
   // Wrapped in try/catch — some environments (private browsing, SSR, older iOS) block storage.
@@ -3548,6 +3951,13 @@ export default function App() {
         </div>
       )}
 
+      {/* RESEARCH-ONLY DISCLAIMER BAR (Google Ads compliance — top of page) */}
+      <div style={{background:"#1a1205",borderBottom:"1px solid rgba(251,191,36,0.25)",padding:"7px 20px",textAlign:"center",fontSize:10.5,letterSpacing:0.5,color:"#fbbf24",fontWeight:600}}>
+        {lang==="FR"
+          ? "⚠️ Produits destinés à la recherche en laboratoire uniquement — Ne pas utiliser pour la consommation humaine ou animale."
+          : "⚠️ Products for laboratory research use only — Not for human or animal consumption."}
+      </div>
+
       {/* TOP ANNOUNCEMENT BAR */}
       <div className="announce-bar" style={{background:"#050a15",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"8px 20px",display:"flex",justifyContent:"center",alignItems:"center",gap:16,fontSize:10,letterSpacing:1,color:"rgba(255,255,255,0.55)",fontWeight:500,overflowX:"auto",whiteSpace:"nowrap"}}>
         <span style={{whiteSpace:"nowrap"}}>{t(lang,"ann1")}</span>
@@ -3560,7 +3970,7 @@ export default function App() {
       </div>
       <Nav page={page} go={go} cur={cur} setCur={setCur} cartCount={cartCount} openCart={()=>setCartOpen(true)} lang={lang} setLang={setLang}/>
       <div className="fi" key={`${page}-${lang}`}>{pages[page]||pages.home}</div>
-      {(page==="home"||page==="products")&&<EmailSignup lang={lang}/>}
+      {/* EmailSignup masqué pour Google Ads compliance (offre = signal consumer) */}
       {(page==="home"||page==="products")&&<B2BBand lang={lang}/>}
       <Footer go={go} lang={lang}/>
       {cartOpen&&<Cart cart={cart} cur={cur} onClose={()=>setCartOpen(false)} onRemove={lineId=>setCart(p=>p.filter(i=>i.lineId!==lineId))} lang={lang}/>}

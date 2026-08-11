@@ -491,7 +491,7 @@ GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
 /* ─── PRODUITS ACTUELLEMENT EN STOCK ───────────────────────
    Tous les autres affichent "Bientôt disponible" et ne peuvent pas être commandés.
    Pour rendre un produit disponible : ajoute juste son id ici. */
-const AVAILABLE_PRODUCTS = ["retatrutide", "bac-water"];
+const AVAILABLE_PRODUCTS = ["bac-water"];
 
 const PRODUCTS = [
   /* ─────────── REGENERATIVE RESEARCH ─────────── */
@@ -1999,14 +1999,12 @@ const PRODUCTS = [
       "Laboratory-grade sterile reconstitution solvent",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
-      "COA published once the batch is independently validated",
     ],
     details_fr: [
       "0.9% benzyl alcohol bacteriostatic agent",
       "Laboratory-grade sterile reconstitution solvent",
       "Multi-draw vial — compatible with all lyophilised peptides",
       "Sealed tamper-evident vial",
-      "COA publié dès la validation indépendante du lot",
     ],
     variants: [
       { size: "3ml vial",   price: 6.99, batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z", image: bacwater_3ml },
@@ -2019,7 +2017,6 @@ const PRODUCTS = [
       { label: "Grade",       value: "Pharmaceutical-grade" },
       { label: "Storage",     value: "Room temperature / avoid direct light" },
       { label: "Shelf life",  value: "24 months (sealed)" },
-      { label: "COA",         value: "Janoshik (par lot)" },
     ],
   },
   {
@@ -3575,7 +3572,7 @@ const COAPage = ({ lang="EN" }) => (
       <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{tg(lang,"COA Library")}</h1>
       <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:540}}>{lang==="FR"?"Chaque lot est testé indépendamment par Janoshik Analytical. Le certificat d'analyse de chaque lot est publié ici avec son numéro de vérification unique, consultable sur le portail Janoshik.":"Every batch is independently tested by Janoshik Analytical. Each batch's Certificate of Analysis is published here with its unique verification number, checkable on the Janoshik portal."}</p>
     </div>
-    {PRODUCTS.map(p=>(
+    {PRODUCTS.filter(p=>p.id!=="bac-water").map(p=>(
       <div key={p.id} style={{background:"linear-gradient(135deg,#0f2240,#0c1a2e)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"24px 28px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:18}}>
         <div style={{display:"flex",alignItems:"center",gap:18}}>
           <ProductIcon color={p.tagColor} size={40}/>

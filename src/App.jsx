@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import retatrutide_5mg from "./F54968B7-8165-405C-880B-FDE36A651BB3.png";
+import retatrutide_5mg from "./F54968B7-8165-405C-880B-FDE36A651BB3.PNG";
 import bacwater_3ml from "./7AE1FE68-8FBE-4D4A-B80F-9342D2C94503.png";
 
 /* ═══════════════════════════════════════════════════════════

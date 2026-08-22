@@ -109,13 +109,11 @@ const STRIPE_LINKS = {
   // Novalyx Formula 03
   "formula03_70mg total": "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X",
   // Bacteriostatic Water
-  "bac-water_3ml vial": "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z",
+  "bac-water_3ml vial": "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16",
+  "bac-water_3ml · Pack de 2": "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17",
+  "bac-water_3ml · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
   // Novalyx Formula 04
   "formula04_80mg total": "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y",
-  // GLP-3RT (Retatrutide)
-  "retatrutide_5mg": "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16",
-  "retatrutide_5mg · Pack de 2": "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17",
-  "retatrutide_5mg · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
 };
 const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
 
@@ -685,9 +683,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16", image: retatrutide_5mg },
-      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17", image: retatrutide_5mg },
-      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18", image: retatrutide_5mg },
+      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "", image: retatrutide_5mg },
+      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "", image: retatrutide_5mg },
+      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "", image: retatrutide_5mg },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2007,9 +2005,9 @@ const PRODUCTS = [
       "Sealed tamper-evident vial",
     ],
     variants: [
-      { size: "3ml vial",   price: 6.99, batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z", image: bacwater_3ml },
-      { size: "3ml · Pack de 2", price: 12.99, batch: "NVX-BW3-PACK2-0526", stripeLink: "", image: bacwater_3ml },
-      { size: "3ml · Pack de 3", price: 18.99, batch: "NVX-BW3-PACK3-0526", stripeLink: "", image: bacwater_3ml },
+      { size: "3ml vial",   price: 6.99, batch: "NVX-BW3-0426",   stripeLink: "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16", image: bacwater_3ml },
+      { size: "3ml · Pack de 2", price: 12.99, batch: "NVX-BW3-PACK2-0526", stripeLink: "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17", image: bacwater_3ml },
+      { size: "3ml · Pack de 3", price: 18.99, batch: "NVX-BW3-PACK3-0526", stripeLink: "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18", image: bacwater_3ml },
     ],
     commonSpecs: [
       { label: "Composition", value: "Sterile reconstitution solvent + 0.9% benzyl alcohol" },

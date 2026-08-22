@@ -2887,8 +2887,18 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang="EN" }) => {
             <button onClick={()=>setQty(qty+1)} style={{width:38,height:46,background:"transparent",border:"none",color:"white",fontSize:18,cursor:"pointer"}}>+</button>
           </div>
           <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:22,fontWeight:800,flex:1}}>{fmt(variant.price*qty,cur)}</div>
-          <button className="btn g" disabled={!available} onClick={()=>{if(available){onAdd(p,variant,qty);onClose();}}} style={{padding:"12px 20px",borderRadius:8,fontSize:11,fontWeight:700,opacity:available?1:0.5,cursor:available?"pointer":"not-allowed"}}>
+        </div>
+        <div style={{display:"flex",gap:10,marginTop:12}}>
+          <button className="btn" disabled={!available} onClick={()=>{if(available){onAdd(p,variant,qty);onClose();}}} style={{flex:1,padding:"12px 16px",borderRadius:8,fontSize:11,fontWeight:700,opacity:available?1:0.5,cursor:available?"pointer":"not-allowed",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",color:"white"}}>
             {available ? t(lang,"add_to_cart") : (lang==="FR"?"BIENTÔT DISPONIBLE":"COMING SOON")}
+          </button>
+          <button className="btn g" disabled={!available || !variant.stripeLink} onClick={()=>{
+            if(!available || !variant.stripeLink) return;
+            let url = variant.stripeLink;
+            if(qty>1) url += (url.includes("?")?"&":"?") + "quantity=" + qty;
+            window.location = url;
+          }} style={{flex:1,padding:"12px 16px",borderRadius:8,fontSize:11,fontWeight:700,opacity:(available&&variant.stripeLink)?1:0.5,cursor:(available&&variant.stripeLink)?"pointer":"not-allowed"}}>
+            {lang==="FR"?"ACHETER MAINTENANT →":"BUY NOW →"}
           </button>
         </div>
       </div>

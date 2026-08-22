@@ -24,9 +24,6 @@ const STRIPE_LINKS = {
   // KPV
   "kpv_5mg": "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12",
   "kpv_10mg": "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13",
-  // Retatrutide
-  "retatrutide_5mg": "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04",
-  "retatrutide_10mg": "https://buy.stripe.com/9B65kDd4n8Bc1rg9882Ry03",
   // Mazdutide
   "mazdutide_10mg": "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14",
   // Survodutide
@@ -113,10 +110,12 @@ const STRIPE_LINKS = {
   "formula03_70mg total": "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X",
   // Bacteriostatic Water
   "bac-water_3ml vial": "https://buy.stripe.com/fZu14n8O72cO4Ds4RS2Ry0Z",
-  "bac-water_10ml vial": "https://buy.stripe.com/cNieVd5BV2cOb1Q2JK2Ry10",
-  "bac-water_5 × 10ml": "https://buy.stripe.com/aFa3cve8r04Ggma1FG2Ry11",
   // Novalyx Formula 04
   "formula04_80mg total": "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y",
+  // GLP-3RT (Retatrutide)
+  "retatrutide_5mg": "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16",
+  "retatrutide_5mg · Pack de 2": "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17",
+  "retatrutide_5mg · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
 };
 const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
 
@@ -686,9 +685,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/cNi14nd4n3gS2vk7002Ry04", image: retatrutide_5mg },
-      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "", image: retatrutide_5mg },
-      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "", image: retatrutide_5mg },
+      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16", image: retatrutide_5mg },
+      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17", image: retatrutide_5mg },
+      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18", image: retatrutide_5mg },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1983,6 +1982,7 @@ const PRODUCTS = [
   {
     id: "bac-water",
     name: "Bacteriostatic Water",
+    noCOA: true,
     tag: "LAB SUPPLY",
     category: "Lab Supplies",
     tagColor: "#67e8f9",
@@ -2775,9 +2775,9 @@ const ProductCard = ({ p, cur, onClick, lang="EN" }) => {
         <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:24,fontWeight:800,marginBottom:6}}>{p.name}</h3>
         <div style={{fontSize:10,color:p.tagColor,letterSpacing:1.5,marginBottom:10,fontWeight:600}}>{t(lang,"available_in")} {sizes}</div>
         <p style={{fontSize:12.5,color:"rgba(255,255,255,0.48)",lineHeight:1.68,marginBottom:14}}>{lang==="FR"&&p.shortDesc_fr?p.shortDesc_fr:p.shortDesc}</p>
-        <p style={{fontSize:10.5,color:"rgba(255,255,255,0.4)",marginBottom:18,lineHeight:1.55}}>
+        {!p.noCOA && <p style={{fontSize:10.5,color:"rgba(255,255,255,0.4)",marginBottom:18,lineHeight:1.55}}>
           {t(lang,"coa_dl")}
-        </p>
+        </p>}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div>
             <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",letterSpacing:1,marginBottom:2}}>{t(lang,"from")}</div>

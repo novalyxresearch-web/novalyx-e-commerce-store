@@ -114,6 +114,10 @@ const STRIPE_LINKS = {
   "bac-water_3ml · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
   // Novalyx Formula 04
   "formula04_80mg total": "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y",
+  // GLP-3RT (Retatrutide)
+  "retatrutide_5mg": "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19",
+  "retatrutide_5mg · Pack de 2": "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a",
+  "retatrutide_5mg · Pack de 3": "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b",
 };
 const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
 
@@ -488,7 +492,7 @@ GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
 /* ─── PRODUITS ACTUELLEMENT EN STOCK ───────────────────────
    Tous les autres affichent "Bientôt disponible" et ne peuvent pas être commandés.
    Pour rendre un produit disponible : ajoute juste son id ici. */
-const AVAILABLE_PRODUCTS = ["bac-water"];
+const AVAILABLE_PRODUCTS = ["bac-water", "retatrutide"];
 
 const PRODUCTS = [
   /* ─────────── REGENERATIVE RESEARCH ─────────── */
@@ -683,9 +687,9 @@ const PRODUCTS = [
       "COA publié dès la validation indépendante du lot",
     ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "", image: retatrutide_5mg },
-      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "", image: retatrutide_5mg },
-      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "", image: retatrutide_5mg },
+      { size: "5mg",  price: 59.99, batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19", image: retatrutide_5mg },
+      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a", image: retatrutide_5mg },
+      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b", image: retatrutide_5mg },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -3849,8 +3853,8 @@ const ShippingPage = ({ lang="EN" }) => (
 
         <div style={{borderTop:"1px solid rgba(255,255,255,0.08)"}}>
           {[
-            ["How long does delivery take?","Delivery typically takes 2–3 weeks across Europe, and 3–5 weeks for international destinations. Our compounds are sourced per-order from verified laboratory partners to ensure batch-specific traceability."],
-            ["Why is there a delivery timeframe?","Orders are processed under controlled conditions and sourced fresh from our verified partner laboratories to maintain product quality, batch freshness, and full traceability."],
+            ["How long does delivery take?","Delivery typically takes 2–3 business days within France, 3–5 business days across the rest of the EU, and 5–10 business days for international destinations. Orders are shipped directly from our own controlled stock."],
+            ["Why is there a delivery timeframe?","Orders are processed under controlled conditions to maintain product quality, packaging integrity, and full traceability before dispatch."],
             ["Do you ship internationally?","Yes. We ship worldwide. However, international orders are dispatched at the buyer's own risk — please review our international shipping notice above before ordering."],
             ["What happens if customs seizes my package?","For international (non-EU) orders, seizure risk is the buyer's responsibility. We cannot provide refunds for packages seized, destroyed, or refused by customs authorities in any country outside the EU."],
             ["Can I track my order?","Yes. Tracking information is provided once your order is processed and in transit."],

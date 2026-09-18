@@ -2778,7 +2778,11 @@ const ProductCard = ({ p, cur, onClick, lang="EN" }) => {
         <h3 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:24,fontWeight:800,marginBottom:6}}>{p.name}</h3>
         <div style={{fontSize:10,color:p.tagColor,letterSpacing:1.5,marginBottom:10,fontWeight:600}}>{t(lang,"available_in")} {sizes}</div>
         <p style={{fontSize:12.5,color:"rgba(255,255,255,0.48)",lineHeight:1.68,marginBottom:14}}>{lang==="FR"&&p.shortDesc_fr?p.shortDesc_fr:p.shortDesc}</p>
-        {!p.noCOA && <p style={{fontSize:10.5,color:"rgba(255,255,255,0.4)",marginBottom:18,lineHeight:1.55}}>
+        {p.coaUrl
+          ? <a href={p.coaUrl} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} style={{display:"inline-block",fontSize:10.5,color:"#4ade80",marginBottom:18,textDecoration:"none",fontWeight:700,letterSpacing:0.3}}>
+              {lang==="FR"?"✓ COA vérifié — voir le rapport →":"✓ Verified COA — view report →"}
+            </a>
+          : !p.noCOA && <p style={{fontSize:10.5,color:"rgba(255,255,255,0.4)",marginBottom:18,lineHeight:1.55}}>
           {t(lang,"coa_dl")}
         </p>}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -3585,7 +3589,7 @@ const COAPage = ({ lang="EN" }) => (
       <h1 style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:"clamp(28px,6vw,44px)",fontWeight:800,marginBottom:12}}>{tg(lang,"COA Library")}</h1>
       <p style={{fontSize:14,color:"rgba(255,255,255,0.42)",maxWidth:540}}>{lang==="FR"?"Chaque lot est testé indépendamment par Janoshik Analytical. Le certificat d'analyse de chaque lot est publié ici avec son numéro de vérification unique, consultable sur le portail Janoshik.":"Every batch is independently tested by Janoshik Analytical. Each batch's Certificate of Analysis is published here with its unique verification number, checkable on the Janoshik portal."}</p>
     </div>
-    {PRODUCTS.filter(p=>p.id!=="bac-water").map(p=>(
+    {PRODUCTS.filter(p=>p.id!=="bac-water").sort((a,b)=>(b.coaUrl?1:0)-(a.coaUrl?1:0)).map(p=>(
       <div key={p.id} style={{background:"linear-gradient(135deg,#0f2240,#0c1a2e)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"24px 28px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:18}}>
         <div style={{display:"flex",alignItems:"center",gap:18}}>
           <ProductIcon color={p.tagColor} size={40}/>

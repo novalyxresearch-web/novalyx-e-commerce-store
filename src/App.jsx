@@ -661,6 +661,7 @@ const PRODUCTS = [
   {
     id: "retatrutide",
     name: "GLP-3RT",
+    coaUrl: "https://verify.janoshik.com/tests/230722-GLP3RT_X9RYPGHB1EGS",
     tag: "TRIPLE-RECEPTOR RESEARCH",
     category: "Metabolic",
     tagColor: "#fbbf24",
@@ -3601,7 +3602,10 @@ const COAPage = ({ lang="EN" }) => (
             </div>
           ))}
         </div>
-        <div style={{textAlign:"center",background:"rgba(251,191,36,0.08)",border:"1px solid rgba(251,191,36,0.25)",borderRadius:8,padding:"9px 18px",fontSize:11,fontWeight:700,letterSpacing:0.3,color:"#fbbf24"}}>{lang==="FR"?"⏱ Disponible avec votre lot":"⏱ Available with your batch"}</div>
+        {p.coaUrl
+          ? <a href={p.coaUrl} target="_blank" rel="noopener noreferrer" style={{textAlign:"center",background:"rgba(74,222,128,0.1)",border:"1px solid rgba(74,222,128,0.35)",borderRadius:8,padding:"9px 18px",fontSize:11,fontWeight:700,letterSpacing:0.3,color:"#4ade80",textDecoration:"none",cursor:"pointer"}}>{lang==="FR"?"✓ VÉRIFIER LE COA →":"✓ VERIFY COA →"}</a>
+          : <div style={{textAlign:"center",background:"rgba(251,191,36,0.08)",border:"1px solid rgba(251,191,36,0.25)",borderRadius:8,padding:"9px 18px",fontSize:11,fontWeight:700,letterSpacing:0.3,color:"#fbbf24"}}>{lang==="FR"?"⏱ Disponible avec votre lot":"⏱ Available with your batch"}</div>
+        }
       </div>
     ))}
     <div style={{marginTop:32,background:"rgba(74,222,128,0.05)",border:"1px solid rgba(74,222,128,0.18)",borderRadius:12,padding:"22px 28px",fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.8}}>

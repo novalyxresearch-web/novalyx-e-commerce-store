@@ -2727,7 +2727,11 @@ a{color:inherit}
 .foot-legal{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--mute);text-transform:uppercase}
 
 /* gate */
-.gate{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .35s ease}
+.gate{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;transition:opacity .35s ease}
+.gate-title{font-size:30px;margin-bottom:10px}
+.gate-seal{width:40px;height:40px}
+@media (max-width:480px){.gate{padding:10px}.gate-card{padding:20px 16px}.gate-title{font-size:23px;margin-bottom:8px}.gate-desc{font-size:12.5px!important;line-height:1.55!important;margin-bottom:14px!important}.gate-seal{width:32px;height:32px}.gate .check{padding:9px 10px;margin-bottom:6px;font-size:12px;line-height:1.45}.gate .field{margin-bottom:10px!important}.gate .field input{padding:10px 12px}.gate-foot{margin-top:10px!important}}
+@media (max-width:820px){.field input,.field textarea,.field select{font-size:16px}}
 .gate.closing{opacity:0;pointer-events:none}
 
 /* cookies */
@@ -2757,7 +2761,7 @@ a{color:inherit}
 .bot-form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
 .bot-form input{flex:1;min-width:0;padding:11px 12px;border:1px solid var(--line);background:var(--paper);outline:none;border-radius:2px}
 .bot-form .btn{padding:11px 16px;font-size:13px}
-.gate-card{max-width:460px;width:100%;border:1px solid var(--line);background:var(--surface);padding:34px 28px}
+.gate-card{max-width:460px;width:100%;margin:auto;border:1px solid var(--line);background:var(--surface);padding:34px 28px}
 `;
 
 /* ─── LOGO (reprend ton logo : nœuds + A vert) ───────────── */
@@ -4478,14 +4482,14 @@ export default function App() {
       {!ageOk && (
         <div className={`gate${gateClosing ? " closing" : ""}`}>
           <div className="gate-card fade">
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-              <div style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid var(--green)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+              <div className="gate-seal" style={{ borderRadius: "50%", border: "1.5px solid var(--green)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#1E6A43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
               <div className="eyebrow">{FR ? "Accès professionnel" : "Professional access"}</div>
             </div>
-            <h2 className="h2" style={{ fontSize: 30, marginBottom: 10 }}>{FR ? "Réservé à la recherche en laboratoire." : "Reserved for laboratory research."}</h2>
-            <p className="muted" style={{ fontSize: 13.5, marginBottom: 22, lineHeight: 1.7 }}>{t(lang, "age_desc")}</p>
+            <h2 className="h2 gate-title">{FR ? "Réservé à la recherche en laboratoire." : "Reserved for laboratory research."}</h2>
+            <p className="muted gate-desc" style={{ fontSize: 13.5, marginBottom: 22, lineHeight: 1.7 }}>{t(lang, "age_desc")}</p>
 
             <div className="field" style={{ marginBottom: 16 }}>
               <label>{t(lang, "age_org_label")}</label>
@@ -4497,7 +4501,7 @@ export default function App() {
             <label className="check"><input type="checkbox" checked={gateUse} onChange={e => setGateUse(e.target.checked)} /><span>{t(lang, "age_check_use")}</span></label>
 
             <button className="btn btn-ink" style={{ width: "100%", marginTop: 8 }} disabled={!gateReady} onClick={enter}>{t(lang, "age_enter")}</button>
-            <p className="muted" style={{ fontSize: 10, marginTop: 14, lineHeight: 1.6, textAlign: "center" }}>{t(lang, "age_footer")}</p>
+            <p className="muted gate-foot" style={{ fontSize: 10, marginTop: 14, lineHeight: 1.6, textAlign: "center" }}>{t(lang, "age_footer")}</p>
             <div className="lang" style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
               {["FR", "EN"].map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)}>{l}</button>)}
             </div>

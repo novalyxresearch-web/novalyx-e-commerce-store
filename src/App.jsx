@@ -2733,6 +2733,12 @@ a{color:inherit}
 @media (max-width:480px){.gate{padding:10px}.gate-card{padding:20px 16px}.gate-title{font-size:23px;margin-bottom:8px}.gate-desc{font-size:12.5px!important;line-height:1.55!important;margin-bottom:14px!important}.gate-seal{width:32px;height:32px}.gate .check{padding:9px 10px;margin-bottom:6px;font-size:12px;line-height:1.45}.gate .field{margin-bottom:10px!important}.gate .field input{padding:10px 12px}.gate-foot{margin-top:10px!important}}
 @media (max-width:820px){.field input,.field textarea,.field select{font-size:16px}}
 .gate.closing{opacity:0;pointer-events:none}
+.hero-prod{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;width:100%;margin-top:14px;padding:12px;border:1px solid var(--line);background:var(--paper);cursor:pointer;text-align:left;font:inherit;color:inherit;border-radius:2px;transition:border-color .2s}
+.hero-prod:hover{border-color:var(--ink)}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
+@media (max-width:480px){.hero-prod{gap:12px;padding:10px}.hero-prod img{width:96px!important;height:96px!important}.hero-prod-name{font-size:24px!important}}
+@media (max-width:979px){.hero-grid > .sheet{order:-1}}
 
 /* cookies */
 .cookie{position:fixed;left:0;right:0;bottom:0;z-index:95;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none}
@@ -3213,6 +3219,8 @@ const SecHead = ({ n, label, title, children }) => (
 const Home = ({ go, cur, openProduct, lang }) => {
   const FR = lang === "FR";
   const hero = COAS.retatrutide;
+  const heroP = PRODUCTS.find(p => p.id === "retatrutide");
+  const heroMin = heroP ? Math.min(...heroP.variants.map(v => v.price)) : 0;
   const withCoa = PRODUCTS.filter(p => COAS[p.id]);
   const cats = CATEGORY_ORDER.filter(c => PRODUCTS.some(p => p.category === c));
   return (
@@ -3234,25 +3242,35 @@ const Home = ({ go, cur, openProduct, lang }) => {
             </div>
           </div>
           <div className="sheet">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-              <div>
-                <div className="eyebrow">{FR ? "Fiche d'analyse" : "Analysis sheet"}</div>
-                <div style={{ fontFamily: "var(--serif)", fontSize: 28, marginTop: 6 }}>GLP-3RT 5 mg</div>
-                <div className="mono muted" style={{ fontSize: 11.5, marginTop: 2 }}>{FR ? "Réf. rapport" : "Report ref."} : {hero.sample}</div>
-              </div>
-              <div className="mono muted" style={{ fontSize: 11, textAlign: "right" }}>#{hero.task}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+              <div className="eyebrow" style={{ color: "var(--green)" }}>{FR ? "Produit analysé · lot publié" : "Analysed product · published batch"}</div>
+              <div className="mono muted" style={{ fontSize: 11 }}>#{hero.task}</div>
             </div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "22px 0 8px" }}>
+            {heroP && (
+              <button className="hero-prod" onClick={() => openProduct(heroP)} aria-label={FR ? "Voir le produit GLP-3RT 5 mg" : "View GLP-3RT 5 mg"}>
+                <ProductPhoto p={heroP} size={hero.size} h={124} />
+                <div>
+                  <div className="hero-prod-name" style={{ fontFamily: "var(--serif)", fontSize: 30, lineHeight: 1.05, whiteSpace: "nowrap" }}>GLP-3RT 5 mg</div>
+                  <div className="mono muted" style={{ fontSize: 11.5, marginTop: 5 }}>{FR ? "Peptide lyophilisé · usage recherche" : "Lyophilised peptide · research use"}</div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+                    <span className="tag">{FR ? "À partir de" : "From"}</span>
+                    <span className="pcard-price">{price(heroMin, cur, lang)}</span>
+                  </div>
+                </div>
+              </button>
+            )}
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "20px 0 8px" }}>
               <span className="big-num">{hero.purity ? num(hero.purity, lang) : "—"}</span>
               <span className="mono" style={{ fontSize: 14 }}>% {FR ? "pureté HPLC" : "HPLC purity"}</span>
             </div>
             <div className="sheet-row"><span>{FR ? "Quantité mesurée" : "Measured content"}</span><span>{num(hero.measured, lang)} / 5 mg</span></div>
             <div className="sheet-row"><span>{FR ? "Laboratoire" : "Laboratory"}</span><span>Janoshik Analytical</span></div>
+            <div className="sheet-row"><span>{FR ? "Lot" : "Batch"}</span><span>{hero.batch}</span></div>
             <div className="sheet-row"><span>{FR ? "Date" : "Date"}</span><span>{fmtDate(hero.date, lang)}</span></div>
-            <div className="sheet-row"><span>{FR ? "Clé" : "Key"}</span><span>{hero.key}</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginTop: 18, flexWrap: "wrap" }}>
-              <a className="link" href={coaLink(hero)} target="_blank" rel="noopener noreferrer">{FR ? "Voir le rapport original" : "View original report"}</a>
-              <span className="mono muted" style={{ fontSize: 10.5 }}>{FR ? "LOT NOVALYX" : "NOVALYX BATCH"}</span>
+            <div className="sheet-row"><span>{FR ? "Clé de vérification" : "Verification key"}</span><span>{hero.key}</span></div>
+            <div className="hero-cta">
+              {heroP && <button className="btn btn-ink" onClick={() => openProduct(heroP)}>{FR ? "Voir le produit" : "View product"} →</button>}
+              <a className="btn btn-line" href={coaLink(hero)} target="_blank" rel="noopener noreferrer">{FR ? "Vérifier sur Janoshik" : "Verify on Janoshik"} ↗</a>
             </div>
           </div>
         </div>

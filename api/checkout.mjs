@@ -1,4 +1,3 @@
-
 /* ═══════════════════════════════════════════════════════════════
    Novalyx Research — création d'une facture Bitcoin (BTCPay Server)
    Fonction serveur Vercel : /api/checkout
@@ -358,7 +357,7 @@ export default async function handler(req, res) {
         },
         checkout: {
           expirationMinutes: 60,
-          paymentTolerance: 1,
+          paymentTolerance: 2,
           redirectURL: site + "/?paid=" + orderId,
           redirectAutomatically: true,
           defaultLanguage: lang === "FR" ? "fr-FR" : "en",

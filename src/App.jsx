@@ -2028,13 +2028,15 @@ a{color:inherit}
 @media(min-width:980px){.hero-grid{grid-template-columns:1.15fr .85fr;gap:64px}}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
 .hero-stack{position:relative;display:block;width:100%;max-width:560px;height:200px;margin:0 auto;background:none;border:0;padding:0;cursor:pointer}
-.hs{position:absolute;bottom:6px;width:31%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 14px 32px rgba(9,25,59,.14);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;animation:nvx-fan .9s cubic-bezier(.2,.8,.2,1) backwards;animation-play-state:paused}
+.hs{position:absolute;bottom:6px;width:31%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 14px 32px rgba(9,25,59,.14);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;animation:nvx-fan .9s cubic-bezier(.2,.8,.2,1) backwards,nvx-float var(--fd,6s) ease-in-out infinite;animation-play-state:paused}
 .hero-stack.play .hs{animation-play-state:running}
 .hs img{width:100% !important;height:100% !important;object-fit:cover;border-radius:0 !important}
-.hs0{left:0;--r:-6deg;--s:.8;--dx:111%;z-index:1;animation-delay:.32s}.hs1{left:17%;--r:-3deg;--s:.9;--dx:56%;z-index:2;animation-delay:.2s}
-.hs2{left:34.5%;--r:0deg;--s:1;--dx:0%;z-index:5;animation-delay:.05s}.hs3{right:17%;--r:3deg;--s:.9;--dx:-56%;z-index:2;animation-delay:.2s}.hs4{right:0;--r:6deg;--s:.8;--dx:-111%;z-index:1;animation-delay:.32s}
+.hs0{left:0;--r:-6deg;--s:.8;--dx:111%;--fd:6.4s;z-index:1;animation-delay:.32s,1.6s}.hs1{left:17%;--r:-3deg;--s:.9;--dx:56%;--fd:5.6s;z-index:2;animation-delay:.2s,2.3s}
+.hs2{left:34.5%;--r:0deg;--s:1;--dx:0%;--fd:6s;z-index:5;animation-delay:.05s,1.1s}.hs3{right:17%;--r:3deg;--s:.9;--dx:-56%;--fd:5.8s;z-index:2;animation-delay:.2s,1.9s}.hs4{right:0;--r:6deg;--s:.8;--dx:-111%;--fd:6.8s;z-index:1;animation-delay:.32s,2.7s}
 .hs{transform:rotate(var(--r)) scale(var(--s))}
-/* Entrée en scène : les flacons partent du centre et se déploient en éventail, une seule fois, puis restent immobiles. */
+/* Entrée en scène : les flacons partent du centre et se déploient en éventail, puis « respirent » doucement, chacun à son rythme.
+   Le flottement utilise la propriété translate (indépendante de transform) : le survol et l'éventail restent intacts. */
+@keyframes nvx-float{0%,100%{translate:0 0}50%{translate:0 -7px}}
 @keyframes nvx-fan{from{opacity:0;transform:translateX(var(--dx)) rotate(0deg) scale(.72)}to{opacity:1;transform:rotate(var(--r)) scale(var(--s))}}
 @media (hover:hover){.hero-stack .hs:hover{transform:rotate(var(--r)) scale(calc(var(--s) * 1.06)) translateY(-10px);box-shadow:0 26px 50px rgba(9,25,59,.22);z-index:6}}
 .hero-vials{padding-top:6px}

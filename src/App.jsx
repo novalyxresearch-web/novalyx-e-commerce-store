@@ -2672,7 +2672,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
             </div>
             {CONFIG.BTC_ON && canBuy(p) && (
               <p style={{ fontSize: 13, marginTop: 12 }}>
-                <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Paiement en Bitcoin : comment ça marche ? (3 étapes)" : "Bitcoin payment: how does it work? (3 steps)"}</a>
+                <a href="/payer-en-bitcoin" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Paiement en Bitcoin : comment ça marche ? (3 étapes)" : "Bitcoin payment: how does it work? (3 steps)"}</a>
               </p>
             )}
             {CONFIG.BTC_ON && canBuy(p) && qtyDiscount(qty, v.size, p.id, v.price) > 0.0001 && (
@@ -2746,7 +2746,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
       window.location.href = d.url;
     } catch (e) {
-      setBtcErr(FR ? "Le paiement Bitcoin est momentanément indisponible. Réessayez dans un instant ou écrivez-nous." : "Bitcoin payment is temporarily unavailable. Please try again shortly or contact us.");
+      const why = e && e.message && e.message !== "checkout" ? " (" + e.message + ")" : "";
+      setBtcErr((FR ? "Le paiement Bitcoin est momentanément indisponible. Réessayez dans un instant ou écrivez-nous." : "Bitcoin payment is temporarily unavailable. Please try again shortly or contact us.") + why);
       setLoading(false);
     }
   };
@@ -4288,6 +4289,10 @@ const BitcoinGuide = ({ lang, go }) => {
                 <li key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start", ...p }}><span style={{ marginTop: 3 }}><BtcIco d={ICO.check} s={17} /></span><span>{t}</span></li>
               ))}
             </ol>
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "14px 16px", borderRadius: 12, background: "#FBF3E4", color: "#7A4E0E", fontSize: 14, lineHeight: 1.55 }}>
+              <BtcIco d={ICO.alert} c="#7A4E0E" s={18} />
+              <span><b>{T("Avec Revolut :", "Using Revolut:")}</b> {T("à la question sur le destinataire, choisissez « portefeuille d'une autre personne » et indiquez Novalyx Research. Revolut retire parfois ses frais du montant : vérifiez que le montant reçu est bien celui de la facture. L'envoi peut prendre jusqu'à une heure ; votre paiement est pris en compte dès qu'il part.", "when asked about the recipient, choose “someone else's wallet” and enter Novalyx Research. Revolut sometimes deducts its fees from the amount: check that the amount received matches the invoice. Sending can take up to an hour; your payment counts as soon as it leaves.")}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -4455,7 +4460,8 @@ export default function App() {
   useDomTranslate(lang);
   useReveal(CONFIG.THEME === "modern");
 
-  const go = (p, filter) => { setPage(p); setProduct(null); if (filter !== undefined) setProductFilter(filter); pushPath(ROUTES[p] || "/"); window.scrollTo(0, 0); };
+  // Depuis une fiche produit ouverte, on remplace son adresse au lieu d'empiler (sinon « retour » rouvrirait la fiche).
+  const go = (p, filter) => { const fromModal = !!(window.history.state && window.history.state.modal); setPage(p); setProduct(null); if (filter !== undefined) setProductFilter(filter); pushPath(ROUTES[p] || "/", fromModal); window.scrollTo(0, 0); };
   const openProduct = (prod) => { setProduct(prod); if (prod) pushPath("/produit/" + encodeURIComponent(prod.id), false, { nvx: 1, modal: 1 }); };
   // Fermer une fiche ouverte depuis le site = revenir en arrière (pas de doublon dans l'historique) ;
   // fiche ouverte par un lien direct = remplacer l'adresse par celle de la page.
@@ -5040,6 +5046,8 @@ const XL_DE = {
 "Direct payment": "Direkte Zahlung",
 "Discreet": "Diskret",
 "Email us and we'll guide you step by step, the first time and every time after.": "Schreiben Sie uns, wir führen Sie Schritt für Schritt — beim ersten Mal und auch danach.",
+"Using Revolut:": "Mit Revolut:",
+"when asked about the recipient, choose “someone else's wallet” and enter Novalyx Research. Revolut sometimes deducts its fees from the amount: check that the amount received matches the invoice. Sending can take up to an hour; your payment counts as soon as it leaves.": "Bei der Frage nach dem Empfänger wählen Sie „Wallet einer anderen Person“ und geben Sie Novalyx Research an. Revolut zieht seine Gebühren manchmal vom Betrag ab: Prüfen Sie, ob der empfangene Betrag der Rechnung entspricht. Der Versand kann bis zu einer Stunde dauern; Ihre Zahlung zählt, sobald sie abgeschickt ist.",
 "Got Revolut?": "Sie haben Revolut?",
 "How long does confirmation take?": "Wie lange dauert die Bestätigung?",
 "I paid slightly less because of fees.": "Ich habe wegen der Gebühren etwas weniger bezahlt.",
@@ -5509,6 +5517,8 @@ const XL_NL = {
 "GLP-{#}, GIP, glucagon and amylin receptors.": "GLP-{#}-, GIP-, glucagon- en amylinereceptoren.",
 "GROWTH FACTOR RESEARCH": "ONDERZOEK GROEIFACTOREN",
 "GROWTH HORMONE RESEARCH": "ONDERZOEK GROEIHORMOON",
+"Using Revolut:": "Met Revolut:",
+"when asked about the recipient, choose “someone else's wallet” and enter Novalyx Research. Revolut sometimes deducts its fees from the amount: check that the amount received matches the invoice. Sending can take up to an hour; your payment counts as soon as it leaves.": "Bij de vraag naar de ontvanger kiest u „wallet van iemand anders” en vult u Novalyx Research in. Revolut trekt zijn kosten soms van het bedrag af: controleer of het ontvangen bedrag overeenkomt met de factuur. Verzenden kan tot een uur duren; uw betaling telt zodra ze vertrokken is.",
 "Got Revolut?": "Heeft u Revolut?",
 "Governed by French law and applicable EU regulations.": "Beheerst door het Franse recht en de toepasselijke EU-regelgeving.",
 "Grade": "Kwaliteit",

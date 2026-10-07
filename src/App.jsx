@@ -9,113 +9,14 @@ import { useState, useEffect, useRef } from "react";
 //  Clé = "idproduit_dosage". Vide "" = bouton "contactez-nous".
 //  Le SITE affiche les vrais noms ; Stripe peut afficher des codes.
 // ============================================================
+/* Liens Stripe encore utilisés tant que le paiement Bitcoin n'est pas activé (GLP-3RT et eau). */
 const STRIPE_LINKS = {
-  // BPC-157
-  "bpc157_5mg": "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01",
-  "bpc157_10mg": "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02",
-  // TB-500
-  "tb500_5mg": "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09",
-  "tb500_10mg": "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a",
-  // GHK-Copper
-  "ghk_50mg": "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g",
-  "ghk_100mg": "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h",
-  // KPV
-  "kpv_5mg": "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12",
-  "kpv_10mg": "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13",
-  // GLP-3RT (Retatrutide) — packs
   "retatrutide_5mg": "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19",
   "retatrutide_5mg · Pack de 2": "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a",
   "retatrutide_5mg · Pack de 3": "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b",
-  // Mazdutide
-  "mazdutide_10mg": "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14",
-  // Survodutide
-  "survodutide_10mg": "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15",
-  // Cagrilintide
-  "cagrilintide_5mg": "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c",
-  "cagrilintide_10mg": "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d",
-  // Tesamorelin
-  "tesamorelin_5mg": "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e",
-  "tesamorelin_10mg": "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f",
-  // Ipamorelin
-  "ipamorelin_5mg": "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i",
-  "ipamorelin_10mg": "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j",
-  // Sermorelin
-  "sermorelin_5mg": "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l",
-  // CJC-1295 (no DAC)
-  "cjc1295_10mg": "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k",
-  // NAD+
-  "nad_500mg": "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m",
-  "nad_1000mg": "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n",
-  // Epitalon
-  "epitalon_10mg": "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o",
-  "epitalon_50mg": "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p",
-  // Pinealon
-  "pinealon_5mg": "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q",
-  "pinealon_10mg": "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r",
-  "pinealon_20mg": "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s",
-  // MOTS-c
-  "motsc_10mg": "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t",
-  "motsc_40mg": "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u",
-  // SS-31
-  "ss31_10mg": "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v",
-  "ss31_50mg": "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w",
-  // Thymosin Alpha-1
-  "thymosinalpha1_5mg": "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x",
-  "thymosinalpha1_10mg": "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y",
-  // Thymalin
-  "thymalin_10mg": "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z",
-  // LL-37
-  "ll37_5mg": "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A",
-  // Semax
-  "semax_5mg": "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B",
-  "semax_11mg": "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C",
-  // Selank
-  "selank_5mg": "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D",
-  "selank_11mg": "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E",
-  // Cerebrolysin
-  "cerebrolysin_60mg": "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F",
-  // DSIP
-  "dsip_5mg": "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G",
-  "dsip_10mg": "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H",
-  // PT-141
-  "pt141_10mg": "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I",
-  // Ara-290
-  "ara290_10mg": "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J",
-  // Kisspeptin-10
-  "kisspeptin_5mg": "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K",
-  "kisspeptin_10mg": "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L",
-  // Tirzepatide
-  "slupp322_5mg": "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05",
-  "slupp322_10mg": "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06",
-  // Semaglutide
-  "semaglutide_5mg": "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07",
-  "semaglutide_10mg": "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08",
-  // AOD-9604
-  "aod9604_5mg": "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M",
-  "aod9604_10mg": "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N",
-  // GHRP-2
-  "ghrp2_5mg": "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O",
-  "ghrp2_10mg": "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P",
-  // GHRP-6
-  "ghrp6_5mg": "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q",
-  "ghrp6_10mg": "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R",
-  // 5-Amino-1MQ
-  "amino1mq_5mg": "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S",
-  // Hexarelin
-  "hexarelin_2mg": "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T",
-  "hexarelin_5mg": "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U",
-  // Novalyx Formula 01
-  "formula01_10mg+10mg": "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V",
-  // Novalyx Formula 02
-  "formula02_5mg+5mg": "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W",
-  // Novalyx Formula 03
-  "formula03_70mg total": "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X",
-  // Bacteriostatic Water — packs
   "bac-water_3ml vial": "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16",
   "bac-water_3ml · Pack de 2": "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17",
   "bac-water_3ml · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
-  // Novalyx Formula 04
-  "formula04_80mg total": "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y",
 };
 const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
 
@@ -196,6 +97,11 @@ const CONFIG = {
   ADDRESS:                "44 Rue Pasquier, 75008 Paris, France",
   STRIPE_ENABLED:         true,
   SITE_URL:               "https://novalyxresearch.com/",
+  // Paiement Bitcoin (BTCPay) : passe à true quand le serveur est synchronisé et testé.
+  // false = le site fonctionne comme avant (Stripe + virement).
+  BTC_ON:                 false,
+  /* Apparence : "classic" (crème, titres à empattements) ou "modern" (fond blanc, police du logo, animations). */
+  THEME:                  "modern",
   // Coordonnées bancaires pour les commandes professionnelles / grosses commandes par virement.
   // Le titulaire légal (raison sociale d'un auto-entrepreneur = nom/prénom) doit être affiché
   // tel quel pour passer la vérification du bénéficiaire (VoP) des banques.
@@ -218,14 +124,7 @@ const CURRENCIES = {
 /* ─── TRANSLATIONS ───────────────────────────────────────── */
 const TRANSLATIONS = {
   EN: {
-    // Nav
-    nav_products: "PRODUCTS", nav_coa: "COA LIBRARY", nav_calc: "CALCULATOR", nav_learn: "LEARNING CENTER", nav_about: "ABOUT", nav_faq: "FAQ", nav_contact: "CONTACT",
-    // Announcement bar
-    ann1: "FRANCE BASED", ann2: "BATCH TESTED", ann3: "WORLDWIDE SHIPPING", ann4: "CONTROLLED FULFILLMENT",
-    // Age gate
-    age_title: "Professional Access",
     age_desc: "Novalyx Research supplies compounds exclusively for laboratory research. Access is restricted to qualified professionals.",
-    age_confirm: "I confirm I am a qualified professional and this order is for laboratory research use only.",
     age_enter: "ENTER SITE →",
     age_footer: "By entering you confirm compliance with all applicable laws in your jurisdiction.",
     age_org_label: "Laboratory / Organization (optional)",
@@ -233,98 +132,11 @@ const TRANSLATIONS = {
     age_check_age: "I confirm I am 18 years of age or older.",
     age_check_pro: "I am a qualified professional (researcher, laboratory, institution).",
     age_check_use: "This order is strictly for laboratory research — not for human or animal use.",
-    // Product card
-    available_in: "AVAILABLE IN:",
-    coa_dl: "COA: published upon batch validation",
-    from: "FROM", per_vial: "PER VIAL",
-    view_options: "VIEW OPTIONS →",
-    // Product modal
-    select_size: "SELECT SIZE",
-    verified: "INDEPENDENTLY VERIFIED",
-    purity_confirmed: "Purity",
-    confirmed_by: "confirmed by",
-    verify_link: "VERIFY AT JANOSHIK.COM →",
-    size_label: "Size", batch_label: "Batch",
-    add_to_cart: "ADD TO CART →",
-    // Cart
-    your_order: "Your Order",
-    cart_empty: "Your cart is empty",
-    qty: "Qty",
-    subtotal: "SUBTOTAL",
     cart_confirm: "I confirm this order is strictly for laboratory research purposes only.",
     intl_confirm: "I acknowledge this shipment may be subject to customs inspection and I am responsible for compliance with local regulations.",
-    checkout: "PROCEED TO CHECKOUT →",
-    checkout_loading: "PROCESSING...",
-    cart_disclaimer: "Research compounds only. Not for human use.",
-    // Home
-    hero_sub: "ADVANCED RESEARCH COMPOUNDS",
-    hero_h1_1: "Peptides engineered",
-    hero_h1_2: "for science.",
-    hero_desc: "Novalyx Research supplies high-purity research peptides and laboratory compounds to researchers, laboratories, and biohackers across Europe. Each new batch is submitted for independent analysis by Janoshik — Certificates of Analysis are published as batches are validated.",
-    hero_tagline: "For researchers, laboratories & serious professionals — research use only.",
-    hero_browse: "BROWSE COMPOUNDS →",
-    hero_coa: "VIEW COA LIBRARY",
-    hero_contact: "CONTACT US",
-    hero_stat1: "Research Compounds", hero_stat2: "Purity Guarantee", hero_stat3: "International Shipping",
-    // Products page
-    prod_sub: "OUR COMPOUNDS",
-    prod_h1: "Research Catalog",
-    prod_desc: "Research compounds across specialized categories. Each new batch is submitted for independent analysis — COA published upon validation. Supplied for research use only.",
-    compound: "COMPOUND", compounds: "COMPOUNDS",
-    // COA page
-    coa_sub: "TRANSPARENCY",
-    coa_h1: "COA Library",
-    coa_desc: "Every batch tested. Every result published. Download COAs for all current Novalyx products.",
-    download_coa: "DOWNLOAD COA →",
-    // About
-    about_sub: "OUR MISSION",
-    about_h1: "Research-grade compounds. Uncompromised standards.",
-    // FAQ
-    faq_h1: "Frequently Asked Questions",
-    // Contact
-    contact_h1: "Contact Us",
-    // Shipping
-    shipping_h1: "Shipping & Delivery",
-    // Footer
-    footer_tagline: "Advanced research compounds, third-party verified. Not for human or veterinary use.",
-    footer_shop: "SHOP", footer_company: "COMPANY", footer_legal: "LEGAL",
-    footer_all_products: "All Products", footer_blends: "Signature Blends",
-    footer_metabolic: "Metabolic", footer_longevity: "Longevity", footer_regen: "Regenerative",
-    footer_about: "About", footer_coa: "COA Library", footer_faq: "FAQ",
-    footer_shipping: "Shipping", footer_contact: "Contact",
-    footer_privacy: "Privacy Policy", footer_terms: "Terms & Conditions", footer_disclaimer: "Disclaimer",
-    footer_copy: "All rights reserved.",
-    footer_research: "All products for research use only. Not for human or veterinary use.",
-    // Subscribe
-    subscribe_sub: "STAY INFORMED",
-    subscribe_h2: "First Access. New Compounds. COA Alerts.",
-    subscribe_desc: "Join the Novalyx research list for early product access and batch notifications.",
-    subscribe_placeholder: "your@email.com",
-    subscribe_btn: "SUBSCRIBE",
-    subscribe_done: "✓ You're on the list.",
-    subscribe_note: "No spam. Research professionals only.",
-    // B2B
-    b2b_sub: "FOR LABS & BULK ORDERS",
-    b2b_h2: "B2B & Institutional Supply",
-    b2b_desc: "Contact us for bulk pricing, long-term supply agreements, and dedicated account support for research institutions.",
-    b2b_btn: "REQUEST BULK PRICING →",
-    // Why Novalyx
-    why_sub: "WHY NOVALYX",
-    why_h2: "Built for researchers who demand more.",
-    // Packaging
-    pack_sub: "PROFESSIONAL PACKAGING",
-    pack_h2: "Shipped ready for the lab.",
-    pack_desc: "Each Novalyx Research compound arrives in tamper-evident packaging, fully labelled for laboratory handling — product name, batch code, storage conditions, and regulatory markings all visible at a glance.",
   },
   FR: {
-    // Nav
-    nav_products: "PRODUITS", nav_coa: "BIBLIOTHÈQUE COA", nav_calc: "CALCULATEUR", nav_learn: "CENTRE D'APPRENTISSAGE", nav_about: "À PROPOS", nav_faq: "FAQ", nav_contact: "CONTACT",
-    // Announcement bar
-    ann1: "ENTREPRISE FRANÇAISE", ann2: "TESTÉ PAR LOT", ann3: "LIVRAISON INTERNATIONALE", ann4: "FULFILLMENT CONTRÔLÉ",
-    // Age gate
-    age_title: "Accès Professionnel",
     age_desc: "Novalyx Research fournit des composés exclusivement pour la recherche en laboratoire. L'accès est réservé aux professionnels qualifiés.",
-    age_confirm: "Je confirme être un professionnel qualifié et que cette commande est uniquement destinée à la recherche en laboratoire.",
     age_enter: "ACCÉDER AU SITE →",
     age_footer: "En entrant, vous confirmez être en conformité avec toutes les lois applicables dans votre juridiction.",
     age_org_label: "Laboratoire / Organisation (optionnel)",
@@ -332,88 +144,8 @@ const TRANSLATIONS = {
     age_check_age: "Je certifie avoir 18 ans ou plus.",
     age_check_pro: "Je suis un professionnel qualifié (chercheur, laboratoire, institution).",
     age_check_use: "Cette commande est strictement destinée à la recherche en laboratoire — non à un usage humain ou animal.",
-    // Product card
-    available_in: "DISPONIBLE EN :",
-    coa_dl: "COA : publié dès validation du lot",
-    from: "À PARTIR DE", per_vial: "PAR FIOLE",
-    view_options: "VOIR LES OPTIONS →",
-    // Product modal
-    select_size: "CHOISIR LA TAILLE",
-    verified: "VÉRIFIÉ INDÉPENDAMMENT",
-    purity_confirmed: "Pureté",
-    confirmed_by: "confirmée par",
-    verify_link: "VÉRIFIER SUR JANOSHIK.COM →",
-    size_label: "Taille", batch_label: "Lot",
-    add_to_cart: "AJOUTER AU PANIER →",
-    // Cart
-    your_order: "Votre Commande",
-    cart_empty: "Votre panier est vide",
-    qty: "Qté",
-    subtotal: "SOUS-TOTAL",
     cart_confirm: "Je confirme que cette commande est strictement destinée à des fins de recherche en laboratoire uniquement.",
     intl_confirm: "Je reconnais que cet envoi peut être soumis à une inspection douanière et que je suis responsable du respect des réglementations locales.",
-    checkout: "PASSER LA COMMANDE →",
-    checkout_loading: "TRAITEMENT...",
-    cart_disclaimer: "Composés de recherche uniquement. Pas à usage humain.",
-    // Home
-    hero_sub: "COMPOSÉS DE RECHERCHE AVANCÉS",
-    hero_h1_1: "Peptides conçus",
-    hero_h1_2: "pour la science.",
-    hero_desc: "Novalyx Research fournit des peptides de recherche et composés de laboratoire haute pureté aux chercheurs, laboratoires et biohackers à travers l'Europe. Chaque nouveau lot est soumis à une analyse indépendante par Janoshik — les certificats sont publiés dès validation.",
-    hero_tagline: "Pour chercheurs, laboratoires & professionnels exigeants — usage recherche uniquement.",
-    hero_contact: "NOUS CONTACTER",
-    hero_browse: "VOIR LES COMPOSÉS →",
-    hero_coa: "VOIR LA BIBLIOTHÈQUE COA",
-    hero_stat1: "Composés de Recherche", hero_stat2: "Garantie de Pureté", hero_stat3: "Livraison Internationale",
-    // Products page
-    prod_sub: "NOS COMPOSÉS",
-    prod_h1: "Catalogue de Recherche",
-    prod_desc: "Composés de recherche dans des catégories spécialisées. Chaque nouveau lot est soumis à une analyse indépendante — COA publié dès validation. Fourni uniquement pour la recherche.",
-    compound: "COMPOSÉ", compounds: "COMPOSÉS",
-    // COA page
-    coa_sub: "TRANSPARENCE",
-    coa_h1: "Bibliothèque COA",
-    coa_desc: "Chaque lot testé. Chaque résultat publié. Téléchargez les COA pour tous les produits Novalyx actuels.",
-    download_coa: "TÉLÉCHARGER COA →",
-    // About
-    about_sub: "NOTRE MISSION",
-    about_h1: "Composés de qualité recherche. Standards sans compromis.",
-    // FAQ
-    faq_h1: "Questions Fréquentes",
-    // Contact
-    contact_h1: "Nous Contacter",
-    // Shipping
-    shipping_h1: "Livraison & Expédition",
-    // Footer
-    footer_tagline: "Composés de recherche avancés, vérifiés par des tiers. Pas à usage humain ou vétérinaire.",
-    footer_shop: "BOUTIQUE", footer_company: "ENTREPRISE", footer_legal: "LÉGAL",
-    footer_all_products: "Tous les Produits", footer_blends: "Mélanges Signature",
-    footer_metabolic: "Métabolique", footer_longevity: "Longévité", footer_regen: "Régénératif",
-    footer_about: "À Propos", footer_coa: "Bibliothèque COA", footer_faq: "FAQ",
-    footer_shipping: "Livraison", footer_contact: "Contact",
-    footer_privacy: "Politique de Confidentialité", footer_terms: "Conditions Générales", footer_disclaimer: "Avertissement",
-    footer_copy: "Tous droits réservés.",
-    footer_research: "Tous les produits sont réservés à la recherche. Pas à usage humain ou vétérinaire.",
-    // Subscribe
-    subscribe_sub: "RESTEZ INFORMÉ",
-    subscribe_h2: "Accès Prioritaire. Nouveaux Composés. Alertes COA.",
-    subscribe_desc: "Rejoignez la liste de recherche Novalyx pour un accès anticipé aux produits et aux notifications de lots.",
-    subscribe_placeholder: "votre@email.com",
-    subscribe_btn: "S'ABONNER",
-    subscribe_done: "✓ Vous êtes sur la liste.",
-    subscribe_note: "Pas de spam. Professionnels de la recherche uniquement.",
-    // B2B
-    b2b_sub: "POUR LABORATOIRES & COMMANDES EN GROS",
-    b2b_h2: "Approvisionnement B2B & Institutionnel",
-    b2b_desc: "Contactez-nous pour les tarifs en gros, les accords d'approvisionnement à long terme et le support dédié pour les institutions de recherche.",
-    b2b_btn: "DEMANDER UN DEVIS →",
-    // Why Novalyx
-    why_sub: "POURQUOI NOVALYX",
-    why_h2: "Conçu pour les chercheurs qui exigent le meilleur.",
-    // Packaging
-    pack_sub: "EMBALLAGE PROFESSIONNEL",
-    pack_h2: "Expédié prêt pour le laboratoire.",
-    pack_desc: "Chaque composé Novalyx Research arrive dans un emballage inviolable, entièrement étiqueté pour la manipulation en laboratoire — nom du produit, code de lot, conditions de stockage et marquages réglementaires visibles en un coup d'œil.",
   },
 };
 
@@ -456,6 +188,12 @@ const PRODUCT_FR = {
   "REGENERATIVE TRIPLE BLEND": "MÉLANGE TRIPLE RÉGÉNÉRATIF",
   "COMPLETE RESEARCH COMPLEX": "COMPLEXE DE RECHERCHE COMPLET",
   "LAB SUPPLY": "FOURNITURE LABORATOIRE",
+  "GROWTH FACTOR RESEARCH": "RECHERCHE FACTEURS DE CROISSANCE",
+  "GH RESEARCH": "RECHERCHE GH",
+  "LONGEVITY RESEARCH": "RECHERCHE LONGÉVITÉ",
+  "MULTI-RECEPTOR RESEARCH": "RECHERCHE MULTI-RÉCEPTEURS",
+  "COSMETIC PEPTIDE RESEARCH": "RECHERCHE PEPTIDES COSMÉTIQUES",
+  "BIOREGULATOR RESEARCH": "RECHERCHE BIORÉGULATEURS",
   "ANTI-AGING RESEARCH": "RECHERCHE ANTI-ÂGE",
   "NEUROPEPTIDE RESEARCH": "RECHERCHE NEUROPEPTIDE",
   // Categories
@@ -465,7 +203,9 @@ const PRODUCT_FR = {
   "Growth & Cellular": "Croissance & Cellulaire",
   "Longevity": "Longévité",
   "Immune": "Immunité",
-  "Cognitive": "Cognitif",
+  "Cognitive": "Recherche cognitive",
+  "Bioregulators": "Biorégulateurs peptidiques",
+  "Cosmetic Peptides": "Peptides dermo-cosmétiques",
   "Specialized": "Spécialisé",
   "Signature Blends": "Mélanges Signature",
   "Lab Supplies": "Fournitures Labo",
@@ -509,7 +249,7 @@ const tp = (lang, txt) => (lang === "FR" && txt ? (PRODUCT_FR[txt] || txt) : txt
 const GLOBAL_FR = {
   "Explore Our Compounds": "Explorez Nos Composés",
   "VERIFIED BY INDEPENDENT EU LABORATORY": "VÉRIFIÉ PAR UN LABORATOIRE INDÉPENDANT UE",
-  "Every batch. Every compound. Fully documented.": "Chaque lot. Chaque composé. Entièrement documenté.",
+  "Published reports. Public verification keys.": "Rapports publiés. Clés de vérification publiques.",
   "CERTIFICATE OF ANALYSIS": "CERTIFICAT D'ANALYSE",
   "Product:": "Produit :",
   "Batch:": "Lot :",
@@ -531,7 +271,7 @@ const GLOBAL_FR = {
   "No spam. Research professionals only.": "Pas de spam. Professionnels de la recherche uniquement.",
   "TRANSPARENCY": "TRANSPARENCE",
   "COA Library": "Bibliothèque COA",
-  "Every batch tested. Every result published. Download COAs for all current Novalyx products.": "Chaque lot testé. Chaque résultat publié. Téléchargez les COA de tous les produits Novalyx actuels.",
+  "Every published report can be verified with its key. Products without a published report are marked “analysis pending”.": "Chaque rapport publié se vérifie avec sa clé. Les produits sans rapport publié sont signalés « analyse à venir ».",
   "OUR STORY": "NOTRE HISTOIRE",
   "VIEW OUR PRODUCTS": "VOIR NOS PRODUITS",
   "SUPPORT": "SUPPORT",
@@ -566,7 +306,6 @@ const GLOBAL_FR = {
   "Research-First.": "La Recherche d'Abord.",
   "Transparency Always.": "Transparence Toujours.",
 };
-const tg = (lang, txt) => (lang === "FR" && txt && GLOBAL_FR[txt]) ? GLOBAL_FR[txt] : txt;
 GLOBAL_FR["BROWSE BY RESEARCH CATEGORY"] = "PARCOURIR PAR CATÉGORIE DE RECHERCHE";
 GLOBAL_FR["WHY NOVALYX"] = "POURQUOI NOVALYX";
 GLOBAL_FR["Purity (HPLC):"] = "Pureté (HPLC) :";
@@ -583,32 +322,11 @@ const PRODUCTS = [
     name: "BPC-157",
     tag: "TISSUE REPAIR RESEARCH",
     category: "Regenerative",
-    tagColor: "#4ade80",
-    badge: "BESTSELLER",
-    badgeColor: "#4ade80",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(74,222,128,0.03)",
-    shortDesc: "Pentadecapeptide fragment for research into tissue repair, gut integrity, and angiogenesis pathways.",
     desc: "BPC-157 (Body Protection Compound) is a synthetic pentadecapeptide supplied for research into tissue repair, angiogenesis, and gastrointestinal integrity. Each vial contains lyophilized peptide. Supplied exclusively for in-vitro and laboratory research purposes.",
-    shortDesc_fr: "Fragment pentadécapeptide pour la recherche sur la réparation tissulaire, l'intégrité intestinale et les voies de l'angiogenèse.",
     desc_fr: "Le BPC-157 (Body Protection Compound) est un pentadécapeptide synthétique fourni pour la recherche sur la réparation tissulaire, l'angiogenèse et l'intégrité gastro-intestinale. Chaque flacon contient un peptide lyophilisé. Fourni exclusivement à des fins de recherche in-vitro et en laboratoire.",
-    details: [
-      "Synthetic pentadecapeptide fragment",
-      "Research into tissue repair and angiogenesis pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fragment pentadécapeptide synthétique",
-      "Recherche sur les voies de réparation tissulaire et d'angiogenèse",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 30.99, batch: "NVX-BPC5-0426",  stripeLink: "https://buy.stripe.com/3cI28r8O73gS6LA8442Ry01" },
-      { size: "10mg", price: 49.99, batch: "NVX-BPC10-0426", stripeLink: "https://buy.stripe.com/00w00jc0j2cO4Ds5VW2Ry02" },
+      { size: "5mg",  price: 54.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -622,32 +340,11 @@ const PRODUCTS = [
     name: "TB-500",
     tag: "CELLULAR RESEARCH",
     category: "Regenerative",
-    tagColor: "#60a5fa",
-    badge: "POPULAR",
-    badgeColor: "#60a5fa",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(96,165,250,0.03)",
-    shortDesc: "Thymosin Beta-4 fragment for research into cellular migration and regenerative pathways.",
     desc: "TB-500 is a synthetic fragment of Thymosin Beta-4, supplied for research into cellular migration, angiogenesis, and tissue regeneration. Each vial contains lyophilized peptide.",
-    shortDesc_fr: "Fragment de Thymosine Bêta-4 pour la recherche sur la migration cellulaire et les voies régénératives.",
     desc_fr: "Le TB-500 est un fragment synthétique de la Thymosine Bêta-4, fourni pour la recherche sur la migration cellulaire, l'angiogenèse et la régénération tissulaire. Chaque flacon contient un peptide lyophilisé.",
-    details: [
-      "Thymosin Beta-4 synthetic fragment",
-      "Research into cellular migration and regeneration",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fragment synthétique de Thymosine Bêta-4",
-      "Recherche sur la migration cellulaire et la régénération",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 45.99, batch: "NVX-TB5-0426",  stripeLink: "https://buy.stripe.com/dRm5kD1lF4kW0ncfww2Ry09" },
-      { size: "10mg", price: 76.99, batch: "NVX-TB10-0426", stripeLink: "https://buy.stripe.com/aFa5kDe8r6t44Ds5VW2Ry0a" },
+      { size: "5mg",  price: 59.99 },
+      { size: "10mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -661,32 +358,11 @@ const PRODUCTS = [
     name: "GHK-Copper",
     tag: "REGENERATIVE RESEARCH",
     category: "Regenerative",
-    tagColor: "#f9a8d4",
-    badge: null,
-    badgeColor: "#f9a8d4",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(249,168,212,0.03)",
-    shortDesc: "Copper-peptide complex for research into collagen synthesis and skin-biology pathways.",
     desc: "GHK-Copper (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. New batches are submitted for independent analysis by Janoshik.",
-    shortDesc_fr: "Complexe cuivre-peptide pour la recherche sur la synthèse du collagène, la régénération cutanée et la cicatrisation.",
     desc_fr: "Le GHK-Cuivre (complexe Glycyl-Histidyl-Lysine cuivre) est un tripeptide naturel lié au cuivre. Fourni pour la recherche sur la régénération cutanée, la synthèse du collagène et de l'élastine, et la réparation tissulaire. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
-    details: [
-      "Glycyl-Histidyl-Lysine bound to copper",
-      "Research into collagen and elastin synthesis",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "Lyophilized, high-stability formulation",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Glycyl-Histidyl-Lysine bound to copper",
-      "Recherche sur collagen and elastin synthesis",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "Formulation lyophilisée haute stabilité",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "50mg",  price: 22.99, batch: "NVX-GHK50-0426",  stripeLink: "https://buy.stripe.com/5kQ7sL8O72cO6LAbgg2Ry0g" },
-      { size: "100mg", price: 35.99, batch: "NVX-GHK100-0426", stripeLink: "https://buy.stripe.com/00w4gz4xReZAgma8442Ry0h" },
+      { size: "50mg",  price: 52.99 },
+      { size: "100mg", price: 89.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -700,32 +376,11 @@ const PRODUCTS = [
     name: "KPV",
     tag: "ANTI-INFLAMMATORY RESEARCH",
     category: "Regenerative",
-    tagColor: "#a78bfa",
-    badge: null,
-    badgeColor: "#a78bfa",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(167,139,250,0.03)",
-    shortDesc: "Tripeptide α-MSH fragment for research into inflammation, gut integrity, and dermal pathways.",
     desc: "KPV (Lysine-Proline-Valine) is the C-terminal tripeptide fragment of alpha-MSH. Supplied for research into inflammatory signalling, intestinal barrier function, and dermal health.",
-    shortDesc_fr: "Fragment tripeptide α-MSH pour la recherche sur l'inflammation, l'intégrité intestinale et les voies dermiques.",
     desc_fr: "Le KPV (Lysine-Proline-Valine) est le fragment tripeptide C-terminal de l'alpha-MSH. Fourni pour la recherche sur la signalisation inflammatoire, la fonction de barrière intestinale et la santé dermique.",
-    details: [
-      "C-terminal tripeptide fragment of α-MSH",
-      "Research into inflammation and gut integrity",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "C-terminal tripeptide fragment of α-MSH",
-      "Recherche sur inflammation and gut integrity",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 27.99, batch: "NVX-KPV5-0426",  stripeLink: "https://buy.stripe.com/6oUeVd5BVdVw9XM5VW2Ry12" },
-      { size: "10mg", price: 38.99, batch: "NVX-KPV10-0426", stripeLink: "https://buy.stripe.com/bJedR9c0j9Fg9XMdoo2Ry13" },
+      { size: "5mg",  price: 54.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -741,33 +396,14 @@ const PRODUCTS = [
     name: "GLP-3RT",
     tag: "TRIPLE-RECEPTOR RESEARCH",
     category: "Metabolic",
-    tagColor: "#fbbf24",
-    badge: "PREMIUM",
-    badgeColor: "#fbbf24",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,191,36,0.03)",
-    shortDesc: "Synthetic triple-receptor agonist research peptide for in-vitro laboratory investigation of GLP-1, GIP, and glucagon receptor pathways.",
     desc: "GLP-3RT is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1, GIP, and glucagon receptor signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide de recherche triple-agoniste synthétique pour l'investigation in-vitro en laboratoire des voies des récepteurs GLP-1, GIP et glucagon.",
     desc_fr: "Le GLP-3RT est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation des récepteurs GLP-1, GIP et glucagon. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic triple-receptor agonist peptide",
-      "Research into GLP-1, GIP, and glucagon pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide triple-agoniste synthétique",
-      "Recherche sur les voies GLP-1, GIP et glucagon",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 59.99,  batch: "NVX-RET5-0426",  stripeLink: "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19" },
-      { size: "5mg · Pack de 2", price: 104.99, batch: "NVX-RET5-PACK2-0526", stripeLink: "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a" },
-      { size: "5mg · Pack de 3", price: 149.99, batch: "NVX-RET5-PACK3-0526", stripeLink: "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b" },
+      { size: "5mg",  price: 59.99 },
+      { size: "5mg · Pack de 2", price: 104.99 },
+      { size: "5mg · Pack de 3", price: 149.99 },
+      { size: "10mg", price: 89.99 },
+      { size: "20mg", price: 149.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -781,31 +417,10 @@ const PRODUCTS = [
     name: "Mazdutide",
     tag: "DUAL-AGONIST RESEARCH",
     category: "Metabolic",
-    tagColor: "#fb923c",
-    badge: "NEW",
-    badgeColor: "#fb923c",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,146,60,0.03)",
-    shortDesc: "Synthetic GLP-1/glucagon dual-agonist peptide for research into integrated metabolic signalling pathways.",
     desc: "Mazdutide is a synthetic dual-agonist peptide targeting both GLP-1 and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide double-agoniste GLP-1/glucagon synthétique pour la recherche sur les voies de signalisation métabolique intégrée.",
     desc_fr: "Le Mazdutide est un peptide double-agoniste synthétique ciblant les récepteurs GLP-1 et glucagon. Fourni exclusivement pour la recherche in-vitro en laboratoire. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic dual-receptor agonist peptide",
-      "Research into GLP-1 and glucagon pathways",
-      "Lyophilized for maximum stability",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide double-agoniste synthétique",
-      "Recherche sur GLP-1 and glucagon pathways",
-      "Lyophilized for maximum stability",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 114.99, batch: "NVX-MZD10-0426", stripeLink: "https://buy.stripe.com/cNi5kD5BV04Gb1Q8442Ry14" },
+      { size: "10mg", price: 84.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -819,31 +434,10 @@ const PRODUCTS = [
     name: "Survodutide",
     tag: "DUAL-AGONIST RESEARCH",
     category: "Metabolic",
-    tagColor: "#f59e0b",
-    badge: "PREMIUM",
-    badgeColor: "#f59e0b",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(245,158,11,0.03)",
-    shortDesc: "Synthetic GLP-1/glucagon dual-agonist peptide for research into advanced metabolic pathways.",
     desc: "Survodutide is a synthetic dual-agonist research peptide targeting GLP-1 and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic.",
-    shortDesc_fr: "Peptide double-agoniste GLP-1/glucagon synthétique pour la recherche sur les voies métaboliques avancées.",
     desc_fr: "Le Survodutide est un peptide de recherche double-agoniste synthétique ciblant les récepteurs GLP-1 et glucagon. Fourni exclusivement pour la recherche in-vitro en laboratoire. Pas un médicament, complément ou cosmétique.",
-    details: [
-      "Synthetic dual-agonist peptide",
-      "Research into advanced metabolic signalling",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic dual-agonist peptide",
-      "Recherche sur advanced metabolic signalling",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 151.99, batch: "NVX-SUR10-0426", stripeLink: "https://buy.stripe.com/8x2aEX4xRbNo6LA3NO2Ry15" },
+      { size: "10mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -857,32 +451,11 @@ const PRODUCTS = [
     name: "Cagrilintide",
     tag: "AMYLIN RECEPTOR RESEARCH",
     category: "Metabolic",
-    tagColor: "#eab308",
-    badge: null,
-    badgeColor: "#eab308",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(234,179,8,0.03)",
-    shortDesc: "Synthetic amylin analog for research into appetite regulation and satiety signalling pathways.",
     desc: "Cagrilintide is a synthetic long-acting amylin analog, supplied for research into amylin receptor pathways and satiety signalling. Each vial contains lyophilized peptide for in-vitro laboratory investigation.",
-    shortDesc_fr: "Analogue d'amyline synthétique pour la recherche sur la régulation de l'appétit et les voies de signalisation de la satiété.",
     desc_fr: "Le Cagrilintide est un analogue d'amyline synthétique à action prolongée, fourni pour la recherche sur les voies des récepteurs de l'amyline et la signalisation de la satiété. Chaque flacon contient un peptide lyophilisé pour l'investigation in-vitro en laboratoire.",
-    details: [
-      "Synthetic long-acting amylin analog",
-      "Research into amylin receptor pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic long-acting amylin analog",
-      "Recherche sur amylin receptor pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 81.99, batch: "NVX-CGL5-0426",  stripeLink: "https://buy.stripe.com/4gM28r4xR2cOfi6ess2Ry0c" },
-      { size: "10mg", price: 141.99, batch: "NVX-CGL10-0426", stripeLink: "https://buy.stripe.com/28E28r5BV9Fg5HwgAA2Ry0d" },
+      { size: "5mg",  price: 69.99 },
+      { size: "10mg", price: 119.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -898,32 +471,11 @@ const PRODUCTS = [
     name: "Tesamorelin",
     tag: "GROWTH HORMONE RESEARCH",
     category: "GH Research",
-    tagColor: "#38bdf8",
-    badge: null,
-    badgeColor: "#38bdf8",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(56,189,248,0.03)",
-    shortDesc: "Synthetic GHRH analog for research into visceral adiposity and growth hormone axis signalling.",
     desc: "Tesamorelin is a synthetic analog of growth hormone-releasing hormone (GHRH), supplied for research into visceral fat metabolism and the GH/IGF-1 axis.",
-    shortDesc_fr: "Analogue de GHRH synthétique pour la recherche sur l'adiposité viscérale et la signalisation de l'axe de l'hormone de croissance.",
     desc_fr: "Le Tesamorelin est un analogue synthétique de l'hormone de libération de l'hormone de croissance (GHRH), fourni pour la recherche sur le métabolisme des graisses viscérales et l'axe GH/IGF-1.",
-    details: [
-      "Synthetic GHRH analog",
-      "Research into visceral fat metabolism",
-      "Lyophilized for maximum stability",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic GHRH analog",
-      "Recherche sur visceral fat metabolism",
-      "Lyophilized for maximum stability",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 59.99, batch: "NVX-TES5-0426",  stripeLink: "https://buy.stripe.com/fZu5kD1lF18K7PE1FG2Ry0e" },
-      { size: "10mg", price: 108.99, batch: "NVX-TES10-0426", stripeLink: "https://buy.stripe.com/6oU4gzc0jg3E4Dsdoo2Ry0f" },
+      { size: "5mg",  price: 64.99 },
+      { size: "10mg", price: 109.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -937,32 +489,11 @@ const PRODUCTS = [
     name: "Ipamorelin",
     tag: "GH-SECRETAGOGUE RESEARCH",
     category: "GH Research",
-    tagColor: "#22d3ee",
-    badge: null,
-    badgeColor: "#22d3ee",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(34,211,238,0.03)",
-    shortDesc: "Selective GH secretagogue for research into pulsatile growth hormone release pathways.",
     desc: "Ipamorelin is a selective synthetic growth hormone secretagogue, supplied for research into pulsatile GH release pathways. Lyophilized, high-stability formulation.",
-    shortDesc_fr: "Sécrétagogue GH sélectif pour la recherche sur les voies de libération pulsatile de l'hormone de croissance.",
     desc_fr: "L'Ipamorelin est un sécrétagogue synthétique sélectif de l'hormone de croissance, fourni pour la recherche sur les voies de libération pulsatile de GH. Formulation lyophilisée haute stabilité.",
-    details: [
-      "Selective GH secretagogue peptide",
-      "Research into pulsatile GH release",
-      "Lyophilized for maximum stability",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Selective GH secretagogue peptide",
-      "Recherche sur pulsatile GH release",
-      "Lyophilized for maximum stability",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 25.99, batch: "NVX-IPA5-0426",  stripeLink: "https://buy.stripe.com/28E6oH2pJaJk5Hwess2Ry0i" },
-      { size: "10mg", price: 41.99, batch: "NVX-IPA10-0426", stripeLink: "https://buy.stripe.com/6oU9ATd4n18K2vkbgg2Ry0j" },
+      { size: "5mg",  price: 54.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -976,31 +507,10 @@ const PRODUCTS = [
     name: "Sermorelin",
     tag: "GHRH RESEARCH",
     category: "GH Research",
-    tagColor: "#06b6d4",
-    badge: null,
-    badgeColor: "#06b6d4",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(6,182,212,0.03)",
-    shortDesc: "Synthetic GHRH 1-29 fragment for research into growth hormone releasing pathways.",
     desc: "Sermorelin Acetate is a synthetic GHRH 1-29 fragment, supplied for research into growth hormone releasing pathways. Lyophilized, high-stability formulation.",
-    shortDesc_fr: "Fragment GHRH 1-29 synthétique pour la recherche sur les voies de libération de l'hormone de croissance.",
     desc_fr: "Le Sermorelin Acétate est un fragment synthétique GHRH 1-29, fourni pour la recherche sur les voies de libération de l'hormone de croissance. Formulation lyophilisée haute stabilité.",
-    details: [
-      "Synthetic GHRH 1-29 fragment",
-      "Research into GH releasing pathways",
-      "Lyophilized for maximum stability",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic GHRH 1-29 fragment",
-      "Recherche sur GH releasing pathways",
-      "Lyophilized for maximum stability",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg", price: 43.99, batch: "NVX-SER5-0426", stripeLink: "https://buy.stripe.com/4gM8wP4xR6t49XMbgg2Ry0l" },
+      { size: "5mg", price: 58.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1014,31 +524,10 @@ const PRODUCTS = [
     name: "CJC-1295 (no DAC)",
     tag: "GHRH ANALOG RESEARCH",
     category: "GH Research",
-    tagColor: "#0ea5e9",
-    badge: null,
-    badgeColor: "#0ea5e9",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(14,165,233,0.03)",
-    shortDesc: "Synthetic GHRH analog for research into extended growth hormone releasing pathways.",
     desc: "CJC-1295 without DAC is a synthetic GHRH analog supplied for research into extended-duration GH release pathways. Lyophilized, high-stability formulation.",
-    shortDesc_fr: "Analogue de GHRH synthétique pour la recherche sur les voies prolongées de libération de l'hormone de croissance.",
     desc_fr: "Le CJC-1295 sans DAC est un analogue synthétique de GHRH fourni pour la recherche sur les voies de libération de GH à durée prolongée. Formulation lyophilisée haute stabilité.",
-    details: [
-      "Synthetic GHRH analog (no DAC)",
-      "Research into GH releasing pathways",
-      "Lyophilized for maximum stability",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic GHRH analog (no DAC)",
-      "Recherche sur GH releasing pathways",
-      "Lyophilized for maximum stability",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 103.99, batch: "NVX-CJC10-0426", stripeLink: "https://buy.stripe.com/4gMfZh6FZbNo5Hwbgg2Ry0k" },
+      { size: "10mg", price: 69.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1054,32 +543,11 @@ const PRODUCTS = [
     name: "NAD+",
     tag: "CELLULAR ENERGY RESEARCH",
     category: "Longevity",
-    tagColor: "#c084fc",
-    badge: "LONGEVITY",
-    badgeColor: "#c084fc",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(192,132,252,0.03)",
-    shortDesc: "Nicotinamide adenine dinucleotide for research into cellular energy metabolism, mitochondrial function and longevity pathways.",
     desc: "NAD+ (Nicotinamide Adenine Dinucleotide) is a coenzyme present in all living cells, supplied for research into cellular energy metabolism, sirtuin activity, and longevity pathways.",
-    shortDesc_fr: "Nicotinamide adénine dinucléotide pour la recherche sur le métabolisme énergétique cellulaire, la fonction mitochondriale et les voies de longévité.",
     desc_fr: "Le NAD+ (Nicotinamide Adénine Dinucléotide) est une coenzyme présente dans toutes les cellules vivantes, fournie pour la recherche sur le métabolisme énergétique cellulaire, l'activité des sirtuines et les voies de longévité.",
-    details: [
-      "Naturally occurring coenzyme",
-      "Research into cellular energy and longevity pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Naturally occurring coenzyme",
-      "Recherche sur cellular energy and longevity pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "500mg",  price: 54.99, batch: "NVX-NAD500-0426",  stripeLink: "https://buy.stripe.com/28E00j0hB5p0d9Yess2Ry0m" },
-      { size: "1000mg", price: 99.99, batch: "NVX-NAD1000-0426", stripeLink: "https://buy.stripe.com/cNi28re8r2cO2vkgAA2Ry0n" },
+      { size: "500mg",  price: 58.99 },
+      { size: "1000mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1093,32 +561,11 @@ const PRODUCTS = [
     name: "Epitalon",
     tag: "TELOMERE RESEARCH",
     category: "Longevity",
-    tagColor: "#a3e635",
-    badge: null,
-    badgeColor: "#a3e635",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(163,230,53,0.03)",
-    shortDesc: "Synthetic tetrapeptide for research into telomerase activation, pineal signalling, and longevity pathways.",
     desc: "Epitalon is a synthetic tetrapeptide (Ala-Glu-Asp-Gly), supplied for research into telomerase activation, pineal gland signalling, and longevity pathways.",
-    shortDesc_fr: "Tétrapeptide synthétique pour la recherche sur l'activation de la télomérase, la signalisation pinéale et les voies de longévité.",
     desc_fr: "L'Epitalon est un tétrapeptide synthétique (Ala-Glu-Asp-Gly), fourni pour la recherche sur l'activation de la télomérase, la signalisation de la glande pinéale et les voies de longévité.",
-    details: [
-      "Synthetic tetrapeptide (Ala-Glu-Asp-Gly)",
-      "Research into telomerase and longevity pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic tetrapeptide (Ala-Glu-Asp-Gly)",
-      "Recherche sur telomerase and longevity pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 30.99, batch: "NVX-EPI10-0426", stripeLink: "https://buy.stripe.com/4gM6oH5BVaJk2vkckk2Ry0o" },
-      { size: "50mg", price: 116.99, batch: "NVX-EPI50-0426", stripeLink: "https://buy.stripe.com/aFa5kD1lF7x8b1Q3NO2Ry0p" },
+      { size: "10mg", price: 54.99 },
+      { size: "50mg", price: 209.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1132,33 +579,12 @@ const PRODUCTS = [
     name: "Pinealon",
     tag: "NEUROPROTECTIVE RESEARCH",
     category: "Longevity",
-    tagColor: "#84cc16",
-    badge: null,
-    badgeColor: "#84cc16",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(132,204,22,0.03)",
-    shortDesc: "Synthetic tripeptide for research into neuroprotection and cognitive longevity pathways.",
     desc: "Pinealon is a synthetic tripeptide, supplied for research into neuroprotection and cognitive longevity signalling pathways.",
-    shortDesc_fr: "Tripeptide synthétique pour la recherche sur la neuroprotection et les voies de longévité cognitive.",
     desc_fr: "Le Pinealon est un tripeptide synthétique, fourni pour la recherche sur la neuroprotection et les voies de signalisation de la longévité cognitive.",
-    details: [
-      "Synthetic tripeptide",
-      "Research into neuroprotection and cognitive function",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic tripeptide",
-      "Recherche sur neuroprotection and cognitive function",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 38.99, batch: "NVX-PIN5-0426",  stripeLink: "https://buy.stripe.com/eVq9AT5BV18K1rg4RS2Ry0q" },
-      { size: "10mg", price: 49.99, batch: "NVX-PIN10-0426", stripeLink: "https://buy.stripe.com/14A4gze8r6t41rgckk2Ry0r" },
-      { size: "20mg", price: 65.99, batch: "NVX-PIN20-0426", stripeLink: "https://buy.stripe.com/aFaaEX1lF18Kb1Q4RS2Ry0s" },
+      { size: "5mg",  price: 54.99 },
+      { size: "10mg", price: 94.99 },
+      { size: "20mg", price: 159.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1172,32 +598,11 @@ const PRODUCTS = [
     name: "MOTS-c",
     tag: "MITOCHONDRIAL RESEARCH",
     category: "Longevity",
-    tagColor: "#f472b6",
-    badge: null,
-    badgeColor: "#f472b6",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(244,114,182,0.03)",
-    shortDesc: "Mitochondrial-derived peptide for research into metabolic homeostasis and cellular stress response.",
     desc: "MOTS-c is a 16-amino acid mitochondrial-derived peptide, supplied for research into metabolic homeostasis, insulin sensitivity, and cellular stress response pathways.",
-    shortDesc_fr: "Peptide d'origine mitochondriale pour la recherche sur l'homéostasie métabolique et la réponse au stress cellulaire.",
     desc_fr: "Le MOTS-c est un peptide de 16 acides aminés d'origine mitochondriale, fourni pour la recherche sur l'homéostasie métabolique, la sensibilité à l'insuline et les voies de réponse au stress cellulaire.",
-    details: [
-      "Mitochondrial-derived peptide (MDP)",
-      "Research into metabolic homeostasis",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Mitochondrial-derived peptide (MDP)",
-      "Recherche sur metabolic homeostasis",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 41.99, batch: "NVX-MOTS10-0426", stripeLink: "https://buy.stripe.com/28E8wP7K3g3E4Ds9882Ry0t" },
-      { size: "40mg", price: 114.99, batch: "NVX-MOTS40-0426", stripeLink: "https://buy.stripe.com/6oUcN50hB3gS1rgckk2Ry0u" },
+      { size: "10mg", price: 57.99 },
+      { size: "40mg", price: 179.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1211,32 +616,11 @@ const PRODUCTS = [
     name: "SS-31",
     tag: "MITOCHONDRIAL RESEARCH",
     category: "Longevity",
-    tagColor: "#ec4899",
-    badge: "PREMIUM",
-    badgeColor: "#ec4899",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(236,72,153,0.03)",
-    shortDesc: "Mitochondria-targeting peptide for research into cardiolipin binding and mitochondrial energetics.",
     desc: "SS-31 (Elamipretide) is a mitochondria-targeting peptide, supplied for research into cardiolipin binding and mitochondrial energetics pathways.",
-    shortDesc_fr: "Peptide ciblant les mitochondries pour la recherche sur la liaison à la cardiolipine et l'énergétique mitochondriale.",
     desc_fr: "Le SS-31 (Elamipretide) est un peptide ciblant les mitochondries, fourni pour la recherche sur la liaison à la cardiolipine et les voies énergétiques mitochondriales.",
-    details: [
-      "Mitochondria-targeting peptide",
-      "Research into cardiolipin and mitochondrial energetics",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Mitochondria-targeting peptide",
-      "Recherche sur cardiolipin and mitochondrial energetics",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 51.99, batch: "NVX-SS31-10-0426", stripeLink: "https://buy.stripe.com/4gMeVde8r3gS6LAgAA2Ry0v" },
-      { size: "50mg", price: 189.99, batch: "NVX-SS31-50-0426", stripeLink: "https://buy.stripe.com/6oU3cv2pJdVwee20BC2Ry0w" },
+      { size: "10mg", price: 65.99 },
+      { size: "50mg", price: 249.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1252,32 +636,11 @@ const PRODUCTS = [
     name: "Thymosin Alpha-1",
     tag: "IMMUNE MODULATION RESEARCH",
     category: "Immune",
-    tagColor: "#fb923c",
-    badge: null,
-    badgeColor: "#fb923c",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,146,60,0.03)",
-    shortDesc: "Synthetic 28-amino acid peptide for research into immune modulation and T-cell maturation pathways.",
     desc: "Thymosin Alpha-1 (TA1) is a synthetic 28-amino acid peptide, supplied for research into immune system modulation, T-cell signalling, and thymic function.",
-    shortDesc_fr: "Peptide synthétique de 28 acides aminés pour la recherche sur la modulation immunitaire et les voies de maturation des lymphocytes T.",
     desc_fr: "La Thymosine Alpha-1 (TA1) est un peptide synthétique de 28 acides aminés, fourni pour la recherche sur la modulation du système immunitaire, la signalisation des lymphocytes T et la fonction thymique.",
-    details: [
-      "Synthetic 28-amino acid peptide",
-      "Research into immune modulation and T-cell pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic 28-amino acid peptide",
-      "Recherche sur immune modulation and T-cell pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 62.99, batch: "NVX-TA1-5-0426",  stripeLink: "https://buy.stripe.com/6oU6oH8O79Fg8TIbgg2Ry0x" },
-      { size: "10mg", price: 103.99, batch: "NVX-TA1-10-0426", stripeLink: "https://buy.stripe.com/eVq28r8O79Fgee23NO2Ry0y" },
+      { size: "5mg",  price: 65.99 },
+      { size: "10mg", price: 109.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1291,31 +654,10 @@ const PRODUCTS = [
     name: "Thymalin",
     tag: "IMMUNE MODULATION RESEARCH",
     category: "Immune",
-    tagColor: "#f97316",
-    badge: null,
-    badgeColor: "#f97316",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(249,115,22,0.03)",
-    shortDesc: "Thymus-derived peptide complex for research into immune function and thymic regulation.",
     desc: "Thymalin is a thymus-derived peptide complex, supplied for research into immune function, thymic regulation, and age-related immunology.",
-    shortDesc_fr: "Complexe peptidique d'origine thymique pour la recherche sur la fonction immunitaire et la régulation thymique.",
     desc_fr: "Le Thymalin est un complexe peptidique d'origine thymique, fourni pour la recherche sur la fonction immunitaire, la régulation thymique et l'immunologie liée à l'âge.",
-    details: [
-      "Thymus-derived peptide complex",
-      "Research into immune regulation",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Thymus-derived peptide complex",
-      "Recherche sur immune regulation",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 43.99, batch: "NVX-TYM10-0426", stripeLink: "https://buy.stripe.com/5kQ4gzggz18K3zobgg2Ry0z" },
+      { size: "10mg", price: 57.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1329,31 +671,10 @@ const PRODUCTS = [
     name: "LL-37",
     tag: "ANTIMICROBIAL RESEARCH",
     category: "Immune",
-    tagColor: "#ea580c",
-    badge: null,
-    badgeColor: "#ea580c",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(234,88,12,0.03)",
-    shortDesc: "Cathelicidin-derived antimicrobial peptide for research into innate immunity and host defense.",
     desc: "LL-37 is a cathelicidin-derived antimicrobial peptide, supplied for research into innate immunity pathways and host defense mechanisms.",
-    shortDesc_fr: "Peptide antimicrobien dérivé de la cathélicidine pour la recherche sur l'immunité innée et la défense de l'hôte.",
     desc_fr: "Le LL-37 est un peptide antimicrobien dérivé de la cathélicidine, fourni pour la recherche sur les voies de l'immunité innée et les mécanismes de défense de l'hôte.",
-    details: [
-      "Cathelicidin-derived antimicrobial peptide",
-      "Research into innate immunity",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Cathelicidin-derived antimicrobial peptide",
-      "Recherche sur innate immunity",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg", price: 54.99, batch: "NVX-LL37-0426", stripeLink: "https://buy.stripe.com/4gMaEXaWf2cOd9Yckk2Ry0A" },
+      { size: "5mg", price: 64.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1369,32 +690,11 @@ const PRODUCTS = [
     name: "Semax",
     tag: "NOOTROPIC RESEARCH",
     category: "Cognitive",
-    tagColor: "#2dd4bf",
-    badge: null,
-    badgeColor: "#2dd4bf",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(45,212,191,0.03)",
-    shortDesc: "Synthetic heptapeptide for research into cognitive function, BDNF expression, and neuroprotection.",
     desc: "Semax is a synthetic heptapeptide analog of ACTH(4-10), supplied for research into cognitive function, BDNF expression, and neuroprotective signalling.",
-    shortDesc_fr: "Heptapeptide synthétique pour la recherche sur la fonction cognitive, l'expression du BDNF et la neuroprotection.",
     desc_fr: "Le Semax est un analogue heptapeptide synthétique de l'ACTH(4-10), fourni pour la recherche sur la fonction cognitive, l'expression du BDNF et la signalisation neuroprotectrice.",
-    details: [
-      "Synthetic heptapeptide (ACTH 4-10 analog)",
-      "Research into cognitive function and BDNF",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic heptapeptide (ACTH 4-10 analog)",
-      "Recherche sur cognitive function and BDNF",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 35.99, batch: "NVX-SMX5-0426",  stripeLink: "https://buy.stripe.com/cNifZhggz18K9XMgAA2Ry0B" },
-      { size: "11mg", price: 57.99, batch: "NVX-SMX11-0426", stripeLink: "https://buy.stripe.com/6oU6oHfcv7x8ee29882Ry0C" },
+      { size: "5mg",  price: 53.99 },
+      { size: "11mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1408,32 +708,11 @@ const PRODUCTS = [
     name: "Selank",
     tag: "NEUROMODULATION RESEARCH",
     category: "Cognitive",
-    tagColor: "#818cf8",
-    badge: null,
-    badgeColor: "#818cf8",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(129,140,248,0.03)",
-    shortDesc: "Synthetic heptapeptide for research into anxiolytic mechanisms and GABAergic signalling pathways.",
     desc: "Selank is a synthetic heptapeptide analog of tuftsin, supplied for research into anxiolytic mechanisms and GABAergic signalling pathways.",
-    shortDesc_fr: "Heptapeptide synthétique pour la recherche sur les mécanismes anxiolytiques et les voies de signalisation GABAergiques.",
     desc_fr: "Le Selank est un analogue heptapeptide synthétique de la tuftsine, fourni pour la recherche sur les mécanismes anxiolytiques et les voies de signalisation GABAergiques.",
-    details: [
-      "Synthetic heptapeptide (tuftsin analog)",
-      "Research into anxiolytic and GABAergic pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic heptapeptide (tuftsin analog)",
-      "Recherche sur anxiolytic and GABAergic pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 41.99, batch: "NVX-SEL5-0426",  stripeLink: "https://buy.stripe.com/9B6aEX4xRaJkgma3NO2Ry0D" },
-      { size: "11mg", price: 59.99, batch: "NVX-SEL11-0426", stripeLink: "https://buy.stripe.com/14AcN5aWf18K1rg8442Ry0E" },
+      { size: "5mg",  price: 54.99 },
+      { size: "11mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1447,31 +726,10 @@ const PRODUCTS = [
     name: "Cerebrolysin",
     tag: "NEUROTROPHIC RESEARCH",
     category: "Cognitive",
-    tagColor: "#6366f1",
-    badge: null,
-    badgeColor: "#6366f1",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(99,102,241,0.03)",
-    shortDesc: "Neurotrophic peptide complex for research into neuroprotection and cognitive function.",
     desc: "Cerebrolysin is a neurotrophic peptide complex, supplied for research into neuroprotection, BDNF modulation, and cognitive signalling pathways.",
-    shortDesc_fr: "Complexe peptidique neurotrophique pour la recherche sur la neuroprotection et la fonction cognitive.",
     desc_fr: "Le Cerebrolysin est un complexe peptidique neurotrophique, fourni pour la recherche sur la neuroprotection, la modulation du BDNF et les voies de signalisation cognitive.",
-    details: [
-      "Neurotrophic peptide complex",
-      "Research into neuroprotection pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Neurotrophic peptide complex",
-      "Recherche sur neuroprotection pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "60mg", price: 41.99, batch: "NVX-CBL60-0426", stripeLink: "https://buy.stripe.com/14A5kD8O704G4Ds1FG2Ry0F" },
+      { size: "60mg", price: 79.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vials (6-pack)" },
@@ -1487,32 +745,11 @@ const PRODUCTS = [
     name: "DSIP",
     tag: "SLEEP RESEARCH",
     category: "Specialized",
-    tagColor: "#4f46e5",
-    badge: null,
-    badgeColor: "#4f46e5",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(79,70,229,0.03)",
-    shortDesc: "Delta sleep-inducing peptide for research into sleep regulation, delta wave activity, and circadian signalling.",
     desc: "DSIP (Delta Sleep-Inducing Peptide) is a synthetic nonapeptide, supplied for research into sleep regulation, delta wave activity, and circadian signalling pathways.",
-    shortDesc_fr: "Peptide inducteur du sommeil delta pour la recherche sur la régulation du sommeil, l'activité des ondes delta et la signalisation circadienne.",
     desc_fr: "Le DSIP (Delta Sleep-Inducing Peptide) est un nonapeptide synthétique, fourni pour la recherche sur la régulation du sommeil, l'activité des ondes delta et les voies de signalisation circadienne.",
-    details: [
-      "Synthetic nonapeptide",
-      "Research into sleep regulation and delta wave activity",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic nonapeptide",
-      "Recherche sur sleep regulation and delta wave activity",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 30.99, batch: "NVX-DSIP5-0426",  stripeLink: "https://buy.stripe.com/28E3cvaWf3gSd9Y4RS2Ry0G" },
-      { size: "10mg", price: 43.99, batch: "NVX-DSIP10-0426", stripeLink: "https://buy.stripe.com/cNifZhe8r04G7PE1FG2Ry0H" },
+      { size: "5mg",  price: 53.99 },
+      { size: "10mg", price: 89.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1526,31 +763,10 @@ const PRODUCTS = [
     name: "PT-141",
     tag: "MELANOCORTIN RECEPTOR RESEARCH",
     category: "Specialized",
-    tagColor: "#f43f5e",
-    badge: null,
-    badgeColor: "#f43f5e",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(244,63,94,0.03)",
-    shortDesc: "Synthetic melanocortin receptor agonist for research into MC3/MC4 receptor pathways and central nervous system signalling.",
     desc: "PT-141 (Bremelanotide) is a synthetic cyclic heptapeptide, supplied for research into melanocortin MC3 and MC4 receptor pathways and central nervous system signalling.",
-    shortDesc_fr: "Agoniste des récepteurs de la mélanocortine synthétique pour la recherche sur les voies des récepteurs MC3/MC4 et la signalisation du système nerveux central.",
     desc_fr: "Le PT-141 (Bremelanotide) est un heptapeptide cyclique synthétique, fourni pour la recherche sur les voies des récepteurs de la mélanocortine MC3 et MC4 et la signalisation du système nerveux central.",
-    details: [
-      "Synthetic cyclic heptapeptide",
-      "Research into MC3/MC4 receptor pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic cyclic heptapeptide",
-      "Recherche sur MC3/MC4 receptor pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 43.99, batch: "NVX-PT10-0426", stripeLink: "https://buy.stripe.com/9B6dR9ggz04G8TI1FG2Ry0I" },
+      { size: "10mg", price: 56.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1564,31 +780,10 @@ const PRODUCTS = [
     name: "Ara-290",
     tag: "NEUROPROTECTIVE RESEARCH",
     category: "Specialized",
-    tagColor: "#e11d48",
-    badge: null,
-    badgeColor: "#e11d48",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(225,29,72,0.03)",
-    shortDesc: "EPO-derived peptide for research into innate repair receptor pathways and neuroprotection.",
     desc: "Ara-290 is an 11-amino acid peptide derived from erythropoietin, supplied for research into innate repair receptor signalling and neuroprotection.",
-    shortDesc_fr: "Peptide dérivé de l'EPO pour la recherche sur les voies du récepteur de réparation innée et la neuroprotection.",
     desc_fr: "L'Ara-290 est un peptide de 11 acides aminés dérivé de l'érythropoïétine, fourni pour la recherche sur la signalisation du récepteur de réparation innée et la neuroprotection.",
-    details: [
-      "EPO-derived 11-amino acid peptide",
-      "Research into innate repair receptor pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "EPO-derived 11-amino acid peptide",
-      "Recherche sur innate repair receptor pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 45.99, batch: "NVX-ARA10-0426", stripeLink: "https://buy.stripe.com/9B6dR95BV8Bcb1Qacc2Ry0J" },
+      { size: "10mg", price: 58.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1602,32 +797,11 @@ const PRODUCTS = [
     name: "Kisspeptin-10",
     tag: "REPRODUCTIVE RESEARCH",
     category: "Specialized",
-    tagColor: "#be185d",
-    badge: null,
-    badgeColor: "#be185d",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(190,24,93,0.03)",
-    shortDesc: "Synthetic decapeptide for research into GnRH regulation and reproductive endocrinology pathways.",
     desc: "Kisspeptin-10 is a synthetic decapeptide, supplied for research into GnRH regulation and reproductive endocrinology signalling pathways.",
-    shortDesc_fr: "Décapeptide synthétique pour la recherche sur la régulation de la GnRH et les voies de l'endocrinologie de la reproduction.",
     desc_fr: "Le Kisspeptin-10 est un décapeptide synthétique, fourni pour la recherche sur la régulation de la GnRH et les voies de signalisation de l'endocrinologie de la reproduction.",
-    details: [
-      "Synthetic decapeptide",
-      "Research into GnRH and reproductive pathways",
-      "Lyophilized, high-stability formulation",
-      "Manufacturer HPLC testing included",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Synthetic decapeptide",
-      "Recherche sur GnRH and reproductive pathways",
-      "Formulation lyophilisée haute stabilité",
-      "Test HPLC du fabricant inclus",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg",  price: 27.99, batch: "NVX-KIS5-0426",  stripeLink: "https://buy.stripe.com/eVq3cv6FZeZA8TIgAA2Ry0K" },
-      { size: "10mg", price: 51.99, batch: "NVX-KIS10-0426", stripeLink: "https://buy.stripe.com/7sYfZhe8raJk1rgbgg2Ry0L" },
+      { size: "5mg",  price: 55.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1641,30 +815,10 @@ const PRODUCTS = [
     name: "Tirzepatide",
     tag: "DUAL-RECEPTOR RESEARCH",
     category: "Metabolic",
-    tagColor: "#fbbf24",
-    badge: "BEST SELLER",
-    badgeColor: "#fbbf24",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,191,36,0.03)",
-    shortDesc: "Synthetic dual-receptor agonist research peptide for in-vitro laboratory investigation of GLP-1 and GIP receptor pathways.",
-    desc: "Tirzepatide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 and GIP receptor signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    details: [
-      "Synthetic dual-receptor agonist peptide",
-      "Research into GLP-1 and GIP pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide double-agoniste synthétique",
-      "Recherche sur les voies GLP-1 et GIP",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "Tirzepatide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 and GIP receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     variants: [
-      { size: "5mg",  price: 45.99, batch: "NVX-TIRZ5-0426",  stripeLink: "https://buy.stripe.com/6oUaEX0hB4kW6LA7002Ry05" },
-      { size: "10mg", price: 51.99, batch: "NVX-TIRZ10-0426", stripeLink: "https://buy.stripe.com/00w3cv7K3bNo7PE7002Ry06" },
+      { size: "5mg",  price: 52.99 },
+      { size: "10mg", price: 89.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1678,32 +832,11 @@ const PRODUCTS = [
     name: "Semaglutide",
     tag: "GLP-1 RECEPTOR RESEARCH",
     category: "Metabolic",
-    tagColor: "#fbbf24",
-    badge: "BEST SELLER",
-    badgeColor: "#fbbf24",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,191,36,0.03)",
-    shortDesc: "Synthetic GLP-1 receptor agonist research peptide for in-vitro laboratory investigation of incretin signalling pathways.",
-    desc: "Semaglutide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 receptor signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide de recherche agoniste du récepteur GLP-1 synthétique pour l'investigation in-vitro en laboratoire des voies de signalisation de l'incrétine.",
-    desc_fr: "Le Semaglutide est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du récepteur GLP-1. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic GLP-1 receptor agonist peptide",
-      "Research into incretin and metabolic pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide agoniste du récepteur GLP-1 synthétique",
-      "Recherche sur les voies de l'incrétine et métaboliques",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "Semaglutide is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-1 receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le Semaglutide est un peptide synthétique fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du récepteur GLP-1. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg",  price: 44.99, batch: "NVX-SEMA5-0426",  stripeLink: "https://buy.stripe.com/8x2fZh0hB18K0nc5VW2Ry07" },
-      { size: "10mg", price: 49.99, batch: "NVX-SEMA10-0426", stripeLink: "https://buy.stripe.com/8x2cN5e8r18Kd9Y3NO2Ry08" },
+      { size: "5mg",  price: 51.99 },
+      { size: "10mg", price: 89.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1717,32 +850,11 @@ const PRODUCTS = [
     name: "AOD-9604",
     tag: "METABOLIC FRAGMENT RESEARCH",
     category: "Metabolic",
-    tagColor: "#fbbf24",
-    badge: "NEW",
-    badgeColor: "#fbbf24",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,191,36,0.03)",
-    shortDesc: "Modified growth hormone fragment (176-191) research peptide for in-vitro investigation of lipid metabolism pathways.",
-    desc: "AOD-9604 is a synthetic modified fragment of growth hormone (amino acids 176-191), supplied exclusively for in-vitro laboratory research into lipid metabolism signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide de recherche fragment modifié d'hormone de croissance (176-191) pour l'investigation in-vitro des voies du métabolisme lipidique.",
-    desc_fr: "L'AOD-9604 est un fragment modifié synthétique de l'hormone de croissance (acides aminés 176-191), fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du métabolisme lipidique. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Modified GH fragment (176-191)",
-      "Research into lipid metabolism pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fragment GH modifié (176-191)",
-      "Recherche sur les voies du métabolisme lipidique",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "AOD-9604 is a synthetic modified fragment of growth hormone (amino acids 176-191), supplied exclusively for in-vitro laboratory research into lipid metabolism signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "L'AOD-9604 est un fragment modifié synthétique de l'hormone de croissance (acides aminés 176-191), fourni exclusivement pour la recherche in-vitro en laboratoire sur la signalisation du métabolisme lipidique. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg",  price: 57.99, batch: "NVX-AOD5-0426",  stripeLink: "https://buy.stripe.com/00w6oH8O77x82vkacc2Ry0M" },
-      { size: "10mg", price: 114.99, batch: "NVX-AOD10-0426", stripeLink: "https://buy.stripe.com/cNifZh6FZ4kWb1Q0BC2Ry0N" },
+      { size: "5mg",  price: 64.99 },
+      { size: "10mg", price: 109.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1756,32 +868,11 @@ const PRODUCTS = [
     name: "GHRP-2",
     tag: "GH SECRETAGOGUE RESEARCH",
     category: "Growth & Cellular",
-    tagColor: "#34d399",
-    badge: "NEW",
-    badgeColor: "#34d399",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(52,211,153,0.03)",
-    shortDesc: "Growth hormone-releasing peptide for in-vitro research into GH secretagogue receptor signalling.",
-    desc: "GHRP-2 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide libérateur d'hormone de croissance pour la recherche in-vitro sur la signalisation du récepteur sécrétagogue GH.",
-    desc_fr: "Le GHRP-2 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic GH-releasing peptide",
-      "Research into GH secretagogue receptor pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide synthétique libérateur de GH",
-      "Recherche sur les voies du récepteur sécrétagogue GH",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "GHRP-2 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le GHRP-2 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg",  price: 18.99, batch: "NVX-GHRP2-5-0426",  stripeLink: "https://buy.stripe.com/fZucN53tN9Fg2vk4RS2Ry0O" },
-      { size: "10mg", price: 30.99, batch: "NVX-GHRP2-10-0426", stripeLink: "https://buy.stripe.com/28E14nc0j3gSc5Ubgg2Ry0P" },
+      { size: "5mg",  price: 55.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1795,32 +886,11 @@ const PRODUCTS = [
     name: "GHRP-6",
     tag: "GH SECRETAGOGUE RESEARCH",
     category: "Growth & Cellular",
-    tagColor: "#34d399",
-    badge: "NEW",
-    badgeColor: "#34d399",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(52,211,153,0.03)",
-    shortDesc: "Growth hormone-releasing peptide for in-vitro research into GH secretagogue receptor and appetite signalling.",
-    desc: "GHRP-6 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Peptide libérateur d'hormone de croissance pour la recherche in-vitro sur le récepteur sécrétagogue GH et la signalisation de l'appétit.",
-    desc_fr: "Le GHRP-6 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic GH-releasing peptide",
-      "Research into GH secretagogue and appetite pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Peptide synthétique libérateur de GH",
-      "Recherche sur les voies sécrétagogue GH et de l'appétit",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "GHRP-6 is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le GHRP-6 est un peptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg",  price: 18.99, batch: "NVX-GHRP6-5-0426",  stripeLink: "https://buy.stripe.com/00w8wP1lF8Bcee23NO2Ry0Q" },
-      { size: "10mg", price: 30.99, batch: "NVX-GHRP6-10-0426", stripeLink: "https://buy.stripe.com/fZu6oH9Sb2cO6LAacc2Ry0R" },
+      { size: "5mg",  price: 55.99 },
+      { size: "10mg", price: 94.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1834,31 +904,10 @@ const PRODUCTS = [
     name: "5-Amino-1MQ",
     tag: "METABOLIC RESEARCH",
     category: "Metabolic",
-    tagColor: "#fbbf24",
-    badge: "NEW",
-    badgeColor: "#fbbf24",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(251,191,36,0.03)",
-    shortDesc: "Small molecule NNMT inhibitor for in-vitro research into cellular metabolism and adipocyte pathways.",
-    desc: "5-Amino-1MQ is a synthetic small molecule NNMT inhibitor supplied exclusively for in-vitro laboratory research into cellular metabolism and adipocyte signalling. Each vial contains lyophilized compound with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Inhibiteur NNMT petite molécule pour la recherche in-vitro sur le métabolisme cellulaire et les voies des adipocytes.",
-    desc_fr: "Le 5-Amino-1MQ est un inhibiteur NNMT synthétique petite molécule fourni exclusivement pour la recherche in-vitro en laboratoire sur le métabolisme cellulaire et la signalisation des adipocytes. Chaque flacon contient un composé lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Small molecule NNMT inhibitor",
-      "Research into cellular metabolism pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Inhibiteur NNMT petite molécule",
-      "Recherche sur les voies du métabolisme cellulaire",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "5-Amino-1MQ is a synthetic small molecule NNMT inhibitor supplied exclusively for in-vitro laboratory research into cellular metabolism and adipocyte signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Le 5-Amino-1MQ est un inhibiteur NNMT synthétique petite molécule fourni exclusivement pour la recherche in-vitro en laboratoire sur le métabolisme cellulaire et la signalisation des adipocytes. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg", price: 43.99, batch: "NVX-5AMQ5-0426", stripeLink: "https://buy.stripe.com/aFa00j7K32cOgma0BC2Ry0S" },
+      { size: "5mg", price: 53.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1872,32 +921,10 @@ const PRODUCTS = [
     name: "Hexarelin",
     tag: "GH SECRETAGOGUE RESEARCH",
     category: "Growth & Cellular",
-    tagColor: "#34d399",
-    badge: "NEW",
-    badgeColor: "#34d399",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(52,211,153,0.03)",
-    shortDesc: "Potent growth hormone-releasing hexapeptide for in-vitro research into GH secretagogue receptor signalling.",
-    desc: "Hexarelin is a synthetic growth hormone-releasing hexapeptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    shortDesc_fr: "Hexapeptide puissant libérateur d'hormone de croissance pour la recherche in-vitro sur la signalisation du récepteur sécrétagogue GH.",
-    desc_fr: "L'Hexarelin est un hexapeptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un peptide lyophilisé avec documentation analytique spécifique au lot par Janoshik Analytical (République tchèque). Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Synthetic GH-releasing hexapeptide",
-      "Research into GH secretagogue receptor pathways",
-      "Lyophilized for maximum stability and shelf life",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Hexapeptide synthétique libérateur de GH",
-      "Recherche sur les voies du récepteur sécrétagogue GH",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "Hexarelin is a synthetic growth hormone-releasing hexapeptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "L'Hexarelin est un hexapeptide synthétique libérateur d'hormone de croissance fourni exclusivement pour la recherche in-vitro en laboratoire sur les voies du récepteur sécrétagogue GH. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "2mg", price: 32.99, batch: "NVX-HEX2-0426",  stripeLink: "https://buy.stripe.com/4gMbJ13tN18K9XM4RS2Ry0T" },
-      { size: "5mg", price: 51.99, batch: "NVX-HEX5-0426", stripeLink: "https://buy.stripe.com/28E00jggzbNo8TIbgg2Ry0U" },
+      { size: "5mg", price: 69.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -1913,31 +940,10 @@ const PRODUCTS = [
     name: "Novalyx Formula 01",
     tag: "REGENERATIVE RESEARCH BLEND",
     category: "Signature Blends",
-    tagColor: "#22d3ee",
-    badge: "SIGNATURE",
-    badgeColor: "#22d3ee",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(34,211,238,0.03)",
-    shortDesc: "Proprietary dual-peptide research blend combining BPC-157 and TB-500 for integrated research into tissue repair and regenerative signalling pathways.",
     desc: "Novalyx Formula 01 is a proprietary research blend containing BPC-157 (10mg) and TB-500 (10mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.",
-    shortDesc_fr: "Mélange de recherche propriétaire à double peptide combinant BPC-157 et TB-500 pour la recherche intégrée sur la réparation tissulaire et les voies de signalisation régénératives.",
     desc_fr: "Novalyx Formula 01 est un mélange de recherche propriétaire contenant BPC-157 (10mg) et TB-500 (10mg) combinés dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
-    details: [
-      "Contains BPC-157 and TB-500 in 1:1 ratio",
-      "Research into combined regenerative signalling pathways",
-      "Single-vial convenience for integrated protocols",
-      "New batches are submitted for independent analysis by Janoshik. Certificates of Analysis (COAs) are published upon validation.",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Contains BPC-157 and TB-500 in 1:1 ratio",
-      "Recherche sur combined regenerative signalling pathways",
-      "Single-vial convenience for integrated protocols",
-      "Les nouveaux lots sont soumis à une analyse indépendante par Janoshik. Les certificats d'analyse (COA) sont publiés après validation.",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg+10mg", price: 59.99, batch: "NVX-F01-0426", stripeLink: "https://buy.stripe.com/aFa4gzfcv5p0b1Q3NO2Ry0V" },
+      { size: "10mg+10mg", price: 79.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + TB-500 10mg" },
@@ -1952,31 +958,10 @@ const PRODUCTS = [
     name: "Novalyx Formula 02",
     tag: "GH-RELEASING RESEARCH BLEND",
     category: "Signature Blends",
-    tagColor: "#34d399",
-    badge: "SIGNATURE",
-    badgeColor: "#34d399",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(52,211,153,0.03)",
-    shortDesc: "Proprietary dual-peptide research blend combining CJC-1295 and Ipamorelin for integrated research into growth-hormone releasing pathways.",
     desc: "Novalyx Formula 02 is a proprietary research blend containing CJC-1295 (5mg, no DAC) and Ipamorelin (5mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.",
-    shortDesc_fr: "Mélange de recherche propriétaire à double peptide combinant CJC-1295 et Ipamorelin pour la recherche intégrée sur les voies de libération de l'hormone de croissance.",
     desc_fr: "Novalyx Formula 02 est un mélange de recherche propriétaire contenant CJC-1295 (5mg, sans DAC) et Ipamorelin (5mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de libération de GH dans un protocole intégré.",
-    details: [
-      "Contains CJC-1295 and Ipamorelin in 1:1 ratio",
-      "Research into growth hormone releasing pathways",
-      "Single-vial convenience for integrated protocols",
-      "Lyophilized, high-stability formulation",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Contains CJC-1295 and Ipamorelin in 1:1 ratio",
-      "Recherche sur growth hormone releasing pathways",
-      "Single-vial convenience for integrated protocols",
-      "Formulation lyophilisée haute stabilité",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg+5mg", price: 65.99, batch: "NVX-F02-0426", stripeLink: "https://buy.stripe.com/dRm00jd4n4kW9XM7002Ry0W" },
+      { size: "5mg+5mg", price: 64.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "CJC-1295 5mg + Ipamorelin 5mg" },
@@ -1991,31 +976,10 @@ const PRODUCTS = [
     name: "Novalyx Formula 03",
     tag: "REGENERATIVE TRIPLE BLEND",
     category: "Signature Blends",
-    tagColor: "#14b8a6",
-    badge: "FLAGSHIP",
-    badgeColor: "#14b8a6",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(20,184,166,0.04)",
-    shortDesc: "Flagship triple-peptide research blend combining BPC-157, GHK-Copper, and TB-500 for comprehensive regenerative research protocols.",
     desc: "Novalyx Formula 03 is our flagship triple-peptide research blend containing BPC-157 (10mg), GHK-Copper (50mg), and TB-500 (10mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.",
-    shortDesc_fr: "Mélange de recherche phare à triple peptide combinant BPC-157, GHK-Cuivre et TB-500 pour des protocoles de recherche régénérative complets.",
     desc_fr: "Novalyx Formula 03 est notre mélange de recherche phare à triple peptide contenant BPC-157 (10mg), GHK-Cuivre (50mg) et TB-500 (10mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant la signalisation régénérative complète à travers plusieurs voies simultanément.",
-    details: [
-      "Contains BPC-157 + GHK-Copper + TB-500",
-      "Research into comprehensive regenerative pathways",
-      "Triple-compound single-vial convenience",
-      "Lyophilized, high-stability formulation",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Contains BPC-157 + GHK-Copper + TB-500",
-      "Recherche sur comprehensive regenerative pathways",
-      "Triple-compound single-vial convenience",
-      "Formulation lyophilisée haute stabilité",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "70mg total", price: 135.99, batch: "NVX-F03-0426", stripeLink: "https://buy.stripe.com/28EaEXggz5p0ee2gAA2Ry0X" },
+      { size: "70mg total", price: 79.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg" },
@@ -2032,33 +996,12 @@ const PRODUCTS = [
     name: "Bacteriostatic Water",
     tag: "LAB SUPPLY",
     category: "Lab Supplies",
-    tagColor: "#67e8f9",
-    badge: "ESSENTIAL",
-    badgeColor: "#67e8f9",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(103,232,249,0.03)",
-    shortDesc: "Pharmaceutical-grade bacteriostatic water (0.9% benzyl alcohol) for reconstitution of lyophilised research peptides.",
     desc: "Novalyx Research Bacteriostatic Water is pharmaceutical-grade sterile water containing 0.9% benzyl alcohol as a bacteriostatic agent. Supplied exclusively for laboratory use in the reconstitution of lyophilised research peptides. Each vial is sealed, sterile, and ready for immediate laboratory use.",
-    shortDesc_fr: "Eau bactériostatique de qualité pharmaceutique (alcool benzylique 0,9%) pour la reconstitution des peptides de recherche lyophilisés.",
     desc_fr: "L'Eau Bactériostatique Novalyx Research est une eau stérile de qualité pharmaceutique contenant 0,9% d'alcool benzylique comme agent bactériostatique. Fournie exclusivement pour usage en laboratoire dans la reconstitution des peptides de recherche lyophilisés. Chaque flacon est scellé, stérile et prêt à l'emploi immédiat en laboratoire.",
-    details: [
-      "0.9% benzyl alcohol bacteriostatic agent",
-      "Laboratory-grade sterile reconstitution solvent",
-      "Multi-draw vial — compatible with all lyophilised peptides",
-      "Sealed tamper-evident vial",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "0.9% benzyl alcohol bacteriostatic agent",
-      "Laboratory-grade sterile reconstitution solvent",
-      "Multi-draw vial — compatible with all lyophilised peptides",
-      "Sealed tamper-evident vial",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "3ml vial",        price: 6.99,  batch: "NVX-BW3-0426",        stripeLink: "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16" },
-      { size: "3ml · Pack de 2", price: 12.99, batch: "NVX-BW3-PACK2-0526",  stripeLink: "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17" },
-      { size: "3ml · Pack de 3", price: 18.99, batch: "NVX-BW3-PACK3-0526",  stripeLink: "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18" },
+      { size: "3ml vial",        price: 6.99 },
+      { size: "3ml · Pack de 2", price: 12.99 },
+      { size: "3ml · Pack de 3", price: 18.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "Sterile reconstitution solvent + 0.9% benzyl alcohol" },
@@ -2073,31 +1016,10 @@ const PRODUCTS = [
     name: "Novalyx Formula 04",
     tag: "COMPLETE RESEARCH COMPLEX",
     category: "Signature Blends",
-    tagColor: "#0d9488",
-    badge: "FLAGSHIP",
-    badgeColor: "#0d9488",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "rgba(13,148,136,0.04)",
-    shortDesc: "Premium four-peptide research complex combining BPC-157, GHK-Copper, TB-500, and KPV for maximum-coverage regenerative protocols.",
     desc: "Novalyx Formula 04 is our premium four-peptide research complex containing BPC-157 (10mg), GHK-Copper (50mg), TB-500 (10mg), and KPV (10mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.",
-    shortDesc_fr: "Complexe de recherche premium à quatre peptides combinant BPC-157, GHK-Cuivre, TB-500 et KPV pour des protocoles régénératifs à couverture maximale.",
     desc_fr: "Novalyx Formula 04 est notre complexe de recherche premium à quatre peptides contenant BPC-157 (10mg), GHK-Cuivre (50mg), TB-500 (10mg) et KPV (10mg) dans un seul flacon lyophilisé. Le mélange de recherche régénératif le plus complet de notre catalogue.",
-    details: [
-      "Contains BPC-157 + GHK-Copper + TB-500 + KPV",
-      "Research into maximum-coverage regenerative pathways",
-      "Four-compound single-vial convenience",
-      "Lyophilized, high-stability formulation",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Contains BPC-157 + GHK-Copper + TB-500 + KPV",
-      "Recherche sur maximum-coverage regenerative pathways",
-      "Four-compound single-vial convenience",
-      "Formulation lyophilisée haute stabilité",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "80mg total", price: 164.99, batch: "NVX-F04-0426", stripeLink: "https://buy.stripe.com/eVq3cv7K3aJk7PEckk2Ry0Y" },
+      { size: "80mg total", price: 84.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg + KPV 10mg" },
@@ -2113,27 +1035,10 @@ const PRODUCTS = [
     name: "Melanotan II",
     tag: "MELANOCORTIN RECEPTOR RESEARCH",
     category: "Specialized",
-    tagColor: "#f43f5e",
-    badge: "NEW",
-    badgeColor: "#f43f5e",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#f43f5e0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "Melanotan II is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le Melanotan II est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 24.99, batch: "NVX-ML10-0526", stripeLink: "" },
+      { size: "10mg", price: 54.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2147,27 +1052,10 @@ const PRODUCTS = [
     name: "Melanotan I",
     tag: "MELANOCORTIN RECEPTOR RESEARCH",
     category: "Specialized",
-    tagColor: "#f43f5e",
-    badge: "NEW",
-    badgeColor: "#f43f5e",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#f43f5e0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "Melanotan I is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le Melanotan I est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 27.99, batch: "NVX-MT1-0526", stripeLink: "" },
+      { size: "10mg", price: 55.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2181,27 +1069,10 @@ const PRODUCTS = [
     name: "Snap-8",
     tag: "ANTI-AGING RESEARCH",
     category: "Specialized",
-    tagColor: "#a78bfa",
-    badge: "NEW",
-    badgeColor: "#a78bfa",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#a78bfa0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "Snap-8 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le Snap-8 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg", price: 30.99, batch: "NVX-NP810-0526", stripeLink: "" },
+      { size: "10mg", price: 54.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2215,28 +1086,11 @@ const PRODUCTS = [
     name: "VIP",
     tag: "NEUROPEPTIDE RESEARCH",
     category: "Specialized",
-    tagColor: "#f43f5e",
-    badge: "NEW",
-    badgeColor: "#f43f5e",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#f43f5e0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "VIP is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le VIP est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "5mg", price: 51.99, batch: "NVX-VIP5-0526", stripeLink: "" },
-      { size: "10mg", price: 95.99, batch: "NVX-VIP10-0526", stripeLink: "" },
+      { size: "5mg", price: 60.99 },
+      { size: "10mg", price: 104.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2250,27 +1104,10 @@ const PRODUCTS = [
     name: "IGF-1 LR3",
     tag: "GROWTH HORMONE RESEARCH",
     category: "Growth & Cellular",
-    tagColor: "#38bdf8",
-    badge: "NEW",
-    badgeColor: "#38bdf8",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#38bdf80A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "IGF-1 LR3 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le IGF-1 LR3 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "1mg", price: 108.99, batch: "NVX-IG1-0526", stripeLink: "" },
+      { size: "1mg", price: 79.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2284,27 +1121,10 @@ const PRODUCTS = [
     name: "IGF-DES",
     tag: "GROWTH HORMONE RESEARCH",
     category: "Growth & Cellular",
-    tagColor: "#38bdf8",
-    badge: "NEW",
-    badgeColor: "#38bdf8",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#38bdf80A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "IGF-DES is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le IGF-DES est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "0.1mg", price: 35.99, batch: "NVX-IGD-0526", stripeLink: "" },
+      { size: "2mg", price: 56.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2318,28 +1138,11 @@ const PRODUCTS = [
     name: "Novalyx Formula 06",
     tag: "REGENERATIVE RESEARCH BLEND",
     category: "Signature Blends",
-    tagColor: "#22d3ee",
-    badge: "NEW",
-    badgeColor: "#22d3ee",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#22d3ee0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "Novalyx Formula 06 is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le Novalyx Formula 06 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "10mg total (BPC5+TB5)", price: 59.99, batch: "NVX-BB10-0526", stripeLink: "" },
-      { size: "20mg total (BPC10+TB10)", price: 99.99, batch: "NVX-BB20-0526", stripeLink: "" },
+      { size: "10mg total (BPC5+TB5)", price: 64.99 },
+      { size: "20mg total (BPC10+TB10)", price: 109.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2353,28 +1156,29 @@ const PRODUCTS = [
     name: "Novalyx Formula 07 (Cagri+Sema)",
     tag: "REGENERATIVE RESEARCH BLEND",
     category: "Signature Blends",
-    tagColor: "#22d3ee",
-    badge: "NEW",
-    badgeColor: "#22d3ee",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#22d3ee0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
     desc: "Novalyx Formula 07 (Cagri+Sema) is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "Le Novalyx Formula 07 (Cagri+Sema) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
     variants: [
-      { size: "2.5mg+2.5mg", price: 51.99, batch: "NVX-CS5-0526", stripeLink: "" },
-      { size: "5mg+5mg", price: 124.99, batch: "NVX-CS10-0526", stripeLink: "" },
+      { size: "2.5mg+2.5mg", price: 64.99 },
+      { size: "5mg+5mg", price: 109.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+
+  {
+    id: "novalyxformula08semaxselank",
+    name: "Novalyx Formula 08 (Semax + Selank)",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Signature Blends",
+    desc: "Novalyx Formula 08 (Semax + Selank) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Novalyx Formula 08 (Semax + Selank) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg+10mg", price: 69.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2384,31 +1188,14 @@ const PRODUCTS = [
     ],
   },
   {
-    id: "novalyxformula08cjcipa",
-    name: "Novalyx Formula 08 (CJC+IPA)",
-    tag: "REGENERATIVE RESEARCH BLEND",
+    id: "novalyxformula09glp3rtcagri",
+    name: "Novalyx Formula 09 (GLP-3RT + Cagrilintide)",
+    tag: "MULTI-RECEPTOR RESEARCH",
     category: "Signature Blends",
-    tagColor: "#22d3ee",
-    badge: "NEW",
-    badgeColor: "#22d3ee",
-    gradient: "linear-gradient(180deg,#0c1526 0%,#0a121f 100%)",
-    glow: "#22d3ee0A",
-    shortDesc: "Research compound supplied exclusively for in-vitro laboratory investigation.",
-    shortDesc_fr: "Composé de recherche fourni exclusivement pour l'investigation in-vitro en laboratoire.",
-    desc: "Novalyx Formula 08 (CJC+IPA) is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    desc_fr: "Le Novalyx Formula 08 (CJC+IPA) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
-    details: [
-      "Supplied for in-vitro laboratory research only",
-      "Lyophilized for maximum stability and shelf life",
-      "COA published once the batch is independently validated",
-    ],
-    details_fr: [
-      "Fourni pour la recherche in-vitro en laboratoire uniquement",
-      "Lyophilisé pour une stabilité et une durée de conservation maximales",
-      "COA publié dès la validation indépendante du lot",
-    ],
+    desc: "Novalyx Formula 09 (GLP-3RT + Cagrilintide) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Novalyx Formula 09 (GLP-3RT + Cagrilintide) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg+5mg", price: 65.99, batch: "NVX-CP10-0526", stripeLink: "" },
+      { size: "5mg+5mg", price: 74.99 },
     ],
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
@@ -2417,21 +1204,451 @@ const PRODUCTS = [
       { label: "COA",        value: "Janoshik (per batch)" },
     ],
   },
+  {
+    id: "dihexa",
+    name: "Dihexa",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Cognitive",
+    desc: "Dihexa is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Dihexa est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg", price: 64.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "pe2228",
+    name: "PE-22-28",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Cognitive",
+    desc: "PE-22-28 is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "PE-22-28 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg", price: 60.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "adamax",
+    name: "Adamax",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Cognitive",
+    desc: "Adamax is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Adamax est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "5mg", price: 74.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "nasemaxamidate",
+    name: "NA-Semax Amidate",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Cognitive",
+    desc: "NA-Semax Amidate is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "NA-Semax Amidate est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "30mg", price: 79.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "naselankamidate",
+    name: "NA-Selank Amidate",
+    tag: "NEUROPEPTIDE RESEARCH",
+    category: "Cognitive",
+    desc: "NA-Selank Amidate is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "NA-Selank Amidate est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "30mg", price: 79.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "cardiogen",
+    name: "Cardiogen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Cardiogen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Cardiogen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "cortagen",
+    name: "Cortagen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Cortagen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Cortagen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "pancragen",
+    name: "Pancragen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Pancragen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Pancragen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "cartalax",
+    name: "Cartalax",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Cartalax is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Cartalax est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "chonluten",
+    name: "Chonluten",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Chonluten is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Chonluten est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "ovagen",
+    name: "Ovagen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Ovagen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Ovagen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "vesugen",
+    name: "Vesugen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Vesugen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Vesugen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "testagen",
+    name: "Testagen",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Testagen is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Testagen est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 74.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "prostamax",
+    name: "Prostamax",
+    tag: "BIOREGULATOR RESEARCH",
+    category: "Bioregulators",
+    desc: "Prostamax is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Prostamax est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "20mg", price: 69.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "foxo4dri",
+    name: "FOXO4-DRI",
+    tag: "LONGEVITY RESEARCH",
+    category: "Longevity",
+    desc: "FOXO4-DRI is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "FOXO4-DRI est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg", price: 104.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "humanin",
+    name: "Humanin",
+    tag: "LONGEVITY RESEARCH",
+    category: "Longevity",
+    desc: "Humanin is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Humanin est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg", price: 99.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "aicar",
+    name: "AICAR",
+    tag: "LONGEVITY RESEARCH",
+    category: "Longevity",
+    desc: "AICAR is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "AICAR est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "50mg", price: 57.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "cjc1295dac",
+    name: "CJC-1295 (with DAC)",
+    tag: "GH RESEARCH",
+    category: "GH Research",
+    desc: "CJC-1295 (with DAC) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "CJC-1295 (with DAC) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "5mg", price: 74.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "pegmgf",
+    name: "PEG-MGF",
+    tag: "GROWTH FACTOR RESEARCH",
+    category: "Growth & Cellular",
+    desc: "PEG-MGF is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "PEG-MGF est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "2mg", price: 64.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "hghfrag176191",
+    name: "HGH Fragment 176-191",
+    tag: "GH RESEARCH",
+    category: "GH Research",
+    desc: "HGH Fragment 176-191 is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "HGH Fragment 176-191 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "5mg", price: 74.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "ace031",
+    name: "ACE-031",
+    tag: "GROWTH FACTOR RESEARCH",
+    category: "Growth & Cellular",
+    desc: "ACE-031 is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "ACE-031 est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "1mg", price: 56.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "eloralintide",
+    name: "Eloralintide",
+    tag: "METABOLIC RESEARCH",
+    category: "Metabolic",
+    desc: "Eloralintide is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Eloralintide est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "5mg", price: 99.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "adipotide",
+    name: "Adipotide",
+    tag: "METABOLIC RESEARCH",
+    category: "Metabolic",
+    desc: "Adipotide is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Adipotide est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "2mg", price: 65.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "ahkcu",
+    name: "AHK-Cu",
+    tag: "COSMETIC PEPTIDE RESEARCH",
+    category: "Cosmetic Peptides",
+    desc: "AHK-Cu is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "AHK-Cu est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "50mg", price: 54.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "matrixyl",
+    name: "Matrixyl (Palmitoyl Pentapeptide-4)",
+    tag: "COSMETIC PEPTIDE RESEARCH",
+    category: "Cosmetic Peptides",
+    desc: "Matrixyl (Palmitoyl Pentapeptide-4) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "Matrixyl (Palmitoyl Pentapeptide-4) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "10mg", price: 54.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "Lyophilised vial" },
+      { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "aceticwater",
+    name: "Acetic Acid Water 0.6%",
+    tag: "LAB SUPPLY",
+    category: "Lab Supplies",
+    desc: "Acetic Acid Water 0.6% is a laboratory reconstitution solvent. Not for human or veterinary use.",
+    desc_fr: "Eau acidifiée (acide acétique 0,6 %) : solvant de reconstitution pour le laboratoire. Pas pour usage humain ou vétérinaire.",
+    variants: [
+      { size: "3ml", price: 6.99 },
+    ],
+    commonSpecs: [
+      { label: "Format",     value: "3 ml sealed vial" },
+      { label: "Composition", value: "Sterile water, 0.6% acetic acid" },
+      { label: "Storage",    value: "Room temperature, away from light" },
+    ],
+  },
 ];
 
 /* ─── HELPERS ────────────────────────────────────────────── */
-const fmt = (eurPrice, cur) => {
-  const c = CURRENCIES[cur];
-  return `${c.symbol}${(eurPrice * c.rate).toFixed(2)}`;
-};
 
-const hexToRgb = (hex) => {
-  const h = hex.replace("#","");
-  const r = parseInt(h.substring(0,2),16);
-  const g = parseInt(h.substring(2,4),16);
-  const b = parseInt(h.substring(4,6),16);
-  return `${r},${g},${b}`;
-};
 
 const goToStripeCheckout = async (cartIn, zone = "FR") => {
   if (!cartIn || cartIn.length === 0) return;
@@ -2497,16 +1714,62 @@ const COAS = {
     file: "",
   },
 };
+/* Vente additionnelle « Souvent acheté avec : eau bactériostatique ».
+   Laisse false tant que le paiement se fait par liens Stripe (un seul produit par paiement).
+   Passe à true quand le paiement Bitcoin encaisse tout le panier d'un coup. */
+const XSELL_BAC = CONFIG.BTC_ON;
 /* Produits achetables en ligne. Pour en ouvrir un nouveau : ajoute son id ici. */
 const AVAILABLE = ["retatrutide", "bac-water"];
 const isAvail = (p) => AVAILABLE.includes(p.id);
+/* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
+const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
+const inStock = (p, size) => isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size));
+/* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
+const BTC_ONLY_SIZES = { retatrutide: ["10mg", "20mg"] };
+const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
+/* Avec le paiement Bitcoin, tout le catalogue devient commandable :
+   en stock (AVAILABLE) = expédié sous 24 h ; le reste = sur commande (~3 semaines). */
+const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
+const STOCK_LEFT = { retatrutide: 17 };
+/* Minimum de flacons pour un produit SUR COMMANDE : la commande rembourse au moins les 2 boîtes
+   achetées au fournisseur (+ part de livraison). Le test Janoshik reste avancé par Novalyx.
+   Recalculé à partir du fichier novalyx-calcul-prix.xlsx — à garder identique dans api/checkout.mjs. */
+const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "retatrutide_10mg": 2, "retatrutide_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
+const minQty = (p, size) => (CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
+const isPackSize = (s) => /pack/i.test(String(s));
+/* Remises par quantité (paiement Bitcoin). Les anciens « packs » du GLP-3RT et de l'eau sont remplacés par des
+   paliers aux MÊMES prix (TIER_TOTALS). Règle identique dans api/checkout.mjs. */
+const TIER_TOTALS = { "retatrutide|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
+const baseDisc = (q) => q >= 5 ? 0.2 : q >= 3 ? 0.15 : q >= 2 ? 0.1 : 0;
+const lineTotal = (unit, q, size, id) => {
+  if (!CONFIG.BTC_ON || isPackSize(size)) return Math.round(unit * q * 100) / 100;
+  const t = TIER_TOTALS[id + "|" + size];
+  if (t && t[q]) return t[q];
+  let d = baseDisc(q);
+  if (t && q >= 4) d = Math.max(d, ...Object.keys(t).map(k => 1 - t[k] / (unit * Number(k))));
+  return Math.round(unit * q * (1 - d) * 100) / 100;
+};
+const qtyDiscount = (q, size, id, unit) => {
+  if (!CONFIG.BTC_ON || isPackSize(size)) return 0;
+  if (id && unit) return 1 - lineTotal(unit, q, size, id) / (unit * q);
+  return baseDisc(q);
+};
+const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE
+const cartShipping = (cart, zone, subtotal) => {
+  if (!cart.length) return 0;
+  const eu = zone === "FR" || zone === "EU";
+  if (eu && subtotal >= FREE_SHIP_MIN) return 0;
+  if (eu && cart.some(i => isPackSize(i.size))) return 0;
+  if (cart.every(i => i.id === "bac-water")) return eu ? 3.99 : ZONE_RATE[zone];
+  return ZONE_RATE[zone];
+};
 const JANOSHIK_VERIFY = "https://janoshik.com/verify/";
 
 /* Couleur de capsule par catégorie — sobre, façon étiquette de labo */
 const CAT_TONE = {
   "Metabolic":"#A8792A", "Regenerative":"#1E6A43", "Longevity":"#5A4B86", "GH Research":"#2E5A86",
   "Immune":"#9A4B2C", "Cognitive":"#26706E", "Specialized":"#86394A", "Signature Blends":"#0B1B2E",
-  "Growth & Cellular":"#3E6B4E", "Lab Supplies":"#5B7A99",
+  "Growth & Cellular":"#3E6B4E", "Lab Supplies":"#5B7A99", "Bioregulators":"#8A6D2F", "Cosmetic Peptides":"#9A4B6E",
 };
 const CAT_DESC = {
   "Signature Blends": ["Mélanges multi-peptides en un seul flacon.","Multi-peptide blends in a single vial."],
@@ -2518,27 +1781,167 @@ const CAT_DESC = {
   "Immune":           ["Modulation immunitaire, voies thymiques.","Immune modulation, thymic pathways."],
   "Cognitive":        ["Neuromodulation et neuroprotection.","Neuromodulation and neuroprotection."],
   "Specialized":      ["Sommeil, reproduction, mélanocortine.","Sleep, reproductive, melanocortin."],
-  "Lab Supplies":     ["Solvant de reconstitution pour laboratoire.","Laboratory reconstitution solvent."],
+  "Lab Supplies":     ["Solvants de reconstitution pour laboratoire.","Laboratory reconstitution solvents."],
+  "Bioregulators":    ["Peptides courts issus des travaux de V. Khavinson.","Short peptides from V. Khavinson's research."],
+  "Cosmetic Peptides":["Ingrédients peptidiques dermo-cosmétiques.","Dermo-cosmetic peptide ingredients."],
 };
-const CATEGORY_ORDER = ["Metabolic","Lab Supplies","Regenerative","Signature Blends","Longevity","GH Research","Growth & Cellular","Immune","Cognitive","Specialized"];
+const CATEGORY_ORDER = ["Metabolic","Lab Supplies","Regenerative","Signature Blends","Longevity","GH Research","Growth & Cellular","Immune","Cognitive","Bioregulators","Cosmetic Peptides","Specialized"];
+
+/* ─── LANGUES : FR et EN sont écrites dans le code ; DE et NL sont traduites à l'affichage ───
+   En DE / NL, le site prépare la version anglaise, puis chaque texte affiché est remplacé par sa
+   traduction (dictionnaires XL_DE et XL_NL, en fin de fichier). Les nombres sont remplacés par {#}
+   dans les clés, puis réinsérés : « Only 17 vials left » → clé « Only {#} vials left ». */
+const LANGS = ["FR", "EN", "DE", "NL"];
+const LANG_NAMES = { FR: "Français", EN: "English", DE: "Deutsch", NL: "Nederlands" };
+const COMMA_LANGS = ["FR", "DE", "NL"];
+const XL_NUM = /\d+(?:[.,]\d+)*/g;
+// clé canonique : nombres → {#}, et « €12.50 » / « 12,50 € » / « 12 % » ramenés à une seule forme
+const xlKey = (s) => s.replace(XL_NUM, "{#}").replace(/€\s?\{#\}|\{#\}\s?€/g, "{#}€").replace(/\{#\}\s?%/g, "{#}%");
+let XL_NAME_RX = null;   // noms de produits, reconnus tels quels (« {N} » dans les clés)
+const xlNameRx = () => XL_NAME_RX || (XL_NAME_RX = new RegExp([...new Set(PRODUCTS.map(p => p.name))].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g"));
+const xlOne = (core, dict) => {
+  let v = dict[xlKey(core)], src = core, names = [];
+  if (v == null) {
+    const k2 = core.replace(xlNameRx(), (m) => { names.push(m); return "\u0000"; });
+    if (names.length) { v = dict[xlKey(k2).replace(/\u0000/g, "{N}")]; src = k2; }
+  }
+  if (v == null) return null;
+  const nums = src.match(XL_NUM) || []; let i = 0, j = 0;
+  return v.replace(/\{#\}|\{N\}/g, (t) => (t === "{#}" ? (nums[i++] ?? "") : (names[j++] ?? "")));
+};
+const xlText = (txt, dict) => {
+  const core = txt.trim();
+  if (!core || !/[A-Za-z]/.test(core)) return null;
+  let out = xlOne(core, dict);
+  if (out == null && core.includes("\n")) {
+    const lines = core.split("\n").map(l => (l.trim() ? (xlOne(l.trim(), dict) ?? l) : l)).join("\n");
+    if (lines !== core) out = lines;
+  }
+  if (out == null) return null;
+  return txt.slice(0, txt.length - txt.trimStart().length) + out + txt.slice(txt.trimEnd().length);
+};
+const XL_ATTRS = ["placeholder", "aria-label", "title", "alt"];
+const useDomTranslate = (lang) => {
+  useEffect(() => {
+    const dict = lang === "DE" ? XL_DE : lang === "NL" ? XL_NL : null;
+    if (!dict || typeof document === "undefined") return;
+    const doText = (n) => { const out = xlText(n.nodeValue, dict); if (out != null && out !== n.nodeValue) n.nodeValue = out; };
+    const doAttrs = (el) => { for (const a of XL_ATTRS) { const v = el.getAttribute && el.getAttribute(a); if (v) { const out = xlText(v, dict); if (out != null && out !== v) el.setAttribute(a, out); } } };
+    const walk = (root) => {
+      if (root.nodeType === 3) return doText(root);
+      if (root.nodeType !== 1 || root.tagName === "SCRIPT" || root.tagName === "STYLE") return;
+      doAttrs(root);
+      const it = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+      let n; while ((n = it.nextNode())) { if (n.nodeType === 3) { const pt = n.parentNode && n.parentNode.tagName; if (pt !== "SCRIPT" && pt !== "STYLE") doText(n); } else doAttrs(n); }
+    };
+    walk(document.body);
+    const mo = new MutationObserver((recs) => {
+      for (const r of recs) {
+        if (r.type === "characterData") doText(r.target);
+        else if (r.type === "attributes") doAttrs(r.target);
+        else r.addedNodes.forEach(walk);
+      }
+    });
+    mo.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: XL_ATTRS });
+    return () => mo.disconnect();
+  }, [lang]);
+};
 
 const price = (eur, cur, lang) => {
   const c = CURRENCIES[cur]; const n = (eur * c.rate).toFixed(2);
-  if (cur === "EUR") return lang === "FR" ? `${n.replace(".", ",")} €` : `€${n}`;
+  if (cur === "EUR") return COMMA_LANGS.includes(lang) ? `${n.replace(".", ",")} €` : `€${n}`;
   return `${c.symbol}${n}`;
 };
 const fmtDate = (iso, lang) => {
   if (!iso) return "—";
   const d = new Date(iso + "T12:00:00");
-  return d.toLocaleDateString(lang === "FR" ? "fr-FR" : "en-GB", { day:"2-digit", month:"short", year:"numeric" });
+  return d.toLocaleDateString({ FR: "fr-FR", DE: "de-DE", NL: "nl-NL" }[lang] || "en-GB", { day:"2-digit", month:"short", year:"numeric" });
 };
-const pct = (v, lang) => !v ? "—" : (lang === "FR" ? `${v.replace(".", ",")} %` : `${v}%`);
-const num = (v, lang) => !v ? "—" : (lang === "FR" ? v.replace(".", ",") : v);
+const pct = (v, lang) => !v ? "—" : (COMMA_LANGS.includes(lang) ? `${v.replace(".", ",")} %` : `${v}%`);
+const num = (v, lang) => !v ? "—" : (COMMA_LANGS.includes(lang) ? v.replace(".", ",") : v);
 const coaFor = (p, size) => { const c = COAS[p.id]; return c && (!size || c.size === size) ? c : null; };
 const coaLink = (c) => c.url || JANOSHIK_VERIFY;
 const shortName = (n) => n.replace("Novalyx Formula ", "FORMULA ").replace(" (no DAC)", "");
 
 /* ─── GLOBAL CSS ─────────────────────────────────────────── */
+/* ─── THÈME « MODERNE » (actif si CONFIG.THEME === "modern") ───────────────
+   Fond blanc, police géométrique du logo (Poppins) pour les titres, vert du logo
+   pour les actions d'achat, cartes arrondies avec ombres, animations douces. */
+const MODERN_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap');
+:root{
+  --paper:#FFFFFF; --surface:#FFFFFF; --soft:#F5F7FA; --ink:#09193B; --ink2:#3A4659; --mute:#667085;
+  --line:#E4E8EE; --line2:#EEF1F5; --green:#2E7D32; --green-soft:#EAF5E4; --leaf:#78B752;
+  --serif:'Poppins',system-ui,-apple-system,sans-serif; --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'Inter',system-ui,-apple-system,sans-serif;
+}
+.cart-btn{border-radius:10px;border-width:1.5px}
+.display em,.h2 em{font-style:italic;font-weight:600;color:var(--green)}
+.pcard-sizes,.fact-k,.fact-v{letter-spacing:.01em}
+input[type=text],input[type=email],input[type=search],input:not([type]),select,textarea{border-radius:12px}
+.gate label,label.check{border-radius:12px}
+html,body{background:#fff}
+.display{font-weight:600;letter-spacing:-.035em;line-height:1.04}
+.h2{font-weight:600;letter-spacing:-.025em}
+.pcard-name{font-weight:600;font-size:21px;letter-spacing:-.02em}
+.pcard-price{font-weight:600;font-size:21px}
+.prose h3{font-weight:600}
+.eyebrow{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.12em;color:var(--green)}
+.tag{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.08em}
+.link{font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.01em;text-transform:none;border-bottom-width:2px}
+.lead{color:var(--ink2)}
+.btn{border-radius:12px;font-weight:600;transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn-ink{background:var(--ink);box-shadow:0 8px 20px rgba(9,25,59,.18)}
+.btn-ink:hover{background:#142a5c}
+.btn-line{border:1.5px solid var(--line);background:#fff}
+.btn-line:hover{border-color:var(--ink)}
+.buy-btn.btn-ink,.hero-cta .btn-ink,.drawer-in .btn-ink:last-child,.mbar .btn-ink{background:var(--leaf);color:var(--ink);box-shadow:0 8px 22px rgba(120,183,82,.35)}
+.buy-btn.btn-ink:hover,.hero-cta .btn-ink:hover,.drawer-in .btn-ink:last-child:hover,.mbar .btn-ink:hover{background:#6aa947}
+.nav{background:rgba(255,255,255,.86);border-bottom-color:var(--line2)}
+.nav-links button.on,.nav-links button:hover{border-color:var(--leaf)}
+.hero{background:radial-gradient(60% 50% at 88% 8%,rgba(120,183,82,.16),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(9,25,59,.06),transparent 70%)}
+.grid{gap:16px;background:transparent;border:0}
+.pcard{border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(9,25,59,.04);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.pcard:hover{background:#fff;transform:translateY(-4px);box-shadow:0 16px 36px rgba(9,25,59,.10);border-color:#d6dce6}
+.pcard-vial img{border-radius:14px}
+.sheet{border-radius:22px;border-color:var(--line);box-shadow:0 12px 34px rgba(9,25,59,.07)}
+.facts{border:0;gap:12px}
+.fact{border:1px solid var(--line);border-radius:16px;background:var(--soft)}
+.fchip{border-radius:999px;font-family:var(--sans);font-weight:500;font-size:12.5px;letter-spacing:0;padding:9px 14px}
+.fchip.on{background:var(--ink);border-color:var(--ink)}
+.qty{border-radius:12px;overflow:hidden}
+.tier{border-radius:16px}
+.modal{border-radius:24px 24px 0 0;border:0;box-shadow:0 -10px 40px rgba(9,25,59,.18)}
+@media(min-width:760px){.modal{border-radius:24px}}
+.drawer-in{background:#fff;border-left:0;box-shadow:-20px 0 50px rgba(9,25,59,.15)}
+.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(120,183,82,.18),transparent 70%),linear-gradient(180deg,#F5F7FA,#fff)}
+.gate-card{border-radius:24px;border-color:var(--line);box-shadow:0 24px 60px rgba(9,25,59,.12)}
+.foot{background:var(--soft);border-top:0}
+.btc-callout,.help-cta{border-radius:22px;box-shadow:0 12px 34px rgba(9,25,59,.06)}
+.cookie > div{border-radius:18px}
+/* Apparition douce au défilement */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none;transition:none}.btn:hover,.pcard:hover{transform:none}}
+`;
+/* Révèle en douceur les blocs quand ils entrent à l'écran (thème moderne uniquement). */
+const useReveal = (on) => {
+  useEffect(() => {
+    if (!on || typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.08, rootMargin: "0px 0px -6% 0px" });
+    const SEL = ".sec .wrap > *:not(.grid):not(.filters), .grid > .pcard, .sheet, .fact, .btc-callout, .help-cta";
+    let raf = 0;
+    const tag = () => { raf = 0; document.querySelectorAll(SEL).forEach(el => { if (el.classList.contains("rv") || el.closest(".modal, .gate, .drawer, .menu, .cookie")) return; el.classList.add("rv"); io.observe(el); }); };
+    tag();
+    const mo = new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(tag); });
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => { mo.disconnect(); io.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, [on]);
+};
+
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 :root{
@@ -2547,6 +1950,9 @@ const CSS = `
   --serif:'Newsreader',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* Langues à mots longs (allemand, néerlandais) : coupure propre avec trait d'union, colonnes jamais plus larges que l'écran. */
+h1,h2,h3,.display,.h2,.pcard-name,.hero-prod-name,.lead,.eyebrow,.btn,p{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+.hero-grid > *,.grid > *,.facts > *,.wrap > *{min-width:0}
 html,body{background:var(--paper);color:var(--ink);overflow-x:hidden}
 body{font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
 img,svg{max-width:100%;display:block}
@@ -2583,6 +1989,15 @@ a{color:inherit}
 
 /* top notice + nav */
 .notice{background:var(--ink);color:#C9D1DB;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:8px 16px;line-height:1.5}
+.ticker{overflow:hidden;white-space:nowrap;padding:8px 0;position:relative}
+.ticker-static{display:none;padding:0 16px;white-space:normal}
+.ticker-track{display:inline-flex;animation:nvx-tick 48s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-set{display:inline-flex}
+.ticker-item{display:inline-flex;align-items:center;padding:0 22px}
+.ticker-item:before{content:"";width:5px;height:5px;border-radius:50%;background:#7FCB68;margin-right:22px;flex-shrink:0}
+@keyframes nvx-tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.ticker-track{display:none}.ticker-static{display:block}}
 .nav{position:sticky;top:0;z-index:50;background:rgba(245,243,238,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -2598,7 +2013,9 @@ a{color:inherit}
 .cart-btn{font-family:var(--mono);font-size:12px;letter-spacing:.06em;border:1px solid var(--ink);padding:8px 12px;border-radius:2px}
 .burger{width:40px;height:40px;display:flex;flex-direction:column;justify-content:center;gap:5px;align-items:center}
 .burger span{width:20px;height:1.5px;background:var(--ink);display:block}
-@media(min-width:980px){.nav-links{display:flex}.lang,.cur{display:flex}.burger{display:none}}
+@media(min-width:1180px){.nav-links{display:flex}.lang,.cur{display:flex}.burger{display:none}}
+.nav-links{flex-shrink:0}.nav-links button,.cart-btn{white-space:nowrap}
+@media(min-width:1180px) and (max-width:1499px){.nav-links{gap:14px}.nav-links button{font-size:12.5px}.nav-tools{gap:10px}.brand-sub{display:none}.cart-btn{padding:7px 10px}}
 .menu{position:fixed;inset:0;z-index:80;background:var(--paper);display:flex;flex-direction:column;padding:20px}
 .menu-top{display:flex;justify-content:space-between;align-items:center;height:46px;margin-bottom:28px}
 .menu a,.menu .mi{font-family:var(--serif);font-size:36px;font-weight:300;text-align:left;padding:10px 0;border-bottom:1px solid var(--line2);letter-spacing:-.01em}
@@ -2610,6 +2027,27 @@ a{color:inherit}
 .hero-grid{display:grid;gap:52px;align-items:end}
 @media(min-width:980px){.hero-grid{grid-template-columns:1.15fr .85fr;gap:64px}}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.hero-stack{position:relative;display:block;width:100%;max-width:560px;height:200px;margin:0 auto;background:none;border:0;padding:0;cursor:pointer}
+.hs{position:absolute;bottom:6px;width:31%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 14px 32px rgba(9,25,59,.14);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;animation:nvx-fan .9s cubic-bezier(.2,.8,.2,1) backwards;animation-play-state:paused}
+.hero-stack.play .hs{animation-play-state:running}
+.hs img{width:100% !important;height:100% !important;object-fit:cover;border-radius:0 !important}
+.hs0{left:0;--r:-6deg;--s:.8;--dx:111%;z-index:1;animation-delay:.32s}.hs1{left:17%;--r:-3deg;--s:.9;--dx:56%;z-index:2;animation-delay:.2s}
+.hs2{left:34.5%;--r:0deg;--s:1;--dx:0%;z-index:5;animation-delay:.05s}.hs3{right:17%;--r:3deg;--s:.9;--dx:-56%;z-index:2;animation-delay:.2s}.hs4{right:0;--r:6deg;--s:.8;--dx:-111%;z-index:1;animation-delay:.32s}
+.hs{transform:rotate(var(--r)) scale(var(--s))}
+/* Entrée en scène : les flacons partent du centre et se déploient en éventail, une seule fois, puis restent immobiles. */
+@keyframes nvx-fan{from{opacity:0;transform:translateX(var(--dx)) rotate(0deg) scale(.72)}to{opacity:1;transform:rotate(var(--r)) scale(var(--s))}}
+@media (hover:hover){.hero-stack .hs:hover{transform:rotate(var(--r)) scale(calc(var(--s) * 1.06)) translateY(-10px);box-shadow:0 26px 50px rgba(9,25,59,.22);z-index:6}}
+.hero-vials{padding-top:6px}
+@media(max-width:979px){.hero-stack{height:150px}.hero-grid{gap:28px}}
+@media(min-width:980px){.hero-vials{margin-top:0}.hero-stack{height:170px;margin:0;max-width:520px}.hero-stack-cap{text-align:left;max-width:520px}}
+.hero-stack:hover .hs2{box-shadow:0 24px 50px rgba(9,25,59,.22)}
+.hero-stack-cap{margin-top:12px;font-size:13px;color:var(--mute);text-align:center}
+.row-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.best-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}
+.best-row::-webkit-scrollbar{display:none}
+.best-row > *{scroll-snap-align:start;border:1px solid var(--line)}
+@media(min-width:980px){.best-row{grid-auto-flow:row;grid-template-columns:repeat(4,1fr);overflow:visible}}
+@media (prefers-reduced-motion: reduce){.hs{animation:none}}
 .sheet{background:var(--surface);border:1px solid var(--line);padding:26px 24px;position:relative}
 .sheet::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
 .sheet-row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
@@ -2637,12 +2075,16 @@ a{color:inherit}
 .step p{font-size:14px;color:var(--ink2);margin-top:10px}
 
 /* category index */
-.index-row{display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;width:100%;transition:padding .2s}
+.index-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;column-gap:14px;row-gap:4px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;width:100%;transition:padding .2s}
+.index-row > :nth-child(1){grid-column:1;grid-row:1}
+.index-row > :nth-child(2){grid-column:2;grid-row:1}
+.index-row > :nth-child(4){grid-column:3;grid-row:1;white-space:nowrap}
 .index-row:hover{padding-left:8px}
 .index-row:hover .index-name{color:var(--green)}
 .index-name{font-family:var(--serif);font-size:26px;font-weight:400;letter-spacing:-.01em;line-height:1.2}
-.index-desc{font-size:13.5px;color:var(--mute);margin-top:3px}
-@media(min-width:900px){.index-row{grid-template-columns:60px 1fr 1fr auto}.index-desc{margin-top:0}}
+.index-desc{font-size:13.5px;color:var(--mute);grid-column:2 / 4;grid-row:2}
+.index-name,.index-desc{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+@media(min-width:900px){.index-row{grid-template-columns:60px minmax(0,1fr) minmax(0,1fr) auto;row-gap:0}.index-desc{grid-column:3;grid-row:1}.index-row > :nth-child(4){grid-column:4}}
 
 /* product grid */
 .grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
@@ -2663,6 +2105,10 @@ a{color:inherit}
 
 /* filters */
 .filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:28px;scrollbar-width:none}
+.search{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.search input{flex:1;max-width:520px;min-height:46px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;font-size:16px;color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(30,106,67,.12)}
+.search-n{font-family:var(--mono);font-size:12px;color:var(--mute)}
 .filters::-webkit-scrollbar{display:none}
 .fchip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:8px 12px;border:1px solid var(--line);border-radius:2px;white-space:nowrap;color:var(--ink2);background:var(--surface)}
 .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -2736,9 +2182,53 @@ a{color:inherit}
 .hero-prod{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;width:100%;margin-top:14px;padding:12px;border:1px solid var(--line);background:var(--paper);cursor:pointer;text-align:left;font:inherit;color:inherit;border-radius:2px;transition:border-color .2s}
 .hero-prod:hover{border-color:var(--ink)}
 .hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btc-callout{display:grid;gap:22px;padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface,#fff);align-items:center}
+@media(min-width:980px){.btc-callout{grid-template-columns:1.2fr 1fr auto}}
+.btc-mini{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.btc-mini li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+.btc-mini-n{font-family:var(--serif);font-size:26px;line-height:1;color:var(--green);min-width:34px}
+@media (min-width:860px){.btc-steps{grid-template-columns:1fr 1fr}.btc-after{grid-template-columns:1fr 1.4fr}}
+.buy-btn{flex:1 1 170px;justify-content:center}
+.zoom-btn{position:relative;display:block;background:none;border:0;padding:0;cursor:zoom-in;border-radius:14px}
+.zoom-hint{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 12px rgba(9,25,59,.15)}
+.zoom{position:fixed;inset:0;z-index:200;background:rgba(9,25,59,.92);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));cursor:zoom-out;touch-action:pinch-zoom}
+.zoom img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.4);cursor:default}
+.zoom-x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:var(--ink);font-size:18px;cursor:pointer}
+.mbar{display:none}
+@media(max-width:759px){.mbar{display:flex;align-items:center;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(245,243,238,.97);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+.mbar .btn{min-height:44px;padding:0 14px}.mbar-info{flex:1;display:flex;flex-direction:column;line-height:1.2}.mbar-info b{font-family:var(--serif);font-weight:400;font-size:20px}.mbar-info span{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.modal-body{padding-bottom:96px}}
+.help-cta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-top:44px;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--surface,#fff)}
+.tiers{margin-top:22px}
+.tiers-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.tier{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 12px 10px;border:1px solid var(--line);background:var(--paper);border-radius:12px;cursor:pointer;font:inherit;color:inherit;text-align:left;min-height:44px}
+.tier.on{border-color:var(--green);background:#EEF5EF;box-shadow:0 0 0 1px var(--green) inset}
+.tier-n{font-weight:600;font-size:14px}
+.tier-p{font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.tier-d{font-family:var(--mono);font-size:11.5px;color:#fff;background:var(--green);padding:2px 7px;border-radius:999px;margin-top:2px}
+.tier-pop{position:absolute;top:-9px;right:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;border-radius:999px}
+.saving{margin-top:12px;font-size:13.5px;color:var(--green)}
+.pcard-deal{margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--green)}
+.ship-note{margin-top:14px;padding:9px 12px;border-radius:8px;background:#FBF3E4;color:#7A4E0E;font-size:13px;line-height:1.45}
+.ship-note.ok{background:#EEF5EF;color:var(--green)}
+.freebar{margin:8px 0 6px}
+.freebar-txt{font-size:12.5px;color:var(--ink2);margin-bottom:6px}
+.freebar-track{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.freebar-track i{display:block;height:100%;background:var(--green);border-radius:6px;transition:width .4s}
+.paid-banner{position:sticky;top:0;z-index:60;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:14px 20px;background:#EEF5EF;border-bottom:1px solid var(--green);color:var(--ink);font-size:14px;line-height:1.5}
+@media (max-width:480px){.packs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.xsell{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:22px;padding:10px 12px;border:1px solid var(--line);background:var(--paper);cursor:pointer}
+.xsell.on{border-color:var(--green);background:#EEF5EF}
+.xsell input{accent-color:var(--green);width:18px;height:18px}
+.xsell img{width:52px!important;height:52px!important;border-radius:8px!important}
+.xsell-txt{display:grid;gap:2px;font-size:14px;color:var(--ink)}
+.xsell-price{font-family:var(--mono);font-size:13px;color:var(--ink)}
+.added{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:#EEF5EF;border:1px solid var(--green);color:var(--green);font-size:13.5px}
+.added .link{background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:13px}
 .hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
 @media (max-width:480px){.hero-prod{gap:12px;padding:10px}.hero-prod img{width:96px!important;height:96px!important}.hero-prod-name{font-size:24px!important}}
-@media (max-width:979px){.hero-grid > .sheet{order:-1}}
+@media (max-width:979px){.hero-grid > .sheet{order:-1}.hero-grid > .hero-vials{order:-2}}
+@media(min-width:980px){.hero-grid{grid-template-areas:"vials sheet" "text sheet";align-items:start;row-gap:26px}.hero-text{grid-area:text}.hero-grid > .sheet{grid-area:sheet}.hero-vials{grid-area:vials}}
 
 /* cookies */
 .cookie{position:fixed;left:0;right:0;bottom:0;z-index:95;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none}
@@ -2825,6 +2315,7 @@ const NAV_ITEMS = [
   ["learning", "Fiches composés", "Compound notes"],
   ["about", "Méthode", "Method"],
   ["faq", "FAQ", "FAQ"],
+  ...(CONFIG.BTC_ON ? [["bitcoin", "Payer en Bitcoin", "Pay with Bitcoin"]] : []),
   ["ambassador", "Ambassadeurs", "Ambassadors"],
   ["contact", "Contact", "Contact"],
 ];
@@ -2851,7 +2342,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => {
           </div>
           <div className="nav-tools">
             <div className="lang">
-              {["FR", "EN"].map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)}>{l}</button>)}
+              {LANGS.map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)} lang={l.toLowerCase()} aria-label={LANG_NAMES[l]}>{l}</button>)}
             </div>
             <select className="cur" value={cur} onChange={e => setCur(e.target.value)} aria-label="Currency">
               {Object.keys(CURRENCIES).map(c => <option key={c} value={c}>{c}</option>)}
@@ -2865,14 +2356,14 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => {
         <div className="menu fade">
           <div className="menu-top">
             <div className="brand" onClick={() => nav("home")}><Logo /><div className="brand-name">NOVALYX</div></div>
-            <button className="x" onClick={() => setOpen(false)} aria-label="Fermer">✕</button>
+            <button className="x" onClick={() => setOpen(false)} aria-label={FR ? "Fermer" : "Close"}>✕</button>
           </div>
           {NAV_ITEMS.map(([p, fr, en]) => (
             <button key={p} className="mi" onClick={() => nav(p)}>{FR ? fr : en}</button>
           ))}
           <div className="menu-foot">
             <div className="lang" style={{ display: "flex" }}>
-              {["FR", "EN"].map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)}>{l}</button>)}
+              {LANGS.map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)} lang={l.toLowerCase()} aria-label={LANG_NAMES[l]}>{l}</button>)}
             </div>
             <select className="cur" style={{ display: "block" }} value={cur} onChange={e => setCur(e.target.value)}>
               {Object.keys(CURRENCIES).map(c => <option key={c} value={c}>{c}</option>)}
@@ -2913,8 +2404,10 @@ const Footer = ({ go, lang, onCookies }) => {
           <div>
             <h4>Novalyx</h4>
             <button onClick={() => go("coa")}>{FR ? "Analyses" : "Analyses"}</button>
+            <button onClick={() => go("learning")}>{FR ? "Fiches composés" : "Compound notes"}</button>
             <button onClick={() => go("about")}>{FR ? "Méthode" : "Method"}</button>
             <button onClick={() => go("shipping")}>{FR ? "Livraison" : "Shipping"}</button>
+            {CONFIG.BTC_ON && <button onClick={() => go("bitcoin")}>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"}</button>}
             <button onClick={() => go("faq")}>FAQ</button>
             <button onClick={() => go("ambassador")}>{FR ? "Ambassadeurs" : "Ambassadors"}</button>
             <button onClick={() => go("contact")}>Contact</button>
@@ -2929,7 +2422,7 @@ const Footer = ({ go, lang, onCookies }) => {
         </div>
         <div className="foot-legal">
           <span>© 2026 {CONFIG.BUSINESS_NAME}</span>
-          <span>{FR ? "Paiement sécurisé par Stripe · Visa · Mastercard · Apple Pay" : "Secure payment by Stripe · Visa · Mastercard · Apple Pay"}</span>
+          <span>{CONFIG.BTC_ON ? (FR ? "Paiement direct en Bitcoin · facturé en euros" : "Direct Bitcoin payment · billed in euros") : (FR ? "Paiement sécurisé par Stripe · Visa · Mastercard · Apple Pay" : "Secure payment by Stripe · Visa · Mastercard · Apple Pay")}</span>
           <span>{FR ? "Usage recherche uniquement" : "Research use only"}</span>
         </div>
       </div>
@@ -2950,36 +2443,77 @@ const photoDose = (s = "") => {
   return null;
 };
 const photoFor = (id, size) => { const d = photoDose(size); return d ? `${PHOTO_BASE}${id}-${d}.jpg` : null; };
-const ProductPhoto = ({ p, size, h = 180 }) => {
+/* Chiffre qui défile jusqu'à sa valeur quand il apparaît à l'écran (ex. 99,008 % de pureté). */
+const CountUp = ({ value, lang }) => {
+  const target = parseFloat(value); const dec = (String(value).split(".")[1] || "").length;
+  const [v, setV] = useState(value); const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current; if (!el || isNaN(target)) return;
+    if (typeof window === "undefined" || !("IntersectionObserver" in window) || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    let raf = 0; let done = false;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting || done) return; done = true; io.disconnect();
+      const from = Math.max(0, target - 9), t0 = performance.now(), D = 1400;
+      const step = (t) => { const k = Math.min(1, (t - t0) / D); const ease = 1 - Math.pow(1 - k, 3); setV((from + (target - from) * ease).toFixed(dec)); if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    }, { threshold: 0.5 });
+    io.observe(el); return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, [value]);
+  return <span ref={ref}>{num(String(v), lang)}</span>;
+};
+
+/* Produits mis en avant sur l'accueil (vitrine de flacons + rangée « Les plus demandés »). */
+const HERO_STACK = ["bpc157", "ghk", "retatrutide", "tb500", "nad"];
+const BESTSELLERS = ["retatrutide", "bpc157", "tb500", "ghk", "slupp322", "semaglutide", "nad", "novalyxformula06"];
+
+/* Photos produits « à la façon d'Apple » : le navigateur choisit la bonne taille (WebP 480 px pour les cartes,
+   1200 px pour la fiche et le zoom), et reprend automatiquement la photo JPG d'origine si un fichier WebP manque. */
+const webpFor = (jpg, w) => jpg ? jpg.replace(PHOTO_BASE, PHOTO_BASE + "w" + w + "/").replace(/\.jpg$/, ".webp") : "";
+const ProductPhoto = ({ p, size, h = 180, eager = false }) => {
   const src = photoFor(p.id, size);
-  const [failed, setFailed] = useState(false);
-  useEffect(() => { setFailed(false); }, [src]);
-  if (!src || failed) return <Vial name={p.name} size={size} tone={CAT_TONE[p.category]} h={h} />;
+  const [mode, setMode] = useState("webp"); // webp → jpg → vial
+  useEffect(() => { setMode("webp"); }, [src]);
+  if (!src || mode === "vial") return <Vial name={p.name} size={size} tone={CAT_TONE[p.category]} h={h} />;
+  const style = { width: h, height: h, objectFit: "cover", borderRadius: 14, display: "block" };
+  const alt = `${p.name} ${size || ""} — Novalyx Research`;
+  if (mode === "jpg") return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" width={h} height={h} onError={() => setMode("vial")} style={style} />;
   return (
-    <img src={src} alt={`${p.name} ${size || ""} — Novalyx Research`} loading="lazy" decoding="async"
-      width={h} height={h} onError={() => setFailed(true)}
-      style={{ width: h, height: h, objectFit: "cover", borderRadius: 14, display: "block" }} />
+    <img src={webpFor(src, h > 240 ? 1200 : 480)} srcSet={`${webpFor(src, 480)} 480w, ${webpFor(src, 1200)} 1200w`} sizes={`${h}px`}
+      alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" width={h} height={h} onError={() => setMode("jpg")} style={style} />
+  );
+};
+
+/* Zoom plein écran sur la photo du flacon (fiche produit). Pincer pour agrandir sur téléphone. */
+const PhotoZoom = ({ p, size, onClose, lang }) => {
+  const src = photoFor(p.id, size); const [jpg, setJpg] = useState(false);
+  useEffect(() => { const k = (e) => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
+  return (
+    <div className="zoom" role="dialog" aria-label={lang === "FR" ? "Photo agrandie" : "Enlarged photo"} onClick={onClose}>
+      <img src={jpg ? src : webpFor(src, 1200)} onError={() => setJpg(true)} alt={`${p.name} ${size || ""} — Novalyx Research`} onClick={(e) => e.stopPropagation()} />
+      <button className="zoom-x" onClick={onClose} aria-label={lang === "FR" ? "Fermer" : "Close"}>✕</button>
+    </div>
   );
 };
 
 const ProductCard = ({ p, cur, onClick, lang }) => {
   const FR = lang === "FR";
-  const min = Math.min(...p.variants.map(v => v.price));
+  const min = Math.min(...visVariants(p).map(v => v.price));
   const coa = COAS[p.id];
-  const main = p.variants[p.variants.length - 1];
+  const main = visVariants(p).find(v => inStock(p, v.size)) || visVariants(p)[visVariants(p).length - 1];
   return (
     <button className="pcard" onClick={onClick}>
       <div className="pcard-top">
         <span className="tag">{tp(lang, p.category)}</span>
-        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{FR ? "Bientôt" : "Soon"}</span>}
+        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Sur commande" : "Made to order") : (FR ? "Bientôt" : "Soon")}</span>}
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{p.name}</div>
-      <div className="pcard-sizes">{p.variants.map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</div>
+      <div className="pcard-sizes">{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</div>
       <div className="pcard-foot">
         <div>
-          <div className="tag" style={{ marginBottom: 2 }}>{isAvail(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
+          <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}</div>
+          {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials"}</div>}
         </div>
         <span className="link">{FR ? "Détails" : "Details"}</span>
       </div>
@@ -3014,13 +2548,27 @@ const CoaBlock = ({ coa, lang, compact = false }) => {
 };
 
 /* ─── PRODUCT MODAL ──────────────────────────────────────── */
-const ProductModal = ({ p, cur, onAdd, onClose, lang }) => {
+const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const FR = lang === "FR";
   const [qty, setQty] = useState(1);
+  const [withBac, setWithBac] = useState(false);
+  const [added, setAdded] = useState(false);
+  const bac = PRODUCTS.find(x => x.id === "bac-water");
+  const bacV = bac && bac.variants.find(x => !/pack/i.test(x.size));
   const [idx, setIdx] = useState(Math.max(0, p.variants.findIndex(x => COAS[p.id] && x.size === COAS[p.id].size)));
-  const v = p.variants[idx];
+  const v = visVariants(p)[idx] || visVariants(p)[0];
   const coa = coaFor(p, v.size);
   const coaOther = !coa && COAS[p.id];
+  const showBac = XSELL_BAC && canBuy(p) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
+  const total = lineTotal(v.price, qty, v.size, p.id) + (showBac && withBac ? bacV.price : 0);
+  const [zoom, setZoom] = useState(false);
+  useEffect(() => { setAdded(false); }, [idx, qty, withBac]);
+  useEffect(() => { const m = minQty(p, v.size); if (qty < m) setQty(m); }, [idx]); // eslint-disable-line
+  const addAll = (buyNow) => {
+    onAdd(p, v, qty, false);
+    if (showBac && withBac) onAdd(bac, bacV, 1, false);
+    if (buyNow) onOpenCart(); else setAdded(true);
+  };
   useEffect(() => {
     const k = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", k); document.body.style.overflow = "hidden";
@@ -3030,18 +2578,18 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang }) => {
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()} role="dialog" aria-label={p.name}>
         <div className="modal-grid">
-          <div className="modal-vial" style={{ flexDirection: "column", gap: 10 }}><ProductPhoto p={p} size={v.size} h={300} /><div style={{ fontSize: 11.5, lineHeight: 1.45, color: "var(--mute)", textAlign: "center", maxWidth: 300 }}>{lang === "FR" ? "Visuel du produit. Le numéro de lot figure sur chaque flacon livré, avec son rapport d\u2019analyse." : "Product visual. The batch number is printed on every vial shipped, with its analysis report."}</div></div>
+          <div className="modal-vial" style={{ flexDirection: "column", gap: 10 }}><button className="zoom-btn" onClick={() => setZoom(true)} aria-label={FR ? "Agrandir la photo" : "Enlarge the photo"}><ProductPhoto p={p} size={v.size} h={300} eager /><span className="zoom-hint" aria-hidden="true">⤢</span></button>{zoom && <PhotoZoom p={p} size={v.size} lang={lang} onClose={() => setZoom(false)} />}<div style={{ fontSize: 11.5, lineHeight: 1.45, color: "var(--mute)", textAlign: "center", maxWidth: 300 }}>{lang === "FR" ? "Visuel du produit. Le numéro de lot figure sur chaque flacon livré." : "Product visual. The batch number is printed on every vial shipped."}</div></div>
           <div className="modal-body">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
               <span className="tag">{tp(lang, p.category)} · {tp(lang, p.tag)}</span>
-              <button className="x" onClick={onClose} aria-label="Fermer">✕</button>
+              <button className="x" onClick={onClose} aria-label={FR ? "Fermer" : "Close"}>✕</button>
             </div>
             <h2 className="h2" style={{ fontSize: 40, margin: "6px 0 14px" }}>{p.name}</h2>
             <p style={{ color: "var(--ink2)", fontSize: 14.5, lineHeight: 1.75 }}>{FR && p.desc_fr ? p.desc_fr : p.desc}</p>
 
             <div className="eyebrow" style={{ margin: "26px 0 10px" }}>{FR ? "Conditionnement" : "Size"}</div>
             <div className="sizes">
-              {p.variants.map((x, i) => (
+              {visVariants(p).map((x, i) => (
                 <button key={x.size} className={`size ${i === idx ? "on" : ""}`} onClick={() => setIdx(i)}>
                   <div className="mono" style={{ fontSize: 12, color: "var(--mute)" }}>{x.size}</div>
                   <div style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{price(x.price, cur, lang)}</div>
@@ -3057,28 +2605,85 @@ const ProductModal = ({ p, cur, onAdd, onClose, lang }) => {
             )}
 
             <div style={{ marginTop: coa ? 0 : 22 }}>
-              <div className="spec"><span>{FR ? "Référence de lot" : "Batch reference"}</span><span>{v.batch}</span></div>
               {p.commonSpecs.map(s => (
                 <div className="spec" key={s.label}><span>{tp(lang, s.label)}</span><span>{tp(lang, s.value)}</span></div>
               ))}
             </div>
 
+            {CONFIG.BTC_ON && canBuy(p) && (
+              <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
+                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h" : "In stock · ships within 24 h") : (FR ? "Sur commande · 3 à 4 semaines · lot analysé par Janoshik avant expédition · suivi à chaque étape" : "Made to order · 3–4 weeks · batch analysed by Janoshik before shipping · tracked at every step")}
+                {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
+                {inStock(p, v.size) && STOCK_LEFT[p.id] ? (FR ? ` · plus que ${STOCK_LEFT[p.id]} flacons du lot analysé` : ` · only ${STOCK_LEFT[p.id]} vials left from the analysed batch`) : ""}
+              </div>
+            )}
+            {showBac && (
+              <label className={`xsell${withBac ? " on" : ""}`}>
+                <input type="checkbox" checked={withBac} onChange={e => setWithBac(e.target.checked)} />
+                <ProductPhoto p={bac} size={bacV.size} h={52} />
+                <span className="xsell-txt">
+                  <span className="tag">{FR ? "Souvent acheté avec" : "Frequently bought with"}</span>
+                  <span>{FR ? "Eau bactériostatique 3 ml" : "Bacteriostatic water 3 ml"}</span>
+                </span>
+                <span className="xsell-price">+ {price(bacV.price, cur, lang)}</span>
+              </label>
+            )}
+            {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && (
+              <div className="tiers">
+                <div className="tag" style={{ marginBottom: 8 }}>{FR ? "Prix dégressif : plus vous en prenez, moins c'est cher" : "Volume pricing: the more you take, the less you pay"}</div>
+                <div className="tiers-row">
+                  {[1, 2, 3, 5].filter(n => n >= minQty(p, v.size)).map(n => {
+                    const d = qtyDiscount(n, v.size, p.id, v.price); const on = qty === n || (n === 5 && qty > 5) || (n === 3 && qty === 4);
+                    return (
+                      <button key={n} type="button" className={"tier" + (on ? " on" : "")} onClick={() => setQty(n)}>
+                        {n === 3 && <span className="tier-pop">{FR ? "Le plus choisi" : "Most popular"}</span>}
+                        <span className="tier-n">{n} {FR ? (n > 1 ? "flacons" : "flacon") : (n > 1 ? "vials" : "vial")}</span>
+                        <span className="tier-p">{price(Math.round(lineTotal(v.price, n, v.size, p.id) / n * 100) / 100, cur, lang)}{FR ? " / flacon" : " / vial"}</span>
+                        {d > 0 && <span className="tier-d">−{Math.round(d * 100)} %</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 26, flexWrap: "wrap" }}>
-              {isAvail(p) && <div className="qty">
-                <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label="-">−</button>
+              {canBuy(p) && <div className="qty">
+                <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>
                 <span>{qty}</span>
                 <button onClick={() => setQty(qty + 1)} aria-label="+">+</button>
               </div>}
-              {isAvail(p) ? (
-                <button className="btn btn-ink" style={{ flex: 1 }} onClick={() => { onAdd(p, v, qty); onClose(); }}>
-                  {FR ? "Ajouter au panier" : "Add to cart"} — {price(v.price * qty, cur, lang)}
-                </button>
+              {canBuy(p) ? (
+                <>
+                  <button className="btn btn-line buy-btn" onClick={() => addAll(false)}>{FR ? "Ajouter au panier" : "Add to cart"}</button>
+                  <button className="btn btn-ink buy-btn" onClick={() => addAll(true)}>{FR ? "Acheter maintenant" : "Buy now"} — {price(total, cur, lang)}</button>
+                  <div className="mbar" role="region" aria-label={FR ? "Achat rapide" : "Quick buy"}>
+                    <div className="mbar-info"><b>{price(total, cur, lang)}</b><span>{v.size}{qty > 1 ? ` · ×${qty}` : ""}</span></div>
+                    <button className="btn btn-line" onClick={() => addAll(false)}>{FR ? "Ajouter" : "Add"}</button>
+                    <button className="btn btn-ink" onClick={() => addAll(true)}>{FR ? "Acheter" : "Buy"}</button>
+                  </div>
+                </>
               ) : (
                 <a className="btn btn-line" style={{ flex: 1 }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent((FR ? "Disponibilité " : "Availability ") + p.name + " " + v.size)}`}>
                   {FR ? "Bientôt disponible — me prévenir" : "Coming soon — notify me"}
                 </a>
               )}
             </div>
+            {CONFIG.BTC_ON && canBuy(p) && (
+              <p style={{ fontSize: 13, marginTop: 12 }}>
+                <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Paiement en Bitcoin : comment ça marche ? (3 étapes)" : "Bitcoin payment: how does it work? (3 steps)"}</a>
+              </p>
+            )}
+            {CONFIG.BTC_ON && canBuy(p) && qtyDiscount(qty, v.size, p.id, v.price) > 0.0001 && (
+              <div className="saving">{FR ? "Vous économisez " : "You save "}<b>{price(Math.round((v.price * qty - lineTotal(v.price, qty, v.size, p.id)) * 100) / 100, cur, lang)}</b>{FR ? ` · au lieu de ${price(v.price * qty, cur, lang)}` : ` · instead of ${price(v.price * qty, cur, lang)}`}</div>
+            )}
+            {added && (
+              <div className="added" role="status">
+                <span>✓ {FR ? "Ajouté au panier" : "Added to cart"}</span>
+                <span style={{ flex: 1 }} />
+                <button className="link" onClick={onClose}>{FR ? "Continuer mes achats" : "Keep shopping"}</button>
+                <button className="link" onClick={onOpenCart}>{FR ? "Voir le panier" : "View cart"}</button>
+              </div>
+            )}
             <p className="muted" style={{ fontSize: 11.5, marginTop: 14, lineHeight: 1.6 }}>
               {FR ? "Destiné exclusivement à la recherche in-vitro en laboratoire. Pas pour usage humain ou vétérinaire." : "For in-vitro laboratory research only. Not for human or veterinary use."}
             </p>
@@ -3098,7 +2703,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const [bankRef, setBankRef] = useState(null);
   const [copied, setCopied] = useState("");
   const [zone, setZone] = useState("FR");
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const [btcErr, setBtcErr] = useState("");
+  const total = cart.reduce((s, i) => s + lineTotal(i.price, i.qty, i.size, i.id), 0);
   const count = cart.reduce((s, i) => s + i.qty, 0);
   const ready = ok1 && ok2 && !loading;
   // Virement : le montant est toujours en euros (compte en EUR) ; la livraison est confirmée par email
@@ -3124,12 +2730,30 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     FR ? "Je confirme que cette commande est strictement destinée à la recherche en laboratoire." : "I confirm this order is strictly for laboratory research purposes only.",
   ].join("\n"));
   const checkout = async () => { setLoading(true); try { await goToStripeCheckout(cart, zone); } finally { setLoading(false); } };
+  const ship = cartShipping(cart, zone, total);
+  const grand = Math.round((total + ship) * 100) / 100;
+  const euZone = zone === "FR" || zone === "EU";
+  const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - total) : 0;
+  const allStock = cart.every(i => AVAILABLE.includes(i.id) && (!STOCK_SIZES[i.id] || STOCK_SIZES[i.id].includes(i.size)));
+  const payBtc = async () => {
+    setLoading(true); setBtcErr("");
+    try {
+      const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.url) throw new Error(d.error || "checkout");
+      window.location.href = d.url;
+    } catch (e) {
+      setBtcErr(FR ? "Le paiement Bitcoin est momentanément indisponible. Réessayez dans un instant ou écrivez-nous." : "Bitcoin payment is temporarily unavailable. Please try again shortly or contact us.");
+      setLoading(false);
+    }
+  };
   return (
     <div className="drawer" onClick={onClose}>
       <div className="drawer-in" onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <div className="h3">{FR ? "Panier" : "Cart"} <span className="mono muted" style={{ fontSize: 13 }}>({count})</span></div>
-          <button className="x" onClick={onClose} aria-label="Fermer">✕</button>
+          <button className="x" onClick={onClose} aria-label={FR ? "Fermer" : "Close"}>✕</button>
         </div>
         {cart.length === 0 ? (
           <div className="muted" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
@@ -3142,9 +2766,9 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 <div key={i.lineId} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
                   <div>
                     <div style={{ fontFamily: "var(--serif)", fontSize: 19 }}>{i.name}</div>
-                    <div className="mono muted" style={{ fontSize: 11.5 }}>{i.size} · {FR ? "Qté" : "Qty"} {i.qty} · {price(i.price * i.qty, cur, lang)}</div>
+                    <div className="mono muted" style={{ fontSize: 11.5 }}>{i.size} · {FR ? "Qté" : "Qty"} {i.qty} · {price(lineTotal(i.price, i.qty, i.size, i.id), cur, lang)}{qtyDiscount(i.qty, i.size, i.id, i.price) > 0.0001 && <span style={{ color: "var(--green)" }}> · −{Math.round(qtyDiscount(i.qty, i.size, i.id, i.price) * 100)} %</span>}</div>
                   </div>
-                  <button className="x" style={{ width: 28, height: 28, fontSize: 16 }} onClick={() => onRemove(i.lineId)} aria-label="Retirer">✕</button>
+                  <button className="x" style={{ width: 28, height: 28, fontSize: 16 }} onClick={() => onRemove(i.lineId)} aria-label={FR ? "Retirer" : "Remove"}>✕</button>
                 </div>
               ))}
             </div>
@@ -3159,6 +2783,31 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                   {SHIP_ZONES.map(z => <option key={z[0]} value={z[0]}>{FR ? z[1] : z[2]}</option>)}
                 </select>
               </div>
+              {CONFIG.BTC_ON ? (<>
+                <div className="spec"><span>{FR ? "Livraison" : "Shipping"}</span><span>{ship === 0 ? (FR ? "Offerte" : "Free") : price(ship, cur, lang)}</span></div>
+                {freeLeft > 0 && (
+                  <div className="freebar">
+                    <div className="freebar-txt">{FR ? <>Plus que <b>{price(freeLeft, cur, lang)}</b> pour la livraison offerte</> : <>Only <b>{price(freeLeft, cur, lang)}</b> away from free shipping</>}</div>
+                    <div className="freebar-track"><i style={{ width: Math.min(100, (total / FREE_SHIP_MIN) * 100) + "%" }} /></div>
+                  </div>
+                )}
+                <div className="spec" style={{ borderBottom: "none" }}><span><b>Total</b></span><span style={{ fontFamily: "var(--serif)", fontSize: 24 }}>{price(grand, cur, lang)}</span></div>
+                <p className="muted" style={{ fontSize: 12, margin: "6px 0 14px" }}>
+                  {allStock ? (FR ? "En stock · expédié sous 24 h · livraison en 2 à 3 jours en France" : "In stock · ships within 24 h · 2–3 day delivery in France") : (FR ? "Votre panier contient des articles sur commande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
+                </p>
+                <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
+                <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
+                <button className="btn btn-ink" style={{ width: "100%", marginTop: 10 }} disabled={!ready} onClick={payBtc}>
+                  {loading ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(grand, "EUR", lang)}</>}
+                </button>
+                {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
+                <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 12, letterSpacing: ".05em" }}>
+                  {FR ? "PAIEMENT BITCOIN DIRECT · FACTURÉ EN EUROS · FACTURE VALABLE 60 MIN" : "DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID 60 MIN"}
+                </p>
+                <p style={{ textAlign: "center", fontSize: 13, marginTop: 8 }}>
+                  <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Première fois ? Comment payer en Bitcoin" : "First time? How to pay with Bitcoin"}</a>
+                </p>
+              </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>
                 {FR ? "Expédié sous 24 h · livraison en 2 à 3 jours maximum en France" : "Shipped within 24 h · delivery in 2–3 days maximum in France"}
                 {shipEst !== null && <> · <b>{FR ? "Livraison : " : "Shipping: "}{shipEst === 0 ? (FR ? "offerte" : "free") : eur(shipEst)}</b></>}
@@ -3195,6 +2844,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                   <a className="btn btn-ink" style={{ width: "100%" }} href={mailHref}>{FR ? "Envoyer ma commande par email" : "Send my order by email"}</a>
                 </div>
               )}
+              </>)}
             </div>
           </>
         )}
@@ -3219,6 +2869,17 @@ const SecHead = ({ n, label, title, children }) => (
 const Home = ({ go, cur, openProduct, lang }) => {
   const FR = lang === "FR";
   const hero = COAS.retatrutide;
+  // L'éventail de flacons ne se joue que lorsque l'accueil est vraiment visible (page d'accès refermée, vitrine à l'écran).
+  const stackRef = useRef(null);
+  useEffect(() => {
+    const el = stackRef.current; if (!el) return;
+    let seen = false; const io = "IntersectionObserver" in window ? new IntersectionObserver(([e]) => { seen = e.isIntersecting; }, { threshold: 0.4 }) : null;
+    if (io) io.observe(el); else seen = true;
+    const play = () => el.classList.add("play");
+    const t = setInterval(() => { if (seen && !document.querySelector(".gate")) { clearInterval(t); setTimeout(play, 120); } }, 120);
+    const safety = setTimeout(() => { clearInterval(t); play(); }, 15000);
+    return () => { clearInterval(t); clearTimeout(safety); if (io) io.disconnect(); };
+  }, []);
   const heroP = PRODUCTS.find(p => p.id === "retatrutide");
   const heroMin = heroP ? Math.min(...heroP.variants.map(v => v.price)) : 0;
   const withCoa = PRODUCTS.filter(p => COAS[p.id]);
@@ -3228,7 +2889,13 @@ const Home = ({ go, cur, openProduct, lang }) => {
       {/* HERO */}
       <section className="hero">
         <div className="wrap hero-grid">
-          <div>
+          <div className="hero-vials">
+            <button ref={stackRef} className="hero-stack" onClick={() => go("products", "All")} aria-label={FR ? "Voir tout le catalogue" : "View the whole catalogue"}>
+              {HERO_STACK.map((id, i) => { const sp = PRODUCTS.find(x => x.id === id); return sp ? <span key={id} className={"hs hs" + i}><ProductPhoto p={sp} size={visVariants(sp)[0].size} h={200} /></span> : null; })}
+            </button>
+            <div className="hero-stack-cap">{FR ? `${PRODUCTS.length} composés lyophilisés · un rapport d'analyse par lot` : `${PRODUCTS.length} lyophilised compounds · one analysis report per batch`}</div>
+          </div>
+          <div className="hero-text">
             <div className="eyebrow" style={{ marginBottom: 22 }}>Novalyx Research — Paris</div>
             <h1 className="display">
               {FR ? <>Des composés de recherche <em>analysés</em>, documentés, vérifiables.</> : <>Research compounds, <em>analysed</em>, documented, verifiable.</>}
@@ -3248,7 +2915,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
             </div>
             {heroP && (
               <button className="hero-prod" onClick={() => openProduct(heroP)} aria-label={FR ? "Voir le produit GLP-3RT 5 mg" : "View GLP-3RT 5 mg"}>
-                <ProductPhoto p={heroP} size={hero.size} h={124} />
+                <ProductPhoto p={heroP} size={hero.size} h={124} eager />
                 <div>
                   <div className="hero-prod-name" style={{ fontFamily: "var(--serif)", fontSize: 30, lineHeight: 1.05, whiteSpace: "nowrap" }}>GLP-3RT 5 mg</div>
                   <div className="mono muted" style={{ fontSize: 11.5, marginTop: 5 }}>{FR ? "Peptide lyophilisé · usage recherche" : "Lyophilised peptide · research use"}</div>
@@ -3260,7 +2927,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
               </button>
             )}
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "20px 0 8px" }}>
-              <span className="big-num">{hero.purity ? num(hero.purity, lang) : "—"}</span>
+              <span className="big-num">{hero.purity ? <CountUp value={hero.purity} lang={lang} /> : "—"}</span>
               <span className="mono" style={{ fontSize: 14 }}>% {FR ? "pureté HPLC" : "HPLC purity"}</span>
             </div>
             <div className="sheet-row"><span>{FR ? "Quantité mesurée" : "Measured content"}</span><span>{num(hero.measured, lang)} / 5 mg</span></div>
@@ -3282,11 +2949,48 @@ const Home = ({ go, cur, openProduct, lang }) => {
           {[
             [FR ? "Entreprise" : "Company", FR ? "Française · SIRET 898 509 369" : "French · SIRET 898 509 369"],
             [FR ? "Analyses" : "Analyses", FR ? "Janoshik, clé publique" : "Janoshik, public key"],
-            [FR ? "Paiement" : "Payment", FR ? "Stripe, carte bancaire" : "Stripe, card"],
-            [FR ? "Expédition" : "Shipping", FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging"],
+            [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros") : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
+            [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h · sur commande : 3 à 4 semaines" : "In stock: 24 h · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
           ].map(([k, v]) => <div className="fact" key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
         </div>
       </div>
+
+      {/* LES PLUS DEMANDÉS */}
+      <section className="sec" style={{ paddingTop: 48, paddingBottom: 8 }}>
+        <div className="wrap">
+          <div className="row-head">
+            <div>
+              <div className="eyebrow">{FR ? "Les plus demandés" : "Most requested"}</div>
+              <h2 className="h2" style={{ fontSize: "clamp(26px,4vw,38px)", marginTop: 8 }}>{FR ? "Commencez par l'essentiel." : "Start with the essentials."}</h2>
+            </div>
+            <button className="link" onClick={() => go("products", "All")}>{FR ? "Tout le catalogue" : "Full catalogue"} →</button>
+          </div>
+          <div className="best-row">
+            {BESTSELLERS.map(id => PRODUCTS.find(x => x.id === id)).filter(Boolean).map(bp => <ProductCard key={bp.id} p={bp} cur={cur} lang={lang} onClick={() => openProduct(bp)} />)}
+          </div>
+        </div>
+      </section>
+
+      {CONFIG.BTC_ON && (
+        <section className="sec" style={{ paddingTop: 34, paddingBottom: 10 }}>
+          <div className="wrap">
+            <div className="btc-callout">
+              <div>
+                <div className="eyebrow" style={{ color: "var(--green)" }}>{FR ? "Paiement Bitcoin" : "Bitcoin payment"}</div>
+                <h2 className="h2" style={{ fontSize: "clamp(26px,4vw,38px)", margin: "8px 0 10px" }}>{FR ? "Payer en Bitcoin, plus simple qu'il n'y paraît." : "Paying with Bitcoin is easier than it sounds."}</h2>
+                <p className="muted" style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 560 }}>{FR ? "Si vous savez faire un achat en ligne, vous savez payer en Bitcoin : 10 minutes la première fois, 2 minutes ensuite. Le montant est toujours calculé en euros." : "If you can shop online, you can pay with Bitcoin: 10 minutes the first time, 2 minutes after that. The amount is always calculated in euros."}</p>
+              </div>
+              <ol className="btc-mini">
+                {(FR ? [["01", "Achetez du Bitcoin", "Revolut, Kraken ou Coinbase"], ["02", "Passez commande", "une facture avec QR code s'affiche"], ["03", "Envoyez le paiement", "scannez, vérifiez, validez"]]
+                     : [["01", "Buy Bitcoin", "Revolut, Kraken or Coinbase"], ["02", "Place your order", "an invoice with a QR code appears"], ["03", "Send the payment", "scan, check, confirm"]]).map(([n, t, d]) => (
+                  <li key={n}><span className="btc-mini-n">{n}</span><span><b>{t}</b><br /><span className="muted">{d}</span></span></li>
+                ))}
+              </ol>
+              <button className="btn btn-ink" onClick={() => go("bitcoin")}>{FR ? "Voir le guide en 3 étapes" : "See the 3-step guide"} →</button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* METHOD */}
       <section className="sec">
@@ -3296,15 +3000,15 @@ const Home = ({ go, cur, openProduct, lang }) => {
           </SecHead>
           <div className="steps">
             {(FR ? [
-              ["01", "Sélection du lot", "Chaque lot est commandé en quantité adaptée, puis contrôlé à réception."],
+              ["01", "Sélection du lot", "Chaque lot est sélectionné auprès de notre fabricant partenaire, avec son certificat d'analyse."],
               ["02", "Analyse indépendante", "Un échantillon est envoyé à Janoshik Analytical : identité, pureté HPLC, quantité mesurée."],
               ["03", "Publication", "Le rapport et sa clé de vérification sont publiés. Tout le monde peut le contrôler."],
-              ["04", "Expédition", "Flacons lyophilisés, étiquetés, scellés. Envoi suivi, rapport du lot joint."],
+              ["04", "Expédition", "Flacons lyophilisés, étiquetés, scellés, envoi suivi. Les produits sans rapport publié sont signalés « analyse à venir »."],
             ] : [
-              ["01", "Batch selection", "Each batch is ordered in suitable quantity, then checked on arrival."],
+              ["01", "Batch selection", "Each batch is selected from our manufacturing partner, with its certificate of analysis."],
               ["02", "Independent analysis", "A sample goes to Janoshik Analytical: identity, HPLC purity, measured content."],
               ["03", "Publication", "The report and its verification key are published. Anyone can check it."],
-              ["04", "Dispatch", "Lyophilised, labelled, sealed vials. Tracked shipping, batch report included."],
+              ["04", "Dispatch", "Lyophilised, labelled, sealed vials, tracked shipping. Products without a published report are marked “analysis pending”."],
             ]).map(([n, tt, d]) => (
               <div className="step" key={n}><div className="step-n">{n}</div><div className="h3">{tt}</div><p>{d}</p></div>
             ))}
@@ -3333,7 +3037,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
                 <button key={c} className="index-row" onClick={() => go("products", c)}>
                   <span className="mono muted" style={{ fontSize: 12 }}>{String(i + 1).padStart(2, "0")}</span>
                   <span><span className="index-name">{tp(lang, c)}</span></span>
-                  <span className="index-desc" style={{ gridColumn: "auto" }}>{CAT_DESC[c] ? CAT_DESC[c][FR ? 0 : 1] : ""}</span>
+                  <span className="index-desc">{CAT_DESC[c] ? CAT_DESC[c][FR ? 0 : 1] : ""}</span>
                   <span className="mono muted" style={{ fontSize: 12 }}>{n} →</span>
                 </button>
               );
@@ -3358,27 +3062,55 @@ const Home = ({ go, cur, openProduct, lang }) => {
   );
 };
 
+/* ─── ADRESSES DES PAGES ─────────────────────────────────────
+   Une adresse par page (/payer-en-bitcoin, /catalogue…) et par produit (/produit/bpc157) :
+   un lien copié ouvre directement la bonne page. Actif uniquement sur le vrai domaine (et en test local). */
+const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", about: "/methode", faq: "/faq",
+  ambassador: "/ambassadeurs", contact: "/contact", shipping: "/livraison", privacy: "/confidentialite", terms: "/cgv",
+  disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin" };
+const ROUTING_OK = typeof window !== "undefined" && /(^|\.)novalyxresearch\.com$|\.vercel\.app$|^localhost$|^127\.0\.0\.1$/.test(window.location.hostname);
+const parsePath = (path) => {
+  const clean = (path || "/").replace(/\/+$/, "") || "/";
+  const m = clean.match(/^\/produit\/([^/]+)$/);
+  if (m) { const prod = PRODUCTS.find(x => x.id === decodeURIComponent(m[1])); return { page: "products", product: prod || null }; }
+  const page = Object.keys(ROUTES).find(k => ROUTES[k] === clean);
+  return { page: page || "home", product: null };
+};
+const pushPath = (path, replace, state) => {
+  if (!ROUTING_OK || window.location.pathname === path) return;
+  try { window.history[replace ? "replaceState" : "pushState"](state || { nvx: 1 }, "", path); } catch (e) {}
+};
+
 const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang }) => {
   const FR = lang === "FR";
   const [filter, setFilter] = useState(initialFilter || "All");
   useEffect(() => { if (initialFilter) setFilter(initialFilter); }, [initialFilter]);
   const change = (f) => { setFilter(f); setProductFilter && setProductFilter(f); };
   const cats = CATEGORY_ORDER.filter(c => PRODUCTS.some(p => p.category === c));
-  const list = filter === "All" ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)) : PRODUCTS.filter(p => p.category === filter);
+  const [q, setQ] = useState("");
+  const norm = (t) => (t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+  const nq = norm(q);
+  const base = filter === "All" ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)) : PRODUCTS.filter(p => p.category === filter);
+  const list = nq ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)).filter(p => norm(p.name + " " + p.id + " " + p.tag + " " + ((BOT_KB[p.id] || {}).aliases || []).join(" ") + " " + (((BOT_KB[p.id] || {})[FR ? "fr" : "en"] || [])[0] || "")).includes(nq)) : base;
   return (
     <section className="sec" style={{ paddingTop: 56 }}>
       <div className="wrap">
         <div className="eyebrow" style={{ marginBottom: 14 }}>{FR ? "Catalogue de recherche" : "Research catalogue"}</div>
         <h1 className="display" style={{ fontSize: "clamp(38px,6vw,64px)", marginBottom: 18 }}>{filter === "All" ? (FR ? "Tous les composés" : "All compounds") : tp(lang, filter)}</h1>
         <p className="lead" style={{ marginBottom: 36 }}>{FR ? "Peptides lyophilisés, fournis exclusivement pour la recherche in-vitro. Les rapports d'analyse publiés sont signalés par la mention COA." : "Lyophilised peptides supplied exclusively for in-vitro research. Published analysis reports are marked COA."}</p>
-        <div className="filters">
+        <div className="search">
+          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={FR ? "Rechercher un composé (ex. BPC-157, Semax…)" : "Search a compound (e.g. BPC-157, Semax…)"} aria-label={FR ? "Rechercher un composé" : "Search a compound"} />
+          {q && <span className="search-n">{list.length} {FR ? (list.length > 1 ? "résultats" : "résultat") : (list.length === 1 ? "result" : "results")}</span>}
+        </div>
+        {!nq && <div className="filters">
           <button className={`fchip ${filter === "All" ? "on" : ""}`} onClick={() => change("All")}>{FR ? "Tout" : "All"} ({PRODUCTS.length})</button>
           {cats.map(c => (
             <button key={c} className={`fchip ${filter === c ? "on" : ""}`} onClick={() => change(c)}>
               {tp(lang, c)} ({PRODUCTS.filter(p => p.category === c).length})
             </button>
           ))}
-        </div>
+        </div>}
+        {nq && list.length === 0 && <p className="muted" style={{ margin: "10px 0 30px" }}>{FR ? "Aucun composé ne correspond. Essayez un autre nom, ou écrivez-nous." : "No compound matches. Try another name, or write to us."}</p>}
         <div className="grid">
           {list.map(p => <ProductCard key={p.id} p={p} cur={cur} lang={lang} onClick={() => openProduct(p)} />)}
         </div>
@@ -3386,46 +3118,6 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
     </section>
   );
 };
-const LEARNING_DATA = [
-  { id:"bpc157", name:"BPC-157", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
-    en:"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in tissue-repair assays.",
-    fr:"Fragment peptidique synthétique étudié en modèles de laboratoire pour son rôle dans la recherche sur la réparation tissulaire et l'angiogenèse. Fréquemment utilisé comme composé de référence dans les essais de réparation tissulaire." },
-  { id:"tb500", name:"TB-500", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
-    en:"A synthetic version of a naturally occurring peptide region studied for cell-migration and actin-regulation research in controlled settings.",
-    fr:"Version synthétique d'une région peptidique naturelle, étudiée pour la recherche sur la migration cellulaire et la régulation de l'actine en milieu contrôlé." },
-  { id:"ghk", name:"GHK-Cu (GHK-Cuivre)", cat:{EN:"Regenerative research",FR:"Recherche régénérative"},
-    en:"A copper-binding tripeptide investigated in skin-biology and extracellular-matrix research models.",
-    fr:"Tripeptide liant le cuivre, étudié dans les modèles de recherche en biologie cutanée et sur la matrice extracellulaire." },
-  { id:"retatrutide", name:"GLP-3RT", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
-    en:"A multi-receptor research compound studied in metabolic-pathway investigations. Of interest in laboratory studies examining receptor signalling.",
-    fr:"Composé de recherche multi-récepteurs étudié dans les investigations sur les voies métaboliques. D'intérêt dans les études de laboratoire examinant la signalisation des récepteurs." },
-  { id:"tirzepatide", name:"Tirzepatide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
-    en:"A dual-receptor research peptide used as a reference compound in metabolic signalling studies.",
-    fr:"Peptide de recherche à double récepteur utilisé comme composé de référence dans les études de signalisation métabolique." },
-  { id:"semaglutide", name:"Semaglutide", cat:{EN:"Metabolic research",FR:"Recherche métabolique"},
-    en:"A research peptide widely referenced in receptor-binding and metabolic-pathway laboratory studies.",
-    fr:"Peptide de recherche largement référencé dans les études de laboratoire sur la liaison aux récepteurs et les voies métaboliques." },
-  { id:"nad", name:"NAD+", cat:{EN:"Longevity research",FR:"Recherche longévité"},
-    en:"A coenzyme central to cellular-energy and mitochondrial research, used in a wide range of biochemical assays.",
-    fr:"Coenzyme central de la recherche sur l'énergie cellulaire et les mitochondries, utilisé dans de nombreux essais biochimiques." },
-  { id:"epitalon", name:"Epitalon", cat:{EN:"Longevity research",FR:"Recherche longévité"},
-    en:"A synthetic tetrapeptide studied in telomere-biology and cellular-ageing research models.",
-    fr:"Tétrapeptide synthétique étudié dans les modèles de recherche sur la biologie des télomères et le vieillissement cellulaire." },
-  { id:"motsc", name:"MOTS-c", cat:{EN:"Longevity research",FR:"Recherche longévité"},
-    en:"A mitochondrial-derived peptide investigated in metabolic and cellular-energy research.",
-    fr:"Peptide d'origine mitochondriale étudié dans la recherche métabolique et sur l'énergie cellulaire." },
-  { id:"ipamorelin", name:"Ipamorelin", cat:{EN:"GH research",FR:"Recherche hormone de croissance"},
-    en:"A research peptide referenced in growth-hormone secretagogue and receptor-signalling studies.",
-    fr:"Peptide de recherche référencé dans les études sur les sécrétagogues de l'hormone de croissance et la signalisation des récepteurs." },
-  { id:"thymosinalpha1", name:"Thymosin Alpha-1", cat:{EN:"Immune research",FR:"Recherche immunitaire"},
-    en:"A peptide studied in immune-modulation and T-cell research models.",
-    fr:"Peptide étudié dans les modèles de recherche sur la modulation immunitaire et les lymphocytes T." },
-  { id:"semax", name:"Semax", cat:{EN:"Cognitive research",FR:"Recherche cognitive"},
-    en:"A synthetic peptide investigated in neuromodulation and neuroprotection research.",
-    fr:"Peptide synthétique étudié dans la recherche sur la neuromodulation et la neuroprotection." },
-];
-
-
 /* ─── ANALYSES (COA) ─────────────────────────────────────── */
 const COAPage = ({ lang, openProduct }) => {
   const FR = lang === "FR";
@@ -3480,22 +3172,40 @@ const COAPage = ({ lang, openProduct }) => {
 };
 
 /* ─── FICHES COMPOSÉS ────────────────────────────────────── */
-const LearningPage = ({ lang }) => {
+const LearningPage = ({ lang, openProduct }) => {
   const FR = lang === "FR";
+  const [cat, setCat] = useState("All");
+  // Une fiche par produit du catalogue, générée à partir des fiches scientifiques de l'assistant (BOT_KB) :
+  // tout nouveau produit apparaît ici automatiquement.
+  const items = PRODUCTS.filter(p => BOT_KB[p.id]).map(p => ({ p, kb: BOT_KB[p.id] }));
+  const cats = CATEGORY_ORDER.filter(c => items.some(i => i.p.category === c));
+  const shown = cat === "All" ? items : items.filter(i => i.p.category === cat);
   return (
     <section className="sec" style={{ paddingTop: 56 }}>
       <div className="wrap">
         <div className="eyebrow" style={{ marginBottom: 14 }}>{FR ? "Ressources" : "Resources"}</div>
         <h1 className="display" style={{ fontSize: "clamp(38px,6vw,64px)", marginBottom: 18 }}>{FR ? "Fiches composés" : "Compound notes"}</h1>
-        <p className="lead" style={{ marginBottom: 44 }}>{FR ? "Informations factuelles et strictement scientifiques sur les composés du catalogue. Aucune allégation de santé." : "Factual, strictly scientific information on catalogue compounds. No health claims."}</p>
-        <div className="grid">
-          {LEARNING_DATA.map(i => (
-            <div key={i.id} className="pcard" style={{ cursor: "default" }}>
-              <span className="tag">{FR ? i.cat.FR : i.cat.EN}</span>
-              <div className="pcard-name" style={{ margin: "14px 0 10px" }}>{i.name}</div>
-              <p style={{ fontSize: 14, color: "var(--ink2)", lineHeight: 1.7 }}>{FR ? i.fr : i.en}</p>
-            </div>
+        <p className="lead" style={{ marginBottom: 28 }}>{FR ? `Informations factuelles et strictement scientifiques sur les ${items.length} composés du catalogue : nature de la molécule et statut réglementaire. Aucune allégation de santé.` : `Factual, strictly scientific information on the ${items.length} compounds in the catalogue: what each molecule is and its regulatory status. No health claims.`}</p>
+        <div className="filters" style={{ marginBottom: 28 }}>
+          {["All", ...cats].map(c => (
+            <button key={c} className={"fchip" + (cat === c ? " on" : "")} onClick={() => setCat(c)}>
+              {c === "All" ? (FR ? "Tous" : "All") : tp(lang, c)} ({c === "All" ? items.length : items.filter(i => i.p.category === c).length})
+            </button>
           ))}
+        </div>
+        <div className="grid">
+          {shown.map(({ p, kb }) => {
+            const [nature, status] = FR ? kb.fr : kb.en;
+            return (
+              <div key={p.id} className="pcard" style={{ cursor: "default", display: "flex", flexDirection: "column" }}>
+                <span className="tag">{tp(lang, p.category)}</span>
+                <div className="pcard-name" style={{ margin: "14px 0 10px" }}>{p.name}</div>
+                <p style={{ fontSize: 14, color: "var(--ink2)", lineHeight: 1.7, margin: 0 }}>{nature}</p>
+                {status && <p style={{ fontSize: 12.5, color: "var(--mute)", lineHeight: 1.6, margin: "12px 0 0" }}><b>{FR ? "Statut : " : "Status: "}</b>{status}</p>}
+                {openProduct && <button className="link" style={{ marginTop: "auto", paddingTop: 16, alignSelf: "flex-start" }} onClick={() => openProduct(p)}>{FR ? "Voir le produit" : "View product"} →</button>}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -3535,7 +3245,7 @@ const AboutPage = ({ go, lang }) => {
 };
 
 /* ─── FAQ ────────────────────────────────────────────────── */
-const FAQPage = ({ lang }) => {
+const FAQPage = ({ lang, go }) => {
   const FR = lang === "FR";
   const [open, setOpen] = useState(0);
   const faqs = FR ? [
@@ -3559,6 +3269,24 @@ const FAQPage = ({ lang }) => {
     ["How should compounds be stored?", "Before reconstitution: dry, room temperature, away from light, vial sealed. After reconstitution: between 2 and 8 °C (refrigerated)."],
     ["Are these products legal in my country?", "Regulatory status varies by jurisdiction. It is your responsibility to check the applicable rules before ordering."],
   ];
+  if (CONFIG.BTC_ON) {
+    const fix = (qStart, a) => { const i = faqs.findIndex(([q]) => q.startsWith(qStart)); if (i >= 0) faqs[i] = [faqs[i][0], a]; };
+    if (FR) {
+      fix("Quel est le délai", "Produits en stock : expédiés sous 24 h après confirmation du paiement, livrés en 2 à 3 jours en France. Produits sur commande : 3 à 4 semaines, car le lot est d'abord reçu puis analysé par Janoshik avant de vous être expédié. Vous recevez un email à chaque étape, puis votre numéro de suivi.");
+      fix("Comment payer", "Uniquement en Bitcoin, directement depuis le panier. Le montant est calculé en euros et la facture reste valable 60 minutes. Première fois ? Notre page « Payer en Bitcoin » explique tout en 3 étapes (Revolut, Kraken ou Coinbase).");
+      faqs.splice(5, 0,
+        ["Que signifie « sur commande » ?", "Le produit est commandé auprès de notre fabricant dès votre paiement. À réception, nous envoyons un échantillon de ce lot chez Janoshik : votre flacon ne part qu'une fois l'analyse validée. Délai total : 3 à 4 semaines."],
+        ["Pourquoi un minimum de flacons sur certains produits ?", "Pour les produits sur commande, chaque lot est acheté et analysé spécialement. Le minimum (2 à 4 flacons selon le produit) permet de lancer ce lot ; il vous fait aussi bénéficier automatiquement de nos remises par quantité (−10 à −20 %)."],
+        ["Comment suivre ma commande ?", "Vous recevez un email à chaque étape : commande reçue, commandée auprès du fabricant, lot en analyse chez Janoshik, analyse validée (avec le lien du rapport), puis expédition avec votre numéro de suivi."]);
+    } else {
+      fix("How long is delivery", "In-stock products ship within 24 h of payment confirmation and arrive in 2–3 days in France. Made-to-order products take 3–4 weeks: the batch is received, then analysed by Janoshik before it ships to you. You get an email at every step, then your tracking number.");
+      fix("How do I pay", "Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for 60 minutes. First time? Our \"Pay with Bitcoin\" page explains everything in 3 steps (Revolut, Kraken or Coinbase).");
+      faqs.splice(5, 0,
+        ["What does \"made to order\" mean?", "The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to Janoshik: your vial only ships once the analysis is approved. Total time: 3–4 weeks."],
+        ["Why is there a minimum on some products?", "Made-to-order products are bought and analysed batch by batch. The minimum (2 to 4 vials depending on the product) lets us launch that batch, and automatically gives you our quantity discounts (−10 to −20%)."],
+        ["How do I track my order?", "You receive an email at every step: order received, ordered from the manufacturer, batch under analysis at Janoshik, analysis approved (with the report link), then shipped with your tracking number."]);
+    }
+  }
   return (
     <section className="sec" style={{ paddingTop: 56 }}>
       <div className="wrap">
@@ -3574,6 +3302,15 @@ const FAQPage = ({ lang }) => {
             </div>
           ))}
         </div>
+        {go && (
+          <div className="help-cta">
+            <div>
+              <div className="pcard-name" style={{ margin: 0 }}>{FR ? "Une autre question ?" : "Another question?"}</div>
+              <p className="muted" style={{ margin: "6px 0 0", fontSize: 14.5 }}>{FR ? "Écrivez-nous : réponse sous un jour ouvré." : "Write to us: reply within one business day."}</p>
+            </div>
+            <button className="btn btn-ink" onClick={() => go("contact")}>{FR ? "Nous contacter" : "Contact us"}</button>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -3684,6 +3421,7 @@ const ContactPage = ({ lang }) => {
             ))}
           </div>
 
+          {!CONFIG.BTC_ON && (
           <div className="sheet" style={{ maxWidth: 640, marginTop: 8 }}>
             <div className="eyebrow" style={{ marginBottom: 6 }}>{FR ? "Paiement par virement bancaire" : "Payment by bank transfer"}</div>
             <div style={{ fontFamily: "var(--serif)", fontSize: 24, marginBottom: 14 }}>{CONFIG.BANK.trading}</div>
@@ -3700,6 +3438,7 @@ const ContactPage = ({ lang }) => {
               {FR ? "Le titulaire légal doit correspondre au nom indiqué par votre banque lors du virement (obligation réglementaire de vérification du bénéficiaire)." : "The legal holder name must match what your bank shows when you initiate the transfer (mandatory beneficiary verification requirement)."}
             </p>
           </div>
+          )}
         </div>
       </div>
     </section>
@@ -4018,6 +3757,146 @@ const BOT_KB = {
      "L'afamélanotide est autorisé sous forme d'implant (marque Scenesse) pour une indication précise (protoporphyrie érythropoïétique) dans l'UE et aux États-Unis. Le produit Novalyx est un composé de recherche, pas ce médicament."],
     ["Synthetic analogue of α-MSH, known as afamelanotide ([Nle4, D-Phe7]-α-MSH), an agonist of the MC1R receptor.",
      "Afamelanotide is authorised as an implant (brand Scenesse) for a specific indication (erythropoietic protoporphyria) in the EU and the United States. The Novalyx product is a research compound, not that medicine."]),
+  novalyxformula08semaxselank: K(["formula 08", "formule 08", "semax selank", "semax + selank", "selank semax"],
+    ["Mélange de deux heptapeptides : le Semax, analogue du fragment ACTH(4-10), et le Selank, analogue de la tuftsine. Chacun est étudié pour ses effets sur la neuromodulation.",
+     "Le Semax et le Selank sont autorisés comme médicaments en Russie (voie nasale) ; ni l'un ni l'autre n'est autorisé dans l'Union européenne ou aux États-Unis."],
+    ["Blend of two heptapeptides: Semax, an analogue of the ACTH(4-10) fragment, and Selank, an analogue of tuftsin. Each is studied for its neuromodulatory effects.",
+     "Semax and Selank are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States."]),
+  novalyxformula09glp3rtcagri: K(["formula 09", "formule 09", "glp-3rt cagrilintide", "retatrutide cagrilintide", "reta cagri"],
+    ["Mélange de GLP-3RT (agoniste des récepteurs GLP-1, GIP et glucagon) et de cagrilintide (analogue de l'amyline à longue durée d'action), deux molécules en développement clinique.",
+     "Les deux composants sont des molécules expérimentales, non autorisées comme médicaments."],
+    ["Blend of GLP-3RT (GLP-1, GIP and glucagon receptor agonist) and cagrilintide (long-acting amylin analogue), two molecules in clinical development.",
+     "Both components are investigational molecules, not authorised as medicines."]),
+  dihexa: K(["dihexa", "pnb-0408"],
+    ["Petit peptide dérivé de l'angiotensine IV, étudié dans des modèles précliniques pour son action sur la voie HGF/c-Met et la formation de synapses.",
+     "Composé de recherche préclinique ; aucune autorisation de médicament."],
+    ["Small peptide derived from angiotensin IV, studied in preclinical models for its action on the HGF/c-Met pathway and synapse formation.",
+     "Preclinical research compound; no medicine authorisation."]),
+  pe2228: K(["pe-22-28", "pe 22-28", "pe2228", "pe 22 28"],
+    ["Peptide de 7 acides aminés dérivé de la spadine, étudié chez l'animal comme inhibiteur du canal potassique TREK-1.",
+     "Composé de recherche préclinique ; aucune autorisation de médicament."],
+    ["7-amino-acid peptide derived from spadin, studied in animals as an inhibitor of the TREK-1 potassium channel.",
+     "Preclinical research compound; no medicine authorisation."]),
+  adamax: K(["adamax", "adamantyl semax", "adamantyl-semax"],
+    ["Dérivé synthétique du Semax portant un groupement adamantane. La littérature scientifique indépendante à son sujet est encore très limitée.",
+     "Aucune autorisation de médicament, dans aucun pays ; pas de données cliniques publiées."],
+    ["Synthetic derivative of Semax carrying an adamantane group. Independent scientific literature on it is still very limited.",
+     "No medicine authorisation in any country; no published clinical data."]),
+  nasemaxamidate: K(["na-semax", "na semax", "n-acetyl semax", "na-semax amidate", "semax amidate"],
+    ["Variante du Semax acétylée à une extrémité (N-acétyl) et amidée à l'autre, modifications destinées à le rendre plus stable. Peu d'études indépendantes publiées.",
+     "Aucune autorisation de médicament."],
+    ["Semax variant acetylated at one end (N-acetyl) and amidated at the other, modifications intended to make it more stable. Few independent published studies.",
+     "No medicine authorisation."]),
+  naselankamidate: K(["na-selank", "na selank", "n-acetyl selank", "na-selank amidate", "selank amidate"],
+    ["Variante du Selank acétylée à une extrémité (N-acétyl) et amidée à l'autre, modifications destinées à le rendre plus stable. Peu d'études indépendantes publiées.",
+     "Aucune autorisation de médicament."],
+    ["Selank variant acetylated at one end (N-acetyl) and amidated at the other, modifications intended to make it more stable. Few independent published studies.",
+     "No medicine authorisation."]),
+  cardiogen: K(["cardiogen", "ala-glu-asp-arg"],
+    ["Peptide court synthétique (Ala-Glu-Asp-Arg) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu cardiaque. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Ala-Glu-Asp-Arg) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to heart tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  cortagen: K(["cortagen", "ala-glu-asp-pro"],
+    ["Peptide court synthétique (Ala-Glu-Asp-Pro) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu cérébral. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Ala-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to brain tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  pancragen: K(["pancragen", "lys-glu-asp-trp"],
+    ["Peptide court synthétique (Lys-Glu-Asp-Trp) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu pancréatique. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Lys-Glu-Asp-Trp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to pancreas tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  cartalax: K(["cartalax", "ala-glu-asp"],
+    ["Peptide court synthétique (Ala-Glu-Asp) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu cartilagineux. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Ala-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to cartilage tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  chonluten: K(["chonluten", "glu-asp-gly"],
+    ["Peptide court synthétique (Glu-Asp-Gly) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu bronchique. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to bronchi tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  ovagen: K(["ovagen", "glu-asp-leu"],
+    ["Peptide court synthétique (Glu-Asp-Leu) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu hépatique. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Glu-Asp-Leu) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to liver tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  vesugen: K(["vesugen", "lys-glu-asp"],
+    ["Peptide court synthétique (Lys-Glu-Asp) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu vasculaire. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Lys-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to blood vessels tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  testagen: K(["testagen", "lys-glu-asp-gly"],
+    ["Peptide court synthétique (Lys-Glu-Asp-Gly) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu testiculaire. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Lys-Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to testes tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  prostamax: K(["prostamax", "lys-glu-asp-pro"],
+    ["Peptide court synthétique (Lys-Glu-Asp-Pro) issu des travaux de V. Khavinson sur les « biorégulateurs » (Institut de biorégulation et de gérontologie de Saint-Pétersbourg), étudié en lien avec le tissu prostatique. Les données publiées proviennent surtout de cette équipe.",
+     "Aucune autorisation de médicament dans l'Union européenne ni aux États-Unis."],
+    ["Short synthetic peptide (Lys-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to prostate tissue. Published data come mostly from this team.",
+     "No medicine authorisation in the European Union or the United States."]),
+  foxo4dri: K(["foxo4", "foxo4-dri", "foxo4 dri", "foxo 4"],
+    ["Peptide « D-rétro-inverso » conçu pour perturber l'interaction entre les protéines FOXO4 et p53, étudié dans des modèles de cellules sénescentes (recherche dite sénolytique).",
+     "Composé de recherche préclinique ; aucune autorisation de médicament."],
+    ["\"D-retro-inverso\" peptide designed to disrupt the interaction between the FOXO4 and p53 proteins, studied in senescent-cell models (so-called senolytic research).",
+     "Preclinical research compound; no medicine authorisation."]),
+  humanin: K(["humanin", "hn"],
+    ["Peptide de 24 acides aminés codé par l'ADN mitochondrial, étudié pour ses voies de signalisation cytoprotectrices dans des modèles cellulaires et animaux.",
+     "Peptide de recherche ; aucune autorisation de médicament."],
+    ["24-amino-acid peptide encoded by mitochondrial DNA, studied for its cytoprotective signalling pathways in cell and animal models.",
+     "Research peptide; no medicine authorisation."]),
+  aicar: K(["aicar", "acadesine", "acadésine"],
+    ["Nucléoside (et non un peptide) utilisé en recherche comme activateur de l'AMPK, une enzyme clé du métabolisme énergétique cellulaire.",
+     "Réactif de recherche ; aucune autorisation de médicament. Figure sur la liste des substances interdites de l'Agence mondiale antidopage."],
+    ["Nucleoside (not a peptide) used in research as an activator of AMPK, a key enzyme of cellular energy metabolism.",
+     "Research reagent; no medicine authorisation. Listed on the World Anti-Doping Agency prohibited list."]),
+  cjc1295dac: K(["cjc-1295 dac", "cjc 1295 dac", "cjc with dac", "cjc-1295 with dac", "cjc avec dac"],
+    ["Analogue de la GHRH(1-29) muni d'un « DAC » (complexe d'affinité) qui se lie à l'albumine et allonge fortement sa durée d'action. Son développement clinique a été arrêté au milieu des années 2000.",
+     "Aucune autorisation de médicament ; développement clinique interrompu."],
+    ["GHRH(1-29) analogue fitted with a \"DAC\" (drug affinity complex) that binds albumin and greatly extends its duration of action. Its clinical development was stopped in the mid-2000s.",
+     "No medicine authorisation; clinical development discontinued."]),
+  pegmgf: K(["peg-mgf", "peg mgf", "pegmgf", "mgf"],
+    ["Forme pégylée du peptide MGF (« mechano growth factor »), issu d'un variant d'épissage de l'IGF-1, étudié dans des modèles de cellules musculaires.",
+     "Peptide de recherche ; aucune autorisation de médicament."],
+    ["PEGylated form of the MGF peptide (\"mechano growth factor\"), derived from an IGF-1 splice variant, studied in muscle-cell models.",
+     "Research peptide; no medicine authorisation."]),
+  hghfrag176191: K(["hgh fragment", "hgh frag", "fragment 176-191", "frag 176-191", "176-191"],
+    ["Fragment C-terminal (acides aminés 176 à 191) de l'hormone de croissance humaine, étudié pour son activité sur le métabolisme des graisses sans les effets de croissance de l'hormone entière. L'AOD-9604 en est une version modifiée.",
+     "Peptide de recherche ; aucune autorisation de médicament."],
+    ["C-terminal fragment (amino acids 176 to 191) of human growth hormone, studied for its activity on fat metabolism without the growth effects of the whole hormone. AOD-9604 is a modified version of it.",
+     "Research peptide; no medicine authorisation."]),
+  ace031: K(["ace-031", "ace 031", "ace031", "ramatercept"],
+    ["Protéine de fusion (récepteur soluble de l'activine de type IIB couplé à un fragment d'anticorps) qui capte la myostatine et des molécules apparentées. Ses essais cliniques ont été arrêtés en 2011.",
+     "Aucune autorisation de médicament ; développement clinique arrêté."],
+    ["Fusion protein (soluble activin type IIB receptor coupled to an antibody fragment) that captures myostatin and related molecules. Its clinical trials were stopped in 2011.",
+     "No medicine authorisation; clinical development stopped."]),
+  eloralintide: K(["eloralintide", "éloralintide"],
+    ["Agoniste sélectif du récepteur de l'amyline à longue durée d'action, en développement clinique.",
+     "Molécule expérimentale en essais cliniques ; non autorisée comme médicament."],
+    ["Long-acting selective amylin receptor agonist, in clinical development.",
+     "Investigational molecule in clinical trials; not authorised as a medicine."]),
+  adipotide: K(["adipotide", "ftpp"],
+    ["Peptidomimétique conçu pour cibler la prohibitine des vaisseaux sanguins du tissu adipeux blanc, étudié chez le rongeur et le primate.",
+     "Composé expérimental ; aucune autorisation de médicament."],
+    ["Peptidomimetic designed to target prohibitin on the blood vessels of white adipose tissue, studied in rodents and primates.",
+     "Experimental compound; no medicine authorisation."]),
+  ahkcu: K(["ahk-cu", "ahk cu", "ahkcu", "ahk copper"],
+    ["Complexe de cuivre du tripeptide Ala-His-Lys, utilisé comme ingrédient cosmétique et étudié dans des modèles de cellules de la peau et du follicule pileux.",
+     "Ingrédient cosmétique ; aucun statut de médicament."],
+    ["Copper complex of the tripeptide Ala-His-Lys, used as a cosmetic ingredient and studied in skin and hair-follicle cell models.",
+     "Cosmetic ingredient; no medicine status."]),
+  matrixyl: K(["matrixyl", "palmitoyl pentapeptide-4", "palmitoyl pentapeptide", "pal-kttks"],
+    ["Pentapeptide KTTKS couplé à un acide palmitique, ingrédient cosmétique étudié pour la synthèse du collagène dans des modèles cutanés.",
+     "Ingrédient cosmétique ; aucun statut de médicament."],
+    ["KTTKS pentapeptide coupled to palmitic acid, a cosmetic ingredient studied for collagen synthesis in skin models.",
+     "Cosmetic ingredient; no medicine status."]),
+  aceticwater: K(["acetic acid water", "eau acidifiée", "eau acide acétique", "acide acétique", "acetic water"],
+    ["Eau stérile contenant 0,6 % d'acide acétique, utilisée comme solvant de reconstitution pour les peptides peu solubles à pH neutre.",
+     "Réactif de laboratoire."],
+    ["Sterile water containing 0.6% acetic acid, used as a reconstitution solvent for peptides that dissolve poorly at neutral pH.",
+     "Laboratory reagent."]),
   snap8: K(["snap-8", "snap 8", "snap8", "acetyl octapeptide-3", "acetyl octapeptide 3"],
     ["Octapeptide acétylé (acétyl octapeptide-3) utilisé comme ingrédient cosmétique ; sa séquence reproduit une partie de la protéine SNAP-25, impliquée dans le complexe SNARE de libération des neurotransmetteurs.",
      "Ingrédient cosmétique (usage topique) ; les données d'efficacité viennent surtout des fabricants. Aucun statut de médicament."],
@@ -4068,11 +3947,6 @@ const BOT_KB = {
      "Mélange propriétaire de composés de recherche ; ce n'est pas un médicament. Les statuts de ses composants sont ceux décrits dans leurs fiches."],
     ["Novalyx research blend of two compounds: cagrilintide + semaglutide, in two sizes (2.5 mg + 2.5 mg; 5 mg + 5 mg). See the Cagrilintide and Semaglutide entries.",
      "Proprietary blend of research compounds; it is not a medicine. The status of its components is as described in their own entries."]),
-  novalyxformula08cjcipa: K(["formula 08", "formula 8", "formule 08", "formule 8", "f08", "f8"],
-    ["Mélange de recherche Novalyx de deux composés : CJC-1295 + ipamoréline (5 mg + 5 mg). Voir leurs fiches pour la nature de chaque composant.",
-     "Mélange propriétaire de composés de recherche ; aucun statut de médicament. Les statuts de ses composants sont ceux décrits dans leurs fiches."],
-    ["Novalyx research blend of two compounds: CJC-1295 + ipamorelin (5 mg + 5 mg). See their entries for the nature of each component.",
-     "Proprietary blend of research compounds; no medicine status. The status of its components is as described in their own entries."]),
   "bac-water": K(["bacteriostatic water", "bac water", "bac-water", "eau bacteriostatique", "eau bac", "bacteriostatique"],
     ["Eau stérile contenant 0,9 % d'alcool benzylique comme agent bactériostatique, destinée à la reconstitution en laboratoire de composés lyophilisés, en flacon multi-prélèvement.",
      "Solvant de laboratoire : il ne contient aucune substance active."],
@@ -4160,10 +4034,12 @@ const botStorage = (p, lang) => {
 };
 
 const botPriceLine = (p, cur, lang) => {
-  const sizes = p.variants.map((v) => v.size + " : " + price(v.price, cur, lang)).join("\n");
+  const sizes = visVariants(p).map((v) => v.size + " : " + price(v.price, cur, lang)).join("\n");
   const avail = isAvail(p)
     ? (lang === "FR" ? "Disponible à l'achat en ligne." : "Available to order online.")
-    : (lang === "FR" ? "Pas encore disponible à l'achat en ligne (bientôt)." : "Not yet available to order online (coming soon).");
+    : CONFIG.BTC_ON
+      ? (lang === "FR" ? "Disponible sur commande : 3 à 4 semaines, lot analysé par Janoshik avant expédition, suivi à chaque étape." : "Available to order: 3–4 weeks, batch analysed by Janoshik before shipping, tracked at every step.")
+      : (lang === "FR" ? "Pas encore disponible à l'achat en ligne (bientôt)." : "Not yet available to order online (coming soon).");
   return p.name + "\n" + sizes + "\n\n" + avail;
 };
 
@@ -4178,11 +4054,11 @@ const botCatalogue = (lang) => {
 const botAnswer = (text, ctx) => {
   const lang = ctx.lang, cur = ctx.cur, FR = lang === "FR";
   const t = botNorm(text);
-  const note = BOT_NOTE[lang];
+  const note = BOT_NOTE[lang] || BOT_NOTE.EN; // allemand et néerlandais : texte anglais traduit à l'affichage
   if (!t) return botGreeting(lang);
 
   // 1) refus : usage humain / dose / conseil médical
-  if (botHas(t, BOT_BLOCK)) return BOT_REFUSE[lang];
+  if (botHas(t, BOT_BLOCK)) return BOT_REFUSE[lang] || BOT_REFUSE.EN;
 
   const p = botFindProduct(text);
   const email = CONFIG.EMAIL;
@@ -4332,6 +4208,122 @@ const Chatbot = ({ lang, cur }) => {
 };
 
 /* ─── SEO : titre, description, aperçu de partage, favicon (par page et par langue) ───── */
+/* ─── Page « Payer en Bitcoin » (affichée quand CONFIG.BTC_ON est vrai) ─── */
+const BtcIco = ({ d, c = "var(--green)", s = 16 }) => (
+  <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" dangerouslySetInnerHTML={{ __html: d }} />
+);
+const ICO = {
+  bolt: '<path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"/>',
+  eye: '<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><path d="M4 4l16 16"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  alert: '<path d="M12 4l9 16H3L12 4z"/><path d="M12 10v4.5"/><path d="M12 17.5v.5"/>',
+  mail: '<rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M4 7l8 6 8-6"/>',
+};
+const BitcoinGuide = ({ lang, go }) => {
+  const FR = lang === "FR";
+  const T = (fr, en) => (FR ? fr : en);
+  const card = { display: "flex", flexDirection: "column", gap: 14, padding: 22, border: "1px solid var(--line)", borderRadius: 18, background: "var(--surface, #fff)" };
+  const head = (n, title, dur) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+        <span style={{ fontFamily: "var(--serif)", fontSize: 44, lineHeight: 0.9, color: "var(--green)" }}>{n}</span>
+        <span style={{ fontFamily: "var(--serif)", fontSize: 24, lineHeight: 1.15 }}>{title}</span>
+      </div>
+      <span className="mono" style={{ flexShrink: 0, marginTop: 4, padding: "4px 9px", borderRadius: 999, background: "#E8F1EA", fontSize: 11, color: "var(--green)" }}>{dur}</span>
+    </div>
+  );
+  const p = { fontSize: 15, lineHeight: 1.6, color: "var(--ink2)", margin: 0 };
+  const after = FR
+    ? [["Paiement envoyé", "depuis votre application"], ["Paiement confirmé", "en général en 10 à 60 minutes"], ["Email de confirmation", "votre commande est validée"],
+       ["Produit sur commande ?", "lot reçu puis analysé par Janoshik : un email à chaque étape"], ["Expédition", "avec votre numéro de suivi"]]
+    : [["Payment sent", "from your app"], ["Payment confirmed", "usually within 10 to 60 minutes"], ["Confirmation email", "your order is approved"],
+       ["Made-to-order product?", "batch received, then analysed by Janoshik: an email at every step"], ["Shipped", "with your tracking number"]];
+  const faq = FR ? [
+    ["J'ai payé un peu moins, à cause des frais.", "Un petit écart, jusqu'à 1 %, est accepté automatiquement. S'il manque davantage, la facture vous indique le complément à envoyer."],
+    ["Ma facture a expiré.", "Repassez simplement la commande. Si vous aviez déjà envoyé le paiement, écrivez-nous avec l'heure de l'envoi : nous le retrouverons."],
+    ["Pourquoi le Bitcoin ?", "C'est un paiement direct, sans intermédiaire bancaire. Sur votre relevé de banque n'apparaît que l'achat de Bitcoin chez votre plateforme. Le montant est toujours calculé en euros."],
+    ["Combien de temps prend la confirmation ?", "En général de 10 à 60 minutes, selon l'activité du réseau Bitcoin. Vous recevez un email dès que c'est confirmé."],
+  ] : [
+    ["I paid slightly less because of fees.", "A small difference, up to 1%, is accepted automatically. If more is missing, the invoice shows the remaining amount to send."],
+    ["My invoice expired.", "Simply place the order again. If you had already sent the payment, email us with the time it was sent: we will find it."],
+    ["Why Bitcoin?", "It's a direct payment with no banking intermediary. Your bank statement only shows the Bitcoin purchase on your platform. The amount is always calculated in euros."],
+    ["How long does confirmation take?", "Usually 10 to 60 minutes, depending on Bitcoin network activity. You get an email as soon as it's confirmed."],
+  ];
+  return (
+    <section className="wrap" style={{ padding: "44px 20px 72px", maxWidth: 1120 }}>
+      <div className="eyebrow" style={{ color: "var(--green)" }}>{T("Paiement Bitcoin", "Bitcoin payment")}</div>
+      <h1 className="display" style={{ fontSize: "clamp(38px,6vw,64px)", margin: "10px 0 0", lineHeight: 1.04 }}>{T("Payer en Bitcoin, en trois étapes.", "Pay with Bitcoin in three steps.")}</h1>
+      <p className="lead" style={{ marginTop: 14, maxWidth: 680 }}>{T("Si vous savez faire un achat en ligne, vous savez payer en Bitcoin. Comptez ", "If you can shop online, you can pay with Bitcoin. Allow ")}<b>{T("10 minutes", "10 minutes")}</b>{T(" la première fois, ", " the first time, ")}<b>{T("2 minutes", "2 minutes")}</b>{T(" ensuite.", " after that.")}</p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 }}>
+        {[["bolt", T("Paiement direct", "Direct payment")], ["eye", T("Discret", "Discreet")], ["clock", T("Confirmé en 10 à 60 min", "Confirmed in 10–60 min")]].map(([i, t]) => (
+          <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", border: "1px solid var(--line)", background: "var(--surface, #fff)", borderRadius: 999, fontSize: 13, color: "var(--ink2)" }}><BtcIco d={ICO[i]} s={15} />{t}</span>
+        ))}
+      </div>
+      <div className="btc-steps" style={{ display: "grid", gap: 18, marginTop: 28 }}>
+        <div style={card}>
+          {head("01", T("Achetez du Bitcoin", "Buy Bitcoin"), "~5 min")}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 18, borderRadius: 14, background: "var(--ink)", color: "#fff" }}>
+            <span className="mono" style={{ fontSize: 11, letterSpacing: ".14em", color: "#7FCB68" }}>{T("LE PLUS RAPIDE", "THE FASTEST WAY")}</span>
+            <span style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{T("Vous avez Revolut ?", "Got Revolut?")}</span>
+            <span style={{ fontSize: 14.5, lineHeight: 1.6, color: "#D6DEE7" }}>{T("Onglet ", "Open the ")}<b style={{ color: "#fff" }}>Crypto</b>{T(", puis ", " tab, then ")}<b style={{ color: "#fff" }}>Bitcoin</b>{T(". Achetez le montant de votre commande, plus 2 à 3 € pour les frais d'envoi.", ". Buy your order amount, plus €2–3 for sending fees.")}</span>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "14px 16px", borderRadius: 12, background: "#FBF3E4", color: "#7A4E0E", fontSize: 14, lineHeight: 1.55 }}>
+            <BtcIco d={ICO.alert} c="#7A4E0E" s={18} />
+            <span><b>{T("Sinon : Kraken ou Coinbase.", "Otherwise: Kraken or Coinbase.")}</b> {T("À la première inscription, la plateforme vérifie votre identité : de quelques minutes à un jour. Faites-le avant de commander.", "On first sign-up the platform verifies your identity: from a few minutes to a day. Do it before ordering.")}</span>
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div style={card}>
+            {head("02", T("Passez votre commande", "Place your order"), "1 min")}
+            <p style={p}>{T("Au panier, choisissez ", "In the cart, choose ")}<b style={{ color: "var(--ink)" }}>{T("« Payer en Bitcoin »", "“Pay with Bitcoin”")}</b>{T(". Une facture s'affiche avec un QR code et le montant exact, valable 60 minutes.", ". An invoice appears with a QR code and the exact amount, valid for 60 minutes.")}</p>
+          </div>
+          <div style={card}>
+            {head("03", T("Envoyez le paiement", "Send the payment"), "1 min")}
+            <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+              {(FR ? ["Dans votre appli, touchez « Envoyer » ou « Retirer ».", "Scannez le QR code de la facture.", "Vérifiez que le montant reçu correspond.", "Validez. C'est tout."]
+                   : ["In your app, tap “Send” or “Withdraw”.", "Scan the invoice QR code.", "Check that the amount received matches.", "Confirm. That's it."]).map(t => (
+                <li key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start", ...p }}><span style={{ marginTop: 3 }}><BtcIco d={ICO.check} s={17} /></span><span>{t}</span></li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div className="btc-after" style={{ display: "grid", gap: 34, marginTop: 42 }}>
+        <div>
+          <h2 className="h3" style={{ fontFamily: "var(--serif)", fontSize: 28, margin: "0 0 16px" }}>{T("Et ensuite ?", "What happens next?")}</h2>
+          {after.map(([t, d], i) => (
+            <div key={t} style={{ display: "flex", gap: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid var(--green)", background: i < 2 ? "var(--green)" : "var(--surface, #fff)", flexShrink: 0 }} />
+                {i < after.length - 1 && <div style={{ width: 2, flexGrow: 1, minHeight: 28, background: "var(--line)" }} />}
+              </div>
+              <div style={{ paddingBottom: i < after.length - 1 ? 14 : 0 }}><b style={{ display: "block", fontSize: 15 }}>{t}</b><span style={{ fontSize: 13.5, color: "var(--mute)" }}>{d}</span></div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <h2 className="h3" style={{ fontFamily: "var(--serif)", fontSize: 28, margin: "0 0 10px" }}>{T("Questions fréquentes", "Frequently asked questions")}</h2>
+          {faq.map(([q, a], i) => (
+            <details key={q} open={i === 0} style={{ borderTop: "1px solid var(--line)", padding: "14px 0" }}>
+              <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: 15 }}>{q}</summary>
+              <p style={{ ...p, marginTop: 8 }}>{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 22, borderRadius: 18, background: "#E8F1EA", marginTop: 36, maxWidth: 560 }}>
+        <span style={{ fontFamily: "var(--serif)", fontSize: 22 }}>{T("Bloqué à une étape ?", "Stuck at a step?")}</span>
+        <p style={p}>{T("Écrivez-nous, nous vous guidons pas à pas, la première fois comme les suivantes.", "Email us and we'll guide you step by step, the first time and every time after.")}</p>
+        <a className="btn btn-ink" href={"mailto:" + CONFIG.EMAIL} style={{ justifyContent: "center", textDecoration: "none" }}><BtcIco d={ICO.mail} c="#fff" s={17} />&nbsp;{CONFIG.EMAIL}</a>
+      </div>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 22 }}>
+        <button className="btn btn-ink" onClick={() => go("products", "All")}>{T("Voir le catalogue", "View catalogue")} →</button>
+      </div>
+    </section>
+  );
+};
+
 const getSeo = (page, lang) => {
   const FR = lang === "FR";
   const n = PRODUCTS.length;
@@ -4346,6 +4338,8 @@ const getSeo = (page, lang) => {
                  : ["Compound notes | Novalyx Research", "Factual, scientific information on the compounds in the catalogue. No health claims. Research use only."],
     about: FR ? ["Notre méthode | Novalyx Research", "Analyses indépendantes, rapports vérifiables et traçabilité des lots : la méthode de Novalyx Research, entreprise française basée à Paris."]
               : ["Our method | Novalyx Research", "Independent analyses, verifiable reports and batch traceability: the method of Novalyx Research, a French company based in Paris."],
+    bitcoin: FR ? ["Payer en Bitcoin | Novalyx Research", "Comment payer votre commande en Bitcoin en trois étapes : acheter du Bitcoin, passer commande, envoyer le paiement. Montant facturé en euros."]
+                : ["Pay with Bitcoin | Novalyx Research", "How to pay for your order with Bitcoin in three steps: buy Bitcoin, place your order, send the payment. Billed in euros."],
     faq: FR ? ["Questions fréquentes | Novalyx Research", "Livraison, paiement, analyses COA, conservation et conformité : réponses aux questions fréquentes sur Novalyx Research."]
             : ["Frequently asked questions | Novalyx Research", "Shipping, payment, COA analyses, storage and compliance: answers to frequently asked questions about Novalyx Research."],
     ambassador: FR ? ["Programme Ambassadeurs | Novalyx Research", "Rejoignez le programme ambassadeurs de Novalyx Research : un code personnel pour votre audience et une commission sur les ventes générées."]
@@ -4447,26 +4441,61 @@ export default function App() {
 
   useEffect(() => {
     try {
-      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).filter(i => AVAILABLE.includes(i.id)));
+      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).filter(i => CONFIG.BTC_ON || AVAILABLE.includes(i.id)));
       const k = localStorage.getItem("novalyx_currency"); if (k && CURRENCIES[k]) setCur(k);
-      const l = localStorage.getItem("novalyx_lang"); if (l === "FR" || l === "EN") setLang(l);
+      const l = localStorage.getItem("novalyx_lang"); if (LANGS.includes(l)) setLang(l);
       if (sessionStorage.getItem("novalyx_gate") === "1") setAgeOk(true);
     } catch (e) {}
   }, []);
   useEffect(() => { try { localStorage.setItem("novalyx_cart", JSON.stringify(cart)); } catch (e) {} }, [cart]);
   useEffect(() => { try { localStorage.setItem("novalyx_currency", cur); } catch (e) {} }, [cur]);
-  useEffect(() => { try { localStorage.setItem("novalyx_lang", lang); } catch (e) {} ; document.documentElement.lang = lang === "FR" ? "fr" : "en"; }, [lang]);
+  useEffect(() => { try { localStorage.setItem("novalyx_lang", lang); } catch (e) {} ; document.documentElement.lang = lang.toLowerCase(); }, [lang]);
+  useDomTranslate(lang);
+  useReveal(CONFIG.THEME === "modern");
 
-  const go = (p, filter) => { setPage(p); if (filter !== undefined) setProductFilter(filter); window.scrollTo(0, 0); };
-  const addToCart = (p, v, q = 1) => {
-    if (!isAvail(p)) return;
+  const go = (p, filter) => { setPage(p); setProduct(null); if (filter !== undefined) setProductFilter(filter); pushPath(ROUTES[p] || "/"); window.scrollTo(0, 0); };
+  const openProduct = (prod) => { setProduct(prod); if (prod) pushPath("/produit/" + encodeURIComponent(prod.id), false, { nvx: 1, modal: 1 }); };
+  // Fermer une fiche ouverte depuis le site = revenir en arrière (pas de doublon dans l'historique) ;
+  // fiche ouverte par un lien direct = remplacer l'adresse par celle de la page.
+  const closeProduct = () => {
+    setProduct(null);
+    if (ROUTING_OK && window.history.state && window.history.state.modal) { try { window.history.back(); return; } catch (e) {} }
+    pushPath(ROUTES[page] || "/", true);
+  };
+  // Adresse ouverte directement (lien partagé) + bouton « retour » du navigateur
+  useEffect(() => {
+    if (!ROUTING_OK) return;
+    const apply = () => { const r = parsePath(window.location.pathname); setPage(r.page); setProduct(r.product); };
+    apply();
+    window.addEventListener("popstate", apply);
+    return () => window.removeEventListener("popstate", apply);
+  }, []);
+  // Lien « Comment payer en Bitcoin » du panier
+  useEffect(() => {
+    const h = (e) => go(e.detail);
+    window.addEventListener("nvx-go", h);
+    return () => window.removeEventListener("nvx-go", h);
+  }, []);
+  // Retour de BTCPay après paiement : ?paid=NVX-XXXXXX
+  const [paidRef, setPaidRef] = useState(null);
+  useEffect(() => {
+    try {
+      const ref = new URLSearchParams(window.location.search).get("paid");
+      if (ref && /^NVX-[A-Z0-9]{6}$/.test(ref)) {
+        setPaidRef(ref); setCart([]);
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    } catch (e) {}
+  }, []);
+  const addToCart = (p, v, q = 1, open = true) => {
+    if (!canBuy(p)) return;
     const lineId = `${p.id}-${v.size}`;
     setCart(prev => {
       const ex = prev.find(i => i.lineId === lineId);
       if (ex) return prev.map(i => i.lineId === lineId ? { ...i, qty: i.qty + q } : i);
-      return [...prev, { lineId, id: p.id, name: p.name, size: v.size, batch: v.batch, price: v.price, stripeLink: getStripeLink(p.id, v.size), qty: q }];
+      return [...prev, { lineId, id: p.id, name: p.name, size: v.size, price: v.price, stripeLink: getStripeLink(p.id, v.size), qty: q }];
     });
-    setCartOpen(true);
+    if (open) setCartOpen(true);
   };
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
   const FR = lang === "FR";
@@ -4479,23 +4508,34 @@ export default function App() {
   };
 
   const pages = {
-    home: <Home go={go} cur={cur} lang={lang} openProduct={setProduct} />,
-    products: <ProductsPage cur={cur} lang={lang} openProduct={setProduct} initialFilter={productFilter} setProductFilter={setProductFilter} />,
-    coa: <COAPage lang={lang} openProduct={setProduct} />,
-    learning: <LearningPage lang={lang} />,
+    home: <Home go={go} cur={cur} lang={lang} openProduct={openProduct} />,
+    products: <ProductsPage cur={cur} lang={lang} openProduct={openProduct} initialFilter={productFilter} setProductFilter={setProductFilter} />,
+    coa: <COAPage lang={lang} openProduct={openProduct} />,
+    learning: <LearningPage lang={lang} openProduct={openProduct} />,
     about: <AboutPage go={go} lang={lang} />,
-    faq: <FAQPage lang={lang} />,
+    faq: <FAQPage lang={lang} go={go} />,
     ambassador: <AmbassadorPage lang={lang} />,
     contact: <ContactPage lang={lang} />,
     shipping: <ShippingPage lang={lang} />,
     privacy: <PrivacyPage lang={lang} />,
     terms: <TermsPage lang={lang} />,
     disclaimer: <DisclaimerPage lang={lang} />,
+    bitcoin: <BitcoinGuide lang={lang} go={go} />,
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
+    <div key={lang} style={{ minHeight: "100vh", background: "var(--paper)" }}>
       <style>{CSS}</style>
+      {CONFIG.THEME === "modern" && <style>{MODERN_CSS}</style>}
+      {paidRef && (
+        <div className="paid-banner" role="status">
+          <div>
+            <b>{lang === "FR" ? "Merci pour votre commande !" : "Thank you for your order!"}</b>
+            <span> {lang === "FR" ? `Commande ${paidRef} : votre paiement est en cours de confirmation sur le réseau Bitcoin (10 à 60 minutes). Vous recevrez un email dès que c'est confirmé.` : `Order ${paidRef}: your payment is being confirmed on the Bitcoin network (10 to 60 minutes). You will receive an email once it's confirmed.`}</span>
+          </div>
+          <button className="x" onClick={() => setPaidRef(null)} aria-label={lang === "FR" ? "Fermer" : "Close"}>✕</button>
+        </div>
+      )}
 
       {!ageOk && (
         <div className={`gate${gateClosing ? " closing" : ""}`}>
@@ -4521,18 +4561,43 @@ export default function App() {
             <button className="btn btn-ink" style={{ width: "100%", marginTop: 8 }} disabled={!gateReady} onClick={enter}>{t(lang, "age_enter")}</button>
             <p className="muted gate-foot" style={{ fontSize: 10, marginTop: 14, lineHeight: 1.6, textAlign: "center" }}>{t(lang, "age_footer")}</p>
             <div className="lang" style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
-              {["FR", "EN"].map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)}>{l}</button>)}
+              {LANGS.map(l => <button key={l} className={lang === l ? "on" : ""} onClick={() => setLang(l)} lang={l.toLowerCase()} aria-label={LANG_NAMES[l]}>{l}</button>)}
             </div>
           </div>
         </div>
       )}
 
-      <div className="notice">{FR ? "Produits destinés exclusivement à la recherche en laboratoire — pas pour consommation humaine ou animale" : "Products for laboratory research use only — not for human or animal consumption"}</div>
+      <div className="notice ticker" role="note" aria-label={FR ? "Produits destinés exclusivement à la recherche en laboratoire, pas pour usage humain ou vétérinaire" : "Products for laboratory research use only, not for human or veterinary use"}>
+        <div className="ticker-static">{FR ? "Produits destinés exclusivement à la recherche en laboratoire — pas pour usage humain ou vétérinaire" : "Products for laboratory research use only — not for human or veterinary use"}</div>
+        <div className="ticker-track" aria-hidden="true">
+          {[0, 1].map(k => (
+            <span className="ticker-set" key={k}>
+              {(FR ? [
+                "Usage recherche uniquement — pas pour usage humain ou vétérinaire",
+                "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
+                "Livraison offerte dès 100 €",
+                CONFIG.BTC_ON ? "Jusqu'à −20 % dès 2 flacons" : "Rapports d'analyse vérifiables",
+                CONFIG.BTC_ON ? "Paiement Bitcoin, facturé en euros" : "Paiement sécurisé",
+                "En stock : expédié sous 24 h",
+                "Entreprise française · Paris",
+              ] : [
+                "Research use only — not for human or veterinary use",
+                "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
+                "Free shipping from €100",
+                CONFIG.BTC_ON ? "Up to −20% from 2 vials" : "Verifiable analysis reports",
+                CONFIG.BTC_ON ? "Bitcoin payment, billed in euros" : "Secure payment",
+                "In stock: ships within 24 h",
+                "French company · Paris",
+              ]).map((m, i) => <span className="ticker-item" key={i}>{m}</span>)}
+            </span>
+          ))}
+        </div>
+      </div>
       <Nav page={page} go={go} cur={cur} setCur={setCur} cartCount={cartCount} openCart={() => setCartOpen(true)} lang={lang} setLang={setLang} />
       <main className="fade" key={`${page}-${lang}`}>{pages[page] || pages.home}</main>
       <Footer go={go} lang={lang} onCookies={() => setCookieOpen(true)} />
 
-      {product && <ProductModal p={product} cur={cur} lang={lang} onAdd={addToCart} onClose={() => setProduct(null)} />}
+      {product && <ProductModal p={product} cur={cur} lang={lang} onAdd={addToCart} onOpenCart={() => { closeProduct(); setCartOpen(true); }} onClose={closeProduct} />}
       {cartOpen && <Cart cart={cart} cur={cur} lang={lang} onClose={() => setCartOpen(false)} onRemove={id => setCart(c => c.filter(i => i.lineId !== id))} />}
       {ageOk && consent !== undefined && (consent === null || cookieOpen) && (
         <CookieBanner lang={lang} initial={consent} onSave={saveConsent} go={(p) => { setCookieOpen(false); go(p); }} />
@@ -4541,3 +4606,1479 @@ export default function App() {
     </div>
   );
 }
+
+/* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
+/* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
+const XL_DE = {
+"Help": "Hilfe",
+"Another question?": "Noch eine Frage?",
+"Write to us: reply within one business day.": "Schreiben Sie uns: Antwort innerhalb eines Werktags.",
+"Contact us": "Kontakt aufnehmen",
+"Add": "Hinzufügen",
+"Buy": "Kaufen",
+"Quick buy": "Schnellkauf",
+"Australia, New Zealand, other countries": "Australien, Neuseeland, andere Länder",
+"DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID {#} MIN": "DIREKTE BITCOIN-ZAHLUNG · ABRECHNUNG IN EURO · RECHNUNG {#} MIN GÜLTIG",
+"Delivery country": "Lieferland",
+"European Union (excl. France)": "Europäische Union (ohne Frankreich)",
+"First time? How to pay with Bitcoin": "Zum ersten Mal? So bezahlen Sie mit Bitcoin",
+"I acknowledge this shipment may be subject to customs inspection and I am responsible for compliance with local regulations.": "Ich nehme zur Kenntnis, dass diese Sendung einer Zollkontrolle unterliegen kann, und bin für die Einhaltung der örtlichen Vorschriften verantwortlich.",
+"I confirm this order is strictly for laboratory research purposes only.": "Ich bestätige, dass diese Bestellung ausschließlich für Laborforschungszwecke bestimmt ist.",
+"In stock · ships within {#} h · {#}–{#} day delivery in France": "Auf Lager · Versand innerhalb von {#} h · Lieferung in {#}–{#} Tagen in Frankreich",
+"Only": "Nur noch",
+"Qty": "Menge",
+"Remove": "Entfernen",
+"Close": "Schließen",
+"Subtotal": "Zwischensumme",
+"Switzerland, United Kingdom": "Schweiz, Vereinigtes Königreich",
+"Total": "Gesamt",
+"United States, Canada": "Vereinigte Staaten, Kanada",
+"away from free shipping": "bis zum kostenlosen Versand",
+"Accept all": "Alle akzeptieren",
+"Customise": "Anpassen",
+"Learn more": "Mehr erfahren",
+"Refuse all": "Alle ablehnen",
+"We use cookies that are essential for the site to work (cart, language). With your consent, we also use audience-measurement and advertising cookies to improve the site and measure our campaigns. You can refuse or change your choice at any time.": "Wir verwenden Cookies, die für das Funktionieren der Website notwendig sind (Warenkorb, Sprache). Mit Ihrer Zustimmung verwenden wir außerdem Cookies zur Reichweitenmessung und für Werbung, um die Website zu verbessern und unsere Kampagnen zu messen. Sie können jederzeit ablehnen oder Ihre Wahl ändern.",
+"A report issued by a third-party laboratory confirming a compound's identity and purity. Our Janoshik reports carry a public verification key at janoshik.com/verify.": "Ein von einem unabhängigen Labor ausgestellter Bericht, der Identität und Reinheit einer Verbindung bestätigt. Unsere Janoshik-Berichte tragen einen öffentlichen Prüfschlüssel unter janoshik.com/verify.",
+"Adult researchers and laboratory professionals acting in compliance with the laws of their jurisdiction.": "Volljährige Forschende und Laborfachleute, die im Einklang mit den Gesetzen ihres Landes handeln.",
+"Before reconstitution: dry, room temperature, away from light, vial sealed. After reconstitution: between {#} and {#} °C (refrigerated).": "Vor der Rekonstitution: trocken, bei Raumtemperatur, lichtgeschützt, Fläschchen versiegelt. Nach der Rekonstitution: zwischen {#} und {#} °C (gekühlt).",
+"Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for {#} minutes. First time? Our \"Pay with Bitcoin\" page explains everything in {#} steps (Revolut, Kraken or Coinbase).": "Nur mit Bitcoin, direkt aus dem Warenkorb. Der Betrag wird in Euro berechnet, und die Rechnung ist {#} Minuten gültig. Zum ersten Mal? Unsere Seite „Mit Bitcoin bezahlen“ erklärt alles in {#} Schritten (Revolut, Kraken oder Coinbase).",
+"Each report states the product and strength analysed. A report covers one specific batch: each new batch is analysed in turn and published here.": "Jeder Bericht nennt das analysierte Produkt und die Dosierung. Ein Bericht gilt für eine bestimmte Charge: Jede neue Charge wird ihrerseits analysiert und hier veröffentlicht.",
+"If a product does not match its report specifications, contact us within {#} days. We review each case and arrange a replacement or refund where appropriate.": "Wenn ein Produkt nicht den Spezifikationen seines Berichts entspricht, kontaktieren Sie uns innerhalb von {#} Tagen. Wir prüfen jeden Fall und veranlassen gegebenenfalls Ersatz oder Erstattung.",
+"In-stock products ship within {#} h of payment confirmation and arrive in {#}–{#} days in France. Made-to-order products take {#}–{#} weeks: the batch is received, then analysed by Janoshik before it ships to you. You get an email at every step, then your tracking number.": "Lagerprodukte werden innerhalb von {#} h nach Zahlungsbestätigung versandt und sind in Frankreich in {#}–{#} Tagen da. Produkte auf Bestellung brauchen {#}–{#} Wochen: Die Charge wird zuerst empfangen und von Janoshik analysiert, bevor sie an Sie versandt wird. Sie erhalten bei jedem Schritt eine E-Mail und anschließend Ihre Sendungsnummer.",
+"Made-to-order products are bought and analysed batch by batch. The minimum ({#} to {#} vials depending on the product) lets us launch that batch, and automatically gives you our quantity discounts (−{#} to −{#}%).": "Produkte auf Bestellung werden Charge für Charge eingekauft und analysiert. Die Mindestmenge ({#} bis {#} Fläschchen je nach Produkt) ermöglicht den Start dieser Charge und gibt Ihnen automatisch unsere Mengenrabatte (−{#} bis −{#} %).",
+"Regulatory status varies by jurisdiction. It is your responsibility to check the applicable rules before ordering.": "Der rechtliche Status unterscheidet sich je nach Land. Es liegt in Ihrer Verantwortung, die geltenden Vorschriften vor der Bestellung zu prüfen.",
+"The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to Janoshik: your vial only ships once the analysis is approved. Total time: {#}–{#} weeks.": "Das Produkt wird sofort nach Ihrer Zahlung bei unserem Hersteller bestellt. Bei Eingang senden wir eine Probe dieser Charge an Janoshik: Ihr Fläschchen wird erst nach bestandener Analyse versandt. Gesamtdauer: {#}–{#} Wochen.",
+"You receive an email at every step: order received, ordered from the manufacturer, batch under analysis at Janoshik, analysis approved (with the report link), then shipped with your tracking number.": "Sie erhalten bei jedem Schritt eine E-Mail: Bestellung eingegangen, beim Hersteller bestellt, Charge in Analyse bei Janoshik, Analyse bestanden (mit Link zum Bericht), dann versandt mit Ihrer Sendungsnummer.",
+"All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully.": "Alle Produkte sind ausschließlich für die In-vitro-Laborforschung bestimmt. Nicht zur Anwendung am Menschen oder Tier. Mit dem Kauf bestätigen Sie, eine qualifizierte Fachperson zu sein, die rechtmäßig handelt.",
+"By using this website or placing an order you agree to these Terms. If you disagree, do not use this site.": "Durch die Nutzung dieser Website oder eine Bestellung stimmen Sie diesen Bedingungen zu. Wenn Sie nicht einverstanden sind, nutzen Sie diese Website nicht.",
+"Contact us within {#} days if products arrive damaged or do not match COA specs. Opened compounds cannot be returned for safety reasons.": "Kontaktieren Sie uns innerhalb von {#} Tagen, wenn Produkte beschädigt ankommen oder nicht den COA-Spezifikationen entsprechen. Geöffnete Verbindungen können aus Sicherheitsgründen nicht zurückgegeben werden.",
+"For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks.": "Bei internationalen Bestellungen (außerhalb der Europäischen Union) ist allein der Käufer dafür verantwortlich, zu prüfen, ob die Produkte rechtmäßig in sein Land eingeführt werden dürfen, etwaige Zölle, Steuern oder Abfertigungsgebühren zu zahlen und alle örtlichen Gesetze für Forschungsverbindungen einzuhalten. Novalyx Research tritt nicht als Importeur auf. Sendungen, die von Zollbehörden außerhalb der EU beschlagnahmt, vernichtet, abgelehnt oder zurückgesandt werden, werden nicht erstattet. Mit einer internationalen Bestellung erkennt der Käufer diese Risiken ausdrücklich an und akzeptiert sie.",
+"Governed by French law and applicable EU regulations.": "Es gilt französisches Recht sowie die anwendbaren EU-Vorschriften.",
+"Last updated: April {#}": "Zuletzt aktualisiert: April {#}",
+"Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products.": "Novalyx haftet nicht für eine missbräuchliche Verwendung der Produkte oder für indirekte oder Folgeschäden aus der Nutzung dieser Website oder der Produkte.",
+"Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within {#} h of payment confirmation. Delivery within France typically takes {#}–{#} days; the rest of the EU {#}–{#} business days; international destinations {#}–{#} business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.": "Bestellungen werden unter kontrollierten Bedingungen bearbeitet, mit Chargenbezug je Bestellung von unseren geprüften Laborpartnern. Bestellungen werden innerhalb von {#} h nach Zahlungsbestätigung versandt. Die Lieferung innerhalb Frankreichs dauert in der Regel {#}–{#} Tage, in die übrige EU {#}–{#} Werktage, international {#}–{#} Werktage. Lieferzeiten sind Schätzungen, keine Garantien. Die Gefahr geht mit dem Versand auf den Käufer über.",
+"Prices are shown in EUR and do not include VAT (TVA non applicable, art. {#}B du CGI — French micro-entrepreneur regime). Card payment is processed securely by Stripe; payment by bank transfer is also available, in which case the order is shipped once the transfer is received. We reserve the right to cancel orders, with a full refund issued.": "Die Preise werden in EUR angezeigt und enthalten keine Mehrwertsteuer (TVA non applicable, art. {#}B du CGI — französische Kleinunternehmerregelung). Die Kartenzahlung wird sicher über Stripe abgewickelt; eine Zahlung per Banküberweisung ist ebenfalls möglich, in diesem Fall wird die Bestellung nach Zahlungseingang versandt. Wir behalten uns das Recht vor, Bestellungen gegen vollständige Erstattung zu stornieren.",
+"You must be {#}+ to purchase. Completing a purchase confirms you meet this requirement.": "Sie müssen mindestens {#} Jahre alt sein, um zu kaufen. Mit dem Abschluss eines Kaufs bestätigen Sie, diese Voraussetzung zu erfüllen.",
+"{#}. Acceptance": "{#}. Annahme",
+"{#}. Age Restriction": "{#}. Altersbeschränkung",
+"{#}. Governing Law": "{#}. Anwendbares Recht",
+"{#}. Limitation of Liability": "{#}. Haftungsbeschränkung",
+"{#}. Orders & Payment": "{#}. Bestellungen & Zahlung",
+"{#}. Research Use Only": "{#}. Nur für Forschungszwecke",
+"{#}. Returns": "{#}. Rücksendungen",
+"{#}. Shipping & International Orders": "{#}. Versand & internationale Bestellungen",
+"Data enquiries:": "Datenanfragen:",
+"Essential cookies for functionality only. Analytics cookies placed with consent only.": "Nur für die Funktion notwendige Cookies. Analyse-Cookies nur mit Einwilligung.",
+"Name, email, shipping address, and order details you provide directly. Anonymised usage data via analytics to improve our site.": "Name, E-Mail, Lieferadresse und Bestelldaten, die Sie uns direkt mitteilen. Anonymisierte Nutzungsdaten über Analysewerkzeuge zur Verbesserung unserer Website.",
+"Novalyx operates this website and is responsible for your personal data in accordance with the GDPR.": "Novalyx betreibt diese Website und ist gemäß DSGVO für Ihre personenbezogenen Daten verantwortlich.",
+"Privacy Policy": "Datenschutzerklärung",
+"To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details.": "Zur Bearbeitung von Bestellungen, für den Support, für Bestellmitteilungen und — mit Einwilligung — für Produktneuheiten. Zahlungsdaten werden von Stripe verarbeitet; wir sehen oder speichern Ihre Kartendaten nie.",
+"Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email": "Nach der DSGVO: Auskunft, Berichtigung, Löschung, Einschränkung, Übertragbarkeit Ihrer Daten oder Widerspruch gegen die Verarbeitung. E-Mail",
+"We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements.": "Wir verkaufen Ihre Daten nicht. Wir geben sie nur an Logistik- und Zahlungspartner (Stripe) im Rahmen strenger Auftragsverarbeitungsverträge weiter.",
+"{#}. Contact": "{#}. Kontakt",
+"{#}. Data Sharing": "{#}. Datenweitergabe",
+"{#}. Data We Collect": "{#}. Welche Daten wir erheben",
+"{#}. How We Use Your Data": "{#}. Wie wir Ihre Daten verwenden",
+"{#}. Who We Are": "{#}. Wer wir sind",
+"{#}. Your Rights": "{#}. Ihre Rechte",
+"Accuracy": "Genauigkeit",
+"All products are intended exclusively for scientific research by qualified professionals in appropriate laboratory settings. They are not drugs, supplements, or food products.": "Alle Produkte sind ausschließlich für die wissenschaftliche Forschung durch qualifizierte Fachleute in geeigneten Laborumgebungen bestimmt. Sie sind weder Arzneimittel noch Nahrungsergänzungsmittel noch Lebensmittel.",
+"COA documents represent the definitive specification per batch. While we strive for accuracy, we do not warrant all website content is error-free.": "COA-Dokumente stellen die maßgebliche Spezifikation je Charge dar. Wir bemühen uns um Genauigkeit, garantieren aber nicht, dass alle Inhalte der Website fehlerfrei sind.",
+"It is the purchaser's sole responsibility to verify that a compound is legal in their jurisdiction. Novalyx makes no representation regarding regulatory status in any country.": "Es liegt allein in der Verantwortung des Käufers, zu prüfen, ob eine Verbindung in seinem Land legal ist. Novalyx gibt keine Zusicherung zum rechtlichen Status in irgendeinem Land.",
+"No Medical Advice": "Keine medizinische Beratung",
+"No product sold by Novalyx is intended for human or veterinary administration. Novalyx expressly disclaims liability for any use contrary to this designation.": "Kein von Novalyx verkauftes Produkt ist zur Anwendung am Menschen oder Tier bestimmt. Novalyx lehnt ausdrücklich jede Haftung für eine dieser Bestimmung widersprechende Verwendung ab.",
+"Not for Human Use": "Nicht zur Anwendung am Menschen",
+"Nothing on this website constitutes medical advice. No claims are made regarding health benefits or therapeutic effects of any compound.": "Nichts auf dieser Website stellt eine medizinische Beratung dar. Es werden keine Aussagen über gesundheitliche Vorteile oder therapeutische Wirkungen einer Verbindung gemacht.",
+"Regulatory Compliance": "Einhaltung der Vorschriften",
+"Research Use Only": "Nur für Forschungszwecke",
+"All products are supplied exclusively for laboratory research. By ordering you confirm you are a qualified professional acting in compliance with applicable laws.": "Alle Produkte werden ausschließlich für die Laborforschung geliefert. Mit Ihrer Bestellung bestätigen Sie, eine qualifizierte Fachperson zu sein, die im Einklang mit den geltenden Gesetzen handelt.",
+"Australia, New Zealand and other countries": "Australien, Neuseeland und andere Länder",
+"Each order is shipped from Paris within {#} h of payment confirmation. Delivery in {#}–{#} days maximum within France, {#}–{#} business days for the rest of the EU. A tracking number is sent on dispatch.": "Jede Bestellung wird innerhalb von {#} h nach Zahlungsbestätigung aus Paris versandt. Lieferung in maximal {#}–{#} Tagen innerhalb Frankreichs, {#}–{#} Werktage in die übrige EU. Eine Sendungsnummer wird beim Versand mitgeteilt.",
+"European Union": "Europäische Union",
+"France": "Frankreich",
+"Free shipping in France and the EU on {N} Packs of {#} and {#}. Bacteriostatic water: {#}€ in France and the EU. We do not ship to Russia or Belarus.": "Kostenloser Versand in Frankreich und der EU für {N} im {#}er- und {#}er-Pack. Bakteriostatisches Wasser: {#}€ in Frankreich und der EU. Wir liefern nicht nach Russland oder Belarus.",
+"Orders outside the European Union": "Bestellungen außerhalb der Europäischen Union",
+"Shipments outside the EU are at the buyer's risk. The buyer must check that the products may be lawfully imported and pay any duties or taxes. Novalyx Research does not act as importer of record. Parcels seized, refused or destroyed by customs outside the EU are non-refundable.": "Sendungen außerhalb der EU erfolgen auf Gefahr des Käufers. Der Käufer muss prüfen, ob die Produkte rechtmäßig eingeführt werden dürfen, und etwaige Zölle oder Steuern zahlen. Novalyx Research tritt nicht als Importeur auf. Vom Zoll außerhalb der EU beschlagnahmte, abgelehnte oder vernichtete Pakete werden nicht erstattet.",
+"Shipping & delivery": "Versand & Lieferung",
+"Switzerland, UK": "Schweiz, Vereinigtes Königreich",
+"USA, Canada": "USA, Kanada",
+"Use declaration": "Verwendungserklärung",
+"Zones and rates": "Zonen und Tarife",
+"{#}–{#} business days": "{#}–{#} Werktage",
+"{#}–{#} business days (variable)": "{#}–{#} Werktage (variabel)",
+"{#}–{#} days max.": "max. {#}–{#} Tage",
+", documented, verifiable.": ", dokumentiert, überprüfbar.",
+"A sample goes to Janoshik Analytical: identity, HPLC purity, measured content.": "Eine Probe geht an Janoshik Analytical: Identität, HPLC-Reinheit, gemessener Gehalt.",
+"Ambassadors": "Botschafter",
+"Analysed": "Analysiert",
+"Analysed and published.": "Analysiert und veröffentlicht.",
+"Analysed product · published batch": "Analysiertes Produkt · veröffentlichte Charge",
+"Analyses": "Analysen",
+"Batch": "Charge",
+"Batch selection": "Chargenauswahl",
+"Bioregulators": "Bioregulatoren",
+"Bitcoin payment": "Bitcoin-Zahlung",
+"Bitcoin payment, billed in euros": "Bitcoin-Zahlung, abgerechnet in Euro",
+"Bitcoin, billed in euros": "Bitcoin, abgerechnet in Euro",
+"Buy Bitcoin": "Bitcoin kaufen",
+"By entering you confirm compliance with all applicable laws in your jurisdiction.": "Mit dem Betreten bestätigen Sie die Einhaltung aller in Ihrem Land geltenden Gesetze.",
+"Cart": "Warenkorb",
+"Catalogue": "Katalog",
+"Cellular energy, mitochondria, telomeres.": "Zelluläre Energie, Mitochondrien, Telomere.",
+"Cognitive": "Kognitive Forschung",
+"Company": "Unternehmen",
+"Compound notes": "Hinweise zur Verbindung",
+"Compounds supplied exclusively for in-vitro laboratory research. Not medicines or dietary supplements.": "Verbindungen ausschließlich für die In-vitro-Laborforschung. Keine Arzneimittel oder Nahrungsergänzungsmittel.",
+"Contact": "Kontakt",
+"Cosmetic Peptides": "Dermokosmetische Peptide",
+"Currency": "Währung",
+"Date": "Datum",
+"Dermo-cosmetic peptide ingredients.": "Dermokosmetische Peptid-Wirkstoffe.",
+"Direct Bitcoin payment · billed in euros": "Direkte Bitcoin-Zahlung · abgerechnet in Euro",
+"Disclaimer": "Haftungsausschluss",
+"Dispatch": "Versand",
+"ENTER SITE →": "SEITE BETRETEN →",
+"Each batch is selected from our manufacturing partner, with its certificate of analysis.": "Jede Charge wird bei unserem Herstellungspartner ausgewählt, mit ihrem Analysezertifikat.",
+"For volume orders, recurring supply or a specific document request, write to us. Reply within one business day.": "Für Mengenbestellungen, regelmäßige Lieferungen oder eine bestimmte Dokumentenanfrage schreiben Sie uns. Antwort innerhalb eines Werktags.",
+"Four steps, nothing hidden.": "Vier Schritte, nichts verborgen.",
+"Free shipping from {#}€": "Kostenloser Versand ab {#}€",
+"French company · Paris": "Französisches Unternehmen · Paris",
+"French · SIRET {#} {#} {#}": "Französisch · SIRET {#} {#} {#}",
+"From": "Ab",
+"Full catalogue": "Gesamter Katalog",
+"GH Research": "GH-Forschung",
+"GH secretagogue receptor research.": "Forschung zum GH-Sekretagog-Rezeptor.",
+"GH-releasing and secretagogue research.": "Forschung zu GH-Freisetzung und Sekretagogen.",
+"GLP-{#}, GIP, glucagon and amylin receptors.": "GLP-{#}-, GIP-, Glukagon- und Amylin-Rezeptoren.",
+"Growth & Cellular": "Wachstum & Zellulär",
+"HPLC purity": "HPLC-Reinheit",
+"I am a qualified professional (researcher, laboratory, institution).": "Ich bin eine qualifizierte Fachperson (Forschung, Labor, Einrichtung).",
+"I confirm I am {#} years of age or older.": "Ich bestätige, dass ich mindestens {#} Jahre alt bin.",
+"If you can shop online, you can pay with Bitcoin: {#} minutes the first time, {#} minutes after that. The amount is always calculated in euros.": "Wer online einkaufen kann, kann auch mit Bitcoin bezahlen: {#} Minuten beim ersten Mal, danach {#} Minuten. Der Betrag wird immer in Euro berechnet.",
+"Immune": "Immunsystem",
+"Immune modulation, thymic pathways.": "Immunmodulation, Thymus-Signalwege.",
+"In stock: ships within {#} h": "Auf Lager: Versand innerhalb von {#} h",
+"In stock: {#} h · made to order: {#}–{#} weeks": "Auf Lager: {#} h · auf Bestellung: {#}–{#} Wochen",
+"Independent analysis": "Unabhängige Analyse",
+"Janoshik, public key": "Janoshik, öffentlicher Schlüssel",
+"Lab Supplies": "Laborbedarf",
+"Laboratories and resellers: volume pricing, reports included.": "Labore und Wiederverkäufer: Mengenpreise, Berichte inklusive.",
+"Laboratory": "Labor",
+"Laboratory / Organization (optional)": "Labor / Organisation (optional)",
+"Laboratory reconstitution solvents.": "Lösungsmittel zur Rekonstitution im Labor.",
+"Legal": "Rechtliches",
+"Longevity": "Langlebigkeit",
+"Lyophilised peptide · research use": "Lyophilisiertes Peptid · Forschungszwecke",
+"Lyophilised peptides for laboratories and researchers. Analyses are performed by an independent laboratory, and every report can be verified publicly with its key.": "Lyophilisierte Peptide für Labore und Forschende. Die Analysen werden von einem unabhängigen Labor durchgeführt, und jeder Bericht lässt sich mit seinem Schlüssel öffentlich überprüfen.",
+"Lyophilised, labelled, sealed vials, tracked shipping. Products without a published report are marked “analysis pending”.": "Lyophilisierte, etikettierte, versiegelte Fläschchen, Versand mit Sendungsverfolgung. Produkte ohne veröffentlichten Bericht sind als „Analyse ausstehend“ gekennzeichnet.",
+"Manage cookies": "Cookies verwalten",
+"Measured content": "Gemessener Gehalt",
+"Menu": "Menü",
+"Metabolic": "Stoffwechsel",
+"Method": "Methode",
+"Multi-peptide blends in a single vial.": "Multi-Peptid-Mischungen in einem einzigen Fläschchen.",
+"Neuromodulation and neuroprotection.": "Neuromodulation und Neuroprotektion.",
+"Novalyx Research supplies compounds exclusively for laboratory research. Access is restricted to qualified professionals.": "Novalyx Research liefert Verbindungen ausschließlich für die Laborforschung. Der Zugang ist qualifizierten Fachleuten vorbehalten.",
+"PDF catalogue": "PDF-Katalog",
+"Pay with Bitcoin": "Mit Bitcoin bezahlen",
+"Paying with Bitcoin is easier than it sounds.": "Mit Bitcoin bezahlen ist einfacher, als es klingt.",
+"Payment": "Zahlung",
+"Place your order": "Bestellung aufgeben",
+"Privacy": "Datenschutz",
+"Products for laboratory research use only — not for human or veterinary use": "Produkte ausschließlich für die Laborforschung — nicht zur Anwendung am Menschen oder Tier",
+"Products for laboratory research use only, not for human or veterinary use": "Produkte ausschließlich für die Laborforschung, nicht zur Anwendung am Menschen oder Tier",
+"Professional access": "Fachzugang",
+"Professionals": "Fachkunden",
+"Publication": "Veröffentlichung",
+"Regenerative": "Regenerativ",
+"Request pricing": "Preise anfragen",
+"Research compounds,": "Forschungsverbindungen,",
+"Research use only": "Nur für Forschungszwecke",
+"Research use only — not for human or veterinary use": "Nur für Forschungszwecke — nicht zur Anwendung am Menschen oder Tier",
+"Reserved for laboratory research.": "Der Laborforschung vorbehalten.",
+"Revolut, Kraken or Coinbase": "Revolut, Kraken oder Coinbase",
+"See the analyses": "Analysen ansehen",
+"See the {#}-step guide": "Zur Anleitung in {#} Schritten",
+"Send the payment": "Zahlung senden",
+"Shipping": "Versand",
+"Short peptides from V. Khavinson's research.": "Kurze Peptide aus der Forschung von V. Khavinson.",
+"Signature Blends": "Signature-Mischungen",
+"Sleep, reproductive, melanocortin.": "Schlaf, Fortpflanzung, Melanocortin.",
+"Specialized": "Spezialisiert",
+"Terms & Conditions": "Allgemeine Geschäftsbedingungen",
+"The report and its verification key are published. Anyone can check it.": "Der Bericht und sein Prüfschlüssel sind veröffentlicht. Jeder kann ihn überprüfen.",
+"This order is strictly for laboratory research — not for human or animal use.": "Diese Bestellung ist ausschließlich für die Laborforschung bestimmt — nicht zur Anwendung am Menschen oder Tier.",
+"Tissue-repair and angiogenesis research.": "Forschung zu Geweberegeneration und Angiogenese.",
+"Trust isn't claimed, it's documented. Here is exactly what happens between production and your laboratory.": "Vertrauen wird nicht behauptet, sondern belegt. Genau das passiert zwischen der Herstellung und Ihrem Labor.",
+"Up to −{#}% from {#} vials": "Bis zu −{#} % ab {#} Fläschchen",
+"Verification key": "Prüfschlüssel",
+"Verify on Janoshik": "Auf Janoshik überprüfen",
+"View catalogue": "Katalog ansehen",
+"View product": "Produkt ansehen",
+"View {N} {#} mg": "{N} {#} mg ansehen",
+"Your organization's name": "Name Ihrer Organisation",
+"an invoice with a QR code appears": "eine Rechnung mit QR-Code erscheint",
+"analysed": "analysiert",
+"lyophilised": "lyophilisiert",
+"scan, check, confirm": "scannen, prüfen, bestätigen",
+"{#} Rue Pasquier, {#} Paris, France": "{#} Rue Pasquier, {#} Paris, Frankreich",
+"{#} Sept {#}": "{#}. Sept. {#}",
+"{#} compounds, {#} research areas.": "{#} Verbindungen, {#} Forschungsbereiche.",
+"{N} · batch NLR-{#}-{#} analysed by Janoshik: {#}%": "{N} · Charge NLR-{#}-{#} von Janoshik analysiert: {#}%",
+"Assistant": "Assistent",
+"Open the assistant": "Assistenten öffnen",
+"/ vial": "/ Fläschchen",
+"AMYLIN RECEPTOR RESEARCH": "AMYLIN-REZEPTOR-FORSCHUNG",
+"ANTI-AGING RESEARCH": "ANTI-AGING-FORSCHUNG",
+"ANTI-INFLAMMATORY RESEARCH": "ENTZÜNDUNGSFORSCHUNG",
+"ANTIMICROBIAL RESEARCH": "ANTIMIKROBIELLE FORSCHUNG",
+"Add to cart": "In den Warenkorb",
+"Analysis date": "Analysedatum",
+"Analysis ordered by Novalyx on its {#}mg batch. The original report can be viewed at any time on Janoshik's website.": "Von Novalyx in Auftrag gegebene Analyse der {#}mg-Charge. Der Originalbericht ist jederzeit auf der Website von Janoshik einsehbar.",
+"Analysis report available for the {#}mg — select it to view.": "Analysebericht für {#}mg verfügbar — wählen Sie diese Dosierung, um ihn anzuzeigen.",
+"BIOREGULATOR RESEARCH": "BIOREGULATOR-FORSCHUNG",
+"Bacteriostatic water {#} ml": "Bakteriostatisches Wasser {#} ml",
+"Bitcoin payment: how does it work? ({#} steps)": "Bitcoin-Zahlung: Wie funktioniert das? ({#} Schritte)",
+"Buy now": "Jetzt kaufen",
+"CELLULAR ENERGY RESEARCH": "ZELLENERGIE-FORSCHUNG",
+"CELLULAR RESEARCH": "ZELLFORSCHUNG",
+"CJC-{#} without DAC is a synthetic GHRH analog supplied for research into extended-duration GH release pathways. Lyophilized, high-stability formulation.": "CJC-{#} ohne DAC ist ein synthetisches GHRH-Analogon für die Forschung zu länger anhaltenden GH-Freisetzungswegen. Lyophilisierte, sehr stabile Formulierung.",
+"COMPLETE RESEARCH COMPLEX": "UMFASSENDER FORSCHUNGSKOMPLEX",
+"COSMETIC PEPTIDE RESEARCH": "FORSCHUNG ZU KOSMETISCHEN PEPTIDEN",
+"Composition": "Zusammensetzung",
+"DUAL-AGONIST RESEARCH": "DUAL-AGONIST-FORSCHUNG",
+"DUAL-RECEPTOR RESEARCH": "DUAL-REZEPTOR-FORSCHUNG",
+"Dry, room temperature, away from light before reconstitution; {#}–{#}°C after reconstitution": "Vor der Rekonstitution trocken, bei Raumtemperatur und lichtgeschützt; nach der Rekonstitution {#}–{#} °C",
+"Fermer": "Schließen",
+"For in-vitro laboratory research only. Not for human or veterinary use.": "Nur für die In-vitro-Laborforschung. Nicht zur Anwendung am Menschen oder Tier.",
+"Frequently bought with": "Häufig zusammen gekauft",
+"GH RESEARCH": "GH-FORSCHUNG",
+"GH SECRETAGOGUE RESEARCH": "GH-SEKRETAGOG-FORSCHUNG",
+"GH-RELEASING RESEARCH BLEND": "FORSCHUNGSMISCHUNG ZUR GH-FREISETZUNG",
+"GH-SECRETAGOGUE RESEARCH": "GH-SEKRETAGOG-FORSCHUNG",
+"GHRH ANALOG RESEARCH": "GHRH-ANALOGON-FORSCHUNG",
+"GHRH RESEARCH": "GHRH-FORSCHUNG",
+"GLP-{#} RECEPTOR RESEARCH": "GLP-{#}-REZEPTOR-FORSCHUNG",
+"GROWTH FACTOR RESEARCH": "WACHSTUMSFAKTOR-FORSCHUNG",
+"GROWTH HORMONE RESEARCH": "WACHSTUMSHORMON-FORSCHUNG",
+"Grade": "Qualität",
+"IMMUNE MODULATION RESEARCH": "IMMUNMODULATIONS-FORSCHUNG",
+"In stock · ships within {#} h": "Auf Lager · Versand innerhalb von {#} h",
+"Independent analysis · Janoshik": "Unabhängige Analyse · Janoshik",
+"Janoshik (per batch)": "Janoshik (je Charge)",
+"Janoshik HPLC (per batch)": "Janoshik HPLC (je Charge)",
+"LAB SUPPLY": "LABORBEDARF",
+"LONGEVITY RESEARCH": "LANGLEBIGKEITSFORSCHUNG",
+"Lyophilised vial": "Lyophilisiertes Fläschchen",
+"Lyophilised vials ({#}-pack)": "Lyophilisierte Fläschchen ({#}er-Pack)",
+"MELANOCORTIN RECEPTOR RESEARCH": "MELANOCORTIN-REZEPTOR-FORSCHUNG",
+"METABOLIC FRAGMENT RESEARCH": "STOFFWECHSEL-FRAGMENT-FORSCHUNG",
+"METABOLIC RESEARCH": "STOFFWECHSELFORSCHUNG",
+"MITOCHONDRIAL RESEARCH": "MITOCHONDRIENFORSCHUNG",
+"MULTI-RECEPTOR RESEARCH": "MULTI-REZEPTOR-FORSCHUNG",
+"Made to order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Auf Bestellung · {#}–{#} Wochen · Charge vor dem Versand von Janoshik analysiert · Verfolgung bei jedem Schritt",
+"Most popular": "Am beliebtesten",
+"NEUROMODULATION RESEARCH": "NEUROMODULATIONS-FORSCHUNG",
+"NEUROPEPTIDE RESEARCH": "NEUROPEPTID-FORSCHUNG",
+"NEUROPROTECTIVE RESEARCH": "NEUROPROTEKTIONS-FORSCHUNG",
+"NEUROTROPHIC RESEARCH": "NEUROTROPHE FORSCHUNG",
+"NOOTROPIC RESEARCH": "NOOTROPIKA-FORSCHUNG",
+"Novalyx Research {N} is pharmaceutical-grade sterile water containing {#}% benzyl alcohol as a bacteriostatic agent. Supplied exclusively for laboratory use in the reconstitution of lyophilised research peptides. Each vial is sealed, sterile, and ready for immediate laboratory use.": "Novalyx Research {N} ist steriles Wasser in pharmazeutischer Qualität mit {#} % Benzylalkohol als bakteriostatischem Wirkstoff. Ausschließlich für den Laborgebrauch zur Rekonstitution lyophilisierter Forschungspeptide geliefert. Jedes Fläschchen ist versiegelt, steril und sofort einsatzbereit.",
+"Open report (Janoshik)": "Bericht öffnen (Janoshik)",
+"Pharmaceutical-grade": "Pharmazeutische Qualität",
+"Product visual. The batch number is printed on every vial shipped.": "Produktabbildung. Die Chargennummer ist auf jedem versandten Fläschchen aufgedruckt.",
+"Purity": "Reinheit",
+"REGENERATIVE RESEARCH": "REGENERATIONSFORSCHUNG",
+"REGENERATIVE RESEARCH BLEND": "REGENERATIVE FORSCHUNGSMISCHUNG",
+"REGENERATIVE TRIPLE BLEND": "REGENERATIVE DREIFACHMISCHUNG",
+"REPRODUCTIVE RESEARCH": "REPRODUKTIONSFORSCHUNG",
+"Room temperature / avoid direct light": "Raumtemperatur / direktes Licht vermeiden",
+"Room temperature, away from light": "Raumtemperatur, lichtgeschützt",
+"SLEEP RESEARCH": "SCHLAFFORSCHUNG",
+"Sample (as on report)": "Probe (wie im Bericht)",
+"Size": "Größe",
+"Sterile reconstitution solvent + {#}% benzyl alcohol": "Steriles Rekonstitutionslösungsmittel + {#} % Benzylalkohol",
+"Sterile sealed vial": "Steriles versiegeltes Fläschchen",
+"Sterile water, {#}% acetic acid": "Steriles Wasser, {#} % Essigsäure",
+"Storage": "Lagerung",
+"TELOMERE RESEARCH": "TELOMER-FORSCHUNG",
+"TISSUE REPAIR RESEARCH": "GEWEBEREPARATUR-FORSCHUNG",
+"TRIPLE-RECEPTOR RESEARCH": "TRIPLE-REZEPTOR-FORSCHUNG",
+"Task no.": "Auftrag Nr.",
+"Volume pricing: the more you take, the less you pay": "Staffelpreise: Je mehr Sie nehmen, desto weniger zahlen Sie",
+"You save": "Sie sparen",
+"vial": "Fläschchen",
+"vials": "Fläschchen",
+"{#} ml sealed vial": "Versiegeltes {#}-ml-Fläschchen",
+"{#}mg total (BPC{#}+TB{#})": "{#}mg gesamt (BPC{#}+TB{#})",
+"{N} (Body Protection Compound) is a synthetic pentadecapeptide supplied for research into tissue repair, angiogenesis, and gastrointestinal integrity. Each vial contains lyophilized peptide. Supplied exclusively for in-vitro and laboratory research purposes.": "{N} (Body Protection Compound) ist ein synthetisches Pentadecapeptid für die Forschung zu Gewebereparatur, Angiogenese und Integrität des Magen-Darm-Trakts. Jedes Fläschchen enthält lyophilisiertes Peptid. Ausschließlich für die In-vitro- und Laborforschung geliefert.",
+"{N} (Bremelanotide) is a synthetic cyclic heptapeptide, supplied for research into melanocortin MC{#} and MC{#} receptor pathways and central nervous system signalling.": "{N} (Bremelanotid) ist ein synthetisches zyklisches Heptapeptid für die Forschung zu den Melanocortin-Rezeptoren MC{#} und MC{#} und zur Signalübertragung im Zentralnervensystem.",
+"{N} (Delta Sleep-Inducing Peptide) is a synthetic nonapeptide, supplied for research into sleep regulation, delta wave activity, and circadian signalling pathways.": "{N} (Delta Sleep-Inducing Peptide) ist ein synthetisches Nonapeptid für die Forschung zu Schlafregulation, Delta-Wellen-Aktivität und zirkadianen Signalwegen.",
+"{N} (Elamipretide) is a mitochondria-targeting peptide, supplied for research into cardiolipin binding and mitochondrial energetics pathways.": "{N} (Elamipretid) ist ein auf Mitochondrien ausgerichtetes Peptid für die Forschung zur Cardiolipin-Bindung und zu mitochondrialen Energiewegen.",
+"{N} (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. New batches are submitted for independent analysis by Janoshik.": "{N} (Glycyl-Histidyl-Lysin-Kupferkomplex) ist ein natürlich vorkommendes, an Kupfer gebundenes Tripeptid. Geliefert für die Forschung zu Hautregeneration, Kollagen- und Elastinsynthese sowie Gewebereparatur. Neue Chargen werden von Janoshik unabhängig analysiert.",
+"{N} (Lysine-Proline-Valine) is the C-terminal tripeptide fragment of alpha-MSH. Supplied for research into inflammatory signalling, intestinal barrier function, and dermal health.": "{N} (Lysin-Prolin-Valin) ist das C-terminale Tripeptid-Fragment von Alpha-MSH. Geliefert für die Forschung zu Entzündungssignalen, Darmbarrierefunktion und Hautgesundheit.",
+"{N} (Nicotinamide Adenine Dinucleotide) is a coenzyme present in all living cells, supplied for research into cellular energy metabolism, sirtuin activity, and longevity pathways.": "{N} (Nicotinamid-Adenin-Dinukleotid) ist ein in allen lebenden Zellen vorkommendes Coenzym, geliefert für die Forschung zu zellulärem Energiestoffwechsel, Sirtuin-Aktivität und Langlebigkeitswegen.",
+"{N} (TA{#}) is a synthetic {#}-amino acid peptide, supplied for research into immune system modulation, T-cell signalling, and thymic function.": "{N} (TA{#}) ist ein synthetisches Peptid aus {#} Aminosäuren für die Forschung zu Immunmodulation, T-Zell-Signalen und Thymusfunktion.",
+"{N} Acetate is a synthetic GHRH {#}-{#} fragment, supplied for research into growth hormone releasing pathways. Lyophilized, high-stability formulation.": "{N}-Acetat ist ein synthetisches GHRH-{#}-{#}-Fragment für die Forschung zu den Freisetzungswegen des Wachstumshormons. Lyophilisierte, sehr stabile Formulierung.",
+"{N} is a cathelicidin-derived antimicrobial peptide, supplied for research into innate immunity pathways and host defense mechanisms.": "{N} ist ein von Cathelicidin abgeleitetes antimikrobielles Peptid für die Forschung zu angeborener Immunität und Abwehrmechanismen des Wirts.",
+"{N} is a laboratory reconstitution solvent. Not for human or veterinary use.": "{N} ist ein Lösungsmittel zur Rekonstitution im Labor. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a neurotrophic peptide complex, supplied for research into neuroprotection, BDNF modulation, and cognitive signalling pathways.": "{N} ist ein neurotropher Peptidkomplex für die Forschung zu Neuroprotektion, BDNF-Modulation und kognitiven Signalwegen.",
+"{N} is a proprietary research blend containing CJC-{#} ({#}mg, no DAC) and {N} ({#}mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.": "{N} ist eine eigene Forschungsmischung aus CJC-{#} ({#}mg, ohne DAC) und {N} ({#}mg) in einem einzigen lyophilisierten Fläschchen. Entwickelt für Forschende, die GH-Freisetzungswege in einem integrierten Protokoll untersuchen.",
+"{N} is a proprietary research blend containing {N} ({#}mg) and {N} ({#}mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} ist eine eigene Forschungsmischung aus {N} ({#}mg) und {N} ({#}mg) in einem einzigen lyophilisierten Fläschchen. Entwickelt für Forschende, die kombinierte regenerative Signalwege untersuchen. Neue Chargen werden von Janoshik unabhängig analysiert.",
+"{N} is a selective synthetic growth hormone secretagogue, supplied for research into pulsatile GH release pathways. Lyophilized, high-stability formulation.": "{N} ist ein selektiver synthetischer Wachstumshormon-Sekretagog für die Forschung zu pulsatilen GH-Freisetzungswegen. Lyophilisierte, sehr stabile Formulierung.",
+"{N} is a synthetic analog of growth hormone-releasing hormone (GHRH), supplied for research into visceral fat metabolism and the GH/IGF-{#} axis.": "{N} ist ein synthetisches Analogon des Growth-Hormone-Releasing-Hormons (GHRH) für die Forschung zum viszeralen Fettstoffwechsel und zur GH/IGF-{#}-Achse.",
+"{N} is a synthetic decapeptide, supplied for research into GnRH regulation and reproductive endocrinology signalling pathways.": "{N} ist ein synthetisches Decapeptid für die Forschung zur GnRH-Regulation und zu reproduktionsendokrinologischen Signalwegen.",
+"{N} is a synthetic dual-agonist peptide targeting both GLP-{#} and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches Dual-Agonist-Peptid, das sowohl GLP-{#}- als auch Glukagon-Rezeptoren anspricht. Ausschließlich für die In-vitro-Laborforschung geliefert. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic dual-agonist research peptide targeting GLP-{#} and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic.": "{N} ist ein synthetisches Dual-Agonist-Forschungspeptid, das GLP-{#}- und Glukagon-Rezeptoren anspricht. Ausschließlich für die In-vitro-Laborforschung geliefert. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum.",
+"{N} is a synthetic fragment of Thymosin Beta-{#}, supplied for research into cellular migration, angiogenesis, and tissue regeneration. Each vial contains lyophilized peptide.": "{N} ist ein synthetisches Fragment von Thymosin Beta-{#} für die Forschung zu Zellmigration, Angiogenese und Geweberegeneration. Jedes Fläschchen enthält lyophilisiertes Peptid.",
+"{N} is a synthetic growth hormone-releasing hexapeptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches wachstumshormonfreisetzendes Hexapeptid, ausschließlich für die In-vitro-Laborforschung zu GH-Sekretagog-Rezeptorwegen geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches wachstumshormonfreisetzendes Peptid, ausschließlich für die In-vitro-Laborforschung zu GH-Sekretagog-Rezeptorwegen geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic heptapeptide analog of ACTH({#}-{#}), supplied for research into cognitive function, BDNF expression, and neuroprotective signalling.": "{N} ist ein synthetisches Heptapeptid-Analogon von ACTH({#}-{#}) für die Forschung zu kognitiver Funktion, BDNF-Expression und neuroprotektiven Signalen.",
+"{N} is a synthetic heptapeptide analog of tuftsin, supplied for research into anxiolytic mechanisms and GABAergic signalling pathways.": "{N} ist ein synthetisches Heptapeptid-Analogon von Tuftsin für die Forschung zu anxiolytischen Mechanismen und GABAergen Signalwegen.",
+"{N} is a synthetic long-acting amylin analog, supplied for research into amylin receptor pathways and satiety signalling. Each vial contains lyophilized peptide for in-vitro laboratory investigation.": "{N} ist ein synthetisches, lang wirkendes Amylin-Analogon für die Forschung zu Amylin-Rezeptorwegen und Sättigungssignalen. Jedes Fläschchen enthält lyophilisiertes Peptid für die In-vitro-Laboruntersuchung.",
+"{N} is a synthetic modified fragment of growth hormone (amino acids {#}-{#}), supplied exclusively for in-vitro laboratory research into lipid metabolism signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches, modifiziertes Fragment des Wachstumshormons (Aminosäuren {#}-{#}), ausschließlich für die In-vitro-Laborforschung zu Signalen des Fettstoffwechsels geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#} and GIP receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches Peptid, ausschließlich für die In-vitro-Laborforschung zur GLP-{#}- und GIP-Rezeptor-Signalübertragung geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#} receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches Peptid, ausschließlich für die In-vitro-Laborforschung zur GLP-{#}-Rezeptor-Signalübertragung geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#}, GIP, and glucagon receptor signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetisches Peptid, ausschließlich für die In-vitro-Laborforschung zur Signalübertragung über GLP-{#}-, GIP- und Glukagon-Rezeptoren geliefert. Jedes Fläschchen enthält lyophilisiertes Peptid mit chargenspezifischer Analysedokumentation von Janoshik Analytical (Tschechische Republik). Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic small molecule NNMT inhibitor supplied exclusively for in-vitro laboratory research into cellular metabolism and adipocyte signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} ist ein synthetischer niedermolekularer NNMT-Hemmer, ausschließlich für die In-vitro-Laborforschung zu Zellstoffwechsel und Adipozyten-Signalen geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is a synthetic tetrapeptide (Ala-Glu-Asp-Gly), supplied for research into telomerase activation, pineal gland signalling, and longevity pathways.": "{N} ist ein synthetisches Tetrapeptid (Ala-Glu-Asp-Gly) für die Forschung zu Telomerase-Aktivierung, Signalen der Zirbeldrüse und Langlebigkeitswegen.",
+"{N} is a synthetic tripeptide, supplied for research into neuroprotection and cognitive longevity signalling pathways.": "{N} ist ein synthetisches Tripeptid für die Forschung zu Neuroprotektion und Signalwegen der kognitiven Langlebigkeit.",
+"{N} is a thymus-derived peptide complex, supplied for research into immune function, thymic regulation, and age-related immunology.": "{N} ist ein aus dem Thymus gewonnener Peptidkomplex für die Forschung zu Immunfunktion, Thymusregulation und altersbedingter Immunologie.",
+"{N} is a {#}-amino acid mitochondrial-derived peptide, supplied for research into metabolic homeostasis, insulin sensitivity, and cellular stress response pathways.": "{N} ist ein mitochondrial kodiertes Peptid aus {#} Aminosäuren für die Forschung zu Stoffwechselhomöostase, Insulinsensitivität und zellulären Stressreaktionen.",
+"{N} is an {#}-amino acid peptide derived from erythropoietin, supplied for research into innate repair receptor signalling and neuroprotection.": "{N} ist ein von Erythropoetin abgeleitetes Peptid aus {#} Aminosäuren für die Forschung zur Signalübertragung über den angeborenen Reparaturrezeptor und zur Neuroprotektion.",
+"{N} is our flagship triple-peptide research blend containing {N} ({#}mg), {N} ({#}mg), and {N} ({#}mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.": "{N} ist unsere Flaggschiff-Forschungsmischung aus drei Peptiden: {N} ({#}mg), {N} ({#}mg) und {N} ({#}mg) in einem einzigen lyophilisierten Fläschchen. Entwickelt für Forschende, die regenerative Signale über mehrere Wege gleichzeitig untersuchen.",
+"{N} is our premium four-peptide research complex containing {N} ({#}mg), {N} ({#}mg), {N} ({#}mg), and {N} ({#}mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.": "{N} ist unser Premium-Forschungskomplex aus vier Peptiden: {N} ({#}mg), {N} ({#}mg), {N} ({#}mg) und {N} ({#}mg) in einem einzigen lyophilisierten Fläschchen. Die umfassendste regenerative Forschungsmischung unseres Katalogs.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wird ausschließlich für die In-vitro-Laborforschung geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wird ausschließlich für die In-vitro-Laborforschung geliefert. Jedes Fläschchen enthält ein lyophilisiertes Peptid. Der Janoshik-Analysebericht wird veröffentlicht, sobald die Charge getestet ist. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wird ausschließlich für die In-vitro-Laborforschung geliefert. Jedes Fläschchen enthält eine lyophilisierte Verbindung. Kein Arzneimittel, Nahrungsergänzungsmittel oder Kosmetikum. Nicht zur Anwendung am Menschen oder Tier.",
+"· instead of {#}€": "· statt {#}€",
+"· only {#} vials left from the analysed batch": "· nur noch {#} Fläschchen aus der analysierten Charge",
+"· research format: {#} vials minimum (−{#}%)": "· Forschungsformat: mindestens {#} Fläschchen (−{#} %)",
+"≥{#}% target (HPLC)": "≥{#} % Zielwert (HPLC)",
+"Acetic Acid Water {#}%": "Essigsäure-Wasser {#} %",
+"All": "Alle",
+"All compounds": "Alle Verbindungen",
+"Bacteriostatic Water": "Bakteriostatisches Wasser",
+"CJC-{#} (no DAC)": "CJC-{#} (ohne DAC)",
+"CJC-{#} (with DAC)": "CJC-{#} (mit DAC)",
+"GHK-Copper": "GHK-Kupfer",
+"HGH Fragment {#}-{#}": "HGH-Fragment {#}-{#}",
+"Lyophilised peptides supplied exclusively for in-vitro research. Published analysis reports are marked COA.": "Lyophilisierte Peptide ausschließlich für die In-vitro-Forschung. Veröffentlichte Analyseberichte sind mit COA gekennzeichnet.",
+"Made to order": "Auf Bestellung",
+"Research catalogue": "Forschungskatalog",
+"{#}mg total": "{#}mg gesamt",
+"{#}mg total (BPC{#}+TB{#}) · {#}mg total (BPC{#}+TB{#})": "{#}mg gesamt (BPC{#}+TB{#}) · {#}mg gesamt (BPC{#}+TB{#})",
+"{#}ml vial": "{#}-ml-Fläschchen",
+"{N} {#}mg total (BPC{#}+TB{#}) — Novalyx Research": "{N} {#}mg gesamt (BPC{#}+TB{#}) — Novalyx Research",
+"{N} {#}mg total — Novalyx Research": "{N} {#}mg gesamt — Novalyx Research",
+"{N} {#}ml vial — Novalyx Research": "{N} {#}-ml-Fläschchen — Novalyx Research",
+"Analyses ordered by Novalyx on its own batches. Each new batch is analysed in turn and its report is published here.": "Von Novalyx für die eigenen Chargen in Auftrag gegebene Analysen. Jede neue Charge wird ihrerseits analysiert und ihr Bericht hier veröffentlicht.",
+"Analysis pending": "Analyse ausstehend",
+"Each report below was issued by Janoshik Analytical (Czech Republic). Each link opens the original report on Janoshik's website: it cannot be altered.": "Jeder der folgenden Berichte wurde von Janoshik Analytical (Tschechische Republik) ausgestellt. Jeder Link öffnet den Originalbericht auf der Website von Janoshik: Er kann nicht verändert werden.",
+"Measured": "Gemessen",
+"Name on report": "Name im Bericht",
+"Published analyses": "Veröffentlichte Analysen",
+"Reports for these compounds will be published once the first batch has been analysed. Questions are welcome.": "Die Berichte zu diesen Verbindungen werden veröffentlicht, sobald die erste Charge analysiert ist. Fragen sind willkommen.",
+"Task · key": "Auftrag · Schlüssel",
+"Transparency": "Transparenz",
+"View report": "Bericht ansehen",
+"A coenzyme central to cellular-energy and mitochondrial research, used in a wide range of biochemical assays.": "Ein zentrales Coenzym in der Forschung zu Zellenergie und Mitochondrien, eingesetzt in zahlreichen biochemischen Assays.",
+"A copper-binding tripeptide investigated in skin-biology and extracellular-matrix research models.": "Ein kupferbindendes Tripeptid, untersucht in Forschungsmodellen der Hautbiologie und der extrazellulären Matrix.",
+"A dual-receptor research peptide used as a reference compound in metabolic signalling studies.": "Ein Dual-Rezeptor-Forschungspeptid, das als Referenzverbindung in Studien zur Stoffwechselsignalisierung dient.",
+"A mitochondrial-derived peptide investigated in metabolic and cellular-energy research.": "Ein mitochondrial kodiertes Peptid, untersucht in der Stoffwechsel- und Zellenergieforschung.",
+"A multi-receptor research compound studied in metabolic-pathway investigations. Of interest in laboratory studies examining receptor signalling.": "Eine Multi-Rezeptor-Forschungsverbindung, untersucht in Studien zu Stoffwechselwegen. Von Interesse für Laborstudien zur Rezeptor-Signalübertragung.",
+"A peptide studied in immune-modulation and T-cell research models.": "Ein Peptid, untersucht in Forschungsmodellen zu Immunmodulation und T-Zellen.",
+"A research peptide referenced in growth-hormone secretagogue and receptor-signalling studies.": "Ein Forschungspeptid, referenziert in Studien zu Wachstumshormon-Sekretagogen und Rezeptor-Signalübertragung.",
+"A research peptide widely referenced in receptor-binding and metabolic-pathway laboratory studies.": "Ein Forschungspeptid, das in Laborstudien zu Rezeptorbindung und Stoffwechselwegen häufig referenziert wird.",
+"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in tissue-repair assays.": "Ein synthetisches Peptidfragment, in Labormodellen zu Gewebereparatur und Angiogenese untersucht. Häufig als Referenzverbindung in Gewebereparatur-Assays eingesetzt.",
+"A synthetic peptide investigated in neuromodulation and neuroprotection research.": "Ein synthetisches Peptid, untersucht in der Forschung zu Neuromodulation und Neuroprotektion.",
+"A synthetic tetrapeptide studied in telomere-biology and cellular-ageing research models.": "Ein synthetisches Tetrapeptid, untersucht in Forschungsmodellen zu Telomerbiologie und Zellalterung.",
+"A synthetic version of a naturally occurring peptide region studied for cell-migration and actin-regulation research in controlled settings.": "Eine synthetische Version einer natürlich vorkommenden Peptidregion, untersucht in der Forschung zu Zellmigration und Aktinregulation unter kontrollierten Bedingungen.",
+"Cognitive research": "Kognitive Forschung",
+"Factual, strictly scientific information on catalogue compounds. No health claims.": "Sachliche, rein wissenschaftliche Informationen zu den Verbindungen des Katalogs. Keine gesundheitsbezogenen Aussagen.",
+"GH research": "GH-Forschung",
+"GHK-Cu (GHK-Cuivre)": "GHK-Cu (GHK-Kupfer)",
+"Immune research": "Immunforschung",
+"Longevity research": "Langlebigkeitsforschung",
+"Metabolic research": "Stoffwechselforschung",
+"Regenerative research": "Regenerationsforschung",
+"Resources": "Ressourcen",
+"Novalyx Research is a French company registered in Paris. It supplies lyophilised research peptides to laboratories, researchers and professionals.": "Novalyx Research ist ein in Paris eingetragenes französisches Unternehmen. Es liefert lyophilisierte Forschungspeptide an Labore, Forschende und Fachleute.",
+"Our products are not medicines, dietary supplements or cosmetics. They are supplied exclusively for in-vitro research.": "Unsere Produkte sind weder Arzneimittel noch Nahrungsergänzungsmittel noch Kosmetika. Sie werden ausschließlich für die In-vitro-Forschung geliefert.",
+"Paris, France": "Paris, Frankreich",
+"Registered": "Eingetragen",
+"Testing lab": "Prüflabor",
+"The rigour of a laboratory,": "Die Sorgfalt eines Labors,",
+"The sector is full of unverifiable promises. Our position is simple: claim nothing that cannot be checked. Analyses are entrusted to an independent laboratory, and every published report carries a key that lets anyone verify it at the source.": "Die Branche ist voller unüberprüfbarer Versprechen. Unsere Haltung ist einfach: nichts behaupten, was sich nicht überprüfen lässt. Die Analysen werden einem unabhängigen Labor anvertraut, und jeder veröffentlichte Bericht trägt einen Schlüssel, mit dem ihn jeder an der Quelle überprüfen kann.",
+"not the noise": "nicht der Lärm",
+"of a shop.": "eines Ladens.",
+"Are these products legal in my country?": "Sind diese Produkte in meinem Land legal?",
+"Do the published reports match my vial?": "Entsprechen die veröffentlichten Berichte meinem Fläschchen?",
+"Frequently asked questions": "Häufig gestellte Fragen",
+"How do I pay?": "Wie bezahle ich?",
+"How do I track my order?": "Wie verfolge ich meine Bestellung?",
+"How long is delivery?": "Wie lange dauert die Lieferung?",
+"How should compounds be stored?": "Wie sollten die Verbindungen gelagert werden?",
+"Substances supplied exclusively for scientific laboratory research. They are not intended for human or veterinary use, consumption or therapeutic purposes.": "Substanzen, die ausschließlich für die wissenschaftliche Laborforschung geliefert werden. Sie sind nicht zur Anwendung am Menschen oder Tier, zum Verzehr oder für therapeutische Zwecke bestimmt.",
+"What are research peptides?": "Was sind Forschungspeptide?",
+"What does \"made to order\" mean?": "Was bedeutet „auf Bestellung“?",
+"What is a certificate of analysis (COA)?": "Was ist ein Analysezertifikat (COA)?",
+"What is your returns policy?": "Wie sieht Ihre Rückgaberegelung aus?",
+"Who can order from Novalyx?": "Wer kann bei Novalyx bestellen?",
+"Why is there a minimum on some products?": "Warum gibt es bei manchen Produkten eine Mindestmenge?",
+". An invoice appears with a QR code and the exact amount, valid for {#} minutes.": ". Eine Rechnung mit QR-Code und dem genauen Betrag erscheint, {#} Minuten gültig.",
+". Buy your order amount, plus {#}€–{#} for sending fees.": ". Kaufen Sie den Betrag Ihrer Bestellung plus {#}€–{#} für die Versandgebühren.",
+"A small difference, up to {#}%, is accepted automatically. If more is missing, the invoice shows the remaining amount to send.": "Eine kleine Abweichung bis {#} % wird automatisch akzeptiert. Fehlt mehr, zeigt die Rechnung den noch zu sendenden Betrag an.",
+"Check that the amount received matches.": "Prüfen Sie, ob der empfangene Betrag übereinstimmt.",
+"Confirm. That's it.": "Bestätigen. Das war's.",
+"Confirmation email": "Bestätigungs-E-Mail",
+"Confirmed in {#}–{#} min": "Bestätigt in {#}–{#} Min.",
+"Crypto": "Krypto",
+"Direct payment": "Direkte Zahlung",
+"Discreet": "Diskret",
+"Email us and we'll guide you step by step, the first time and every time after.": "Schreiben Sie uns, wir führen Sie Schritt für Schritt — beim ersten Mal und auch danach.",
+"Got Revolut?": "Sie haben Revolut?",
+"How long does confirmation take?": "Wie lange dauert die Bestätigung?",
+"I paid slightly less because of fees.": "Ich habe wegen der Gebühren etwas weniger bezahlt.",
+"If you can shop online, you can pay with Bitcoin. Allow": "Wer online einkaufen kann, kann auch mit Bitcoin bezahlen. Rechnen Sie mit",
+"In the cart, choose": "Wählen Sie im Warenkorb",
+"In your app, tap “Send” or “Withdraw”.": "Tippen Sie in Ihrer App auf „Senden“ oder „Auszahlen“.",
+"It's a direct payment with no banking intermediary. Your bank statement only shows the Bitcoin purchase on your platform. The amount is always calculated in euros.": "Es ist eine direkte Zahlung ohne Bank als Vermittler. Auf Ihrem Kontoauszug erscheint nur der Bitcoin-Kauf auf Ihrer Plattform. Der Betrag wird immer in Euro berechnet.",
+"Made-to-order product?": "Produkt auf Bestellung?",
+"My invoice expired.": "Meine Rechnung ist abgelaufen.",
+"On first sign-up the platform verifies your identity: from a few minutes to a day. Do it before ordering.": "Bei der ersten Anmeldung prüft die Plattform Ihre Identität: einige Minuten bis ein Tag. Erledigen Sie das vor der Bestellung.",
+"Open the": "Öffnen Sie den Tab",
+"Otherwise: Kraken or Coinbase.": "Sonst: Kraken oder Coinbase.",
+"Pay with Bitcoin in three steps.": "Mit Bitcoin bezahlen in drei Schritten.",
+"Payment confirmed": "Zahlung bestätigt",
+"Payment sent": "Zahlung gesendet",
+"Scan the invoice QR code.": "Scannen Sie den QR-Code der Rechnung.",
+"Shipped": "Versandt",
+"Simply place the order again. If you had already sent the payment, email us with the time it was sent: we will find it.": "Geben Sie die Bestellung einfach erneut auf. Falls Sie die Zahlung schon gesendet hatten, schreiben Sie uns mit der Uhrzeit des Versands: Wir finden sie.",
+"Stuck at a step?": "Bei einem Schritt hängen geblieben?",
+"THE FASTEST WAY": "DER SCHNELLSTE WEG",
+"Usually {#} to {#} minutes, depending on Bitcoin network activity. You get an email as soon as it's confirmed.": "Meist {#} bis {#} Minuten, je nach Auslastung des Bitcoin-Netzwerks. Sie erhalten eine E-Mail, sobald die Zahlung bestätigt ist.",
+"What happens next?": "Wie geht es weiter?",
+"Why Bitcoin?": "Warum Bitcoin?",
+"after that.": "danach.",
+"batch received, then analysed by Janoshik: an email at every step": "Charge empfangen, dann von Janoshik analysiert: bei jedem Schritt eine E-Mail",
+"from your app": "aus Ihrer App",
+"tab, then": ", dann",
+"the first time,": "beim ersten Mal,",
+"usually within {#} to {#} minutes": "meist innerhalb von {#} bis {#} Minuten",
+"with your tracking number": "mit Ihrer Sendungsnummer",
+"your order is approved": "Ihre Bestellung ist bestätigt",
+"{#} min": "{#} Min.",
+"{#} minutes": "{#} Minuten",
+"~{#} min": "~{#} Min.",
+"“Pay with Bitcoin”": "„Mit Bitcoin bezahlen“",
+"A commission on every order placed with your code.": "Eine Provision auf jede Bestellung mit Ihrem Code.",
+"A monthly email recap of the sales your code generated.": "Eine monatliche E-Mail-Übersicht der Verkäufe über Ihren Code.",
+"A unique promo code under your name, valid across the catalogue.": "Ein persönlicher Rabattcode auf Ihren Namen, gültig im ganzen Katalog.",
+"Ambassador Program": "Botschafterprogramm",
+"An instant discount at checkout.": "Ein sofortiger Rabatt an der Kasse.",
+"Audience size (optional)": "Reichweite (optional)",
+"Do you create content around research, laboratories, or scientific wellness? Novalyx offers a personal code giving your audience a discount, and a commission on the sales it generates.": "Sie erstellen Inhalte rund um Forschung, Labore oder wissenschaftliches Wohlbefinden? Novalyx bietet einen persönlichen Code mit Rabatt für Ihr Publikum und eine Provision auf die damit erzielten Verkäufe.",
+"Each application is reviewed individually. The program is aimed at creators covering scientific, laboratory and research content. As with the rest of the catalogue, all communication must stay within a laboratory-research framework — research use only.": "Jede Bewerbung wird einzeln geprüft. Das Programm richtet sich an Creator mit wissenschaftlichen, Labor- und Forschungsinhalten. Wie beim gesamten Katalog muss jede Kommunikation im Rahmen der Laborforschung bleiben — nur für Forschungszwecke.",
+"For you": "Für Sie",
+"For your audience": "Für Ihr Publikum",
+"Handle / account link": "Profilname / Link zum Konto",
+"How it works": "So funktioniert es",
+"Message": "Nachricht",
+"Partnerships": "Partnerschaften",
+"Platform (Instagram, TikTok, YouTube…)": "Plattform (Instagram, TikTok, YouTube…)",
+"Send application": "Bewerbung senden",
+"Tell us about your audience and your interest in research.": "Erzählen Sie uns von Ihrem Publikum und Ihrem Interesse an Forschung.",
+"Terms": "Bedingungen",
+"Tracking": "Auswertung",
+"Address": "Adresse",
+"Bank transfer is available for all orders, even small ones. The simplest way: \"Pay by bank transfer\" in the cart, or write to us at contact@novalyxresearch.com to confirm the amount (delivery included) and the order reference.": "Banküberweisung ist für alle Bestellungen möglich, auch für kleine. Am einfachsten: „Per Banküberweisung bezahlen“ im Warenkorb, oder schreiben Sie uns an contact@novalyxresearch.com, um den Betrag (inklusive Versand) und die Bestellreferenz zu bestätigen.",
+"Email": "E-Mail",
+"Legal account holder": "Rechtlicher Kontoinhaber",
+"Payment by bank transfer": "Zahlung per Banküberweisung",
+"Products, orders, documents, professional pricing: reply within one business day.": "Produkte, Bestellungen, Dokumente, Fachpreise: Antwort innerhalb eines Werktags.",
+"Reply": "Antwort",
+"Send": "Senden",
+"Subject": "Betreff",
+"The legal holder name must match what your bank shows when you initiate the transfer (mandatory beneficiary verification requirement).": "Der Name des rechtlichen Kontoinhabers muss mit dem übereinstimmen, was Ihre Bank bei der Überweisung anzeigt (gesetzlich vorgeschriebene Empfängerüberprüfung).",
+"Within {#} business day": "Innerhalb von {#} Werktag",
+"Write to us.": "Schreiben Sie uns.",
+"\"D-retro-inverso\" peptide designed to disrupt the interaction between the FOXO{#} and p{#} proteins, studied in senescent-cell models (so-called senolytic research).": "„D-Retro-Inverso“-Peptid, das die Wechselwirkung zwischen den Proteinen FOXO{#} und p{#} stören soll, untersucht in Modellen seneszenter Zellen (sogenannte senolytische Forschung).",
+"/ {#} mg": "/ {#} mg",
+"Acetylated octapeptide (acetyl octapeptide-{#}) used as a cosmetic ingredient; its sequence mimics part of the SNAP-{#} protein, involved in the SNARE complex of neurotransmitter release.": "Acetyliertes Octapeptid (Acetyl-Octapeptid-{#}), als kosmetischer Wirkstoff verwendet; seine Sequenz ahmt einen Teil des Proteins SNAP-{#} nach, das am SNARE-Komplex beteiligt ist.",
+"Afamelanotide is authorised as an implant (brand Scenesse) for a specific indication (erythropoietic protoporphyria) in the EU and the United States. The Novalyx product is a research compound, not that medicine.": "Afamelanotid ist als Implantat (Marke Scenesse) für eine bestimmte Indikation (erythropoetische Protoporphyrie) in der EU und den USA zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Approved in China (NMPA, June {#}) for chronic weight management in adults; to our knowledge not approved in the EU or the United States.": "In China zugelassen (NMPA, Juni {#}) für das chronische Gewichtsmanagement bei Erwachsenen; unseres Wissens in der EU und den USA nicht zugelassen.",
+"Authorised in the United States (brand Egrifta) for a specific indication (HIV-associated abdominal lipodystrophy). The Novalyx product is a research compound, not that medicine.": "In den USA (Marke Egrifta) für eine bestimmte Indikation zugelassen (HIV-assoziierte abdominale Lipodystrophie). Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Authorised in the United States (brand Vyleesi) for a specific indication. The Novalyx product is a research compound, not that medicine.": "In den USA (Marke Vyleesi) für eine bestimmte Indikation zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Authorised medicine (FDA and EMA) under the brands Mounjaro and Zepbound. The Novalyx product is a research compound and is not that medicine.": "Zugelassenes Arzneimittel (FDA und EMA) unter den Marken Mounjaro und Zepbound. Das Novalyx-Produkt ist eine Forschungsverbindung und nicht dieses Arzneimittel.",
+"Authorised medicine under the brands Ozempic, Wegovy and Rybelsus. The Novalyx product is a research compound and is not that medicine.": "Zugelassenes Arzneimittel unter den Marken Ozempic, Wegovy und Rybelsus. Das Novalyx-Produkt ist eine Forschungsverbindung und nicht dieses Arzneimittel.",
+"Blend of two heptapeptides: {N}, an analogue of the ACTH({#}-{#}) fragment, and {N}, an analogue of tuftsin. Each is studied for its neuromodulatory effects.": "Mischung aus zwei Heptapeptiden: {N}, einem Analogon des ACTH({#}-{#})-Fragments, und {N}, einem Analogon von Tuftsin. Beide werden auf ihre neuromodulatorischen Wirkungen untersucht.",
+"Blend of {N} (GLP-{#}, GIP and glucagon receptor agonist) and cagrilintide (long-acting amylin analogue), two molecules in clinical development.": "Mischung aus {N} (Agonist der GLP-{#}-, GIP- und Glukagon-Rezeptoren) und Cagrilintid (lang wirkendes Amylin-Analogon), zwei Moleküle in klinischer Entwicklung.",
+"Both components are investigational molecules, not authorised as medicines.": "Beide Bestandteile sind Prüfsubstanzen, nicht als Arzneimittel zugelassen.",
+"By card through Stripe (your payment data never touches our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received.": "Per Karte über Stripe (Ihre Zahlungsdaten berühren nie unsere Server) oder per Banküberweisung, auch bei kleinen Bestellungen: Wählen Sie „Per Banküberweisung bezahlen“ im Warenkorb.",
+"C-terminal fragment (amino acids {#} to {#}) of human growth hormone, studied for its activity on fat metabolism without the growth effects of the whole hormone. {N} is a modified version of it.": "C-terminales Fragment (Aminosäuren {#} bis {#}) des menschlichen Wachstumshormons, untersucht auf seine Wirkung auf den Fettstoffwechsel ohne die Wachstumseffekte des ganzen Hormons. {N} ist eine modifizierte Version davon.",
+"Coenzyme (nicotinamide adenine dinucleotide) present in all cells: cofactor of redox reactions in energy metabolism and substrate of enzymes such as sirtuins and PARPs.": "Coenzym (Nicotinamid-Adenin-Dinukleotid), in allen Zellen vorhanden: Cofaktor der Redoxreaktionen im Energiestoffwechsel und Substrat von Enzymen wie den Sirtuinen.",
+"Coming soon": "Demnächst",
+"Coming soon — notify me": "Demnächst — benachrichtigen Sie mich",
+"Complex of polypeptides extracted from (calf) thymus, studied mainly in the Russian literature for immune regulation and ageing.": "Aus dem (Kälber-)Thymus gewonnener Polypeptidkomplex, vor allem in der russischen Fachliteratur zu Immunregulation und Alterung untersucht.",
+"Copper complex of the tripeptide Ala-His-Lys, used as a cosmetic ingredient and studied in skin and hair-follicle cell models.": "Kupferkomplex des Tripeptids Ala-His-Lys, als kosmetischer Wirkstoff verwendet und in Haut- und Haarfollikel-Zellmodellen untersucht.",
+"Cosmetic ingredient (topical use); efficacy data come mostly from manufacturers. No medicine status.": "Kosmetischer Wirkstoff (topische Anwendung); Wirksamkeitsdaten stammen überwiegend von Herstellern. Kein Arzneimittelstatus.",
+"Cosmetic ingredient; no medicine status.": "Kosmetischer Wirkstoff; kein Arzneimittelstatus.",
+"Cyclic peptide (bremelanotide), agonist of melanocortin receptors (notably MC{#}R), related to melanotan II.": "Zyklisches Peptid (Bremelanotid), Agonist der Melanocortin-Rezeptoren (insbesondere MC{#}R), verwandt mit Melanotan II.",
+"Details": "Details",
+"Dual agonist of the GIP and GLP-{#} receptors ({#}-amino-acid peptide, Eli Lilly).": "Dualer Agonist der GIP- und GLP-{#}-Rezeptoren ({#}-Aminosäuren-Peptid, Eli Lilly).",
+"Dual agonist of the GLP-{#} and glucagon receptors (IBI{#} / LY{#}), developed by Innovent (China) under licence from Eli Lilly.": "Dualer Agonist der GLP-{#}- und Glukagon-Rezeptoren (IBI{#} / LY{#}), entwickelt von Innovent (China) unter Lizenz von Eli Lilly.",
+"Dual agonist of the glucagon and GLP-{#} receptors, developed by Boehringer Ingelheim (BI {#}).": "Dualer Agonist der Glukagon- und GLP-{#}-Rezeptoren, entwickelt von Boehringer Ingelheim (BI {#}).",
+"Elamipretide is approved in the United States (FDA, accelerated approval, September {#}, brand Forzinity) only for Barth syndrome. The Novalyx product is a research compound, not that medicine.": "Elamipretid ist in den USA (FDA, beschleunigte Zulassung, September {#}, Marke Forzinity) nur für das Barth-Syndrom zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Endogenous molecule studied in the laboratory. No authorisation as a medicine for the forms sold here; associated health claims are not validated by authorities.": "Körpereigenes Molekül, im Labor untersucht. Keine Arzneimittelzulassung für die hier verkauften Formen; damit verbundene gesundheitsbezogene Aussagen sind von Behörden nicht bestätigt.",
+"Enlarge the photo": "Foto vergrößern",
+"Experimental compound; no medicine authorisation.": "Experimentelle Verbindung; keine Arzneimittelzulassung.",
+"Factual, strictly scientific information on the {#} compounds in the catalogue: what each molecule is and its regulatory status. No health claims.": "Sachliche, streng wissenschaftliche Informationen zu den {#} Verbindungen des Katalogs: was jedes Molekül ist und welchen regulatorischen Status es hat. Keine gesundheitsbezogenen Aussagen.",
+"Format": "Format",
+"Fragment {#}-{#} of human GHRH (sermorelin), which activates the GHRH receptor.": "Fragment {#}-{#} des menschlichen GHRH (Sermorelin), das den GHRH-Rezeptor aktiviert.",
+"Fusion protein (soluble activin type IIB receptor coupled to an antibody fragment) that captures myostatin and related molecules. Its clinical trials were stopped in {#}.": "Fusionsprotein (löslicher Aktivin-Rezeptor Typ IIB, gekoppelt an ein Antikörperfragment), das Myostatin und verwandte Moleküle bindet. Seine klinischen Studien wurden {#} gestoppt.",
+"GHRH analogue (\"no DAC\" version: modified {#}-{#} sequence, also called modified GRF {#}-{#}), designed for better stability.": "GHRH-Analogon (Version „ohne DAC“: modifizierte {#}-{#}-Sequenz, auch modifiziertes GRF {#}-{#} genannt), auf bessere Stabilität ausgelegt.",
+"GHRH({#}-{#}) analogue fitted with a \"DAC\" (drug affinity complex) that binds albumin and greatly extends its duration of action. Its clinical development was stopped in the mid-{#}s.": "GHRH({#}-{#})-Analogon mit einem „DAC“ (Drug Affinity Complex), der an Albumin bindet und die Wirkdauer stark verlängert. Seine klinische Entwicklung wurde Mitte der {#}er-Jahre eingestellt.",
+"GLP-{#} receptor agonist (acylated analogue of human GLP-{#}), developed by Novo Nordisk.": "GLP-{#}-Rezeptoragonist (acyliertes Analogon des menschlichen GLP-{#}), entwickelt von Novo Nordisk.",
+"Index": "Index",
+"Investigational drug (phase {#} clinical trials); not authorised.": "Prüfpräparat (klinische Studien der Phase {#}); nicht zugelassen.",
+"Investigational drug in advanced development, alone and in combination with semaglutide (CagriSema). Status is evolving: refer to health authorities for the current situation.": "Prüfpräparat in fortgeschrittener Entwicklung, allein und in Kombination mit Semaglutid (CagriSema). Der Status entwickelt sich: Für die aktuelle Lage wenden Sie sich an die Gesundheitsbehörden.",
+"Investigational drug, in phase {#} clinical trials; to our knowledge not authorised.": "Prüfpräparat in klinischen Studien der Phase {#}; unseres Wissens nicht zugelassen.",
+"Investigational drug: in phase {#} clinical trials, not authorised to date. According to the company's announcements, a US marketing application is targeted for early {#}. The Novalyx product is a research compound, not a medicine.": "Prüfpräparat: in klinischen Studien der Phase {#}, bislang nicht zugelassen. Laut Unternehmensangaben ist ein US-Zulassungsantrag für Anfang {#} geplant. Das Novalyx-Produkt ist eine Forschungsverbindung, kein Arzneimittel.",
+"Investigational molecule in clinical trials; not authorised as a medicine.": "Prüfsubstanz in klinischen Studien; nicht als Arzneimittel zugelassen.",
+"Its pharmaceutical form (thymalfasin, brand Zadaxin) is authorised in several countries, mainly in Asia, for certain indications; it is not authorised in the United States. The Novalyx product is a research compound.": "Seine pharmazeutische Form (Thymalfasin, Marke Zadaxin) ist in mehreren Ländern, vor allem in Asien, für bestimmte Indikationen zugelassen; in den USA ist sie nicht zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung.",
+"KTTKS pentapeptide coupled to palmitic acid, a cosmetic ingredient studied for collagen synthesis in skin models.": "Pentapeptid KTTKS, gekoppelt an Palmitinsäure, ein kosmetischer Wirkstoff, der in Hautmodellen zur Kollagensynthese untersucht wird.",
+"Laboratory reagent.": "Laborreagenz.",
+"Laboratory solvent: it contains no active substance.": "Laborlösungsmittel: Es enthält keinen Wirkstoff.",
+"Long-acting amylin analogue (amylin is a hormone co-secreted with insulin), developed by Novo Nordisk. It acts on amylin and calcitonin receptors.": "Lang wirkendes Amylin-Analogon (Amylin ist ein zusammen mit Insulin ausgeschüttetes Hormon), entwickelt von Novo Nordisk. Es wirkt auf Amylin- und Calcitonin-Rezeptoren.",
+"Long-acting selective amylin receptor agonist, in clinical development.": "Lang wirkender selektiver Amylin-Rezeptoragonist in klinischer Entwicklung.",
+"Marketed as a medicine in some countries (including Austria, Russia, China); not authorised in the United States. Clinical evidence of efficacy remains debated.": "In einigen Ländern als Arzneimittel vermarktet (darunter Österreich, Russland, China); in den USA nicht zugelassen. Der klinische Wirksamkeitsnachweis bleibt umstritten.",
+"Modified fragment of human growth hormone (amino acids {#}-{#}, with an added tyrosine), studied for its link with lipid metabolism.": "Modifiziertes Fragment des menschlichen Wachstumshormons (Aminosäuren {#}-{#}, mit zusätzlichem Tyrosin), untersucht auf seinen Zusammenhang mit dem Fettstoffwechsel.",
+"Most requested": "Am meisten gefragt",
+"Name": "Name",
+"Naturally occurring tripeptide (glycyl-histidyl-lysine) that forms a complex with copper(II). Present in human plasma, it is studied in the laboratory for its role in the extracellular matrix, collagen synthesis and skin biology.": "Natürlich vorkommendes Tripeptid (Glycyl-Histidyl-Lysin), das mit Kupfer(II) einen Komplex bildet. Es kommt im menschlichen Plasma vor und wird im Labor in Modellen zu Gewebereparatur und Hautbiologie untersucht.",
+"No authorisation; preclinical data only.": "Keine Zulassung; nur präklinische Daten.",
+"No medicine authorisation in any country; no published clinical data.": "Keine Arzneimittelzulassung, in keinem Land; keine veröffentlichten klinischen Daten.",
+"No medicine authorisation in the European Union or the United States.": "Keine Arzneimittelzulassung in der Europäischen Union oder den USA.",
+"No medicine authorisation.": "Keine Arzneimittelzulassung.",
+"No medicine authorisation; clinical development discontinued.": "Keine Arzneimittelzulassung; klinische Entwicklung eingestellt.",
+"No medicine authorisation; clinical development stopped.": "Keine Arzneimittelzulassung; klinische Entwicklung gestoppt.",
+"Nonapeptide ({#} amino acids) isolated from rabbit brain in {#}, studied for its link with slow-wave sleep. Its exact mechanism remains poorly established.": "Nonapeptid ({#} Aminosäuren), {#} aus Kaninchenhirn isoliert, untersucht auf seinen Zusammenhang mit dem Tiefschlaf. Sein genauer Mechanismus ist weiterhin wenig geklärt.",
+"Not authorised as a medicine in any country. Published data come mostly from preclinical (animal) studies; controlled human data are very limited. Listed as prohibited by the World Anti-Doping Agency (WADA).": "In keinem Land als Arzneimittel zugelassen. Veröffentlichte Daten stammen überwiegend aus präklinischen (Tier-)Studien; kontrollierte Humandaten sind sehr begrenzt. Von der Welt-Anti-Doping-Agentur (WADA) als verboten gelistet.",
+"Not authorised as a medicine in the EU or the United States; as pralmorelin it has been used in Japan as a diagnostic agent, to our knowledge. Prohibited by WADA.": "In der EU und den USA nicht als Arzneimittel zugelassen; als Pralmorelin wurde es unseres Wissens in Japan als Diagnostikum verwendet. Von der WADA verboten.",
+"Not authorised as a medicine in the EU or the United States; limited data, mostly from a small number of laboratories.": "In der EU und den USA nicht als Arzneimittel zugelassen; begrenzte Daten, überwiegend aus wenigen Laboren.",
+"Not authorised as a medicine in the United States; aviptadil has been the subject of clinical trials and very limited authorisations depending on the country.": "In den USA nicht als Arzneimittel zugelassen; Aviptadil war Gegenstand klinischer Studien und je nach Land sehr begrenzter Zulassungen.",
+"Not authorised as a medicine. Controlled human data are almost non-existent. Prohibited by WADA.": "Nicht als Arzneimittel zugelassen. Kontrollierte Humandaten sind nahezu nicht vorhanden. Von der WADA verboten.",
+"Not authorised as a medicine. Prohibited by WADA.": "Nicht als Arzneimittel zugelassen. Von der WADA verboten.",
+"Not authorised as a medicine; clinical trials in obesity did not lead to an authorisation.": "Nicht als Arzneimittel zugelassen; klinische Studien zu Adipositas führten zu keiner Zulassung.",
+"Not authorised as a medicine; exploratory clinical trials have taken place without authorisation. Prohibited by WADA.": "Nicht als Arzneimittel zugelassen; explorative klinische Studien fanden ohne Zulassung statt. Von der WADA verboten.",
+"Not authorised as a medicine; research is essentially in vitro and preclinical.": "Nicht als Arzneimittel zugelassen; die Forschung ist im Wesentlichen in vitro und präklinisch.",
+"Not authorised as a medicine; research is essentially preclinical.": "Nicht als Arzneimittel zugelassen; die Forschung ist im Wesentlichen präklinisch.",
+"Not authorised as a medicine; research use. Prohibited by WADA.": "Nicht als Arzneimittel zugelassen; Forschungsverwendung. Von der WADA verboten.",
+"Not authorised as a medicine; several health authorities (for example in the United Kingdom and Australia) have issued warnings about products sold under this name.": "Nicht als Arzneimittel zugelassen; mehrere Gesundheitsbehörden (zum Beispiel im Vereinigten Königreich und in Australien) haben vor unter diesem Namen verkauften Produkten gewarnt.",
+"Not authorised as a medicine; the literature is old and results have been inconsistent.": "Nicht als Arzneimittel zugelassen; die Literatur ist alt und die Ergebnisse waren uneinheitlich.",
+"Not authorised as a medicine; used in research studies in reproductive endocrinology.": "Nicht als Arzneimittel zugelassen; in Forschungsstudien der Reproduktionsendokrinologie verwendet.",
+"Not authorised in the EU or the United States; data come mostly from the Russian literature.": "In der EU und den USA nicht zugelassen; die Daten stammen überwiegend aus der russischen Fachliteratur.",
+"Not authorised in the EU or the United States; the literature is limited and rarely independently replicated.": "In der EU und den USA nicht zugelassen; die Literatur ist begrenzt und selten unabhängig repliziert.",
+"Novalyx research blend of four compounds: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-Forschungsmischung aus vier Verbindungen: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) + {N} ({#} mg) in einem einzigen lyophilisierten Fläschchen. Siehe deren Einträge zur Natur der einzelnen Bestandteile.",
+"Novalyx research blend of three compounds: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-Forschungsmischung aus drei Verbindungen: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) in einem einzigen lyophilisierten Fläschchen. Siehe deren Einträge zur Natur der einzelnen Bestandteile.",
+"Novalyx research blend of two compounds: CJC-{#} no DAC ({#} mg) + ipamorelin ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-Forschungsmischung aus zwei Verbindungen: CJC-{#} ohne DAC ({#} mg) + Ipamorelin ({#} mg) in einem einzigen lyophilisierten Fläschchen. Siehe deren Einträge zur Natur der einzelnen Bestandteile.",
+"Novalyx research blend of two compounds: cagrilintide + semaglutide, in two sizes ({#} mg + {#} mg; {#} mg + {#} mg). See the {N} and {N} entries.": "Novalyx-Forschungsmischung aus zwei Verbindungen: Cagrilintid + Semaglutid, in zwei Größen ({#} mg + {#} mg; {#} mg + {#} mg). Siehe die Einträge {N} und {N}.",
+"Novalyx research blend of two compounds: {N} ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See the {N} and {N} entries for the nature of each component.": "Novalyx-Forschungsmischung aus zwei Verbindungen: {N} ({#} mg) + {N} ({#} mg) in einem einzigen lyophilisierten Fläschchen. Siehe die Einträge {N} und {N} zur Natur der einzelnen Bestandteile.",
+"Novalyx research blend of two compounds: {N} + {N}, in two sizes ({#} mg total: {#} mg + {#} mg; {#} mg total: {#} mg + {#} mg). See the {N} and {N} entries.": "Novalyx-Forschungsmischung aus zwei Verbindungen: {N} + {N}, in zwei Größen ({#} mg gesamt: {#} mg + {#} mg; {#} mg gesamt: {#} mg + {#} mg). Siehe die Einträge {N} und {N}.",
+"Nucleoside (not a peptide) used in research as an activator of AMPK, a key enzyme of cellular energy metabolism.": "Nukleosid (kein Peptid), in der Forschung als Aktivator der AMPK eingesetzt, eines Schlüsselenzyms des zellulären Energiestoffwechsels.",
+"Orders are shipped within {#} h of payment confirmation, then delivered in {#}–{#} days maximum within France. Allow {#}–{#} business days for the rest of the EU, and longer outside the EU depending on destination. A tracking number is sent on dispatch.": "Bestellungen werden innerhalb von {#} h nach Zahlungsbestätigung versandt und in Frankreich in maximal {#}–{#} Tagen geliefert. Rechnen Sie für die übrige Welt mit {#}–{#} Werktagen.",
+"PEGylated form of the MGF peptide (\"mechano growth factor\"), derived from an IGF-{#} splice variant, studied in muscle-cell models.": "PEGylierte Form des MGF-Peptids („Mechano Growth Factor“), abgeleitet von einer IGF-{#}-Spleißvariante, untersucht in Muskelzellmodellen.",
+"Pay by bank transfer": "Per Banküberweisung bezahlen",
+"Peptidomimetic designed to target prohibitin on the blood vessels of white adipose tissue, studied in rodents and primates.": "Peptidomimetikum, das auf Prohibitin in den Blutgefäßen des weißen Fettgewebes abzielt, untersucht an Nagetieren und Primaten.",
+"Preclinical research (cells, animals); a few very limited human studies on analogues. No authorisation.": "Präklinische Forschung (Zellen, Tiere); einige sehr begrenzte Humanstudien zu Analoga. Keine Zulassung.",
+"Preclinical research compound; no medicine authorisation.": "Präklinische Forschungsverbindung; keine Arzneimittelzulassung.",
+"Preparation of peptides and amino acids obtained by enzymatic hydrolysis of pig-brain proteins. It is a mixture, not a single molecule.": "Zubereitung aus Peptiden und Aminosäuren, gewonnen durch enzymatische Hydrolyse von Schweinehirnproteinen. Es ist ein Gemisch, kein einzelnes Molekül.",
+"Proceed to checkout": "Zur Kasse",
+"Proprietary blend of research compounds; it is not a medicine. The status of its components is as described in their own entries.": "Eigene Mischung aus Forschungsverbindungen; sie ist kein Arzneimittel. Der Status ihrer Bestandteile entspricht deren eigenen Einträgen.",
+"Proprietary blend of research compounds; no medicine status. The status of its components is as described in their own entries.": "Eigene Mischung aus Forschungsverbindungen; kein Arzneimittelstatus. Der Status ihrer Bestandteile entspricht deren eigenen Einträgen.",
+"Registered as a medicine in Russia; not authorised in the EU or the United States.": "In Russland als Arzneimittel registriert; in der EU und den USA nicht zugelassen.",
+"Research peptide; no medicine authorisation.": "Forschungspeptid; keine Arzneimittelzulassung.",
+"Research reagent (cell culture); not authorised as a medicine.": "Forschungsreagenz (Zellkultur); nicht als Arzneimittel zugelassen.",
+"Research reagent; no medicine authorisation. Listed on the World Anti-Doping Agency prohibited list.": "Forschungsreagenz; keine Arzneimittelzulassung. Auf der Verbotsliste der Welt-Anti-Doping-Agentur.",
+"Research reagent; not authorised as a medicine.": "Forschungsreagenz; nicht als Arzneimittel zugelassen.",
+"Retatrutide (product name on this site: {N}) is a triple agonist of the GIP, GLP-{#} and glucagon receptors, developed by Eli Lilly (code LY{#}). It activates three receptors involved in energy and glucose metabolism at the same time.": "Retatrutid (Produktname auf dieser Website: {N}) ist ein Dreifach-Agonist der GIP-, GLP-{#}- und Glukagon-Rezeptoren, entwickelt von Eli Lilly (Code LY{#}). Es wird in klinischen Studien zu Adipositas und Typ-2-Diabetes untersucht.",
+"SECURE PAYMENT BY STRIPE": "SICHERE ZAHLUNG ÜBER STRIPE",
+"Search a compound": "Verbindung suchen",
+"Search a compound (e.g. {N}, {N}…)": "Verbindung suchen (z. B. {N}, {N}…)",
+"Secure payment": "Sichere Zahlung",
+"Secure payment by Stripe · Visa · Mastercard · Apple Pay": "Sichere Zahlung über Stripe · Visa · Mastercard · Apple Pay",
+"Shipped within {#} h · delivery in {#}–{#} days maximum in France": "Versand innerhalb von {#} h · Lieferung in maximal {#}–{#} Tagen in Frankreich",
+"Shipping:": "Versand:",
+"Short synthetic peptide (Ala-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to cartilage tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Ala-Glu-Asp) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Knorpelgewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Ala-Glu-Asp-Arg) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to heart tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Ala-Glu-Asp-Arg) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Herzgewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Ala-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to brain tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Ala-Glu-Asp-Pro) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Hirngewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to bronchi tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Glu-Asp-Gly) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Bronchialgewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Glu-Asp-Leu) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to liver tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Glu-Asp-Leu) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Lebergewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Lys-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to blood vessels tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Lys-Glu-Asp) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Gefäßgewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Lys-Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to testes tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Lys-Glu-Asp-Gly) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Hodengewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Lys-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to prostate tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Lys-Glu-Asp-Pro) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Prostatagewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Short synthetic peptide (Lys-Glu-Asp-Trp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to pancreas tissue. Published data come mostly from this team.": "Kurzes synthetisches Peptid (Lys-Glu-Asp-Trp) aus V. Khavinsons Arbeiten zu „Bioregulatoren“ (Institut für Bioregulation und Gerontologie in Sankt Petersburg), untersucht im Zusammenhang mit Pankreasgewebe. Die veröffentlichten Daten stammen überwiegend von diesem Team.",
+"Small molecule ({#}-amino-{#}-methylquinolinium), not a peptide: inhibitor of NNMT (nicotinamide N-methyltransferase), an enzyme of cellular metabolism. Studied in cells and mouse models.": "Kleines Molekül ({#}-Amino-{#}-methylchinolinium), kein Peptid: Hemmer der NNMT (Nicotinamid-N-Methyltransferase), eines Enzyms des Zellstoffwechsels.",
+"Small peptide derived from angiotensin IV, studied in preclinical models for its action on the HGF/c-Met pathway and synapse formation.": "Kleines Peptid, abgeleitet von Angiotensin IV, in präklinischen Modellen auf seine Wirkung auf den HGF/c-Met-Signalweg und die Synapsenbildung untersucht.",
+"Soon": "Bald",
+"Start with the essentials.": "Beginnen Sie mit dem Wesentlichen.",
+"Status:": "Status:",
+"Sterile water containing {#}% acetic acid, used as a reconstitution solvent for peptides that dissolve poorly at neutral pH.": "Steriles Wasser mit {#} % Essigsäure, als Rekonstitutionslösungsmittel für Peptide verwendet, die sich bei neutralem pH schlecht lösen.",
+"Sterile water containing {#}% benzyl alcohol as a bacteriostatic agent, intended for laboratory reconstitution of lyophilised compounds, in a multi-draw vial.": "Steriles Wasser mit {#} % Benzylalkohol als bakteriostatischem Wirkstoff, zur Rekonstitution lyophilisierter Verbindungen im Labor, in einem Mehrfachentnahme-Fläschchen.",
+"Stripe, card": "Stripe, Karte",
+"Support": "Support",
+"Synthetic analogue of α-MSH, known as afamelanotide ([Nle{#}, D-Phe{#}]-α-MSH), an agonist of the MC{#}R receptor.": "Synthetisches Analogon von α-MSH, bekannt als Afamelanotid ([Nle{#}, D-Phe{#}]-α-MSH), ein Agonist des MC{#}R-Rezeptors.",
+"Synthetic cyclic peptide analogue of α-MSH, a non-selective agonist of melanocortin receptors.": "Synthetisches zyklisches Peptid-Analogon von α-MSH, ein nicht selektiver Agonist der Melanocortin-Rezeptoren.",
+"Synthetic derivative of {N} carrying an adamantane group. Independent scientific literature on it is still very limited.": "Synthetisches Derivat von {N} mit einer Adamantan-Gruppe. Die unabhängige wissenschaftliche Literatur dazu ist noch sehr begrenzt.",
+"Synthetic heptapeptide analogue of an ACTH({#}-{#}) fragment, stabilised by a Pro-Gly-Pro tail. Studied for the expression of neurotrophic factors such as BDNF.": "Synthetisches Heptapeptid-Analogon eines ACTH({#}-{#})-Fragments, stabilisiert durch einen Pro-Gly-Pro-Schwanz. Untersucht auf die Expression neurotropher Faktoren wie BDNF.",
+"Synthetic heptapeptide derived from tuftsin (an immunoglobulin fragment), stabilised by a Pro-Gly-Pro tail; studied for modulation of neurotransmitters, including the GABAergic system.": "Synthetisches Heptapeptid, abgeleitet von Tuftsin (einem Immunglobulin-Fragment), stabilisiert durch einen Pro-Gly-Pro-Schwanz; untersucht auf die Modulation von Neurotransmittern.",
+"Synthetic hexapeptide agonist of the ghrelin receptor (GHS-R{#}a): a growth-hormone secretagogue (GHRP = growth hormone-releasing peptide).": "Synthetisches Hexapeptid, Agonist des Ghrelin-Rezeptors (GHS-R{#}a): ein Wachstumshormon-Sekretagog (GHRP = Growth Hormone-Releasing Peptide).",
+"Synthetic hexapeptide, a growth-hormone secretagogue acting on the ghrelin receptor; it also binds CD{#}, which has been studied in cardiac models.": "Synthetisches Hexapeptid, ein Wachstumshormon-Sekretagog mit Wirkung auf den Ghrelin-Rezeptor; es bindet auch an CD{#}, was in Herzmodellen untersucht wurde.",
+"Synthetic hexapeptide, one of the first growth-hormone secretagogues, agonist of the ghrelin receptor (GHS-R{#}a).": "Synthetisches Hexapeptid, einer der ersten Wachstumshormon-Sekretagoge, Agonist des Ghrelin-Rezeptors (GHS-R{#}a).",
+"Synthetic pentapeptide agonist of the ghrelin receptor (GHS-R{#}a), classed among growth-hormone secretagogues.": "Synthetisches Pentapeptid, Agonist des Ghrelin-Rezeptors (GHS-R{#}a), zu den Wachstumshormon-Sekretagogen gezählt.",
+"Synthetic peptide related to thymosin beta-{#}, a {#}-amino-acid protein that binds actin (a cytoskeleton component). \"{N}\" usually refers to a synthetic fragment; definitions vary between suppliers. Studied in vitro and in animals for cell migration and tissue repair.": "Synthetisches Peptid, verwandt mit Thymosin Beta-{#}, einem Protein aus {#} Aminosäuren, das Aktin (einen Bestandteil des Zytoskeletts) bindet. „{N}“ bezeichnet meist ein synthetisches Fragment davon.",
+"Synthetic tetrapeptide (Ala-Glu-Asp-Gly) designed from epithalamin, a pineal-gland extract. Studied, mainly by a Russian research group, for effects on telomerase and cellular ageing.": "Synthetisches Tetrapeptid (Ala-Glu-Asp-Gly), entwickelt nach Epithalamin, einem Extrakt der Zirbeldrüse. Vor allem von einer russischen Forschungsgruppe auf Wirkungen auf Telomere und Alterung untersucht.",
+"Synthetic tripeptide (Glu-Asp-Arg) belonging to the \"peptide bioregulators\" studied by Khavinson's group; examined in cell culture and animals for neuroprotective effects.": "Synthetisches Tripeptid (Glu-Asp-Arg) aus der Gruppe der „Peptid-Bioregulatoren“ der Khavinson-Gruppe; in Zellkultur und an Tieren auf neuroprotektive Wirkungen untersucht.",
+"Synthetic {#}-amino-acid peptide derived from a sequence of the BPC protein found in human gastric juice. In the laboratory it is studied in cell and animal models for its interactions with angiogenesis (blood-vessel formation) and tissue-repair pathways.": "Synthetisches Peptid aus {#} Aminosäuren, abgeleitet von einer Sequenz des Proteins BPC aus dem menschlichen Magensaft. Im Labor wird es in Zell- und Tiermodellen zu Gewebereparatur und Angiogenese untersucht.",
+"Tetrapeptide (also called elamipretide) that binds cardiolipin, a phospholipid of the inner mitochondrial membrane, and is studied for its effect on mitochondrial function.": "Tetrapeptid (auch Elamipretid genannt), das an Cardiolipin bindet, ein Phospholipid der inneren Mitochondrienmembran, und auf seine Wirkung auf die mitochondriale Funktion untersucht wird.",
+"Tripeptide (lysine-proline-valine) matching the C-terminal end of α-MSH (melanocyte-stimulating hormone). Studied in vitro and in animals for its effects on inflammatory signalling, notably in the intestinal epithelium.": "Tripeptid (Lysin-Prolin-Valin), das dem C-terminalen Ende von α-MSH (Melanozyten-stimulierendes Hormon) entspricht. In vitro und an Tieren auf seine entzündungsbezogenen Wirkungen untersucht.",
+"Truncated form of IGF-{#} (des({#}-{#})IGF-{#}) lacking the first three amino acids, with reduced affinity for IGFBPs and enhanced activity at the IGF-{#} receptor in culture. It occurs naturally in some tissues, including the brain.": "Verkürzte Form von IGF-{#} (des({#}-{#})IGF-{#}) ohne die ersten drei Aminosäuren, mit verringerter Affinität zu IGFBPs und verstärkter Aktivität am IGF-{#}-Rezeptor in Zellkultur. Sie kommt in einigen Geweben natürlich vor, darunter im Gehirn.",
+"Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "In der Kosmetik verwendet (topische Anwendung); keine Zulassung als injizierbares Arzneimittel. Die Forschung betrifft hauptsächlich Zellmodelle und topische Anwendungen.",
+"Verifiable analysis reports": "Überprüfbare Analyseberichte",
+"View the whole catalogue": "Gesamten Katalog ansehen",
+"Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "War in den USA zugelassen (Marke Geref) und wurde später aus kommerziellen Gründen zurückgezogen. Von der WADA verboten.",
+"Within {#} h, tracked, plain packaging": "Innerhalb von {#} h, mit Sendungsverfolgung, neutrale Verpackung",
+"{#} lyophilised compounds · one analysis report per batch": "{#} lyophilisierte Verbindungen · ein Analysebericht pro Charge",
+"{#}-amino-acid analogue of GHRH (growth-hormone-releasing hormone), modified to resist degradation.": "GHRH-Analogon (Growth-Hormone-Releasing-Hormon) aus {#} Aminosäuren, gegen Abbau modifiziert.",
+"{#}-amino-acid analogue of human IGF-{#} (Arg{#} substitution and {#}-amino-acid N-terminal extension) with low binding to IGF-binding proteins (IGFBPs). It is mostly used as a cell-culture supplement.": "Analogon des menschlichen IGF-{#} aus {#} Aminosäuren (Arg{#}-Substitution und N-terminale Verlängerung um {#} Aminosäuren) mit geringer Bindung an IGF-Bindungsproteine (IGFBPs).",
+"{#}-amino-acid antimicrobial peptide, the only human member of the cathelicidin family, released by cleavage of the hCAP{#} protein. Studied for its role in innate immunity.": "Antimikrobielles Peptid aus {#} Aminosäuren, das einzige menschliche Mitglied der Cathelicidin-Familie, freigesetzt durch Spaltung des Proteins hCAP{#}. Untersucht auf seine Rolle in der angeborenen Immunität.",
+"{#}-amino-acid fragment of kisspeptin, ligand of the KISS{#}R receptor (GPR{#}), which controls GnRH release and therefore the reproductive axis.": "Fragment von Kisspeptin aus {#} Aminosäuren, Ligand des Rezeptors KISS{#}R (GPR{#}), der die GnRH-Freisetzung und damit die Reproduktionsachse steuert.",
+"{#}-amino-acid neuropeptide acting on VPAC{#} and VPAC{#} receptors, involved in vasodilation, immunity and digestive function. Its synthetic drug form is called aviptadil.": "Neuropeptid aus {#} Aminosäuren mit Wirkung auf die Rezeptoren VPAC{#} und VPAC{#}, beteiligt an Gefäßerweiterung, Immunität und Verdauungsfunktion. Seine synthetische Arzneimittelform heißt Aviptadil.",
+"{#}-amino-acid peptide derived from erythropoietin (helix B), which binds selectively to the \"innate repair receptor\" (EPOR/CD{#} heterodimer) without stimulating erythropoiesis. Also called cibinetide.": "Peptid aus {#} Aminosäuren, abgeleitet von Erythropoetin (Helix B), das selektiv an den „angeborenen Reparaturrezeptor“ (EPOR/CD{#}-Heterodimer) bindet, ohne die Bildung roter Blutkörperchen anzuregen.",
+"{#}-amino-acid peptide derived from prothymosin alpha, studied for modulation of the immune response (T-cell maturation).": "Peptid aus {#} Aminosäuren, abgeleitet von Prothymosin Alpha, untersucht auf die Modulation der Immunantwort (T-Zell-Reifung).",
+"{#}-amino-acid peptide derived from spadin, studied in animals as an inhibitor of the TREK-{#} potassium channel.": "Peptid aus {#} Aminosäuren, abgeleitet von Spadin, am Tier als Hemmer des Kaliumkanals TREK-{#} untersucht.",
+"{#}-amino-acid peptide encoded by mitochondrial DNA ({#}S rRNA gene): a \"mitochondrial-derived peptide\". Studied for its role in metabolic homeostasis and cellular stress response.": "Peptid aus {#} Aminosäuren, kodiert von der mitochondrialen DNA ({#}S-rRNA-Gen): ein „mitochondrial abgeleitetes Peptid“. Untersucht auf seine Rolle in der Stoffwechselhomöostase.",
+"{#}-amino-acid peptide encoded by mitochondrial DNA, studied for its cytoprotective signalling pathways in cell and animal models.": "Peptid aus {#} Aminosäuren, kodiert von der mitochondrialen DNA, untersucht auf seine zytoprotektiven Signalwege in Zell- und Tiermodellen.",
+"{#}mg · Pack de {#}": "{#}mg · {#}er-Pack",
+"{#}ml · Pack de {#}": "{#}ml · {#}er-Pack",
+"{N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "{N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen.",
+"{N} variant acetylated at one end (N-acetyl) and amidated at the other, modifications intended to make it more stable. Few independent published studies.": "{N}-Variante, an einem Ende acetyliert (N-Acetyl) und am anderen amidiert, Modifikationen zur Erhöhung der Stabilität. Wenige unabhängige veröffentlichte Studien.",
+"{N} {#}mg · Pack de {#} — Novalyx Research": "{N} {#}mg · {#}er-Pack — Novalyx Research",
+"{N} {#}ml · Pack de {#} — Novalyx Research": "{N} {#}ml · {#}er-Pack — Novalyx Research",
+"— or —": "— oder —",
+"All Novalyx products are compounds supplied exclusively for laboratory research (in vitro): not medicines, dietary supplements or cosmetics, with no human or animal use. Orders are reserved for adults and qualified professionals. It is your responsibility to check the regulations applicable in your country.": "Alle Novalyx-Produkte sind Verbindungen, die ausschließlich für die Laborforschung (in vitro) geliefert werden: keine Arzneimittel, Nahrungsergänzungsmittel oder Kosmetika, keine Anwendung am Menschen oder Tier. Bestellungen sind Volljährigen und qualifizierten Fachleuten vorbehalten. Es liegt in Ihrer Verantwortung, die in Ihrem Land geltenden Vorschriften zu prüfen.",
+"Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The {N} {#}mg report is published (HPLC purity {#}%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.": "Die Analysen werden von Janoshik Analytical (Tschechische Republik) durchgeführt, einem unabhängigen Labor. Der Bericht zu {N} {#}mg ist veröffentlicht (HPLC-Reinheit {#} %) mit seinem Prüfschlüssel: siehe die Seite Analysen. Für andere Verbindungen wird der Bericht veröffentlicht, sobald die erste Charge analysiert ist.",
+"Before reconstitution: dry, at room temperature, away from light, vial sealed. After reconstitution: between {#} and {#} °C (refrigerated).": "Vor der Rekonstitution: trocken, bei Raumtemperatur, lichtgeschützt, Fläschchen versiegelt. Nach der Rekonstitution: zwischen {#} und {#} °C (gekühlt).",
+"COA analyses": "COA-Analysen",
+"Currently available to order online: {N}, {N}. Other items are shown as \"coming soon\".": "Derzeit online bestellbar: {N}, {N}. Andere Artikel sind als „demnächst“ gekennzeichnet.",
+"Educational information only": "Nur Bildungsinformationen",
+"Hello, I'm the Novalyx assistant. I can tell you about our research compounds (nature, mechanism, regulatory status), prices, shipping, payment, storage and COA analyses.": "Hallo, ich bin der Novalyx-Assistent. Ich kann Ihnen etwas über unsere Forschungsverbindungen (Natur, Mechanismus, regulatorischer Status), Preise, Versand, Zahlung, Lagerung und COA-Analysen sagen.",
+"I can't answer that question. Novalyx products are compounds supplied exclusively for laboratory research (no human or animal use), and this assistant gives no dose, protocol or medical advice. For any health question, please consult a healthcare professional.": "Diese Frage kann ich nicht beantworten. Novalyx-Produkte sind Verbindungen, die ausschließlich für die Laborforschung geliefert werden (keine Anwendung am Menschen oder Tier), und dieser Assistent gibt keine Dosierungs-, Protokoll- oder medizinischen Ratschläge. Bei Gesundheitsfragen wenden Sie sich bitte an eine medizinische Fachkraft.",
+"I don't have reliable information on this and I prefer not to improvise. Write to us at contact@novalyxresearch.com (reply within one business day), or pick a question below.": "Dazu habe ich keine verlässlichen Informationen, und ich improvisiere lieber nicht. Schreiben Sie uns an contact@novalyxresearch.com (Antwort innerhalb eines Werktags) oder wählen Sie unten eine Frage.",
+"I give no dose, protocol or medical advice.": "Ich gebe keine Dosierungs-, Protokoll- oder medizinischen Ratschläge.",
+"Note: educational information only. No medical advice, no dose, no usage recommendation. Product reserved for laboratory research.": "Hinweis: nur Bildungsinformationen. Keine medizinische Beratung, keine Dosierung, keine Anwendungsempfehlung. Produkt der Laborforschung vorbehalten.",
+"Novalyx assistant": "Novalyx-Assistent",
+"On Novalyx: available to order.": "Bei Novalyx: bestellbar.",
+"On Novalyx: coming soon (not yet available to order).": "Bei Novalyx: demnächst (noch nicht bestellbar).",
+"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (free in France and the EU on {N} Packs; bacteriostatic water {#}€ in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellungen werden innerhalb von {#} h nach Zahlungsbestätigung aus Paris versandt. Lieferung in maximal {#} bis {#} Tagen innerhalb Frankreichs; länger für die übrige Welt (siehe Seite Versand). Versand nach Land: Frankreich {#}€, EU {#}€, Schweiz/Vereinigtes Königreich {#}€, USA/Kanada {#}€, Australien, Neuseeland und andere Länder {#}€ (kostenlos in Frankreich und der EU für {N}-Packs; bakteriostatisches Wasser {#}€ in Frankreich und der EU). Beim Versand wird eine Sendungsnummer mitgeteilt. Außerhalb der Europäischen Union ist der Käufer für Zölle und die Einhaltung örtlicher Vorschriften verantwortlich.",
+"Payment by card through Stripe (your banking data never touch our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received. Any question: contact@novalyxresearch.com.": "Zahlung per Karte über Stripe (Ihre Bankdaten berühren nie unsere Server) oder per Banküberweisung, auch bei kleinen Bestellungen: Wählen Sie „Per Banküberweisung bezahlen“ im Warenkorb. Die Bestellung wird nach Zahlungseingang versandt. Fragen: contact@novalyxresearch.com.",
+"What is {N}?": "Was ist {N}?",
+"Which product do you mean? Give its name (for example \"price of {N}\").": "Welches Produkt meinen Sie? Nennen Sie seinen Namen (zum Beispiel „Preis von {N}“).",
+"Which products are available?": "Welche Produkte sind verfügbar?",
+"Your question": "Ihre Frage",
+"Your question…": "Ihre Frage…",
+"Status (checked October {#}): Afamelanotide is authorised as an implant (brand Scenesse) for a specific indication (erythropoietic protoporphyria) in the EU and the United States. The Novalyx product is a research compound, not that medicine.": "Status (geprüft im Oktober {#}): Afamelanotid ist als Implantat (Marke Scenesse) für eine bestimmte Indikation (erythropoetische Protoporphyrie) in der EU und den USA zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Status (checked October {#}): Approved in China (NMPA, June {#}) for chronic weight management in adults; to our knowledge not approved in the EU or the United States.": "Status (geprüft im Oktober {#}): In China zugelassen (NMPA, Juni {#}) für das chronische Gewichtsmanagement bei Erwachsenen; unseres Wissens in der EU und den USA nicht zugelassen.",
+"Status (checked October {#}): Authorised in the United States (brand Egrifta) for a specific indication (HIV-associated abdominal lipodystrophy). The Novalyx product is a research compound, not that medicine.": "Status (geprüft im Oktober {#}): In den USA (Marke Egrifta) für eine bestimmte Indikation zugelassen (HIV-assoziierte abdominale Lipodystrophie). Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Status (checked October {#}): Authorised in the United States (brand Vyleesi) for a specific indication. The Novalyx product is a research compound, not that medicine.": "Status (geprüft im Oktober {#}): In den USA (Marke Vyleesi) für eine bestimmte Indikation zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Status (checked October {#}): Authorised medicine (FDA and EMA) under the brands Mounjaro and Zepbound. The Novalyx product is a research compound and is not that medicine.": "Status (geprüft im Oktober {#}): Zugelassenes Arzneimittel (FDA und EMA) unter den Marken Mounjaro und Zepbound. Das Novalyx-Produkt ist eine Forschungsverbindung und nicht dieses Arzneimittel.",
+"Status (checked October {#}): Authorised medicine under the brands Ozempic, Wegovy and Rybelsus. The Novalyx product is a research compound and is not that medicine.": "Status (geprüft im Oktober {#}): Zugelassenes Arzneimittel unter den Marken Ozempic, Wegovy und Rybelsus. Das Novalyx-Produkt ist eine Forschungsverbindung und nicht dieses Arzneimittel.",
+"Status (checked October {#}): Both components are investigational molecules, not authorised as medicines.": "Status (geprüft im Oktober {#}): Beide Bestandteile sind Prüfsubstanzen, nicht als Arzneimittel zugelassen.",
+"Status (checked October {#}): Cosmetic ingredient (topical use); efficacy data come mostly from manufacturers. No medicine status.": "Status (geprüft im Oktober {#}): Kosmetischer Wirkstoff (topische Anwendung); Wirksamkeitsdaten stammen überwiegend von Herstellern. Kein Arzneimittelstatus.",
+"Status (checked October {#}): Cosmetic ingredient; no medicine status.": "Status (geprüft im Oktober {#}): Kosmetischer Wirkstoff; kein Arzneimittelstatus.",
+"Status (checked October {#}): Elamipretide is approved in the United States (FDA, accelerated approval, September {#}, brand Forzinity) only for Barth syndrome. The Novalyx product is a research compound, not that medicine.": "Status (geprüft im Oktober {#}): Elamipretid ist in den USA (FDA, beschleunigte Zulassung, September {#}, Marke Forzinity) nur für das Barth-Syndrom zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung, nicht dieses Arzneimittel.",
+"Status (checked October {#}): Endogenous molecule studied in the laboratory. No authorisation as a medicine for the forms sold here; associated health claims are not validated by authorities.": "Status (geprüft im Oktober {#}): Körpereigenes Molekül, im Labor untersucht. Keine Arzneimittelzulassung für die hier verkauften Formen; damit verbundene gesundheitsbezogene Aussagen sind von Behörden nicht bestätigt.",
+"Status (checked October {#}): Experimental compound; no medicine authorisation.": "Status (geprüft im Oktober {#}): Experimentelle Verbindung; keine Arzneimittelzulassung.",
+"Status (checked October {#}): Investigational drug (phase {#} clinical trials); not authorised.": "Status (geprüft im Oktober {#}): Prüfpräparat (klinische Studien der Phase {#}); nicht zugelassen.",
+"Status (checked October {#}): Investigational drug in advanced development, alone and in combination with semaglutide (CagriSema). Status is evolving: refer to health authorities for the current situation.": "Status (geprüft im Oktober {#}): Prüfpräparat in fortgeschrittener Entwicklung, allein und in Kombination mit Semaglutid (CagriSema). Der Status entwickelt sich: Für die aktuelle Lage wenden Sie sich an die Gesundheitsbehörden.",
+"Status (checked October {#}): Investigational drug, in phase {#} clinical trials; to our knowledge not authorised.": "Status (geprüft im Oktober {#}): Prüfpräparat in klinischen Studien der Phase {#}; unseres Wissens nicht zugelassen.",
+"Status (checked October {#}): Investigational drug: in phase {#} clinical trials, not authorised to date. According to the company's announcements, a US marketing application is targeted for early {#}. The Novalyx product is a research compound, not a medicine.": "Status (geprüft im Oktober {#}): Prüfpräparat: in klinischen Studien der Phase {#}, bislang nicht zugelassen. Laut Unternehmensangaben ist ein US-Zulassungsantrag für Anfang {#} geplant. Das Novalyx-Produkt ist eine Forschungsverbindung, kein Arzneimittel.",
+"Status (checked October {#}): Investigational molecule in clinical trials; not authorised as a medicine.": "Status (geprüft im Oktober {#}): Prüfsubstanz in klinischen Studien; nicht als Arzneimittel zugelassen.",
+"Status (checked October {#}): Its pharmaceutical form (thymalfasin, brand Zadaxin) is authorised in several countries, mainly in Asia, for certain indications; it is not authorised in the United States. The Novalyx product is a research compound.": "Status (geprüft im Oktober {#}): Seine pharmazeutische Form (Thymalfasin, Marke Zadaxin) ist in mehreren Ländern, vor allem in Asien, für bestimmte Indikationen zugelassen; in den USA ist sie nicht zugelassen. Das Novalyx-Produkt ist eine Forschungsverbindung.",
+"Status (checked October {#}): Laboratory reagent.": "Status (geprüft im Oktober {#}): Laborreagenz.",
+"Status (checked October {#}): Laboratory solvent: it contains no active substance.": "Status (geprüft im Oktober {#}): Laborlösungsmittel: Es enthält keinen Wirkstoff.",
+"Status (checked October {#}): Marketed as a medicine in some countries (including Austria, Russia, China); not authorised in the United States. Clinical evidence of efficacy remains debated.": "Status (geprüft im Oktober {#}): In einigen Ländern als Arzneimittel vermarktet (darunter Österreich, Russland, China); in den USA nicht zugelassen. Der klinische Wirksamkeitsnachweis bleibt umstritten.",
+"Status (checked October {#}): No authorisation; preclinical data only.": "Status (geprüft im Oktober {#}): Keine Zulassung; nur präklinische Daten.",
+"Status (checked October {#}): No medicine authorisation in any country; no published clinical data.": "Status (geprüft im Oktober {#}): Keine Arzneimittelzulassung, in keinem Land; keine veröffentlichten klinischen Daten.",
+"Status (checked October {#}): No medicine authorisation in the European Union or the United States.": "Status (geprüft im Oktober {#}): Keine Arzneimittelzulassung in der Europäischen Union oder den USA.",
+"Status (checked October {#}): No medicine authorisation.": "Status (geprüft im Oktober {#}): Keine Arzneimittelzulassung.",
+"Status (checked October {#}): No medicine authorisation; clinical development discontinued.": "Status (geprüft im Oktober {#}): Keine Arzneimittelzulassung; klinische Entwicklung eingestellt.",
+"Status (checked October {#}): No medicine authorisation; clinical development stopped.": "Status (geprüft im Oktober {#}): Keine Arzneimittelzulassung; klinische Entwicklung gestoppt.",
+"Status (checked October {#}): Not authorised as a medicine in any country. Published data come mostly from preclinical (animal) studies; controlled human data are very limited. Listed as prohibited by the World Anti-Doping Agency (WADA).": "Status (geprüft im Oktober {#}): In keinem Land als Arzneimittel zugelassen. Veröffentlichte Daten stammen überwiegend aus präklinischen (Tier-)Studien; kontrollierte Humandaten sind sehr begrenzt. Von der Welt-Anti-Doping-Agentur (WADA) als verboten gelistet.",
+"Status (checked October {#}): Not authorised as a medicine in the EU or the United States; as pralmorelin it has been used in Japan as a diagnostic agent, to our knowledge. Prohibited by WADA.": "Status (geprüft im Oktober {#}): In der EU und den USA nicht als Arzneimittel zugelassen; als Pralmorelin wurde es unseres Wissens in Japan als Diagnostikum verwendet. Von der WADA verboten.",
+"Status (checked October {#}): Not authorised as a medicine in the EU or the United States; limited data, mostly from a small number of laboratories.": "Status (geprüft im Oktober {#}): In der EU und den USA nicht als Arzneimittel zugelassen; begrenzte Daten, überwiegend aus wenigen Laboren.",
+"Status (checked October {#}): Not authorised as a medicine in the United States; aviptadil has been the subject of clinical trials and very limited authorisations depending on the country.": "Status (geprüft im Oktober {#}): In den USA nicht als Arzneimittel zugelassen; Aviptadil war Gegenstand klinischer Studien und je nach Land sehr begrenzter Zulassungen.",
+"Status (checked October {#}): Not authorised as a medicine. Controlled human data are almost non-existent. Prohibited by WADA.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen. Kontrollierte Humandaten sind nahezu nicht vorhanden. Von der WADA verboten.",
+"Status (checked October {#}): Not authorised as a medicine. Prohibited by WADA.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen. Von der WADA verboten.",
+"Status (checked October {#}): Not authorised as a medicine; clinical trials in obesity did not lead to an authorisation.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; klinische Studien zu Adipositas führten zu keiner Zulassung.",
+"Status (checked October {#}): Not authorised as a medicine; exploratory clinical trials have taken place without authorisation. Prohibited by WADA.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; explorative klinische Studien fanden ohne Zulassung statt. Von der WADA verboten.",
+"Status (checked October {#}): Not authorised as a medicine; research is essentially in vitro and preclinical.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; die Forschung ist im Wesentlichen in vitro und präklinisch.",
+"Status (checked October {#}): Not authorised as a medicine; research is essentially preclinical.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; die Forschung ist im Wesentlichen präklinisch.",
+"Status (checked October {#}): Not authorised as a medicine; research use. Prohibited by WADA.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; Forschungsverwendung. Von der WADA verboten.",
+"Status (checked October {#}): Not authorised as a medicine; several health authorities (for example in the United Kingdom and Australia) have issued warnings about products sold under this name.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; mehrere Gesundheitsbehörden (zum Beispiel im Vereinigten Königreich und in Australien) haben vor unter diesem Namen verkauften Produkten gewarnt.",
+"Status (checked October {#}): Not authorised as a medicine; the literature is old and results have been inconsistent.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; die Literatur ist alt und die Ergebnisse waren uneinheitlich.",
+"Status (checked October {#}): Not authorised as a medicine; used in research studies in reproductive endocrinology.": "Status (geprüft im Oktober {#}): Nicht als Arzneimittel zugelassen; in Forschungsstudien der Reproduktionsendokrinologie verwendet.",
+"Status (checked October {#}): Not authorised in the EU or the United States; data come mostly from the Russian literature.": "Status (geprüft im Oktober {#}): In der EU und den USA nicht zugelassen; die Daten stammen überwiegend aus der russischen Fachliteratur.",
+"Status (checked October {#}): Not authorised in the EU or the United States; the literature is limited and rarely independently replicated.": "Status (geprüft im Oktober {#}): In der EU und den USA nicht zugelassen; die Literatur ist begrenzt und selten unabhängig repliziert.",
+"Status (checked October {#}): Preclinical research (cells, animals); a few very limited human studies on analogues. No authorisation.": "Status (geprüft im Oktober {#}): Präklinische Forschung (Zellen, Tiere); einige sehr begrenzte Humanstudien zu Analoga. Keine Zulassung.",
+"Status (checked October {#}): Preclinical research compound; no medicine authorisation.": "Status (geprüft im Oktober {#}): Präklinische Forschungsverbindung; keine Arzneimittelzulassung.",
+"Status (checked October {#}): Proprietary blend of research compounds; it is not a medicine. The status of its components is as described in their own entries.": "Status (geprüft im Oktober {#}): Eigene Mischung aus Forschungsverbindungen; sie ist kein Arzneimittel. Der Status ihrer Bestandteile entspricht deren eigenen Einträgen.",
+"Status (checked October {#}): Proprietary blend of research compounds; no medicine status. The status of its components is as described in their own entries.": "Status (geprüft im Oktober {#}): Eigene Mischung aus Forschungsverbindungen; kein Arzneimittelstatus. Der Status ihrer Bestandteile entspricht deren eigenen Einträgen.",
+"Status (checked October {#}): Registered as a medicine in Russia; not authorised in the EU or the United States.": "Status (geprüft im Oktober {#}): In Russland als Arzneimittel registriert; in der EU und den USA nicht zugelassen.",
+"Status (checked October {#}): Research peptide; no medicine authorisation.": "Status (geprüft im Oktober {#}): Forschungspeptid; keine Arzneimittelzulassung.",
+"Status (checked October {#}): Research reagent (cell culture); not authorised as a medicine.": "Status (geprüft im Oktober {#}): Forschungsreagenz (Zellkultur); nicht als Arzneimittel zugelassen.",
+"Status (checked October {#}): Research reagent; no medicine authorisation. Listed on the World Anti-Doping Agency prohibited list.": "Status (geprüft im Oktober {#}): Forschungsreagenz; keine Arzneimittelzulassung. Auf der Verbotsliste der Welt-Anti-Doping-Agentur.",
+"Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (geprüft im Oktober {#}): Forschungsreagenz; nicht als Arzneimittel zugelassen.",
+"Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (geprüft im Oktober {#}): In der Kosmetik verwendet (topische Anwendung); keine Zulassung als injizierbares Arzneimittel. Die Forschung betrifft hauptsächlich Zellmodelle und topische Anwendungen.",
+"Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (geprüft im Oktober {#}): War in den USA zugelassen (Marke Geref) und wurde später aus kommerziellen Gründen zurückgezogen. Von der WADA verboten.",
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen."
+};
+/* Dictionnaire néerlandais : même principe que XL_DE. */
+const XL_NL = {
+", documented, verifiable.": ", gedocumenteerd, verifieerbaar.",
+". An invoice appears with a QR code and the exact amount, valid for {#} minutes.": ". Er verschijnt een factuur met een QR-code en het exacte bedrag, {#} minuten geldig.",
+". Buy your order amount, plus {#}€–{#} for sending fees.": ". Koop het bedrag van uw bestelling, plus {#}€–{#} voor de verzendkosten.",
+"/ vial": "/ flacon",
+"/ {#} mg": "/ {#} mg",
+"A coenzyme central to cellular-energy and mitochondrial research, used in a wide range of biochemical assays.": "Een co-enzym dat centraal staat in onderzoek naar cellulaire energie en mitochondriën, gebruikt in uiteenlopende biochemische assays.",
+"A commission on every order placed with your code.": "Een commissie op elke bestelling met uw code.",
+"A copper-binding tripeptide investigated in skin-biology and extracellular-matrix research models.": "Een koperbindend tripeptide, onderzocht in onderzoeksmodellen van huidbiologie en de extracellulaire matrix.",
+"A dual-receptor research peptide used as a reference compound in metabolic signalling studies.": "Een dual-receptor-onderzoekspeptide, gebruikt als referentieverbinding in studies naar metabole signalering.",
+"A mitochondrial-derived peptide investigated in metabolic and cellular-energy research.": "Een van mitochondriën afgeleid peptide, onderzocht in metabool onderzoek en onderzoek naar cellulaire energie.",
+"A monthly email recap of the sales your code generated.": "Een maandelijks e-mailoverzicht van de verkopen via uw code.",
+"A peptide studied in immune-modulation and T-cell research models.": "Een peptide, bestudeerd in onderzoeksmodellen van immuunmodulatie en T-cellen.",
+"A research peptide referenced in growth-hormone secretagogue and receptor-signalling studies.": "Een onderzoekspeptide, aangehaald in studies naar groeihormoon-secretagogen en receptorsignalering.",
+"A research peptide widely referenced in receptor-binding and metabolic-pathway laboratory studies.": "Een onderzoekspeptide dat veel wordt aangehaald in laboratoriumstudies naar receptorbinding en metabole routes.",
+"A sample goes to Janoshik Analytical: identity, HPLC purity, measured content.": "Een monster gaat naar Janoshik Analytical: identiteit, HPLC-zuiverheid, gemeten gehalte.",
+"A synthetic peptide investigated in neuromodulation and neuroprotection research.": "Een synthetisch peptide, onderzocht in onderzoek naar neuromodulatie en neuroprotectie.",
+"A synthetic tetrapeptide studied in telomere-biology and cellular-ageing research models.": "Een synthetisch tetrapeptide, bestudeerd in onderzoeksmodellen van telomeerbiologie en cellulaire veroudering.",
+"A unique promo code under your name, valid across the catalogue.": "Een persoonlijke kortingscode op uw naam, geldig voor de hele catalogus.",
+"AMYLIN RECEPTOR RESEARCH": "ONDERZOEK AMYLINERECEPTOR",
+"ANTI-AGING RESEARCH": "ANTI-AGING-ONDERZOEK",
+"ANTI-INFLAMMATORY RESEARCH": "ONTSTEKINGSONDERZOEK",
+"ANTIMICROBIAL RESEARCH": "ANTIMICROBIEEL ONDERZOEK",
+"Accept all": "Alles accepteren",
+"Accuracy": "Nauwkeurigheid",
+"Acetic Acid Water {#}%": "Azijnzuurwater {#}%",
+"Add": "Toevoegen",
+"Add to cart": "In winkelwagen",
+"Address": "Adres",
+"Adult researchers and laboratory professionals acting in compliance with the laws of their jurisdiction.": "Volwassen onderzoekers en laboratoriumprofessionals die handelen in overeenstemming met de wetten van hun land.",
+"All": "Alles",
+"All compounds": "Alle verbindingen",
+"Ambassador Program": "Ambassadeursprogramma",
+"Ambassadors": "Ambassadeurs",
+"An instant discount at checkout.": "Directe korting bij het afrekenen.",
+"Analysed": "Geanalyseerd",
+"Analysed and published.": "Geanalyseerd en gepubliceerd.",
+"Analysed product · published batch": "Geanalyseerd product · gepubliceerde batch",
+"Analyses": "Analyses",
+"Analyses ordered by Novalyx on its own batches. Each new batch is analysed in turn and its report is published here.": "Analyses die Novalyx op zijn eigen batches laat uitvoeren. Elke nieuwe batch wordt op zijn beurt geanalyseerd en het rapport wordt hier gepubliceerd.",
+"Analysis date": "Analysedatum",
+"Analysis ordered by Novalyx on its {#}mg batch. The original report can be viewed at any time on Janoshik's website.": "Analyse die Novalyx op zijn batch van {#}mg liet uitvoeren. Het originele rapport is altijd in te zien op de website van Janoshik.",
+"Analysis pending": "Analyse in behandeling",
+"Analysis report available for the {#}mg — select it to view.": "Analyserapport beschikbaar voor {#}mg — selecteer het om het te bekijken.",
+"Another question?": "Nog een vraag?",
+"Are these products legal in my country?": "Zijn deze producten legaal in mijn land?",
+"Assistant": "Assistent",
+"Audience size (optional)": "Bereik (optioneel)",
+"Australia, New Zealand and other countries": "Australië, Nieuw-Zeeland en andere landen",
+"Australia, New Zealand, other countries": "Australië, Nieuw-Zeeland, andere landen",
+"BIOREGULATOR RESEARCH": "ONDERZOEK BIOREGULATOREN",
+"Bacteriostatic Water": "Bacteriostatisch water",
+"Bacteriostatic water {#} ml": "Bacteriostatisch water {#} ml",
+"Batch": "Batch",
+"Batch selection": "Batchselectie",
+"Bioregulators": "Bioregulatoren",
+"Bitcoin payment": "Bitcoin-betaling",
+"Bitcoin payment, billed in euros": "Bitcoin-betaling, gefactureerd in euro",
+"Bitcoin payment: how does it work? ({#} steps)": "Bitcoin-betaling: hoe werkt het? ({#} stappen)",
+"Bitcoin, billed in euros": "Bitcoin, gefactureerd in euro",
+"Both components are investigational molecules, not authorised as medicines.": "Beide componenten zijn onderzoeksmoleculen, niet als geneesmiddel toegelaten.",
+"Buy": "Kopen",
+"Buy Bitcoin": "Bitcoin kopen",
+"Buy now": "Nu kopen",
+"By entering you confirm compliance with all applicable laws in your jurisdiction.": "Door verder te gaan bevestigt u dat u alle geldende wetten in uw land naleeft.",
+"By using this website or placing an order you agree to these Terms. If you disagree, do not use this site.": "Door deze website te gebruiken of een bestelling te plaatsen, gaat u akkoord met deze voorwaarden. Als u niet akkoord gaat, gebruik deze site dan niet.",
+"CELLULAR ENERGY RESEARCH": "ONDERZOEK CELLULAIRE ENERGIE",
+"CELLULAR RESEARCH": "CELLULAIR ONDERZOEK",
+"CJC-{#} (no DAC)": "CJC-{#} (zonder DAC)",
+"CJC-{#} (with DAC)": "CJC-{#} (met DAC)",
+"COA analyses": "COA-analyses",
+"COMPLETE RESEARCH COMPLEX": "COMPLEET ONDERZOEKSCOMPLEX",
+"COSMETIC PEPTIDE RESEARCH": "ONDERZOEK COSMETISCHE PEPTIDEN",
+"Cart": "Winkelwagen",
+"Catalogue": "Catalogus",
+"Cellular energy, mitochondria, telomeres.": "Cellulaire energie, mitochondriën, telomeren.",
+"Check that the amount received matches.": "Controleer of het ontvangen bedrag overeenkomt.",
+"Close": "Sluiten",
+"Cognitive": "Cognitief",
+"Cognitive research": "Cognitief onderzoek",
+"Coming soon": "Binnenkort",
+"Coming soon — notify me": "Binnenkort — breng mij op de hoogte",
+"Company": "Bedrijf",
+"Composition": "Samenstelling",
+"Compound notes": "Productfiches",
+"Compounds supplied exclusively for in-vitro laboratory research. Not medicines or dietary supplements.": "Verbindingen uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Geen geneesmiddelen of voedingssupplementen.",
+"Confirm. That's it.": "Bevestigen. Klaar.",
+"Confirmation email": "Bevestigingsmail",
+"Confirmed in {#}–{#} min": "Bevestigd in {#}–{#} min",
+"Contact": "Contact",
+"Contact us": "Contact opnemen",
+"Cosmetic Peptides": "Dermocosmetische peptiden",
+"Cosmetic ingredient (topical use); efficacy data come mostly from manufacturers. No medicine status.": "Cosmetisch ingrediënt (topisch gebruik); werkzaamheidsgegevens komen vooral van fabrikanten. Geen geneesmiddelstatus.",
+"Cosmetic ingredient; no medicine status.": "Cosmetisch ingrediënt; geen geneesmiddelstatus.",
+"Crypto": "Crypto",
+"Currency": "Valuta",
+"Currently available to order online: {N}, {N}. Other items are shown as \"coming soon\".": "Momenteel online te bestellen: {N}, {N}. Andere artikelen staan als „binnenkort” vermeld.",
+"Customise": "Aanpassen",
+"Cyclic peptide (bremelanotide), agonist of melanocortin receptors (notably MC{#}R), related to melanotan II.": "Cyclisch peptide (bremelanotide), agonist van melanocortinereceptoren (met name MC{#}R), verwant aan melanotan II.",
+"DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID {#} MIN": "DIRECTE BITCOIN-BETALING · GEFACTUREERD IN EURO · FACTUUR {#} MIN GELDIG",
+"DUAL-AGONIST RESEARCH": "ONDERZOEK DUALE AGONISTEN",
+"DUAL-RECEPTOR RESEARCH": "ONDERZOEK DUALE RECEPTOREN",
+"Data enquiries:": "Vragen over gegevens:",
+"Date": "Datum",
+"Delivery country": "Land van levering",
+"Dermo-cosmetic peptide ingredients.": "Dermocosmetische peptide-ingrediënten.",
+"Details": "Details",
+"Direct Bitcoin payment · billed in euros": "Directe Bitcoin-betaling · gefactureerd in euro",
+"Direct payment": "Directe betaling",
+"Disclaimer": "Disclaimer",
+"Discreet": "Discreet",
+"Dispatch": "Verzending",
+"Do the published reports match my vial?": "Komen de gepubliceerde rapporten overeen met mijn flacon?",
+"Dry, room temperature, away from light before reconstitution; {#}–{#}°C after reconstitution": "Droog, kamertemperatuur, beschermd tegen licht vóór reconstitutie; {#}–{#}°C na reconstitutie",
+"Dual agonist of the GIP and GLP-{#} receptors ({#}-amino-acid peptide, Eli Lilly).": "Duale agonist van de GIP- en GLP-{#}-receptoren (peptide van {#} aminozuren, Eli Lilly).",
+"Dual agonist of the glucagon and GLP-{#} receptors, developed by Boehringer Ingelheim (BI {#}).": "Duale agonist van de glucagon- en GLP-{#}-receptoren, ontwikkeld door Boehringer Ingelheim (BI {#}).",
+"ENTER SITE →": "SITE BETREDEN →",
+"Each batch is selected from our manufacturing partner, with its certificate of analysis.": "Elke batch wordt geselecteerd bij onze productiepartner, met zijn analysecertificaat.",
+"Educational information only": "Uitsluitend educatieve informatie",
+"Email": "E-mail",
+"Email us and we'll guide you step by step, the first time and every time after.": "Schrijf ons en we begeleiden u stap voor stap, de eerste keer en alle volgende keren.",
+"Enlarge the photo": "Foto vergroten",
+"Essential cookies for functionality only. Analytics cookies placed with consent only.": "Alleen cookies die nodig zijn voor de werking. Analysecookies alleen met toestemming.",
+"European Union": "Europese Unie",
+"European Union (excl. France)": "Europese Unie (zonder Frankrijk)",
+"Experimental compound; no medicine authorisation.": "Experimentele verbinding; geen geneesmiddelvergunning.",
+"Factual, strictly scientific information on catalogue compounds. No health claims.": "Feitelijke, strikt wetenschappelijke informatie over de verbindingen uit de catalogus. Geen gezondheidsclaims.",
+"Fermer": "Sluiten",
+"First time? How to pay with Bitcoin": "Eerste keer? Zo betaalt u met Bitcoin",
+"For in-vitro laboratory research only. Not for human or veterinary use.": "Uitsluitend voor in-vitro laboratoriumonderzoek. Niet voor gebruik bij mens of dier.",
+"For volume orders, recurring supply or a specific document request, write to us. Reply within one business day.": "Voor volumebestellingen, regelmatige levering of een specifiek documentverzoek kunt u ons schrijven. Antwoord binnen één werkdag.",
+"For you": "Voor u",
+"For your audience": "Voor uw publiek",
+"Format": "Formaat",
+"Four steps, nothing hidden.": "Vier stappen, niets verborgen.",
+"Fragment {#}-{#} of human GHRH (sermorelin), which activates the GHRH receptor.": "Fragment {#}-{#} van menselijk GHRH (sermorelin), dat de GHRH-receptor activeert.",
+"France": "Frankrijk",
+"Free shipping from {#}€": "Gratis verzending vanaf {#}€",
+"French company · Paris": "Frans bedrijf · Parijs",
+"French · SIRET {#} {#} {#}": "Frans · SIRET {#} {#} {#}",
+"Frequently asked questions": "Veelgestelde vragen",
+"Frequently bought with": "Vaak samen gekocht",
+"From": "Vanaf",
+"Full catalogue": "Volledige catalogus",
+"GH RESEARCH": "GH-ONDERZOEK",
+"GH Research": "GH-onderzoek",
+"GH SECRETAGOGUE RESEARCH": "ONDERZOEK GH-SECRETAGOGEN",
+"GH research": "GH-onderzoek",
+"GH secretagogue receptor research.": "Onderzoek naar de GH-secretagoogreceptor.",
+"GH-RELEASING RESEARCH BLEND": "ONDERZOEKSMENGSEL GH-AFGIFTE",
+"GH-SECRETAGOGUE RESEARCH": "ONDERZOEK GH-SECRETAGOGEN",
+"GH-releasing and secretagogue research.": "Onderzoek naar GH-afgifte en secretagogen.",
+"GHK-Copper": "GHK-Koper",
+"GHK-Cu (GHK-Cuivre)": "GHK-Cu (GHK-Koper)",
+"GHRH ANALOG RESEARCH": "ONDERZOEK GHRH-ANALOGEN",
+"GHRH RESEARCH": "GHRH-ONDERZOEK",
+"GLP-{#} RECEPTOR RESEARCH": "ONDERZOEK GLP-{#}-RECEPTOR",
+"GLP-{#} receptor agonist (acylated analogue of human GLP-{#}), developed by Novo Nordisk.": "GLP-{#}-receptoragonist (geacyleerd analoog van menselijk GLP-{#}), ontwikkeld door Novo Nordisk.",
+"GLP-{#}, GIP, glucagon and amylin receptors.": "GLP-{#}-, GIP-, glucagon- en amylinereceptoren.",
+"GROWTH FACTOR RESEARCH": "ONDERZOEK GROEIFACTOREN",
+"GROWTH HORMONE RESEARCH": "ONDERZOEK GROEIHORMOON",
+"Got Revolut?": "Heeft u Revolut?",
+"Governed by French law and applicable EU regulations.": "Beheerst door het Franse recht en de toepasselijke EU-regelgeving.",
+"Grade": "Kwaliteit",
+"Growth & Cellular": "Groei & cellulair",
+"HGH Fragment {#}-{#}": "HGH-fragment {#}-{#}",
+"HPLC purity": "HPLC-zuiverheid",
+"Handle / account link": "Profielnaam / accountlink",
+"Help": "Hulp",
+"How do I pay?": "Hoe betaal ik?",
+"How do I track my order?": "Hoe volg ik mijn bestelling?",
+"How it works": "Hoe het werkt",
+"How long does confirmation take?": "Hoe lang duurt de bevestiging?",
+"How long is delivery?": "Hoe lang duurt de levering?",
+"How should compounds be stored?": "Hoe moeten de verbindingen worden bewaard?",
+"I am a qualified professional (researcher, laboratory, institution).": "Ik ben een gekwalificeerde professional (onderzoeker, laboratorium, instelling).",
+"I confirm I am {#} years of age or older.": "Ik bevestig dat ik {#} jaar of ouder ben.",
+"I confirm this order is strictly for laboratory research purposes only.": "Ik bevestig dat deze bestelling uitsluitend bestemd is voor laboratoriumonderzoek.",
+"I give no dose, protocol or medical advice.": "Ik geef geen dosering, protocol of medisch advies.",
+"I paid slightly less because of fees.": "Ik heb door de kosten iets minder betaald.",
+"IMMUNE MODULATION RESEARCH": "ONDERZOEK IMMUUNMODULATIE",
+"If you can shop online, you can pay with Bitcoin. Allow": "Als u online kunt winkelen, kunt u met Bitcoin betalen. Reken op",
+"Immune": "Immuunsysteem",
+"Immune modulation, thymic pathways.": "Immuunmodulatie, thymusroutes.",
+"Immune research": "Immuunonderzoek",
+"In stock · ships within {#} h": "Op voorraad · verzending binnen {#} u",
+"In stock · ships within {#} h · {#}–{#} day delivery in France": "Op voorraad · verzending binnen {#} u · levering in {#}–{#} dagen in Frankrijk",
+"In stock: ships within {#} h": "Op voorraad: verzending binnen {#} u",
+"In stock: {#} h · made to order: {#}–{#} weeks": "Op voorraad: {#} u · op bestelling: {#}–{#} weken",
+"In the cart, choose": "Kies in de winkelwagen",
+"In your app, tap “Send” or “Withdraw”.": "Tik in uw app op „Verzenden” of „Opnemen”.",
+"Independent analysis": "Onafhankelijke analyse",
+"Independent analysis · Janoshik": "Onafhankelijke analyse · Janoshik",
+"Index": "Index",
+"Investigational drug (phase {#} clinical trials); not authorised.": "Onderzoeksgeneesmiddel (klinische studies fase {#}); niet toegelaten.",
+"Investigational drug, in phase {#} clinical trials; to our knowledge not authorised.": "Onderzoeksgeneesmiddel in klinische studies fase {#}; voor zover wij weten niet toegelaten.",
+"Investigational molecule in clinical trials; not authorised as a medicine.": "Onderzoeksmolecuul in klinische studies; niet als geneesmiddel toegelaten.",
+"Janoshik (per batch)": "Janoshik (per batch)",
+"Janoshik HPLC (per batch)": "Janoshik HPLC (per batch)",
+"Janoshik, public key": "Janoshik, openbare sleutel",
+"KTTKS pentapeptide coupled to palmitic acid, a cosmetic ingredient studied for collagen synthesis in skin models.": "Pentapeptide KTTKS gekoppeld aan palmitinezuur, een cosmetisch ingrediënt dat in huidmodellen wordt onderzocht op collageensynthese.",
+"LAB SUPPLY": "LABORATORIUMBENODIGDHEDEN",
+"LONGEVITY RESEARCH": "ONDERZOEK LEVENSDUUR",
+"Lab Supplies": "Laboratoriumbenodigdheden",
+"Laboratories and resellers: volume pricing, reports included.": "Laboratoria en wederverkopers: volumeprijzen, rapporten inbegrepen.",
+"Laboratory": "Laboratorium",
+"Laboratory / Organization (optional)": "Laboratorium / organisatie (optioneel)",
+"Laboratory reagent.": "Laboratoriumreagens.",
+"Laboratory reconstitution solvents.": "Oplosmiddelen voor reconstitutie in het laboratorium.",
+"Laboratory solvent: it contains no active substance.": "Laboratoriumoplosmiddel: het bevat geen werkzame stof.",
+"Last updated: April {#}": "Laatst bijgewerkt: april {#}",
+"Learn more": "Meer informatie",
+"Legal": "Juridisch",
+"Legal account holder": "Wettelijke rekeninghouder",
+"Long-acting selective amylin receptor agonist, in clinical development.": "Langwerkende selectieve amylinereceptoragonist, in klinische ontwikkeling.",
+"Longevity": "Levensduur",
+"Longevity research": "Onderzoek naar levensduur",
+"Lyophilised peptide · research use": "Gelyofiliseerd peptide · onderzoeksgebruik",
+"Lyophilised peptides supplied exclusively for in-vitro research. Published analysis reports are marked COA.": "Gelyofiliseerde peptiden uitsluitend voor in-vitro-onderzoek. Gepubliceerde analyserapporten zijn gemarkeerd met COA.",
+"Lyophilised vial": "Gelyofiliseerde flacon",
+"Lyophilised vials ({#}-pack)": "Gelyofiliseerde flacons ({#}-pack)",
+"MELANOCORTIN RECEPTOR RESEARCH": "ONDERZOEK MELANOCORTINERECEPTOR",
+"METABOLIC FRAGMENT RESEARCH": "ONDERZOEK METABOLE FRAGMENTEN",
+"METABOLIC RESEARCH": "METABOOL ONDERZOEK",
+"MITOCHONDRIAL RESEARCH": "MITOCHONDRIAAL ONDERZOEK",
+"MULTI-RECEPTOR RESEARCH": "ONDERZOEK MEERDERE RECEPTOREN",
+"Made to order": "Op bestelling",
+"Made to order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Op bestelling · {#}–{#} weken · batch vóór verzending door Janoshik geanalyseerd · gevolgd bij elke stap",
+"Made-to-order product?": "Product op bestelling?",
+"Manage cookies": "Cookies beheren",
+"Measured": "Gemeten",
+"Measured content": "Gemeten gehalte",
+"Menu": "Menu",
+"Message": "Bericht",
+"Metabolic": "Metabool",
+"Metabolic research": "Metabool onderzoek",
+"Method": "Methode",
+"Most popular": "Meest gekozen",
+"Most requested": "Meest gevraagd",
+"Multi-peptide blends in a single vial.": "Multi-peptidemengsels in één flacon.",
+"My invoice expired.": "Mijn factuur is verlopen.",
+"NEUROMODULATION RESEARCH": "ONDERZOEK NEUROMODULATIE",
+"NEUROPEPTIDE RESEARCH": "ONDERZOEK NEUROPEPTIDEN",
+"NEUROPROTECTIVE RESEARCH": "ONDERZOEK NEUROPROTECTIE",
+"NEUROTROPHIC RESEARCH": "NEUROTROOF ONDERZOEK",
+"NOOTROPIC RESEARCH": "ONDERZOEK NOOTROPICA",
+"Name": "Naam",
+"Name on report": "Naam in het rapport",
+"Neuromodulation and neuroprotection.": "Neuromodulatie en neuroprotectie.",
+"No Medical Advice": "Geen medisch advies",
+"No authorisation; preclinical data only.": "Geen vergunning; alleen preklinische gegevens.",
+"No medicine authorisation in any country; no published clinical data.": "Geen geneesmiddelvergunning, in geen enkel land; geen gepubliceerde klinische gegevens.",
+"No medicine authorisation in the European Union or the United States.": "Geen geneesmiddelvergunning in de Europese Unie of de Verenigde Staten.",
+"No medicine authorisation.": "Geen geneesmiddelvergunning.",
+"No medicine authorisation; clinical development discontinued.": "Geen geneesmiddelvergunning; klinische ontwikkeling stopgezet.",
+"No medicine authorisation; clinical development stopped.": "Geen geneesmiddelvergunning; klinische ontwikkeling gestopt.",
+"Not authorised as a medicine in the EU or the United States; limited data, mostly from a small number of laboratories.": "Niet als geneesmiddel toegelaten in de EU of de Verenigde Staten; beperkte gegevens, grotendeels van een klein aantal laboratoria.",
+"Not authorised as a medicine. Controlled human data are almost non-existent. Prohibited by WADA.": "Niet als geneesmiddel toegelaten. Gecontroleerde gegevens bij mensen zijn vrijwel onbestaand. Verboden door het WADA.",
+"Not authorised as a medicine. Prohibited by WADA.": "Niet als geneesmiddel toegelaten. Verboden door het WADA.",
+"Not authorised as a medicine; clinical trials in obesity did not lead to an authorisation.": "Niet als geneesmiddel toegelaten; klinische studies naar obesitas hebben niet tot een vergunning geleid.",
+"Not authorised as a medicine; exploratory clinical trials have taken place without authorisation. Prohibited by WADA.": "Niet als geneesmiddel toegelaten; verkennende klinische studies hebben zonder vergunning plaatsgevonden. Verboden door het WADA.",
+"Not authorised as a medicine; research is essentially in vitro and preclinical.": "Niet als geneesmiddel toegelaten; het onderzoek is in wezen in vitro en preklinisch.",
+"Not authorised as a medicine; research is essentially preclinical.": "Niet als geneesmiddel toegelaten; het onderzoek is in wezen preklinisch.",
+"Not authorised as a medicine; research use. Prohibited by WADA.": "Niet als geneesmiddel toegelaten; gebruik voor onderzoek. Verboden door het WADA.",
+"Not authorised as a medicine; the literature is old and results have been inconsistent.": "Niet als geneesmiddel toegelaten; de literatuur is oud en de resultaten waren wisselend.",
+"Not authorised as a medicine; used in research studies in reproductive endocrinology.": "Niet als geneesmiddel toegelaten; gebruikt in onderzoeksstudies in de reproductieve endocrinologie.",
+"Not authorised in the EU or the United States; data come mostly from the Russian literature.": "Niet toegelaten in de EU of de Verenigde Staten; de gegevens komen grotendeels uit de Russische literatuur.",
+"Not authorised in the EU or the United States; the literature is limited and rarely independently replicated.": "Niet toegelaten in de EU of de Verenigde Staten; de literatuur is beperkt en zelden onafhankelijk herhaald.",
+"Not for Human Use": "Niet voor menselijk gebruik",
+"Novalyx assistant": "Novalyx-assistent",
+"Novalyx operates this website and is responsible for your personal data in accordance with the GDPR.": "Novalyx beheert deze website en is verantwoordelijk voor uw persoonsgegevens volgens de AVG.",
+"Nucleoside (not a peptide) used in research as an activator of AMPK, a key enzyme of cellular energy metabolism.": "Nucleoside (geen peptide), in onderzoek gebruikt als activator van AMPK, een sleutelenzym van het cellulaire energiemetabolisme.",
+"On Novalyx: available to order.": "Bij Novalyx: te bestellen.",
+"On Novalyx: coming soon (not yet available to order).": "Bij Novalyx: binnenkort (nog niet te bestellen).",
+"On first sign-up the platform verifies your identity: from a few minutes to a day. Do it before ordering.": "Bij de eerste aanmelding controleert het platform uw identiteit: van enkele minuten tot een dag. Doe dit vóór het bestellen.",
+"Only": "Nog maar",
+"Open report (Janoshik)": "Rapport openen (Janoshik)",
+"Open the": "Open het tabblad",
+"Open the assistant": "Assistent openen",
+"Orders outside the European Union": "Bestellingen buiten de Europese Unie",
+"Otherwise: Kraken or Coinbase.": "Anders: Kraken of Coinbase.",
+"Our products are not medicines, dietary supplements or cosmetics. They are supplied exclusively for in-vitro research.": "Onze producten zijn geen geneesmiddelen, voedingssupplementen of cosmetica. Ze worden uitsluitend geleverd voor in-vitro-onderzoek.",
+"PDF catalogue": "PDF-catalogus",
+"Paris, France": "Parijs, Frankrijk",
+"Partnerships": "Partnerschappen",
+"Pay by bank transfer": "Betalen per bankoverschrijving",
+"Pay with Bitcoin": "Betalen met Bitcoin",
+"Pay with Bitcoin in three steps.": "Betalen met Bitcoin in drie stappen.",
+"Paying with Bitcoin is easier than it sounds.": "Betalen met Bitcoin is eenvoudiger dan het klinkt.",
+"Payment": "Betaling",
+"Payment by bank transfer": "Betaling per bankoverschrijving",
+"Payment confirmed": "Betaling bevestigd",
+"Payment sent": "Betaling verzonden",
+"Pharmaceutical-grade": "Farmaceutische kwaliteit",
+"Place your order": "Bestelling plaatsen",
+"Platform (Instagram, TikTok, YouTube…)": "Platform (Instagram, TikTok, YouTube…)",
+"Preclinical research (cells, animals); a few very limited human studies on analogues. No authorisation.": "Preklinisch onderzoek (cellen, dieren); enkele zeer beperkte studies bij mensen op analogen. Geen vergunning.",
+"Preclinical research compound; no medicine authorisation.": "Preklinische onderzoeksverbinding; geen geneesmiddelvergunning.",
+"Privacy": "Privacy",
+"Privacy Policy": "Privacybeleid",
+"Proceed to checkout": "Afrekenen",
+"Product visual. The batch number is printed on every vial shipped.": "Productafbeelding. Het batchnummer staat op elke verzonden flacon.",
+"Products for laboratory research use only — not for human or veterinary use": "Producten uitsluitend voor laboratoriumonderzoek — niet voor gebruik bij mens of dier",
+"Products for laboratory research use only, not for human or veterinary use": "Producten uitsluitend voor laboratoriumonderzoek, niet voor gebruik bij mens of dier",
+"Products, orders, documents, professional pricing: reply within one business day.": "Producten, bestellingen, documenten, professionele prijzen: antwoord binnen één werkdag.",
+"Professional access": "Professionele toegang",
+"Professionals": "Professionals",
+"Publication": "Publicatie",
+"Published analyses": "Gepubliceerde analyses",
+"Purity": "Zuiverheid",
+"Qty": "Aantal",
+"Quick buy": "Snel kopen",
+"REGENERATIVE RESEARCH": "REGENERATIEF ONDERZOEK",
+"REGENERATIVE RESEARCH BLEND": "REGENERATIEF ONDERZOEKSMENGSEL",
+"REGENERATIVE TRIPLE BLEND": "REGENERATIEF DRIEVOUDIG MENGSEL",
+"REPRODUCTIVE RESEARCH": "REPRODUCTIEF ONDERZOEK",
+"Refuse all": "Alles weigeren",
+"Regenerative": "Regeneratief",
+"Regenerative research": "Regeneratief onderzoek",
+"Registered": "Ingeschreven",
+"Registered as a medicine in Russia; not authorised in the EU or the United States.": "In Rusland als geneesmiddel geregistreerd; niet toegelaten in de EU of de Verenigde Staten.",
+"Regulatory Compliance": "Naleving van de regelgeving",
+"Regulatory status varies by jurisdiction. It is your responsibility to check the applicable rules before ordering.": "De wettelijke status verschilt per land. Het is uw verantwoordelijkheid de geldende regels vóór het bestellen te controleren.",
+"Remove": "Verwijderen",
+"Reply": "Antwoord",
+"Reports for these compounds will be published once the first batch has been analysed. Questions are welcome.": "De rapporten voor deze verbindingen worden gepubliceerd zodra de eerste batch is geanalyseerd. Vragen zijn welkom.",
+"Request pricing": "Prijzen aanvragen",
+"Research Use Only": "Uitsluitend voor onderzoek",
+"Research catalogue": "Onderzoekscatalogus",
+"Research compounds,": "Onderzoeksverbindingen,",
+"Research peptide; no medicine authorisation.": "Onderzoekspeptide; geen geneesmiddelvergunning.",
+"Research reagent (cell culture); not authorised as a medicine.": "Onderzoeksreagens (celkweek); niet als geneesmiddel toegelaten.",
+"Research reagent; no medicine authorisation. Listed on the World Anti-Doping Agency prohibited list.": "Onderzoeksreagens; geen geneesmiddelvergunning. Op de verboden lijst van het Wereldantidopingagentschap.",
+"Research reagent; not authorised as a medicine.": "Onderzoeksreagens; niet als geneesmiddel toegelaten.",
+"Research use only": "Uitsluitend voor onderzoek",
+"Research use only — not for human or veterinary use": "Uitsluitend voor onderzoek — niet voor gebruik bij mens of dier",
+"Reserved for laboratory research.": "Voorbehouden aan laboratoriumonderzoek.",
+"Resources": "Bronnen",
+"Revolut, Kraken or Coinbase": "Revolut, Kraken of Coinbase",
+"Room temperature / avoid direct light": "Kamertemperatuur / direct licht vermijden",
+"Room temperature, away from light": "Kamertemperatuur, beschermd tegen licht",
+"SECURE PAYMENT BY STRIPE": "VEILIGE BETALING VIA STRIPE",
+"SLEEP RESEARCH": "SLAAPONDERZOEK",
+"Sample (as on report)": "Monster (zoals in het rapport)",
+"Scan the invoice QR code.": "Scan de QR-code van de factuur.",
+"Search a compound": "Verbinding zoeken",
+"Search a compound (e.g. {N}, {N}…)": "Verbinding zoeken (bijv. {N}, {N}…)",
+"Secure payment": "Veilige betaling",
+"Secure payment by Stripe · Visa · Mastercard · Apple Pay": "Veilige betaling via Stripe · Visa · Mastercard · Apple Pay",
+"See the analyses": "Analyses bekijken",
+"See the {#}-step guide": "Bekijk de gids in {#} stappen",
+"Send": "Verzenden",
+"Send application": "Aanvraag verzenden",
+"Send the payment": "De betaling verzenden",
+"Shipped": "Verzonden",
+"Shipped within {#} h · delivery in {#}–{#} days maximum in France": "Verzending binnen {#} u · levering in maximaal {#}–{#} dagen in Frankrijk",
+"Shipping": "Verzending",
+"Shipping & delivery": "Verzending & levering",
+"Shipping:": "Verzending:",
+"Short peptides from V. Khavinson's research.": "Korte peptiden uit het onderzoek van V. Khavinson.",
+"Signature Blends": "Signature-mengsels",
+"Simply place the order again. If you had already sent the payment, email us with the time it was sent: we will find it.": "Plaats de bestelling gewoon opnieuw. Had u de betaling al verzonden, mail ons dan met het tijdstip van verzending: wij vinden haar terug.",
+"Size": "Formaat",
+"Sleep, reproductive, melanocortin.": "Slaap, voortplanting, melanocortine.",
+"Soon": "Binnenkort",
+"Specialized": "Gespecialiseerd",
+"Start with the essentials.": "Begin met de basis.",
+"Status:": "Status:",
+"Sterile reconstitution solvent + {#}% benzyl alcohol": "Steriel reconstitutie-oplosmiddel + {#}% benzylalcohol",
+"Sterile sealed vial": "Steriele verzegelde flacon",
+"Sterile water, {#}% acetic acid": "Steriel water, {#}% azijnzuur",
+"Storage": "Bewaring",
+"Stripe, card": "Stripe, kaart",
+"Stuck at a step?": "Vastgelopen bij een stap?",
+"Subject": "Onderwerp",
+"Subtotal": "Subtotaal",
+"Support": "Support",
+"Switzerland, UK": "Zwitserland, VK",
+"Switzerland, United Kingdom": "Zwitserland, Verenigd Koninkrijk",
+"Synthetic analogue of α-MSH, known as afamelanotide ([Nle{#}, D-Phe{#}]-α-MSH), an agonist of the MC{#}R receptor.": "Synthetisch analoog van α-MSH, bekend als afamelanotide ([Nle{#}, D-Phe{#}]-α-MSH), een agonist van de MC{#}R-receptor.",
+"Synthetic cyclic peptide analogue of α-MSH, a non-selective agonist of melanocortin receptors.": "Synthetisch cyclisch peptide-analoog van α-MSH, een niet-selectieve agonist van melanocortinereceptoren.",
+"Synthetic derivative of {N} carrying an adamantane group. Independent scientific literature on it is still very limited.": "Synthetisch derivaat van {N} met een adamantaangroep. De onafhankelijke wetenschappelijke literatuur erover is nog zeer beperkt.",
+"Synthetic hexapeptide, one of the first growth-hormone secretagogues, agonist of the ghrelin receptor (GHS-R{#}a).": "Synthetisch hexapeptide, een van de eerste groeihormoon-secretagogen, agonist van de ghrelinereceptor (GHS-R{#}a).",
+"Synthetic pentapeptide agonist of the ghrelin receptor (GHS-R{#}a), classed among growth-hormone secretagogues.": "Synthetisch pentapeptide, agonist van de ghrelinereceptor (GHS-R{#}a), gerekend tot de groeihormoon-secretagogen.",
+"TELOMERE RESEARCH": "TELOMEERONDERZOEK",
+"THE FASTEST WAY": "DE SNELSTE WEG",
+"TISSUE REPAIR RESEARCH": "ONDERZOEK WEEFSELHERSTEL",
+"TRIPLE-RECEPTOR RESEARCH": "ONDERZOEK DRIEVOUDIGE RECEPTOREN",
+"Task no.": "Opdracht nr.",
+"Task · key": "Opdracht · sleutel",
+"Tell us about your audience and your interest in research.": "Vertel ons over uw publiek en uw interesse in onderzoek.",
+"Terms": "Voorwaarden",
+"Terms & Conditions": "Algemene voorwaarden",
+"Testing lab": "Testlaboratorium",
+"The report and its verification key are published. Anyone can check it.": "Het rapport en de verificatiesleutel zijn gepubliceerd. Iedereen kan het controleren.",
+"The rigour of a laboratory,": "De nauwgezetheid van een laboratorium,",
+"This order is strictly for laboratory research — not for human or animal use.": "Deze bestelling is uitsluitend bestemd voor laboratoriumonderzoek — niet voor gebruik bij mens of dier.",
+"Tissue-repair and angiogenesis research.": "Onderzoek naar weefselherstel en angiogenese.",
+"Total": "Totaal",
+"Tracking": "Tracking",
+"Transparency": "Transparantie",
+"Trust isn't claimed, it's documented. Here is exactly what happens between production and your laboratory.": "Vertrouwen wordt niet beweerd, het wordt gedocumenteerd. Dit gebeurt er precies tussen de productie en uw laboratorium.",
+"USA, Canada": "VS, Canada",
+"Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email": "Volgens de AVG: inzage, rectificatie, wissing, beperking, overdraagbaarheid van uw gegevens of bezwaar tegen de verwerking. E-mail",
+"United States, Canada": "Verenigde Staten, Canada",
+"Up to −{#}% from {#} vials": "Tot −{#}% vanaf {#} flacons",
+"Use declaration": "Gebruiksverklaring",
+"Usually {#} to {#} minutes, depending on Bitcoin network activity. You get an email as soon as it's confirmed.": "Meestal {#} tot {#} minuten, afhankelijk van de drukte op het Bitcoin-netwerk. U krijgt een e-mail zodra de betaling bevestigd is.",
+"Verifiable analysis reports": "Verifieerbare analyserapporten",
+"Verification key": "Verificatiesleutel",
+"Verify on Janoshik": "Controleren op Janoshik",
+"View catalogue": "Catalogus bekijken",
+"View product": "Product bekijken",
+"View report": "Rapport bekijken",
+"View the whole catalogue": "Volledige catalogus bekijken",
+"View {N} {#} mg": "{N} {#} mg bekijken",
+"Volume pricing: the more you take, the less you pay": "Staffelprijzen: hoe meer u neemt, hoe minder u betaalt",
+"Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
+"We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements.": "Wij verkopen uw gegevens niet. Wij delen ze alleen met logistieke en betaalpartners (Stripe) onder strikte verwerkersovereenkomsten.",
+"What are research peptides?": "Wat zijn onderzoekspeptiden?",
+"What does \"made to order\" mean?": "Wat betekent „op bestelling”?",
+"What happens next?": "Wat gebeurt er daarna?",
+"What is a certificate of analysis (COA)?": "Wat is een analysecertificaat (COA)?",
+"What is your returns policy?": "Wat is uw retourbeleid?",
+"What is {N}?": "Wat is {N}?",
+"Which product do you mean? Give its name (for example \"price of {N}\").": "Welk product bedoelt u? Noem de naam (bijvoorbeeld „prijs van {N}”).",
+"Which products are available?": "Welke producten zijn beschikbaar?",
+"Who can order from Novalyx?": "Wie kan bij Novalyx bestellen?",
+"Why Bitcoin?": "Waarom Bitcoin?",
+"Why is there a minimum on some products?": "Waarom is er bij sommige producten een minimum?",
+"Within {#} business day": "Binnen {#} werkdag",
+"Within {#} h, tracked, plain packaging": "Binnen {#} u, met tracking, neutrale verpakking",
+"Write to us.": "Schrijf ons.",
+"Write to us: reply within one business day.": "Schrijf ons: antwoord binnen één werkdag.",
+"You must be {#}+ to purchase. Completing a purchase confirms you meet this requirement.": "U moet {#}+ zijn om te kopen. Met een aankoop bevestigt u dat u aan deze voorwaarde voldoet.",
+"You save": "U bespaart",
+"Your organization's name": "Naam van uw organisatie",
+"Your question": "Uw vraag",
+"Your question…": "Uw vraag…",
+"Zones and rates": "Zones en tarieven",
+"after that.": "daarna.",
+"an invoice with a QR code appears": "er verschijnt een factuur met een QR-code",
+"analysed": "geanalyseerd",
+"away from free shipping": "tot gratis verzending",
+"batch received, then analysed by Janoshik: an email at every step": "batch ontvangen en daarna door Janoshik geanalyseerd: bij elke stap een e-mail",
+"from your app": "vanuit uw app",
+"lyophilised": "gelyofiliseerd",
+"not the noise": "niet het lawaai",
+"of a shop.": "van een winkel.",
+"scan, check, confirm": "scannen, controleren, bevestigen",
+"tab, then": ", daarna",
+"the first time,": "de eerste keer,",
+"usually within {#} to {#} minutes": "meestal binnen {#} tot {#} minuten",
+"vial": "flacon",
+"vials": "flacons",
+"with your tracking number": "met uw trackingnummer",
+"your order is approved": "uw bestelling is goedgekeurd",
+"{#} Rue Pasquier, {#} Paris, France": "{#} Rue Pasquier, {#} Parijs, Frankrijk",
+"{#} Sept {#}": "{#} sep. {#}",
+"{#} compounds, {#} research areas.": "{#} verbindingen, {#} onderzoeksgebieden.",
+"{#} lyophilised compounds · one analysis report per batch": "{#} gelyofiliseerde verbindingen · één analyserapport per batch",
+"{#} min": "{#} min",
+"{#} minutes": "{#} minuten",
+"{#} ml sealed vial": "Verzegelde flacon van {#} ml",
+"{#}-amino-acid analogue of GHRH (growth-hormone-releasing hormone), modified to resist degradation.": "Analoog van GHRH (groeihormoon-releasing hormoon) van {#} aminozuren, aangepast om afbraak te weerstaan.",
+"{#}-amino-acid peptide derived from spadin, studied in animals as an inhibitor of the TREK-{#} potassium channel.": "Peptide van {#} aminozuren, afgeleid van spadine, bij dieren bestudeerd als remmer van het kaliumkanaal TREK-{#}.",
+"{#}. Acceptance": "{#}. Aanvaarding",
+"{#}. Age Restriction": "{#}. Leeftijdsgrens",
+"{#}. Contact": "{#}. Contact",
+"{#}. Data Sharing": "{#}. Delen van gegevens",
+"{#}. Data We Collect": "{#}. Welke gegevens wij verzamelen",
+"{#}. Governing Law": "{#}. Toepasselijk recht",
+"{#}. How We Use Your Data": "{#}. Hoe wij uw gegevens gebruiken",
+"{#}. Limitation of Liability": "{#}. Beperking van aansprakelijkheid",
+"{#}. Orders & Payment": "{#}. Bestellingen & betaling",
+"{#}. Research Use Only": "{#}. Uitsluitend voor onderzoek",
+"{#}. Returns": "{#}. Retouren",
+"{#}. Shipping & International Orders": "{#}. Verzending & internationale bestellingen",
+"{#}. Who We Are": "{#}. Wie wij zijn",
+"{#}. Your Rights": "{#}. Uw rechten",
+"{#}mg total": "{#}mg totaal",
+"{#}mg total (BPC{#}+TB{#})": "{#}mg totaal (BPC{#}+TB{#})",
+"{#}mg total (BPC{#}+TB{#}) · {#}mg total (BPC{#}+TB{#})": "{#}mg totaal (BPC{#}+TB{#}) · {#}mg totaal (BPC{#}+TB{#})",
+"{#}mg · Pack de {#}": "{#}mg · {#}-pack",
+"{#}ml vial": "Flacon van {#}ml",
+"{#}ml · Pack de {#}": "{#}ml · {#}-pack",
+"{#}–{#} business days": "{#}–{#} werkdagen",
+"{#}–{#} business days (variable)": "{#}–{#} werkdagen (variabel)",
+"{#}–{#} days max.": "max. {#}–{#} dagen",
+"{N} is a laboratory reconstitution solvent. Not for human or veterinary use.": "{N} is een oplosmiddel voor reconstitutie in het laboratorium. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic tripeptide, supplied for research into neuroprotection and cognitive longevity signalling pathways.": "{N} is een synthetisch tripeptide, geleverd voor onderzoek naar neuroprotectie en signaalroutes van cognitieve levensduur.",
+"{N} {#}mg total (BPC{#}+TB{#}) — Novalyx Research": "{N} {#}mg totaal (BPC{#}+TB{#}) — Novalyx Research",
+"{N} {#}mg total — Novalyx Research": "{N} {#}mg totaal — Novalyx Research",
+"{N} {#}mg · Pack de {#} — Novalyx Research": "{N} {#}mg · {#}-pack — Novalyx Research",
+"{N} {#}ml vial — Novalyx Research": "{N} flacon van {#}ml — Novalyx Research",
+"{N} {#}ml · Pack de {#} — Novalyx Research": "{N} {#}ml · {#}-pack — Novalyx Research",
+"{N} · batch NLR-{#}-{#} analysed by Janoshik: {#}%": "{N} · batch NLR-{#}-{#} geanalyseerd door Janoshik: {#}%",
+"~{#} min": "~{#} min",
+"· instead of {#}€": "· in plaats van {#}€",
+"· only {#} vials left from the analysed batch": "· nog maar {#} flacons uit de geanalyseerde batch",
+"· research format: {#} vials minimum (−{#}%)": "· onderzoeksformaat: minimaal {#} flacons (−{#}%)",
+"— or —": "— of —",
+"“Pay with Bitcoin”": "„Betalen met Bitcoin”",
+"≥{#}% target (HPLC)": "≥{#}% streefwaarde (HPLC)",
+"\"D-retro-inverso\" peptide designed to disrupt the interaction between the FOXO{#} and p{#} proteins, studied in senescent-cell models (so-called senolytic research).": "„D-retro-inverso”-peptide, ontworpen om de interactie tussen de eiwitten FOXO{#} en p{#} te verstoren, bestudeerd in modellen van senescente cellen (zogenoemd senolytisch onderzoek).",
+"A multi-receptor research compound studied in metabolic-pathway investigations. Of interest in laboratory studies examining receptor signalling.": "Een onderzoeksverbinding voor meerdere receptoren, bestudeerd in onderzoek naar metabole routes. Van belang voor laboratoriumstudies naar receptorsignalering.",
+"A report issued by a third-party laboratory confirming a compound's identity and purity. Our Janoshik reports carry a public verification key at janoshik.com/verify.": "Een rapport van een onafhankelijk laboratorium dat de identiteit en zuiverheid van een verbinding bevestigt. Onze Janoshik-rapporten hebben een openbare verificatiesleutel op janoshik.com/verify.",
+"A small difference, up to {#}%, is accepted automatically. If more is missing, the invoice shows the remaining amount to send.": "Een klein verschil, tot {#}%, wordt automatisch geaccepteerd. Ontbreekt er meer, dan toont de factuur het nog te verzenden bedrag.",
+"A synthetic peptide fragment studied in laboratory models for its role in tissue-repair and angiogenesis research. Frequently used as a reference compound in tissue-repair assays.": "Een synthetisch peptidefragment, in laboratoriummodellen bestudeerd voor onderzoek naar weefselherstel en angiogenese. Vaak gebruikt als referentieverbinding in assays naar weefselherstel.",
+"A synthetic version of a naturally occurring peptide region studied for cell-migration and actin-regulation research in controlled settings.": "Een synthetische versie van een van nature voorkomend peptidegebied, bestudeerd voor onderzoek naar celmigratie en actineregulatie onder gecontroleerde omstandigheden.",
+"Acetylated octapeptide (acetyl octapeptide-{#}) used as a cosmetic ingredient; its sequence mimics part of the SNAP-{#} protein, involved in the SNARE complex of neurotransmitter release.": "Geacetyleerd octapeptide (acetyl-octapeptide-{#}), gebruikt als cosmetisch ingrediënt; de sequentie bootst een deel van het eiwit SNAP-{#} na, dat betrokken is bij het SNARE-complex van de afgifte van neurotransmitters.",
+"Afamelanotide is authorised as an implant (brand Scenesse) for a specific indication (erythropoietic protoporphyria) in the EU and the United States. The Novalyx product is a research compound, not that medicine.": "Afamelanotide is als implantaat (merk Scenesse) toegelaten voor een specifieke indicatie (erytropoëtische protoporfyrie) in de EU en de Verenigde Staten. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"All Novalyx products are compounds supplied exclusively for laboratory research (in vitro): not medicines, dietary supplements or cosmetics, with no human or animal use. Orders are reserved for adults and qualified professionals. It is your responsibility to check the regulations applicable in your country.": "Alle Novalyx-producten zijn verbindingen die uitsluitend worden geleverd voor laboratoriumonderzoek (in vitro): geen geneesmiddelen, voedingssupplementen of cosmetica, zonder gebruik bij mens of dier. Bestellingen zijn voorbehouden aan volwassenen en gekwalificeerde professionals. Het is uw verantwoordelijkheid de regelgeving in uw land te controleren.",
+"All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully.": "Alle producten zijn uitsluitend voor in-vitro laboratoriumonderzoek. Niet voor gebruik bij mens of dier. Met uw aankoop bevestigt u dat u een gekwalificeerde onderzoeker bent die rechtmatig handelt.",
+"All products are intended exclusively for scientific research by qualified professionals in appropriate laboratory settings. They are not drugs, supplements, or food products.": "Alle producten zijn uitsluitend bestemd voor wetenschappelijk onderzoek door gekwalificeerde professionals in geschikte laboratoriumomgevingen. Het zijn geen geneesmiddelen, supplementen of voedingsmiddelen.",
+"All products are supplied exclusively for laboratory research. By ordering you confirm you are a qualified professional acting in compliance with applicable laws.": "Alle producten worden uitsluitend geleverd voor laboratoriumonderzoek. Met uw bestelling bevestigt u dat u een gekwalificeerde professional bent die handelt in overeenstemming met de geldende wetten.",
+"Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The {N} {#}mg report is published (HPLC purity {#}%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.": "De analyses worden uitgevoerd door Janoshik Analytical (Tsjechië), een onafhankelijk laboratorium. Het rapport van {N} {#}mg is gepubliceerd (HPLC-zuiverheid {#}%) met de verificatiesleutel: zie de pagina Analyses. Voor andere verbindingen wordt het rapport gepubliceerd zodra de eerste batch is geanalyseerd.",
+"Approved in China (NMPA, June {#}) for chronic weight management in adults; to our knowledge not approved in the EU or the United States.": "In China goedgekeurd (NMPA, juni {#}) voor chronisch gewichtsbeheer bij volwassenen; voor zover wij weten niet goedgekeurd in de EU of de Verenigde Staten.",
+"Authorised in the United States (brand Egrifta) for a specific indication (HIV-associated abdominal lipodystrophy). The Novalyx product is a research compound, not that medicine.": "Toegelaten in de Verenigde Staten (merk Egrifta) voor een specifieke indicatie (hiv-gerelateerde abdominale lipodystrofie). Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Authorised in the United States (brand Vyleesi) for a specific indication. The Novalyx product is a research compound, not that medicine.": "Toegelaten in de Verenigde Staten (merk Vyleesi) voor een specifieke indicatie. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Authorised medicine (FDA and EMA) under the brands Mounjaro and Zepbound. The Novalyx product is a research compound and is not that medicine.": "Toegelaten geneesmiddel (FDA en EMA) onder de merken Mounjaro en Zepbound. Het Novalyx-product is een onderzoeksverbinding en niet dat geneesmiddel.",
+"Authorised medicine under the brands Ozempic, Wegovy and Rybelsus. The Novalyx product is a research compound and is not that medicine.": "Toegelaten geneesmiddel onder de merken Ozempic, Wegovy en Rybelsus. Het Novalyx-product is een onderzoeksverbinding en niet dat geneesmiddel.",
+"Bank transfer is available for all orders, even small ones. The simplest way: \"Pay by bank transfer\" in the cart, or write to us at contact@novalyxresearch.com to confirm the amount (delivery included) and the order reference.": "Bankoverschrijving is mogelijk voor alle bestellingen, ook kleine. Het eenvoudigst: „Betalen per bankoverschrijving” in de winkelwagen, of schrijf ons op contact@novalyxresearch.com om het bedrag (inclusief verzending) en de bestelreferentie te bevestigen.",
+"Before reconstitution: dry, at room temperature, away from light, vial sealed. After reconstitution: between {#} and {#} °C (refrigerated).": "Vóór reconstitutie: droog, op kamertemperatuur, beschermd tegen licht, flacon verzegeld. Na reconstitutie: tussen {#} en {#} °C (gekoeld).",
+"Before reconstitution: dry, room temperature, away from light, vial sealed. After reconstitution: between {#} and {#} °C (refrigerated).": "Vóór reconstitutie: droog, kamertemperatuur, beschermd tegen licht, flacon verzegeld. Na reconstitutie: tussen {#} en {#} °C (gekoeld).",
+"Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for {#} minutes. First time? Our \"Pay with Bitcoin\" page explains everything in {#} steps (Revolut, Kraken or Coinbase).": "Alleen met Bitcoin, rechtstreeks vanuit de winkelwagen. Het bedrag wordt in euro berekend en de factuur is {#} minuten geldig. Eerste keer? Onze pagina „Betalen met Bitcoin” legt alles uit in {#} stappen (Revolut, Kraken of Coinbase).",
+"Blend of two heptapeptides: {N}, an analogue of the ACTH({#}-{#}) fragment, and {N}, an analogue of tuftsin. Each is studied for its neuromodulatory effects.": "Mengsel van twee heptapeptiden: {N}, een analoog van het ACTH({#}-{#})-fragment, en {N}, een analoog van tuftsine. Elk wordt bestudeerd op zijn neuromodulerende effecten.",
+"Blend of {N} (GLP-{#}, GIP and glucagon receptor agonist) and cagrilintide (long-acting amylin analogue), two molecules in clinical development.": "Mengsel van {N} (agonist van de GLP-{#}-, GIP- en glucagonreceptoren) en cagrilintide (langwerkend amyline-analoog), twee moleculen in klinische ontwikkeling.",
+"By card through Stripe (your payment data never touches our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received.": "Met een kaart via Stripe (uw betaalgegevens komen nooit op onze servers), of per bankoverschrijving, ook voor een kleine bestelling: kies „Betalen per bankoverschrijving” in de winkelwagen. De bestelling wordt verzonden zodra de overschrijving is ontvangen.",
+"C-terminal fragment (amino acids {#} to {#}) of human growth hormone, studied for its activity on fat metabolism without the growth effects of the whole hormone. {N} is a modified version of it.": "C-terminaal fragment (aminozuren {#} tot {#}) van menselijk groeihormoon, bestudeerd op zijn werking op het vetmetabolisme zonder de groei-effecten van het volledige hormoon. {N} is er een gewijzigde versie van.",
+"CJC-{#} without DAC is a synthetic GHRH analog supplied for research into extended-duration GH release pathways. Lyophilized, high-stability formulation.": "CJC-{#} zonder DAC is een synthetisch GHRH-analoog, geleverd voor onderzoek naar routes van langdurige GH-afgifte. Gelyofiliseerde formulering met hoge stabiliteit.",
+"COA documents represent the definitive specification per batch. While we strive for accuracy, we do not warrant all website content is error-free.": "COA-documenten vormen de bindende specificatie per batch. Wij streven naar nauwkeurigheid, maar garanderen niet dat alle inhoud van de website foutloos is.",
+"Coenzyme (nicotinamide adenine dinucleotide) present in all cells: cofactor of redox reactions in energy metabolism and substrate of enzymes such as sirtuins and PARPs.": "Co-enzym (nicotinamide-adenine-dinucleotide) aanwezig in alle cellen: cofactor van redoxreacties in het energiemetabolisme en substraat van enzymen zoals sirtuïnes en PARP's.",
+"Complex of polypeptides extracted from (calf) thymus, studied mainly in the Russian literature for immune regulation and ageing.": "Complex van polypeptiden gewonnen uit de thymus (van kalveren), vooral in de Russische literatuur bestudeerd op immuunregulatie en veroudering.",
+"Contact us within {#} days if products arrive damaged or do not match COA specs. Opened compounds cannot be returned for safety reasons.": "Neem binnen {#} dagen contact met ons op als producten beschadigd aankomen of niet overeenkomen met de COA-specificaties. Geopende verbindingen kunnen om veiligheidsredenen niet worden geretourneerd.",
+"Copper complex of the tripeptide Ala-His-Lys, used as a cosmetic ingredient and studied in skin and hair-follicle cell models.": "Koperkomplex van het tripeptide Ala-His-Lys, gebruikt als cosmetisch ingrediënt en bestudeerd in celmodellen van huid en haarzakjes.",
+"Do you create content around research, laboratories, or scientific wellness? Novalyx offers a personal code giving your audience a discount, and a commission on the sales it generates.": "Maakt u content over onderzoek, laboratoria of wetenschappelijk welzijn? Novalyx biedt een persoonlijke code met korting voor uw publiek en een commissie op de verkopen die deze oplevert.",
+"Dual agonist of the GLP-{#} and glucagon receptors (IBI{#} / LY{#}), developed by Innovent (China) under licence from Eli Lilly.": "Duale agonist van de GLP-{#}- en glucagonreceptoren (IBI{#} / LY{#}), ontwikkeld door Innovent (China) onder licentie van Eli Lilly.",
+"Each application is reviewed individually. The program is aimed at creators covering scientific, laboratory and research content. As with the rest of the catalogue, all communication must stay within a laboratory-research framework — research use only.": "Elke aanvraag wordt afzonderlijk beoordeeld. Het programma richt zich op makers van wetenschappelijke, laboratorium- en onderzoekscontent. Zoals voor de hele catalogus moet alle communicatie binnen het kader van laboratoriumonderzoek blijven — uitsluitend voor onderzoek.",
+"Each order is shipped from Paris within {#} h of payment confirmation. Delivery in {#}–{#} days maximum within France, {#}–{#} business days for the rest of the EU. A tracking number is sent on dispatch.": "Elke bestelling wordt binnen {#} u na betalingsbevestiging vanuit Parijs verzonden. Levering in maximaal {#}–{#} dagen in Frankrijk, {#}–{#} werkdagen voor de rest van de EU. Bij verzending ontvangt u een trackingnummer.",
+"Each report below was issued by Janoshik Analytical (Czech Republic). Each link opens the original report on Janoshik's website: it cannot be altered.": "Elk onderstaand rapport is uitgegeven door Janoshik Analytical (Tsjechië). Elke link opent het originele rapport op de website van Janoshik: het kan niet worden gewijzigd.",
+"Each report states the product and strength analysed. A report covers one specific batch: each new batch is analysed in turn and published here.": "Elk rapport vermeldt het geanalyseerde product en de sterkte. Een rapport geldt voor één specifieke batch: elke nieuwe batch wordt op zijn beurt geanalyseerd en hier gepubliceerd.",
+"Elamipretide is approved in the United States (FDA, accelerated approval, September {#}, brand Forzinity) only for Barth syndrome. The Novalyx product is a research compound, not that medicine.": "Elamipretide is in de Verenigde Staten goedgekeurd (FDA, versnelde goedkeuring, september {#}, merk Forzinity) uitsluitend voor het syndroom van Barth. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Endogenous molecule studied in the laboratory. No authorisation as a medicine for the forms sold here; associated health claims are not validated by authorities.": "Lichaamseigen molecuul, bestudeerd in het laboratorium. Geen vergunning als geneesmiddel voor de hier verkochte vormen; bijbehorende gezondheidsclaims zijn niet door de autoriteiten bevestigd.",
+"Factual, strictly scientific information on the {#} compounds in the catalogue: what each molecule is and its regulatory status. No health claims.": "Feitelijke, strikt wetenschappelijke informatie over de {#} verbindingen uit de catalogus: wat elk molecuul is en wat de wettelijke status ervan is. Geen gezondheidsclaims.",
+"For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks.": "Bij internationale bestellingen (buiten de Europese Unie) is de koper als enige verantwoordelijk om na te gaan of de producten legaal in zijn land mogen worden ingevoerd, voor het betalen van eventuele douanerechten, belastingen of inklaringskosten, en voor het naleven van alle lokale wetten over onderzoeksverbindingen. Novalyx Research treedt niet op als importeur. Pakketten die door douaneautoriteiten buiten de EU in beslag worden genomen, vernietigd, geweigerd of teruggestuurd, worden niet terugbetaald. Met een internationale bestelling erkent en aanvaardt de koper uitdrukkelijk deze risico's.",
+"Free shipping in France and the EU on {N} Packs of {#} and {#}. Bacteriostatic water: {#}€ in France and the EU. We do not ship to Russia or Belarus.": "Gratis verzending in Frankrijk en de EU voor {N}-packs van {#} en {#}. Bacteriostatisch water: {#}€ in Frankrijk en de EU. Wij verzenden niet naar Rusland of Belarus.",
+"Fusion protein (soluble activin type IIB receptor coupled to an antibody fragment) that captures myostatin and related molecules. Its clinical trials were stopped in {#}.": "Fusie-eiwit (oplosbare activinereceptor type IIB gekoppeld aan een antilichaamfragment) dat myostatine en verwante moleculen bindt. De klinische studies werden in {#} stopgezet.",
+"GHRH analogue (\"no DAC\" version: modified {#}-{#} sequence, also called modified GRF {#}-{#}), designed for better stability.": "GHRH-analoog (versie „zonder DAC”: gewijzigde {#}-{#}-sequentie, ook gewijzigd GRF {#}-{#} genoemd), ontworpen voor betere stabiliteit.",
+"GHRH({#}-{#}) analogue fitted with a \"DAC\" (drug affinity complex) that binds albumin and greatly extends its duration of action. Its clinical development was stopped in the mid-{#}s.": "GHRH({#}-{#})-analoog met een „DAC” (drug affinity complex) dat aan albumine bindt en de werkingsduur sterk verlengt. De klinische ontwikkeling werd halverwege de jaren {#} stopgezet.",
+"Hello, I'm the Novalyx assistant. I can tell you about our research compounds (nature, mechanism, regulatory status), prices, shipping, payment, storage and COA analyses.": "Hallo, ik ben de Novalyx-assistent. Ik kan u vertellen over onze onderzoeksverbindingen (aard, mechanisme, wettelijke status), prijzen, verzending, betaling, bewaring en COA-analyses.",
+"I acknowledge this shipment may be subject to customs inspection and I am responsible for compliance with local regulations.": "Ik erken dat deze zending aan een douanecontrole kan worden onderworpen en dat ik verantwoordelijk ben voor de naleving van de lokale regelgeving.",
+"I can't answer that question. Novalyx products are compounds supplied exclusively for laboratory research (no human or animal use), and this assistant gives no dose, protocol or medical advice. For any health question, please consult a healthcare professional.": "Die vraag kan ik niet beantwoorden. Novalyx-producten zijn verbindingen die uitsluitend worden geleverd voor laboratoriumonderzoek (geen gebruik bij mens of dier), en deze assistent geeft geen dosering, protocol of medisch advies. Raadpleeg voor elke gezondheidsvraag een zorgprofessional.",
+"I don't have reliable information on this and I prefer not to improvise. Write to us at contact@novalyxresearch.com (reply within one business day), or pick a question below.": "Hierover heb ik geen betrouwbare informatie en ik improviseer liever niet. Schrijf ons op contact@novalyxresearch.com (antwoord binnen één werkdag), of kies hieronder een vraag.",
+"If a product does not match its report specifications, contact us within {#} days. We review each case and arrange a replacement or refund where appropriate.": "Als een product niet overeenkomt met de specificaties van zijn rapport, neem dan binnen {#} dagen contact met ons op. Wij bekijken elk geval en zorgen waar nodig voor vervanging of terugbetaling.",
+"If you can shop online, you can pay with Bitcoin: {#} minutes the first time, {#} minutes after that. The amount is always calculated in euros.": "Als u online kunt winkelen, kunt u met Bitcoin betalen: {#} minuten de eerste keer, daarna {#} minuten. Het bedrag wordt altijd in euro berekend.",
+"In-stock products ship within {#} h of payment confirmation and arrive in {#}–{#} days in France. Made-to-order products take {#}–{#} weeks: the batch is received, then analysed by Janoshik before it ships to you. You get an email at every step, then your tracking number.": "Producten op voorraad worden binnen {#} u na betalingsbevestiging verzonden en zijn in {#}–{#} dagen in Frankrijk. Producten op bestelling duren {#}–{#} weken: de batch wordt ontvangen en daarna door Janoshik geanalyseerd voordat hij naar u wordt verzonden. U krijgt bij elke stap een e-mail en daarna uw trackingnummer.",
+"Investigational drug in advanced development, alone and in combination with semaglutide (CagriSema). Status is evolving: refer to health authorities for the current situation.": "Onderzoeksgeneesmiddel in vergevorderde ontwikkeling, alleen en in combinatie met semaglutide (CagriSema). De status verandert: raadpleeg de gezondheidsautoriteiten voor de actuele situatie.",
+"Investigational drug: in phase {#} clinical trials, not authorised to date. According to the company's announcements, a US marketing application is targeted for early {#}. The Novalyx product is a research compound, not a medicine.": "Onderzoeksgeneesmiddel: in klinische studies fase {#}, tot nu toe niet toegelaten. Volgens aankondigingen van het bedrijf is een Amerikaanse handelsvergunning gepland voor begin {#}. Het Novalyx-product is een onderzoeksverbinding, geen geneesmiddel.",
+"It is the purchaser's sole responsibility to verify that a compound is legal in their jurisdiction. Novalyx makes no representation regarding regulatory status in any country.": "Het is uitsluitend de verantwoordelijkheid van de koper om na te gaan of een verbinding legaal is in zijn land. Novalyx doet geen uitspraak over de wettelijke status in welk land dan ook.",
+"It's a direct payment with no banking intermediary. Your bank statement only shows the Bitcoin purchase on your platform. The amount is always calculated in euros.": "Het is een directe betaling zonder bank als tussenpersoon. Op uw bankafschrift staat alleen de aankoop van Bitcoin op uw platform. Het bedrag wordt altijd in euro berekend.",
+"Its pharmaceutical form (thymalfasin, brand Zadaxin) is authorised in several countries, mainly in Asia, for certain indications; it is not authorised in the United States. The Novalyx product is a research compound.": "De farmaceutische vorm (thymalfasine, merk Zadaxin) is in verschillende landen, vooral in Azië, voor bepaalde indicaties toegelaten; in de Verenigde Staten is ze niet toegelaten. Het Novalyx-product is een onderzoeksverbinding.",
+"Long-acting amylin analogue (amylin is a hormone co-secreted with insulin), developed by Novo Nordisk. It acts on amylin and calcitonin receptors.": "Langwerkend amyline-analoog (amyline is een hormoon dat samen met insuline wordt afgegeven), ontwikkeld door Novo Nordisk. Het werkt op amyline- en calcitoninereceptoren.",
+"Lyophilised peptides for laboratories and researchers. Analyses are performed by an independent laboratory, and every report can be verified publicly with its key.": "Gelyofiliseerde peptiden voor laboratoria en onderzoekers. De analyses worden door een onafhankelijk laboratorium uitgevoerd en elk rapport is openbaar te controleren met zijn sleutel.",
+"Lyophilised, labelled, sealed vials, tracked shipping. Products without a published report are marked “analysis pending”.": "Gelyofiliseerde, geëtiketteerde, verzegelde flacons, verzending met tracking. Producten zonder gepubliceerd rapport zijn gemarkeerd als „analyse in behandeling”.",
+"Made-to-order products are bought and analysed batch by batch. The minimum ({#} to {#} vials depending on the product) lets us launch that batch, and automatically gives you our quantity discounts (−{#} to −{#}%).": "Producten op bestelling worden batch per batch ingekocht en geanalyseerd. Het minimum ({#} tot {#} flacons, afhankelijk van het product) maakt het mogelijk die batch te starten en geeft u automatisch onze volumekortingen (−{#} tot −{#}%).",
+"Marketed as a medicine in some countries (including Austria, Russia, China); not authorised in the United States. Clinical evidence of efficacy remains debated.": "In sommige landen als geneesmiddel op de markt gebracht (waaronder Oostenrijk, Rusland, China); niet toegelaten in de Verenigde Staten. Het klinische bewijs van werkzaamheid blijft omstreden.",
+"Modified fragment of human growth hormone (amino acids {#}-{#}, with an added tyrosine), studied for its link with lipid metabolism.": "Gewijzigd fragment van menselijk groeihormoon (aminozuren {#}-{#}, met een toegevoegd tyrosine), bestudeerd op het verband met het lipidenmetabolisme.",
+"Name, email, shipping address, and order details you provide directly. Anonymised usage data via analytics to improve our site.": "Naam, e-mail, verzendadres en bestelgegevens die u ons rechtstreeks verstrekt. Geanonimiseerde gebruiksgegevens via analysetools om onze site te verbeteren.",
+"Naturally occurring tripeptide (glycyl-histidyl-lysine) that forms a complex with copper(II). Present in human plasma, it is studied in the laboratory for its role in the extracellular matrix, collagen synthesis and skin biology.": "Van nature voorkomend tripeptide (glycyl-histidyl-lysine) dat een complex vormt met koper(II). Het komt voor in menselijk plasma en wordt in het laboratorium bestudeerd op zijn rol in de extracellulaire matrix, collageensynthese en huidbiologie.",
+"No product sold by Novalyx is intended for human or veterinary administration. Novalyx expressly disclaims liability for any use contrary to this designation.": "Geen enkel door Novalyx verkocht product is bestemd voor toediening bij mens of dier. Novalyx wijst uitdrukkelijk elke aansprakelijkheid af voor gebruik in strijd met deze bestemming.",
+"Nonapeptide ({#} amino acids) isolated from rabbit brain in {#}, studied for its link with slow-wave sleep. Its exact mechanism remains poorly established.": "Nonapeptide ({#} aminozuren), in {#} geïsoleerd uit konijnenhersenen, bestudeerd op het verband met de diepe slaap. Het precieze mechanisme is nog slecht opgehelderd.",
+"Not authorised as a medicine in any country. Published data come mostly from preclinical (animal) studies; controlled human data are very limited. Listed as prohibited by the World Anti-Doping Agency (WADA).": "In geen enkel land als geneesmiddel toegelaten. Gepubliceerde gegevens komen vooral uit preklinische (dier)studies; gecontroleerde gegevens bij mensen zijn zeer beperkt. Op de verboden lijst van het Wereldantidopingagentschap (WADA).",
+"Not authorised as a medicine in the EU or the United States; as pralmorelin it has been used in Japan as a diagnostic agent, to our knowledge. Prohibited by WADA.": "Niet als geneesmiddel toegelaten in de EU of de Verenigde Staten; als pralmorelin is het voor zover wij weten in Japan gebruikt als diagnostisch middel. Verboden door het WADA.",
+"Not authorised as a medicine in the United States; aviptadil has been the subject of clinical trials and very limited authorisations depending on the country.": "Niet als geneesmiddel toegelaten in de Verenigde Staten; aviptadil is onderwerp geweest van klinische studies en, afhankelijk van het land, zeer beperkte vergunningen.",
+"Not authorised as a medicine; several health authorities (for example in the United Kingdom and Australia) have issued warnings about products sold under this name.": "Niet als geneesmiddel toegelaten; verschillende gezondheidsautoriteiten (bijvoorbeeld in het Verenigd Koninkrijk en Australië) hebben gewaarschuwd voor producten die onder deze naam worden verkocht.",
+"Note: educational information only. No medical advice, no dose, no usage recommendation. Product reserved for laboratory research.": "Let op: uitsluitend educatieve informatie. Geen medisch advies, geen dosering, geen gebruiksaanbeveling. Product voorbehouden aan laboratoriumonderzoek.",
+"Nothing on this website constitutes medical advice. No claims are made regarding health benefits or therapeutic effects of any compound.": "Niets op deze website vormt medisch advies. Er worden geen beweringen gedaan over gezondheidsvoordelen of therapeutische effecten van welke verbinding dan ook.",
+"Novalyx Research is a French company registered in Paris. It supplies lyophilised research peptides to laboratories, researchers and professionals.": "Novalyx Research is een Frans bedrijf, ingeschreven in Parijs. Het levert gelyofiliseerde onderzoekspeptiden aan laboratoria, onderzoekers en professionals.",
+"Novalyx Research supplies compounds exclusively for laboratory research. Access is restricted to qualified professionals.": "Novalyx Research levert verbindingen uitsluitend voor laboratoriumonderzoek. De toegang is voorbehouden aan gekwalificeerde professionals.",
+"Novalyx Research {N} is pharmaceutical-grade sterile water containing {#}% benzyl alcohol as a bacteriostatic agent. Supplied exclusively for laboratory use in the reconstitution of lyophilised research peptides. Each vial is sealed, sterile, and ready for immediate laboratory use.": "Novalyx Research {N} is steriel water van farmaceutische kwaliteit met {#}% benzylalcohol als bacteriostatisch middel. Uitsluitend geleverd voor laboratoriumgebruik bij de reconstitutie van gelyofiliseerde onderzoekspeptiden. Elke flacon is verzegeld, steriel en direct klaar voor gebruik in het laboratorium.",
+"Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products.": "Novalyx is niet aansprakelijk voor misbruik van de producten, of voor indirecte schade of gevolgschade door het gebruik van deze website of de producten.",
+"Novalyx research blend of four compounds: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-onderzoeksmengsel van vier verbindingen: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) + {N} ({#} mg) in één gelyofiliseerde flacon. Zie hun eigen fiches voor de aard van elke component.",
+"Novalyx research blend of three compounds: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-onderzoeksmengsel van drie verbindingen: {N} ({#} mg) + GHK-Cu ({#} mg) + {N} ({#} mg) in één gelyofiliseerde flacon. Zie hun eigen fiches voor de aard van elke component.",
+"Novalyx research blend of two compounds: CJC-{#} no DAC ({#} mg) + ipamorelin ({#} mg) in a single lyophilised vial. See their entries for the nature of each component.": "Novalyx-onderzoeksmengsel van twee verbindingen: CJC-{#} zonder DAC ({#} mg) + ipamorelin ({#} mg) in één gelyofiliseerde flacon. Zie hun eigen fiches voor de aard van elke component.",
+"Novalyx research blend of two compounds: cagrilintide + semaglutide, in two sizes ({#} mg + {#} mg; {#} mg + {#} mg). See the {N} and {N} entries.": "Novalyx-onderzoeksmengsel van twee verbindingen: cagrilintide + semaglutide, in twee formaten ({#} mg + {#} mg; {#} mg + {#} mg). Zie de fiches van {N} en {N}.",
+"Novalyx research blend of two compounds: {N} ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See the {N} and {N} entries for the nature of each component.": "Novalyx-onderzoeksmengsel van twee verbindingen: {N} ({#} mg) + {N} ({#} mg) in één gelyofiliseerde flacon. Zie de fiches van {N} en {N} voor de aard van elke component.",
+"Novalyx research blend of two compounds: {N} + {N}, in two sizes ({#} mg total: {#} mg + {#} mg; {#} mg total: {#} mg + {#} mg). See the {N} and {N} entries.": "Novalyx-onderzoeksmengsel van twee verbindingen: {N} + {N}, in twee formaten ({#} mg totaal: {#} mg + {#} mg; {#} mg totaal: {#} mg + {#} mg). Zie de fiches van {N} en {N}.",
+"Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within {#} h of payment confirmation. Delivery within France typically takes {#}–{#} days; the rest of the EU {#}–{#} business days; international destinations {#}–{#} business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.": "Bestellingen worden onder gecontroleerde omstandigheden verwerkt, met batchtoewijzing per bestelling bij onze gecontroleerde laboratoriumpartners. Bestellingen worden binnen {#} u na betalingsbevestiging verzonden. Levering in Frankrijk duurt doorgaans {#}–{#} dagen; in de rest van de EU {#}–{#} werkdagen; internationale bestemmingen {#}–{#} werkdagen. Levertijden zijn schattingen, geen garanties. Het risico gaat bij verzending over op de koper.",
+"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (free in France and the EU on {N} Packs; bacteriostatic water {#}€ in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellingen worden binnen {#} u na betalingsbevestiging vanuit Parijs verzonden. Levering in maximaal {#} tot {#} dagen in Frankrijk; langer voor de rest van de wereld (zie de pagina Verzending). Verzending per land: Frankrijk {#}€, EU {#}€, Zwitserland/VK {#}€, VS/Canada {#}€, Australië, Nieuw-Zeeland en andere landen {#}€ (gratis in Frankrijk en de EU voor {N}-packs; bacteriostatisch water {#}€ in Frankrijk en de EU). Bij verzending ontvangt u een trackingnummer. Buiten de Europese Unie is de koper verantwoordelijk voor douanerechten en lokale naleving.",
+"Orders are shipped within {#} h of payment confirmation, then delivered in {#}–{#} days maximum within France. Allow {#}–{#} business days for the rest of the EU, and longer outside the EU depending on destination. A tracking number is sent on dispatch.": "Bestellingen worden binnen {#} u na betalingsbevestiging verzonden en daarna in maximaal {#}–{#} dagen in Frankrijk geleverd. Reken op {#}–{#} werkdagen voor de rest van de EU, en langer buiten de EU afhankelijk van de bestemming. Bij verzending ontvangt u een trackingnummer.",
+"PEGylated form of the MGF peptide (\"mechano growth factor\"), derived from an IGF-{#} splice variant, studied in muscle-cell models.": "Gepegyleerde vorm van het MGF-peptide („mechano growth factor”), afgeleid van een splicevariant van IGF-{#}, bestudeerd in modellen van spiercellen.",
+"Payment by card through Stripe (your banking data never touch our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received. Any question: contact@novalyxresearch.com.": "Betaling met een kaart via Stripe (uw bankgegevens komen nooit op onze servers), of per bankoverschrijving, ook voor een kleine bestelling: kies „Betalen per bankoverschrijving” in de winkelwagen. De bestelling wordt verzonden zodra de overschrijving is ontvangen. Vragen: contact@novalyxresearch.com.",
+"Peptidomimetic designed to target prohibitin on the blood vessels of white adipose tissue, studied in rodents and primates.": "Peptidomimeticum, ontworpen om zich te richten op prohibitine in de bloedvaten van wit vetweefsel, bestudeerd bij knaagdieren en primaten.",
+"Preparation of peptides and amino acids obtained by enzymatic hydrolysis of pig-brain proteins. It is a mixture, not a single molecule.": "Preparaat van peptiden en aminozuren, verkregen door enzymatische hydrolyse van eiwitten uit varkenshersenen. Het is een mengsel, geen afzonderlijk molecuul.",
+"Prices are shown in EUR and do not include VAT (TVA non applicable, art. {#}B du CGI — French micro-entrepreneur regime). Card payment is processed securely by Stripe; payment by bank transfer is also available, in which case the order is shipped once the transfer is received. We reserve the right to cancel orders, with a full refund issued.": "De prijzen worden in EUR weergegeven, zonder btw (TVA non applicable, art. {#}B du CGI — Franse micro-ondernemersregeling). Kaartbetaling wordt veilig verwerkt door Stripe; betaling per bankoverschrijving is ook mogelijk, in dat geval wordt de bestelling verzonden zodra de overschrijving is ontvangen. Wij behouden ons het recht voor bestellingen te annuleren, met volledige terugbetaling.",
+"Proprietary blend of research compounds; it is not a medicine. The status of its components is as described in their own entries.": "Eigen mengsel van onderzoeksverbindingen; het is geen geneesmiddel. De status van de componenten is zoals beschreven in hun eigen fiches.",
+"Proprietary blend of research compounds; no medicine status. The status of its components is as described in their own entries.": "Eigen mengsel van onderzoeksverbindingen; geen geneesmiddelstatus. De status van de componenten is zoals beschreven in hun eigen fiches.",
+"Retatrutide (product name on this site: {N}) is a triple agonist of the GIP, GLP-{#} and glucagon receptors, developed by Eli Lilly (code LY{#}). It activates three receptors involved in energy and glucose metabolism at the same time.": "Retatrutide (productnaam op deze site: {N}) is een drievoudige agonist van de GIP-, GLP-{#}- en glucagonreceptoren, ontwikkeld door Eli Lilly (code LY{#}). Het activeert tegelijk drie receptoren die betrokken zijn bij het energie- en glucosemetabolisme.",
+"Shipments outside the EU are at the buyer's risk. The buyer must check that the products may be lawfully imported and pay any duties or taxes. Novalyx Research does not act as importer of record. Parcels seized, refused or destroyed by customs outside the EU are non-refundable.": "Zendingen buiten de EU gebeuren op risico van de koper. De koper moet nagaan of de producten rechtmatig mogen worden ingevoerd en eventuele rechten of belastingen betalen. Novalyx Research treedt niet op als importeur. Pakketten die buiten de EU door de douane in beslag worden genomen, geweigerd of vernietigd, worden niet terugbetaald.",
+"Short synthetic peptide (Ala-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to cartilage tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Ala-Glu-Asp) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met kraakbeenweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Ala-Glu-Asp-Arg) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to heart tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Ala-Glu-Asp-Arg) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met hartweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Ala-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to brain tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Ala-Glu-Asp-Pro) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met hersenweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to bronchi tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Glu-Asp-Gly) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met bronchiaal weefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Glu-Asp-Leu) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to liver tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Glu-Asp-Leu) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met leverweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Lys-Glu-Asp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to blood vessels tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Lys-Glu-Asp) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met vaatweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Lys-Glu-Asp-Gly) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to testes tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Lys-Glu-Asp-Gly) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met testisweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Lys-Glu-Asp-Pro) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to prostate tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Lys-Glu-Asp-Pro) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met prostaatweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Short synthetic peptide (Lys-Glu-Asp-Trp) from V. Khavinson's work on \"bioregulators\" (St Petersburg Institute of Bioregulation and Gerontology), studied in relation to pancreas tissue. Published data come mostly from this team.": "Kort synthetisch peptide (Lys-Glu-Asp-Trp) uit het werk van V. Khavinson over „bioregulatoren” (Instituut voor Bioregulatie en Gerontologie in Sint-Petersburg), bestudeerd in verband met alvleesklierweefsel. De gepubliceerde gegevens komen vooral van dit team.",
+"Small molecule ({#}-amino-{#}-methylquinolinium), not a peptide: inhibitor of NNMT (nicotinamide N-methyltransferase), an enzyme of cellular metabolism. Studied in cells and mouse models.": "Klein molecuul ({#}-amino-{#}-methylchinolinium), geen peptide: remmer van NNMT (nicotinamide-N-methyltransferase), een enzym van het celmetabolisme. Bestudeerd in cellen en muismodellen.",
+"Small peptide derived from angiotensin IV, studied in preclinical models for its action on the HGF/c-Met pathway and synapse formation.": "Klein peptide afgeleid van angiotensine IV, in preklinische modellen bestudeerd op zijn werking op de HGF/c-Met-route en de vorming van synapsen.",
+"Sterile water containing {#}% acetic acid, used as a reconstitution solvent for peptides that dissolve poorly at neutral pH.": "Steriel water met {#}% azijnzuur, gebruikt als reconstitutie-oplosmiddel voor peptiden die slecht oplossen bij neutrale pH.",
+"Sterile water containing {#}% benzyl alcohol as a bacteriostatic agent, intended for laboratory reconstitution of lyophilised compounds, in a multi-draw vial.": "Steriel water met {#}% benzylalcohol als bacteriostatisch middel, bestemd voor de reconstitutie van gelyofiliseerde verbindingen in het laboratorium, in een flacon voor meervoudige afname.",
+"Substances supplied exclusively for scientific laboratory research. They are not intended for human or veterinary use, consumption or therapeutic purposes.": "Stoffen die uitsluitend worden geleverd voor wetenschappelijk laboratoriumonderzoek. Ze zijn niet bestemd voor gebruik bij mens of dier, consumptie of therapeutische doeleinden.",
+"Synthetic heptapeptide analogue of an ACTH({#}-{#}) fragment, stabilised by a Pro-Gly-Pro tail. Studied for the expression of neurotrophic factors such as BDNF.": "Synthetisch heptapeptide-analoog van een ACTH({#}-{#})-fragment, gestabiliseerd door een Pro-Gly-Pro-staart. Bestudeerd op de expressie van neurotrofe factoren zoals BDNF.",
+"Synthetic heptapeptide derived from tuftsin (an immunoglobulin fragment), stabilised by a Pro-Gly-Pro tail; studied for modulation of neurotransmitters, including the GABAergic system.": "Synthetisch heptapeptide afgeleid van tuftsine (een immunoglobulinefragment), gestabiliseerd door een Pro-Gly-Pro-staart; bestudeerd op de modulatie van neurotransmitters, waaronder het GABA-erge systeem.",
+"Synthetic hexapeptide agonist of the ghrelin receptor (GHS-R{#}a): a growth-hormone secretagogue (GHRP = growth hormone-releasing peptide).": "Synthetisch hexapeptide, agonist van de ghrelinereceptor (GHS-R{#}a): een groeihormoon-secretagoog (GHRP = growth hormone-releasing peptide).",
+"Synthetic hexapeptide, a growth-hormone secretagogue acting on the ghrelin receptor; it also binds CD{#}, which has been studied in cardiac models.": "Synthetisch hexapeptide, een groeihormoon-secretagoog die op de ghrelinereceptor werkt; het bindt ook aan CD{#}, wat in hartmodellen is bestudeerd.",
+"Synthetic peptide related to thymosin beta-{#}, a {#}-amino-acid protein that binds actin (a cytoskeleton component). \"{N}\" usually refers to a synthetic fragment; definitions vary between suppliers. Studied in vitro and in animals for cell migration and tissue repair.": "Synthetisch peptide verwant aan thymosine bèta-{#}, een eiwit van {#} aminozuren dat actine bindt (een bestanddeel van het cytoskelet). „{N}” verwijst meestal naar een synthetisch fragment; definities verschillen per leverancier. In vitro en bij dieren bestudeerd op celmigratie en weefselherstel.",
+"Synthetic tetrapeptide (Ala-Glu-Asp-Gly) designed from epithalamin, a pineal-gland extract. Studied, mainly by a Russian research group, for effects on telomerase and cellular ageing.": "Synthetisch tetrapeptide (Ala-Glu-Asp-Gly), ontworpen op basis van epithalamine, een extract van de pijnappelklier. Vooral door een Russische onderzoeksgroep bestudeerd op effecten op telomerase en cellulaire veroudering.",
+"Synthetic tripeptide (Glu-Asp-Arg) belonging to the \"peptide bioregulators\" studied by Khavinson's group; examined in cell culture and animals for neuroprotective effects.": "Synthetisch tripeptide (Glu-Asp-Arg) uit de groep „peptide-bioregulatoren” die de groep van Khavinson bestudeert; in celkweek en bij dieren onderzocht op neuroprotectieve effecten.",
+"Synthetic {#}-amino-acid peptide derived from a sequence of the BPC protein found in human gastric juice. In the laboratory it is studied in cell and animal models for its interactions with angiogenesis (blood-vessel formation) and tissue-repair pathways.": "Synthetisch peptide van {#} aminozuren, afgeleid van een sequentie van het eiwit BPC uit menselijk maagsap. In het laboratorium wordt het in cel- en diermodellen bestudeerd op zijn interacties met angiogenese (vorming van bloedvaten) en routes van weefselherstel.",
+"Tetrapeptide (also called elamipretide) that binds cardiolipin, a phospholipid of the inner mitochondrial membrane, and is studied for its effect on mitochondrial function.": "Tetrapeptide (ook elamipretide genoemd) dat bindt aan cardiolipine, een fosfolipide van het binnenste mitochondriale membraan, en wordt bestudeerd op zijn effect op de mitochondriale functie.",
+"The legal holder name must match what your bank shows when you initiate the transfer (mandatory beneficiary verification requirement).": "De naam van de wettelijke rekeninghouder moet overeenkomen met wat uw bank toont wanneer u de overschrijving start (verplichte controle van de begunstigde).",
+"The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to Janoshik: your vial only ships once the analysis is approved. Total time: {#}–{#} weeks.": "Het product wordt bij onze fabrikant besteld zodra u betaalt. Bij ontvangst sturen wij een monster van die batch naar Janoshik: uw flacon wordt pas verzonden als de analyse is goedgekeurd. Totale duur: {#}–{#} weken.",
+"The sector is full of unverifiable promises. Our position is simple: claim nothing that cannot be checked. Analyses are entrusted to an independent laboratory, and every published report carries a key that lets anyone verify it at the source.": "De sector staat vol onverifieerbare beloften. Ons standpunt is eenvoudig: niets beweren wat niet kan worden gecontroleerd. De analyses worden toevertrouwd aan een onafhankelijk laboratorium, en elk gepubliceerd rapport heeft een sleutel waarmee iedereen het bij de bron kan verifiëren.",
+"To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details.": "Om bestellingen te verwerken, ondersteuning te bieden, berichten over bestellingen te sturen en — met toestemming — productaankondigingen. Betaalgegevens worden verwerkt door Stripe; wij zien of bewaren uw kaartgegevens nooit.",
+"Tripeptide (lysine-proline-valine) matching the C-terminal end of α-MSH (melanocyte-stimulating hormone). Studied in vitro and in animals for its effects on inflammatory signalling, notably in the intestinal epithelium.": "Tripeptide (lysine-proline-valine) dat overeenkomt met het C-terminale uiteinde van α-MSH (melanocytstimulerend hormoon). In vitro en bij dieren bestudeerd op zijn effecten op ontstekingssignalering, met name in het darmepitheel.",
+"Truncated form of IGF-{#} (des({#}-{#})IGF-{#}) lacking the first three amino acids, with reduced affinity for IGFBPs and enhanced activity at the IGF-{#} receptor in culture. It occurs naturally in some tissues, including the brain.": "Verkorte vorm van IGF-{#} (des({#}-{#})IGF-{#}) zonder de eerste drie aminozuren, met verminderde affiniteit voor IGFBP's en verhoogde activiteit op de IGF-{#}-receptor in celkweek. Het komt van nature voor in sommige weefsels, waaronder de hersenen.",
+"Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Gebruikt in cosmetica (topische toepassing); geen vergunning als injecteerbaar geneesmiddel. Het onderzoek betreft vooral celmodellen en topische toepassingen.",
+"We use cookies that are essential for the site to work (cart, language). With your consent, we also use audience-measurement and advertising cookies to improve the site and measure our campaigns. You can refuse or change your choice at any time.": "Wij gebruiken cookies die nodig zijn voor de werking van de site (winkelwagen, taal). Met uw toestemming gebruiken wij ook cookies voor bezoekersmeting en advertenties om de site te verbeteren en onze campagnes te meten. U kunt op elk moment weigeren of uw keuze wijzigen.",
+"You receive an email at every step: order received, ordered from the manufacturer, batch under analysis at Janoshik, analysis approved (with the report link), then shipped with your tracking number.": "U ontvangt bij elke stap een e-mail: bestelling ontvangen, besteld bij de fabrikant, batch in analyse bij Janoshik, analyse goedgekeurd (met de link naar het rapport), daarna verzonden met uw trackingnummer.",
+"{#}-amino-acid analogue of human IGF-{#} (Arg{#} substitution and {#}-amino-acid N-terminal extension) with low binding to IGF-binding proteins (IGFBPs). It is mostly used as a cell-culture supplement.": "Analoog van menselijk IGF-{#} van {#} aminozuren (Arg{#}-substitutie en N-terminale verlenging met {#} aminozuren) met weinig binding aan IGF-bindende eiwitten (IGFBP's). Het wordt vooral gebruikt als supplement voor celkweek.",
+"{#}-amino-acid antimicrobial peptide, the only human member of the cathelicidin family, released by cleavage of the hCAP{#} protein. Studied for its role in innate immunity.": "Antimicrobieel peptide van {#} aminozuren, het enige menselijke lid van de cathelicidinefamilie, vrijgemaakt door splitsing van het eiwit hCAP{#}. Bestudeerd op zijn rol in de aangeboren immuniteit.",
+"{#}-amino-acid fragment of kisspeptin, ligand of the KISS{#}R receptor (GPR{#}), which controls GnRH release and therefore the reproductive axis.": "Fragment van kisspeptine van {#} aminozuren, ligand van de receptor KISS{#}R (GPR{#}), die de afgifte van GnRH en daarmee de voortplantingsas regelt.",
+"{#}-amino-acid neuropeptide acting on VPAC{#} and VPAC{#} receptors, involved in vasodilation, immunity and digestive function. Its synthetic drug form is called aviptadil.": "Neuropeptide van {#} aminozuren dat werkt op de receptoren VPAC{#} en VPAC{#}, betrokken bij vaatverwijding, immuniteit en de spijsvertering. De synthetische geneesmiddelvorm heet aviptadil.",
+"{#}-amino-acid peptide derived from erythropoietin (helix B), which binds selectively to the \"innate repair receptor\" (EPOR/CD{#} heterodimer) without stimulating erythropoiesis. Also called cibinetide.": "Peptide van {#} aminozuren afgeleid van erytropoëtine (helix B), dat selectief bindt aan de „aangeboren herstelreceptor” (EPOR/CD{#}-heterodimeer) zonder de aanmaak van rode bloedcellen te stimuleren. Ook cibinetide genoemd.",
+"{#}-amino-acid peptide derived from prothymosin alpha, studied for modulation of the immune response (T-cell maturation).": "Peptide van {#} aminozuren afgeleid van prothymosine alfa, bestudeerd op de modulatie van de immuunrespons (rijping van T-cellen).",
+"{#}-amino-acid peptide encoded by mitochondrial DNA ({#}S rRNA gene): a \"mitochondrial-derived peptide\". Studied for its role in metabolic homeostasis and cellular stress response.": "Peptide van {#} aminozuren, gecodeerd door mitochondriaal DNA ({#}S-rRNA-gen): een „van mitochondriën afgeleid peptide”. Bestudeerd op zijn rol in de metabole homeostase en de cellulaire stressrespons.",
+"{#}-amino-acid peptide encoded by mitochondrial DNA, studied for its cytoprotective signalling pathways in cell and animal models.": "Peptide van {#} aminozuren, gecodeerd door mitochondriaal DNA, bestudeerd op zijn cytoprotectieve signaalroutes in cel- en diermodellen.",
+"{N} (Body Protection Compound) is a synthetic pentadecapeptide supplied for research into tissue repair, angiogenesis, and gastrointestinal integrity. Each vial contains lyophilized peptide. Supplied exclusively for in-vitro and laboratory research purposes.": "{N} (Body Protection Compound) is een synthetisch pentadecapeptide, geleverd voor onderzoek naar weefselherstel, angiogenese en de integriteit van het maag-darmkanaal. Elke flacon bevat gelyofiliseerd peptide. Uitsluitend geleverd voor in-vitro- en laboratoriumonderzoek.",
+"{N} (Bremelanotide) is a synthetic cyclic heptapeptide, supplied for research into melanocortin MC{#} and MC{#} receptor pathways and central nervous system signalling.": "{N} (bremelanotide) is een synthetisch cyclisch heptapeptide, geleverd voor onderzoek naar de routes van de melanocortinereceptoren MC{#} en MC{#} en signalering in het centrale zenuwstelsel.",
+"{N} (Delta Sleep-Inducing Peptide) is a synthetic nonapeptide, supplied for research into sleep regulation, delta wave activity, and circadian signalling pathways.": "{N} (Delta Sleep-Inducing Peptide) is een synthetisch nonapeptide, geleverd voor onderzoek naar slaapregulatie, deltagolfactiviteit en circadiane signaalroutes.",
+"{N} (Elamipretide) is a mitochondria-targeting peptide, supplied for research into cardiolipin binding and mitochondrial energetics pathways.": "{N} (elamipretide) is een op mitochondriën gericht peptide, geleverd voor onderzoek naar cardiolipinebinding en mitochondriale energieroutes.",
+"{N} (Glycyl-Histidyl-Lysine copper complex) is a naturally occurring tripeptide bound to copper. Supplied for research into dermal regeneration, collagen and elastin synthesis, and tissue repair. New batches are submitted for independent analysis by Janoshik.": "{N} (glycyl-histidyl-lysine-kopercomplex) is een van nature voorkomend tripeptide gebonden aan koper. Geleverd voor onderzoek naar huidregeneratie, collageen- en elastinesynthese en weefselherstel. Nieuwe batches worden onafhankelijk geanalyseerd door Janoshik.",
+"{N} (Lysine-Proline-Valine) is the C-terminal tripeptide fragment of alpha-MSH. Supplied for research into inflammatory signalling, intestinal barrier function, and dermal health.": "{N} (lysine-proline-valine) is het C-terminale tripeptidefragment van alfa-MSH. Geleverd voor onderzoek naar ontstekingssignalering, de darmbarrière en de gezondheid van de huid.",
+"{N} (Nicotinamide Adenine Dinucleotide) is a coenzyme present in all living cells, supplied for research into cellular energy metabolism, sirtuin activity, and longevity pathways.": "{N} (nicotinamide-adenine-dinucleotide) is een co-enzym dat in alle levende cellen voorkomt, geleverd voor onderzoek naar het cellulaire energiemetabolisme, de activiteit van sirtuïnes en routes van levensduur.",
+"{N} (TA{#}) is a synthetic {#}-amino acid peptide, supplied for research into immune system modulation, T-cell signalling, and thymic function.": "{N} (TA{#}) is een synthetisch peptide van {#} aminozuren, geleverd voor onderzoek naar immuunmodulatie, T-celsignalering en de thymusfunctie.",
+"{N} Acetate is a synthetic GHRH {#}-{#} fragment, supplied for research into growth hormone releasing pathways. Lyophilized, high-stability formulation.": "{N}-acetaat is een synthetisch GHRH-{#}-{#}-fragment, geleverd voor onderzoek naar de afgifteroutes van groeihormoon. Gelyofiliseerde formulering met hoge stabiliteit.",
+"{N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "{N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten.",
+"{N} is a cathelicidin-derived antimicrobial peptide, supplied for research into innate immunity pathways and host defense mechanisms.": "{N} is een van cathelicidine afgeleid antimicrobieel peptide, geleverd voor onderzoek naar routes van de aangeboren immuniteit en afweermechanismen van de gastheer.",
+"{N} is a neurotrophic peptide complex, supplied for research into neuroprotection, BDNF modulation, and cognitive signalling pathways.": "{N} is een neurotroof peptidecomplex, geleverd voor onderzoek naar neuroprotectie, BDNF-modulatie en cognitieve signaalroutes.",
+"{N} is a proprietary research blend containing CJC-{#} ({#}mg, no DAC) and {N} ({#}mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.": "{N} is een eigen onderzoeksmengsel met CJC-{#} ({#}mg, zonder DAC) en {N} ({#}mg) in één gelyofiliseerde flacon. Samengesteld voor onderzoekers die routes van GH-afgifte in een geïntegreerd protocol bestuderen.",
+"{N} is a proprietary research blend containing {N} ({#}mg) and {N} ({#}mg) combined in a single lyophilized vial. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} is een eigen onderzoeksmengsel met {N} ({#}mg) en {N} ({#}mg) in één gelyofiliseerde flacon. Samengesteld voor onderzoekers die gecombineerde regeneratieve signaalroutes bestuderen. Nieuwe batches worden onafhankelijk geanalyseerd door Janoshik.",
+"{N} is a selective synthetic growth hormone secretagogue, supplied for research into pulsatile GH release pathways. Lyophilized, high-stability formulation.": "{N} is een selectieve synthetische groeihormoon-secretagoog, geleverd voor onderzoek naar routes van pulsatiele GH-afgifte. Gelyofiliseerde formulering met hoge stabiliteit.",
+"{N} is a synthetic analog of growth hormone-releasing hormone (GHRH), supplied for research into visceral fat metabolism and the GH/IGF-{#} axis.": "{N} is een synthetisch analoog van groeihormoon-releasing hormoon (GHRH), geleverd voor onderzoek naar het viscerale vetmetabolisme en de GH/IGF-{#}-as.",
+"{N} is a synthetic decapeptide, supplied for research into GnRH regulation and reproductive endocrinology signalling pathways.": "{N} is een synthetisch decapeptide, geleverd voor onderzoek naar GnRH-regulatie en signaalroutes van de reproductieve endocrinologie.",
+"{N} is a synthetic dual-agonist peptide targeting both GLP-{#} and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch peptide met duale agonistwerking op zowel GLP-{#}- als glucagonreceptoren. Uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic dual-agonist research peptide targeting GLP-{#} and glucagon receptors. Supplied exclusively for in-vitro laboratory research. Not a medicine, supplement, or cosmetic.": "{N} is een synthetisch onderzoekspeptide met duale agonistwerking op GLP-{#}- en glucagonreceptoren. Uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Geen geneesmiddel, supplement of cosmeticum.",
+"{N} is a synthetic fragment of Thymosin Beta-{#}, supplied for research into cellular migration, angiogenesis, and tissue regeneration. Each vial contains lyophilized peptide.": "{N} is een synthetisch fragment van thymosine bèta-{#}, geleverd voor onderzoek naar celmigratie, angiogenese en weefselregeneratie. Elke flacon bevat gelyofiliseerd peptide.",
+"{N} is a synthetic growth hormone-releasing hexapeptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch groeihormoon-releasing hexapeptide, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar routes van de GH-secretagoogreceptor. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic growth hormone-releasing peptide supplied exclusively for in-vitro laboratory research into GH secretagogue receptor pathways. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch groeihormoon-releasing peptide, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar routes van de GH-secretagoogreceptor. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic heptapeptide analog of ACTH({#}-{#}), supplied for research into cognitive function, BDNF expression, and neuroprotective signalling.": "{N} is een synthetisch heptapeptide-analoog van ACTH({#}-{#}), geleverd voor onderzoek naar cognitieve functie, BDNF-expressie en neuroprotectieve signalering.",
+"{N} is a synthetic heptapeptide analog of tuftsin, supplied for research into anxiolytic mechanisms and GABAergic signalling pathways.": "{N} is een synthetisch heptapeptide-analoog van tuftsine, geleverd voor onderzoek naar anxiolytische mechanismen en GABA-erge signaalroutes.",
+"{N} is a synthetic long-acting amylin analog, supplied for research into amylin receptor pathways and satiety signalling. Each vial contains lyophilized peptide for in-vitro laboratory investigation.": "{N} is een synthetisch langwerkend amyline-analoog, geleverd voor onderzoek naar routes van de amylinereceptor en verzadigingssignalering. Elke flacon bevat gelyofiliseerd peptide voor in-vitro laboratoriumonderzoek.",
+"{N} is a synthetic modified fragment of growth hormone (amino acids {#}-{#}), supplied exclusively for in-vitro laboratory research into lipid metabolism signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch gewijzigd fragment van groeihormoon (aminozuren {#}-{#}), uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar signalering in het lipidenmetabolisme. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#} and GIP receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch peptide, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar GLP-{#}- en GIP-receptorsignalering. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#} receptor signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch peptide, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar GLP-{#}-receptorsignalering. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic peptide supplied exclusively for in-vitro laboratory research into GLP-{#}, GIP, and glucagon receptor signalling. Each vial contains lyophilized peptide with batch-specific analytical documentation by Janoshik Analytical (Czech Republic). Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetisch peptide, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar signalering via GLP-{#}-, GIP- en glucagonreceptoren. Elke flacon bevat gelyofiliseerd peptide met batchspecifieke analysedocumentatie van Janoshik Analytical (Tsjechië). Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic small molecule NNMT inhibitor supplied exclusively for in-vitro laboratory research into cellular metabolism and adipocyte signalling. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} is een synthetische NNMT-remmer met klein molecuulgewicht, uitsluitend geleverd voor in-vitro laboratoriumonderzoek naar het celmetabolisme en adipocytsignalering. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is a synthetic tetrapeptide (Ala-Glu-Asp-Gly), supplied for research into telomerase activation, pineal gland signalling, and longevity pathways.": "{N} is een synthetisch tetrapeptide (Ala-Glu-Asp-Gly), geleverd voor onderzoek naar telomeraseactivering, signalering van de pijnappelklier en routes van levensduur.",
+"{N} is a thymus-derived peptide complex, supplied for research into immune function, thymic regulation, and age-related immunology.": "{N} is een uit de thymus afkomstig peptidecomplex, geleverd voor onderzoek naar immuunfunctie, thymusregulatie en leeftijdsgebonden immunologie.",
+"{N} is a {#}-amino acid mitochondrial-derived peptide, supplied for research into metabolic homeostasis, insulin sensitivity, and cellular stress response pathways.": "{N} is een van mitochondriën afgeleid peptide van {#} aminozuren, geleverd voor onderzoek naar metabole homeostase, insulinegevoeligheid en routes van de cellulaire stressrespons.",
+"{N} is an {#}-amino acid peptide derived from erythropoietin, supplied for research into innate repair receptor signalling and neuroprotection.": "{N} is een peptide van {#} aminozuren afgeleid van erytropoëtine, geleverd voor onderzoek naar signalering via de aangeboren herstelreceptor en neuroprotectie.",
+"{N} is our flagship triple-peptide research blend containing {N} ({#}mg), {N} ({#}mg), and {N} ({#}mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.": "{N} is ons belangrijkste onderzoeksmengsel van drie peptiden met {N} ({#}mg), {N} ({#}mg) en {N} ({#}mg) in één gelyofiliseerde flacon. Samengesteld voor onderzoekers die regeneratieve signalering via meerdere routes tegelijk bestuderen.",
+"{N} is our premium four-peptide research complex containing {N} ({#}mg), {N} ({#}mg), {N} ({#}mg), and {N} ({#}mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.": "{N} is ons premium onderzoekscomplex van vier peptiden met {N} ({#}mg), {N} ({#}mg), {N} ({#}mg) en {N} ({#}mg) in één gelyofiliseerde flacon. Het meest complete regeneratieve onderzoeksmengsel van onze catalogus.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised compound. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wordt uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Elke flacon bevat een gelyofiliseerde verbinding. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wordt uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Elke flacon bevat een gelyofiliseerd peptide. Het Janoshik-analyserapport wordt gepubliceerd zodra de batch is getest. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.": "{N} wordt uitsluitend geleverd voor in-vitro laboratoriumonderzoek. Elke flacon bevat een gelyofiliseerde verbinding. Geen geneesmiddel, supplement of cosmeticum. Niet voor gebruik bij mens of dier.",
+"{N} variant acetylated at one end (N-acetyl) and amidated at the other, modifications intended to make it more stable. Few independent published studies.": "{N}-variant, aan het ene uiteinde geacetyleerd (N-acetyl) en aan het andere geamideerd, wijzigingen bedoeld om hem stabieler te maken. Weinig onafhankelijk gepubliceerde studies.",
+"Status (checked October {#}): Afamelanotide is authorised as an implant (brand Scenesse) for a specific indication (erythropoietic protoporphyria) in the EU and the United States. The Novalyx product is a research compound, not that medicine.": "Status (gecontroleerd in oktober {#}): Afamelanotide is als implantaat (merk Scenesse) toegelaten voor een specifieke indicatie (erytropoëtische protoporfyrie) in de EU en de Verenigde Staten. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Status (checked October {#}): Approved in China (NMPA, June {#}) for chronic weight management in adults; to our knowledge not approved in the EU or the United States.": "Status (gecontroleerd in oktober {#}): In China goedgekeurd (NMPA, juni {#}) voor chronisch gewichtsbeheer bij volwassenen; voor zover wij weten niet goedgekeurd in de EU of de Verenigde Staten.",
+"Status (checked October {#}): Authorised in the United States (brand Egrifta) for a specific indication (HIV-associated abdominal lipodystrophy). The Novalyx product is a research compound, not that medicine.": "Status (gecontroleerd in oktober {#}): Toegelaten in de Verenigde Staten (merk Egrifta) voor een specifieke indicatie (hiv-gerelateerde abdominale lipodystrofie). Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Status (checked October {#}): Authorised in the United States (brand Vyleesi) for a specific indication. The Novalyx product is a research compound, not that medicine.": "Status (gecontroleerd in oktober {#}): Toegelaten in de Verenigde Staten (merk Vyleesi) voor een specifieke indicatie. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Status (checked October {#}): Authorised medicine (FDA and EMA) under the brands Mounjaro and Zepbound. The Novalyx product is a research compound and is not that medicine.": "Status (gecontroleerd in oktober {#}): Toegelaten geneesmiddel (FDA en EMA) onder de merken Mounjaro en Zepbound. Het Novalyx-product is een onderzoeksverbinding en niet dat geneesmiddel.",
+"Status (checked October {#}): Authorised medicine under the brands Ozempic, Wegovy and Rybelsus. The Novalyx product is a research compound and is not that medicine.": "Status (gecontroleerd in oktober {#}): Toegelaten geneesmiddel onder de merken Ozempic, Wegovy en Rybelsus. Het Novalyx-product is een onderzoeksverbinding en niet dat geneesmiddel.",
+"Status (checked October {#}): Both components are investigational molecules, not authorised as medicines.": "Status (gecontroleerd in oktober {#}): Beide componenten zijn onderzoeksmoleculen, niet als geneesmiddel toegelaten.",
+"Status (checked October {#}): Cosmetic ingredient (topical use); efficacy data come mostly from manufacturers. No medicine status.": "Status (gecontroleerd in oktober {#}): Cosmetisch ingrediënt (topisch gebruik); werkzaamheidsgegevens komen vooral van fabrikanten. Geen geneesmiddelstatus.",
+"Status (checked October {#}): Cosmetic ingredient; no medicine status.": "Status (gecontroleerd in oktober {#}): Cosmetisch ingrediënt; geen geneesmiddelstatus.",
+"Status (checked October {#}): Elamipretide is approved in the United States (FDA, accelerated approval, September {#}, brand Forzinity) only for Barth syndrome. The Novalyx product is a research compound, not that medicine.": "Status (gecontroleerd in oktober {#}): Elamipretide is in de Verenigde Staten goedgekeurd (FDA, versnelde goedkeuring, september {#}, merk Forzinity) uitsluitend voor het syndroom van Barth. Het Novalyx-product is een onderzoeksverbinding, niet dat geneesmiddel.",
+"Status (checked October {#}): Endogenous molecule studied in the laboratory. No authorisation as a medicine for the forms sold here; associated health claims are not validated by authorities.": "Status (gecontroleerd in oktober {#}): Lichaamseigen molecuul, bestudeerd in het laboratorium. Geen vergunning als geneesmiddel voor de hier verkochte vormen; bijbehorende gezondheidsclaims zijn niet door de autoriteiten bevestigd.",
+"Status (checked October {#}): Experimental compound; no medicine authorisation.": "Status (gecontroleerd in oktober {#}): Experimentele verbinding; geen geneesmiddelvergunning.",
+"Status (checked October {#}): Investigational drug (phase {#} clinical trials); not authorised.": "Status (gecontroleerd in oktober {#}): Onderzoeksgeneesmiddel (klinische studies fase {#}); niet toegelaten.",
+"Status (checked October {#}): Investigational drug in advanced development, alone and in combination with semaglutide (CagriSema). Status is evolving: refer to health authorities for the current situation.": "Status (gecontroleerd in oktober {#}): Onderzoeksgeneesmiddel in vergevorderde ontwikkeling, alleen en in combinatie met semaglutide (CagriSema). De status verandert: raadpleeg de gezondheidsautoriteiten voor de actuele situatie.",
+"Status (checked October {#}): Investigational drug, in phase {#} clinical trials; to our knowledge not authorised.": "Status (gecontroleerd in oktober {#}): Onderzoeksgeneesmiddel in klinische studies fase {#}; voor zover wij weten niet toegelaten.",
+"Status (checked October {#}): Investigational drug: in phase {#} clinical trials, not authorised to date. According to the company's announcements, a US marketing application is targeted for early {#}. The Novalyx product is a research compound, not a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksgeneesmiddel: in klinische studies fase {#}, tot nu toe niet toegelaten. Volgens aankondigingen van het bedrijf is een Amerikaanse handelsvergunning gepland voor begin {#}. Het Novalyx-product is een onderzoeksverbinding, geen geneesmiddel.",
+"Status (checked October {#}): Investigational molecule in clinical trials; not authorised as a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksmolecuul in klinische studies; niet als geneesmiddel toegelaten.",
+"Status (checked October {#}): Its pharmaceutical form (thymalfasin, brand Zadaxin) is authorised in several countries, mainly in Asia, for certain indications; it is not authorised in the United States. The Novalyx product is a research compound.": "Status (gecontroleerd in oktober {#}): De farmaceutische vorm (thymalfasine, merk Zadaxin) is in verschillende landen, vooral in Azië, voor bepaalde indicaties toegelaten; in de Verenigde Staten is ze niet toegelaten. Het Novalyx-product is een onderzoeksverbinding.",
+"Status (checked October {#}): Laboratory reagent.": "Status (gecontroleerd in oktober {#}): Laboratoriumreagens.",
+"Status (checked October {#}): Laboratory solvent: it contains no active substance.": "Status (gecontroleerd in oktober {#}): Laboratoriumoplosmiddel: het bevat geen werkzame stof.",
+"Status (checked October {#}): Marketed as a medicine in some countries (including Austria, Russia, China); not authorised in the United States. Clinical evidence of efficacy remains debated.": "Status (gecontroleerd in oktober {#}): In sommige landen als geneesmiddel op de markt gebracht (waaronder Oostenrijk, Rusland, China); niet toegelaten in de Verenigde Staten. Het klinische bewijs van werkzaamheid blijft omstreden.",
+"Status (checked October {#}): No authorisation; preclinical data only.": "Status (gecontroleerd in oktober {#}): Geen vergunning; alleen preklinische gegevens.",
+"Status (checked October {#}): No medicine authorisation in any country; no published clinical data.": "Status (gecontroleerd in oktober {#}): Geen geneesmiddelvergunning, in geen enkel land; geen gepubliceerde klinische gegevens.",
+"Status (checked October {#}): No medicine authorisation in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): Geen geneesmiddelvergunning in de Europese Unie of de Verenigde Staten.",
+"Status (checked October {#}): No medicine authorisation.": "Status (gecontroleerd in oktober {#}): Geen geneesmiddelvergunning.",
+"Status (checked October {#}): No medicine authorisation; clinical development discontinued.": "Status (gecontroleerd in oktober {#}): Geen geneesmiddelvergunning; klinische ontwikkeling stopgezet.",
+"Status (checked October {#}): No medicine authorisation; clinical development stopped.": "Status (gecontroleerd in oktober {#}): Geen geneesmiddelvergunning; klinische ontwikkeling gestopt.",
+"Status (checked October {#}): Not authorised as a medicine in any country. Published data come mostly from preclinical (animal) studies; controlled human data are very limited. Listed as prohibited by the World Anti-Doping Agency (WADA).": "Status (gecontroleerd in oktober {#}): In geen enkel land als geneesmiddel toegelaten. Gepubliceerde gegevens komen vooral uit preklinische (dier)studies; gecontroleerde gegevens bij mensen zijn zeer beperkt. Op de verboden lijst van het Wereldantidopingagentschap (WADA).",
+"Status (checked October {#}): Not authorised as a medicine in the EU or the United States; as pralmorelin it has been used in Japan as a diagnostic agent, to our knowledge. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten in de EU of de Verenigde Staten; als pralmorelin is het voor zover wij weten in Japan gebruikt als diagnostisch middel. Verboden door het WADA.",
+"Status (checked October {#}): Not authorised as a medicine in the EU or the United States; limited data, mostly from a small number of laboratories.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten in de EU of de Verenigde Staten; beperkte gegevens, grotendeels van een klein aantal laboratoria.",
+"Status (checked October {#}): Not authorised as a medicine in the United States; aviptadil has been the subject of clinical trials and very limited authorisations depending on the country.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten in de Verenigde Staten; aviptadil is onderwerp geweest van klinische studies en, afhankelijk van het land, zeer beperkte vergunningen.",
+"Status (checked October {#}): Not authorised as a medicine. Controlled human data are almost non-existent. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten. Gecontroleerde gegevens bij mensen zijn vrijwel onbestaand. Verboden door het WADA.",
+"Status (checked October {#}): Not authorised as a medicine. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten. Verboden door het WADA.",
+"Status (checked October {#}): Not authorised as a medicine; clinical trials in obesity did not lead to an authorisation.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; klinische studies naar obesitas hebben niet tot een vergunning geleid.",
+"Status (checked October {#}): Not authorised as a medicine; exploratory clinical trials have taken place without authorisation. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; verkennende klinische studies hebben zonder vergunning plaatsgevonden. Verboden door het WADA.",
+"Status (checked October {#}): Not authorised as a medicine; research is essentially in vitro and preclinical.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; het onderzoek is in wezen in vitro en preklinisch.",
+"Status (checked October {#}): Not authorised as a medicine; research is essentially preclinical.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; het onderzoek is in wezen preklinisch.",
+"Status (checked October {#}): Not authorised as a medicine; research use. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; gebruik voor onderzoek. Verboden door het WADA.",
+"Status (checked October {#}): Not authorised as a medicine; several health authorities (for example in the United Kingdom and Australia) have issued warnings about products sold under this name.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; verschillende gezondheidsautoriteiten (bijvoorbeeld in het Verenigd Koninkrijk en Australië) hebben gewaarschuwd voor producten die onder deze naam worden verkocht.",
+"Status (checked October {#}): Not authorised as a medicine; the literature is old and results have been inconsistent.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; de literatuur is oud en de resultaten waren wisselend.",
+"Status (checked October {#}): Not authorised as a medicine; used in research studies in reproductive endocrinology.": "Status (gecontroleerd in oktober {#}): Niet als geneesmiddel toegelaten; gebruikt in onderzoeksstudies in de reproductieve endocrinologie.",
+"Status (checked October {#}): Not authorised in the EU or the United States; data come mostly from the Russian literature.": "Status (gecontroleerd in oktober {#}): Niet toegelaten in de EU of de Verenigde Staten; de gegevens komen grotendeels uit de Russische literatuur.",
+"Status (checked October {#}): Not authorised in the EU or the United States; the literature is limited and rarely independently replicated.": "Status (gecontroleerd in oktober {#}): Niet toegelaten in de EU of de Verenigde Staten; de literatuur is beperkt en zelden onafhankelijk herhaald.",
+"Status (checked October {#}): Preclinical research (cells, animals); a few very limited human studies on analogues. No authorisation.": "Status (gecontroleerd in oktober {#}): Preklinisch onderzoek (cellen, dieren); enkele zeer beperkte studies bij mensen op analogen. Geen vergunning.",
+"Status (checked October {#}): Preclinical research compound; no medicine authorisation.": "Status (gecontroleerd in oktober {#}): Preklinische onderzoeksverbinding; geen geneesmiddelvergunning.",
+"Status (checked October {#}): Proprietary blend of research compounds; it is not a medicine. The status of its components is as described in their own entries.": "Status (gecontroleerd in oktober {#}): Eigen mengsel van onderzoeksverbindingen; het is geen geneesmiddel. De status van de componenten is zoals beschreven in hun eigen fiches.",
+"Status (checked October {#}): Proprietary blend of research compounds; no medicine status. The status of its components is as described in their own entries.": "Status (gecontroleerd in oktober {#}): Eigen mengsel van onderzoeksverbindingen; geen geneesmiddelstatus. De status van de componenten is zoals beschreven in hun eigen fiches.",
+"Status (checked October {#}): Registered as a medicine in Russia; not authorised in the EU or the United States.": "Status (gecontroleerd in oktober {#}): In Rusland als geneesmiddel geregistreerd; niet toegelaten in de EU of de Verenigde Staten.",
+"Status (checked October {#}): Research peptide; no medicine authorisation.": "Status (gecontroleerd in oktober {#}): Onderzoekspeptide; geen geneesmiddelvergunning.",
+"Status (checked October {#}): Research reagent (cell culture); not authorised as a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksreagens (celkweek); niet als geneesmiddel toegelaten.",
+"Status (checked October {#}): Research reagent; no medicine authorisation. Listed on the World Anti-Doping Agency prohibited list.": "Status (gecontroleerd in oktober {#}): Onderzoeksreagens; geen geneesmiddelvergunning. Op de verboden lijst van het Wereldantidopingagentschap.",
+"Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksreagens; niet als geneesmiddel toegelaten.",
+"Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (gecontroleerd in oktober {#}): Gebruikt in cosmetica (topische toepassing); geen vergunning als injecteerbaar geneesmiddel. Het onderzoek betreft vooral celmodellen en topische toepassingen.",
+"Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten."
+};

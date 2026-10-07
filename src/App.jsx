@@ -99,7 +99,7 @@ const CONFIG = {
   SITE_URL:               "https://novalyxresearch.com/",
   // Paiement Bitcoin (BTCPay) : passe à true quand le serveur est synchronisé et testé.
   // false = le site fonctionne comme avant (Stripe + virement).
-  BTC_ON:                 false,
+  BTC_ON:                 true,
   /* Apparence : "classic" (crème, titres à empattements) ou "modern" (fond blanc, police du logo, animations). */
   THEME:                  "modern",
   // Coordonnées bancaires pour les commandes professionnelles / grosses commandes par virement.

@@ -100,8 +100,17 @@ const CONFIG = {
   // Paiement Bitcoin (BTCPay) : passe à true quand le serveur est synchronisé et testé.
   // false = le site fonctionne comme avant (Stripe + virement).
   BTC_ON:                 true,
+  // Virement bancaire proposé à côté du Bitcoin (formulaire + emails via /api/order).
+  TRANSFER_ON:            true,
+  // Carte bancaire via Stripe Checkout (tout le panier en un paiement, via /api/card). false = bouton masqué.
+  CARD_ON:                true,
+  // Médiateur de la consommation (obligatoire pour vendre aux particuliers) : remplir après adhésion.
+  // Exemple : { name: "CM2C", url: "https://www.cm2c.net" }. Laisser vide tant que l'adhésion n'est pas faite.
+  MEDIATOR:               { name: "", url: "" },
   /* Apparence : "classic" (crème, titres à empattements) ou "modern" (fond blanc, police du logo, animations). */
   THEME:                  "modern",
+  /* Touche de rose poudré sur le thème moderne (fonds, étiquettes, ombres). false = retour au blanc et gris d'origine. */
+  ROSE:                   true,
   // Coordonnées bancaires pour les commandes professionnelles / grosses commandes par virement.
   // Le titulaire légal (raison sociale d'un auto-entrepreneur = nom/prénom) doit être affiché
   // tel quel pour passer la vérification du bénéficiaire (VoP) des banques.
@@ -1926,7 +1935,73 @@ html,body{background:#fff}
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none;transition:none}.btn:hover,.pcard:hover{transform:none}}
 `;
+/* ─── TOUCHE « ROSE POUDRÉ » (si CONFIG.ROSE) : le bleu nuit et le vert restent les couleurs principales,
+   le rose ne touche que les fonds, les étiquettes, les bordures et les ombres. ─── */
+const ROSE_CSS = `
+:root{--paper:#FFFCFB; --soft:#FBF1EF; --line:#EFE3E2; --line2:#F5ECEB; --mute:#6A6164; --rose:#D8A0A7; --rose-soft:#F7E4E3; --rose-ink:#9A5560}
+html,body{background:#FFFCFB}
+.hero{background:radial-gradient(60% 50% at 88% 8%,rgba(216,160,167,.24),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(120,183,82,.08),transparent 70%),linear-gradient(180deg,#FBEDEB 0%,#FFFCFB 100%)}
+.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(216,160,167,.24),transparent 70%),linear-gradient(180deg,#FBF1EF,#FFFCFB)}
+.nav{background:rgba(255,252,251,.88)}
+.foot{background:#FBF1EF}
+.fact{background:#FBF1EF}
+.tag{background:var(--rose-soft);color:var(--rose-ink);padding:4px 10px;border-radius:999px}
+.hs{box-shadow:0 14px 32px rgba(154,85,96,.16)}
+.pcard{box-shadow:0 1px 2px rgba(154,85,96,.05)}
+.pcard:hover{box-shadow:0 16px 36px rgba(154,85,96,.12);border-color:#EBD7D6}
+.sheet{box-shadow:0 12px 34px rgba(154,85,96,.08)}
+.btc-callout,.help-cta{box-shadow:0 12px 34px rgba(154,85,96,.07)}
+.gate-card{box-shadow:0 24px 60px rgba(154,85,96,.14)}
+.fchip:not(.on):hover{border-color:var(--rose)}
+.nav-links button.on,.nav-links button:hover{border-color:var(--rose)}
+`;
 /* Révèle en douceur les blocs quand ils entrent à l'écran (thème moderne uniquement). */
+/* Mots entiers partout : si un mot d'un titre est plus large que sa colonne (mots longs en allemand ou en
+   néerlandais, adresse email…), le titre réduit sa taille juste assez pour que le mot tienne, au lieu d'être coupé. */
+const FIT_SEL = "h1, h2, h3, .display, .h2, .index-name, .pcard-name, .fact-v, .hero-prod-name";
+const fitWords = (root) => {
+  (root || document).querySelectorAll(FIT_SEL).forEach((el) => {
+    if (!el.offsetParent) return;
+    el.style.fontSize = "";
+    const cs = getComputedStyle(el);
+    // Largeur disponible : celle du premier bloc parent (les <span> n'ont pas de largeur propre)
+    let box = el;
+    while (box.parentElement && /^inline/.test(getComputedStyle(box).display)) box = box.parentElement;
+    const bs = getComputedStyle(box);
+    const avail = box.clientWidth - parseFloat(bs.paddingLeft) - parseFloat(bs.paddingRight);
+    if (avail <= 0) return;
+    let widest = 0;
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = walker.nextNode())) {
+      const re = /\S+/g; let m;
+      while ((m = re.exec(n.data))) {
+        if (m[0].length < 8) continue;
+        const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length);
+        let w = 0; for (const b of r.getClientRects()) w += b.width;
+        if (w > widest) widest = w;
+      }
+    }
+    if (widest > avail) {
+      const base = parseFloat(cs.fontSize);
+      const floor = base >= 24 ? Math.max(base * 0.4, 14) : Math.max(base * 0.75, 11);
+      el.style.fontSize = Math.max(floor, Math.floor(base * (avail / widest) * 0.97 * 10) / 10) + "px";
+    }
+  });
+};
+const useFitWords = (deps) => {
+  useEffect(() => {
+    let t = 0;
+    const run = () => { cancelAnimationFrame(t); t = requestAnimationFrame(() => fitWords()); };
+    run();
+    const late = setTimeout(run, 400);
+    const fonts = document.fonts && document.fonts.ready ? document.fonts.ready.then(run) : null;
+    window.addEventListener("resize", run);
+    const mo = new MutationObserver(run);
+    mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+    return () => { cancelAnimationFrame(t); clearTimeout(late); window.removeEventListener("resize", run); mo.disconnect(); };
+  }, deps);
+};
 const useReveal = (on) => {
   useEffect(() => {
     if (!on || typeof window === "undefined" || !("IntersectionObserver" in window)) return;
@@ -1951,7 +2026,7 @@ const CSS = `
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 /* Langues à mots longs (allemand, néerlandais) : coupure propre avec trait d'union, colonnes jamais plus larges que l'écran. */
-h1,h2,h3,.display,.h2,.pcard-name,.hero-prod-name,.lead,.eyebrow,.btn,p{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+h1,h2,h3,.display,.h2,.pcard-name,.hero-prod-name,.lead,.eyebrow,.btn,p{overflow-wrap:break-word;hyphens:manual;-webkit-hyphens:manual}
 .hero-grid > *,.grid > *,.facts > *,.wrap > *{min-width:0}
 html,body{background:var(--paper);color:var(--ink);overflow-x:hidden}
 body{font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -2059,14 +2134,16 @@ a{color:inherit}
 .big-num{font-family:var(--serif);font-weight:300;font-size:64px;line-height:1;letter-spacing:-.03em}
 
 /* facts strip */
-.facts{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-@media(min-width:900px){.facts{grid-template-columns:repeat(4,1fr)}}
+.facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+@media(min-width:1180px){.facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .fact{padding:22px 18px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 @media(min-width:900px){.fact{border-bottom:none}.fact:last-child{border-right:none}}
 .fact:nth-child(2n){border-right:none}
 @media(min-width:900px){.fact:nth-child(2n){border-right:1px solid var(--line)}.fact:last-child{border-right:none}}
 .fact-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
-.fact-v{font-size:14px;color:var(--ink)}
+.fact-v{font-size:14px;color:var(--ink);min-width:0}
+@media(max-width:420px){.facts{grid-template-columns:minmax(0,1fr)!important}}
+@media(min-width:421px){.facts:has(.fact-wide){grid-template-columns:repeat(3,minmax(0,1fr))!important}.fact-wide{grid-column:1/-1}}
 
 /* method */
 .steps{display:grid;gap:0;border-top:1px solid var(--line)}
@@ -2085,7 +2162,7 @@ a{color:inherit}
 .index-row:hover .index-name{color:var(--green)}
 .index-name{font-family:var(--serif);font-size:26px;font-weight:400;letter-spacing:-.01em;line-height:1.2}
 .index-desc{font-size:13.5px;color:var(--mute);grid-column:2 / 4;grid-row:2}
-.index-name,.index-desc{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+.index-name,.index-desc{overflow-wrap:break-word;hyphens:manual;-webkit-hyphens:manual}
 @media(min-width:900px){.index-row{grid-template-columns:60px minmax(0,1fr) minmax(0,1fr) auto;row-gap:0}.index-desc{grid-column:3;grid-row:1}.index-row > :nth-child(4){grid-column:4}}
 
 /* product grid */
@@ -2156,6 +2233,7 @@ a{color:inherit}
 .field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
 .field input,.field textarea{width:100%;padding:13px 14px;border:1px solid var(--line);background:var(--surface);border-radius:2px;outline:none}
 .field input:focus,.field textarea:focus{border-color:var(--ink)}
+.tf-form{position:relative}.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tf-grid .field{gap:4px;margin:0;min-width:0}.tf-grid .field span{font-size:11.5px;color:var(--mute)}.tf-grid .field input{box-sizing:border-box;min-width:0;padding:11px 12px}.tf-grid .tf-wide{grid-column:1/-1}
 
 /* prose / legal */
 .prose{max-width:720px}
@@ -2419,12 +2497,13 @@ const Footer = ({ go, lang, onCookies }) => {
             <button onClick={() => go("terms")}>{FR ? "Conditions générales" : "Terms & Conditions"}</button>
             <button onClick={() => go("privacy")}>{FR ? "Confidentialité" : "Privacy"}</button>
             <button onClick={() => go("disclaimer")}>{FR ? "Avertissement" : "Disclaimer"}</button>
+            <button onClick={() => go("legal")}>{FR ? "Mentions légales" : "Legal notice"}</button>
             <button onClick={onCookies}>{FR ? "Gérer les cookies" : "Manage cookies"}</button>
           </div>
         </div>
         <div className="foot-legal">
           <span>© 2026 {CONFIG.BUSINESS_NAME}</span>
-          <span>{CONFIG.BTC_ON ? (FR ? "Paiement direct en Bitcoin · facturé en euros" : "Direct Bitcoin payment · billed in euros") : (FR ? "Paiement sécurisé par Stripe · Visa · Mastercard · Apple Pay" : "Secure payment by Stripe · Visa · Mastercard · Apple Pay")}</span>
+          <span>{CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (FR ? "Carte bancaire, Bitcoin ou virement · facturé en euros" : "Card, Bitcoin or bank transfer · billed in euros") : (FR ? "Paiement direct en Bitcoin · facturé en euros" : "Direct Bitcoin payment · billed in euros")) : (FR ? "Paiement sécurisé par Stripe · Visa · Mastercard · Apple Pay" : "Secure payment by Stripe · Visa · Mastercard · Apple Pay")}</span>
           <span>{FR ? "Usage recherche uniquement" : "Research use only"}</span>
         </div>
       </div>
@@ -2706,6 +2785,13 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const [copied, setCopied] = useState("");
   const [zone, setZone] = useState("FR");
   const [btcErr, setBtcErr] = useState("");
+  const [cardErr, setCardErr] = useState("");
+  const [tfOpen, setTfOpen] = useState(false);
+  const [busy, setBusy] = useState("");
+  const [tf, setTf] = useState({ firstName: "", lastName: "", email: "", address: "", postcode: "", city: "", country: "", phone: "", website: "" });
+  const [tfErr, setTfErr] = useState("");
+  const [tfDone, setTfDone] = useState(null);
+  const setF = (k) => (e) => setTf(v => ({ ...v, [k]: e.target.value }));
   const total = cart.reduce((s, i) => s + lineTotal(i.price, i.qty, i.size, i.id), 0);
   const count = cart.reduce((s, i) => s + i.qty, 0);
   const ready = ok1 && ok2 && !loading;
@@ -2737,11 +2823,13 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const euZone = zone === "FR" || zone === "EU";
   const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - total) : 0;
   const allStock = cart.every(i => AVAILABLE.includes(i.id) && (!STOCK_SIZES[i.id] || STOCK_SIZES[i.id].includes(i.size)));
+  const tfReady = !!(tf.firstName.trim() && tf.lastName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tf.email.trim()) && tf.address.trim() && tf.postcode.trim() && tf.city.trim());
   const payBtc = async () => {
-    setLoading(true); setBtcErr("");
+    if (!ready || !tfReady) return;
+    setBusy("btc"); setLoading(true); setBtcErr(""); setTfErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
       window.location.href = d.url;
@@ -2751,6 +2839,37 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
       setLoading(false);
     }
   };
+  const payCard = async () => {
+    if (!ready || !tfReady) return;
+    setBusy("card"); setLoading(true); setCardErr(""); setBtcErr(""); setTfErr("");
+    try {
+      const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.url) throw new Error(d.error || "card");
+      window.location.href = d.url;
+    } catch (e) {
+      const why = e && e.message && e.message !== "card" ? " (" + e.message + ")" : "";
+      setCardErr((FR ? "Le paiement par carte est momentanément indisponible. Payez en Bitcoin ou par virement, ou réessayez dans un instant." : "Card payment is temporarily unavailable. Pay with Bitcoin or by bank transfer, or try again shortly.") + why);
+      setLoading(false);
+    }
+  };
+  const payTransfer = async (e) => {
+    if (e) e.preventDefault(); if (!ready || !tfReady) return;
+    setBusy("tf"); setLoading(true); setTfErr(""); setBtcErr("");
+    try {
+      const customer = { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) };
+      const r = await fetch("/api/order", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer, website: tf.website }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.orderId) throw new Error(d.error || "order");
+      setTfDone(d);
+    } catch (err) {
+      const why = err && err.message && err.message !== "order" ? " (" + err.message + ")" : "";
+      setTfErr((FR ? "La commande n'a pas pu être envoyée. Réessayez dans un instant ou écrivez-nous." : "The order could not be sent. Please try again shortly or contact us.") + why);
+    } finally { setLoading(false); }
+  };
+  const finishTransfer = () => { window.dispatchEvent(new CustomEvent("nvx-cart-clear")); setTfDone(null); setTfOpen(false); onClose(); };
   return (
     <div className="drawer" onClick={onClose}>
       <div className="drawer-in" onClick={e => e.stopPropagation()}>
@@ -2800,8 +2919,34 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 </p>
                 <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
                 <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
-                <button className="btn btn-ink" style={{ width: "100%", marginTop: 10 }} disabled={!ready} onClick={payBtc}>
-                  {loading ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(grand, "EUR", lang)}</>}
+                {!tfDone && (
+                  <form className="sheet tf-form" style={{ padding: "18px 16px", marginTop: 10 }} onSubmit={e => e.preventDefault()} noValidate>
+                    <div className="eyebrow" style={{ marginBottom: 4 }}>{FR ? "Adresse de livraison" : "Delivery address"}</div>
+                    <p className="muted" style={{ fontSize: 12.5, margin: "0 0 12px", lineHeight: 1.5 }}>{FR ? "Pour expédier votre colis et vous tenir informé par email à chaque étape." : "To ship your parcel and keep you informed by email at every step."}</p>
+                    <div className="tf-grid">
+                      <label className="field"><span>{FR ? "Prénom" : "First name"}</span><input id="tf-first" autoComplete="given-name" value={tf.firstName} onChange={setF("firstName")} required /></label>
+                      <label className="field"><span>{FR ? "Nom" : "Last name"}</span><input id="tf-last" autoComplete="family-name" value={tf.lastName} onChange={setF("lastName")} required /></label>
+                      <label className="field tf-wide"><span>Email</span><input id="tf-email" type="email" inputMode="email" autoComplete="email" value={tf.email} onChange={setF("email")} required /></label>
+                      <label className="field tf-wide"><span>{FR ? "Adresse" : "Address"}</span><input id="tf-address" autoComplete="street-address" value={tf.address} onChange={setF("address")} required /></label>
+                      <label className="field"><span>{FR ? "Code postal" : "Postcode"}</span><input id="tf-postcode" autoComplete="postal-code" value={tf.postcode} onChange={setF("postcode")} required /></label>
+                      <label className="field"><span>{FR ? "Ville" : "City"}</span><input id="tf-city" autoComplete="address-level2" value={tf.city} onChange={setF("city")} required /></label>
+                      <label className="field"><span>{FR ? "Pays" : "Country"}</span><input id="tf-country" autoComplete="country-name" placeholder={FR ? zoneRow[1] : zoneRow[2]} value={tf.country} onChange={setF("country")} /></label>
+                      <label className="field"><span>{FR ? "Téléphone (facultatif)" : "Phone (optional)"}</span><input id="tf-phone" type="tel" autoComplete="tel" value={tf.phone} onChange={setF("phone")} /></label>
+                      <input id="tf-website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={tf.website} onChange={setF("website")} style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
+                    </div>
+                  </form>
+                )}
+                {!tfDone && (<>
+                {CONFIG.CARD_ON && (<>
+                  <button className="btn btn-ink" style={{ width: "100%", marginTop: 12 }} disabled={!ready || !tfReady} onClick={payCard}>
+                    {loading && busy === "card" ? (FR ? "Ouverture du paiement sécurisé…" : "Opening secure checkout…") : <>{FR ? "Payer par carte" : "Pay by card"} — {price(grand, "EUR", lang)}</>}
+                  </button>
+                  <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 8, letterSpacing: ".05em" }}>VISA · MASTERCARD · APPLE PAY · GOOGLE PAY</p>
+                  {cardErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{cardErr}</p>}
+                  <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>
+                </>)}
+                <button className={"btn " + (CONFIG.CARD_ON ? "btn-line" : "btn-ink")} style={{ width: "100%", marginTop: CONFIG.CARD_ON ? 0 : 12 }} disabled={!ready || !tfReady} onClick={payBtc}>
+                  {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(grand, "EUR", lang)}</>}
                 </button>
                 {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
                 <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 12, letterSpacing: ".05em" }}>
@@ -2810,6 +2955,30 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 <p style={{ textAlign: "center", fontSize: 13, marginTop: 8 }}>
                   <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Première fois ? Comment payer en Bitcoin" : "First time? How to pay with Bitcoin"}</a>
                 </p>
+                {CONFIG.TRANSFER_ON && (<>
+                  <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>
+                  <button className="btn btn-line" style={{ width: "100%" }} disabled={!ready || !tfReady} onClick={payTransfer}>
+                    {loading && busy === "tf" ? (FR ? "Envoi de la commande…" : "Sending your order…") : <>{FR ? "Payer par virement" : "Pay by bank transfer"} — {price(grand, "EUR", lang)}</>}
+                  </button>
+                  <p className="muted" style={{ fontSize: 11.5, textAlign: "center", margin: "8px 0 0", lineHeight: 1.5 }}>{FR ? "Vous recevez aussitôt l'IBAN et la référence par email." : "You immediately receive the IBAN and the reference by email."}</p>
+                  {tfErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{tfErr}</p>}
+                </>)}
+                {!tfReady && ready && <p className="muted" style={{ fontSize: 11.5, textAlign: "center", margin: "10px 0 0" }}>{FR ? "Remplissez l'adresse de livraison pour activer le paiement." : "Fill in the delivery address to enable payment."}</p>}
+                </>)}
+                {CONFIG.TRANSFER_ON && tfDone && (
+                  <div className="sheet" role="status" style={{ marginTop: 14, padding: "20px 18px" }}>
+                    <div className="eyebrow" style={{ marginBottom: 6, color: "var(--green)" }}>{FR ? "Commande enregistrée" : "Order received"}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 22, marginBottom: 8 }}>{FR ? "Il ne reste que le virement." : "Only the transfer is left."}</div>
+                    <p className="muted" style={{ fontSize: 12.5, margin: "0 0 12px", lineHeight: 1.55 }}>{FR ? `Ces informations vous ont aussi été envoyées par email. Votre commande est réservée ${tfDone.payWithinHours} heures et part dès réception du virement.` : `These details were also sent to you by email. Your order is reserved for ${tfDone.payWithinHours} hours and ships as soon as the transfer arrives.`}</p>
+                    <div className="spec"><span>{FR ? "Montant" : "Amount"}</span><span><b>{price(tfDone.total, "EUR", lang)}</b></span></div>
+                    <div className="spec"><span>{FR ? "Référence" : "Reference"}</span><span>{tfDone.orderId} <button className="link" onClick={() => copy("ref", tfDone.orderId)}>{copied === "ref" ? "✓" : (FR ? "Copier" : "Copy")}</button></span></div>
+                    <div className="spec"><span>IBAN</span><span style={{ fontSize: 12 }}>{tfDone.bank.iban} <button className="link" onClick={() => copy("iban", tfDone.bank.iban.replace(/ /g, ""))}>{copied === "iban" ? "✓" : (FR ? "Copier" : "Copy")}</button></span></div>
+                    <div className="spec"><span>BIC</span><span>{tfDone.bank.bic} <button className="link" onClick={() => copy("bic", tfDone.bank.bic)}>{copied === "bic" ? "✓" : (FR ? "Copier" : "Copy")}</button></span></div>
+                    <div className="spec" style={{ borderBottom: "none" }}><span>{FR ? "Titulaire" : "Account holder"}</span><span style={{ fontSize: 12, textAlign: "right" }}>{tfDone.bank.holder}<br /><span className="muted">{tfDone.bank.trading}</span></span></div>
+                    <p className="muted" style={{ fontSize: 11, margin: "6px 0 14px", lineHeight: 1.5 }}>{FR ? "Indiquez bien la référence dans le libellé du virement. Le titulaire affiché est le nom légal du compte : c'est lui que votre banque vérifiera." : "Make sure to quote the reference in the transfer label. The holder shown is the legal name on the account: it is the name your bank will check."}</p>
+                    <button className="btn btn-ink" style={{ width: "100%" }} onClick={finishTransfer}>{FR ? "C'est noté" : "Got it"}</button>
+                  </div>
+                )}
               </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>
                 {FR ? "Expédié sous 24 h · livraison en 2 à 3 jours maximum en France" : "Shipped within 24 h · delivery in 2–3 days maximum in France"}
@@ -2952,9 +3121,9 @@ const Home = ({ go, cur, openProduct, lang }) => {
           {[
             [FR ? "Entreprise" : "Company", FR ? "Française · SIRET 898 509 369" : "French · SIRET 898 509 369"],
             [FR ? "Analyses" : "Analyses", FR ? "Janoshik, clé publique" : "Janoshik, public key"],
-            [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros") : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
+            [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (FR ? "Carte, Bitcoin ou virement" : "Card, Bitcoin or bank transfer") : (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros")) : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
             [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h · sur commande : 3 à 4 semaines" : "In stock: 24 h · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
-          ].map(([k, v]) => <div className="fact" key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
+          ].map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
         </div>
       </div>
 
@@ -3070,7 +3239,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
    un lien copié ouvre directement la bonne page. Actif uniquement sur le vrai domaine (et en test local). */
 const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", about: "/methode", faq: "/faq",
   ambassador: "/ambassadeurs", contact: "/contact", shipping: "/livraison", privacy: "/confidentialite", terms: "/cgv",
-  disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin" };
+  disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin", legal: "/mentions-legales" };
 const ROUTING_OK = typeof window !== "undefined" && /(^|\.)novalyxresearch\.com$|\.vercel\.app$|^localhost$|^127\.0\.0\.1$/.test(window.location.hostname);
 const parsePath = (path) => {
   const clean = (path || "/").replace(/\/+$/, "") || "/";
@@ -3236,7 +3405,7 @@ const AboutPage = ({ go, lang }) => {
             ["SIRET", CONFIG.SIRET],
             [FR ? "Laboratoire d'analyse" : "Testing lab", "Janoshik Analytical"],
             [FR ? "Contact" : "Contact", CONFIG.EMAIL],
-          ].map(([k, v]) => <div className="fact" key={k}><div className="fact-k">{k}</div><div className="fact-v" style={{ wordBreak: "break-word" }}>{v}</div></div>)}
+          ].map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v" style={{ wordBreak: "break-word" }}>{v}</div></div>)}
         </div>
         <div style={{ marginTop: 40, display: "flex", gap: 12, flexWrap: "wrap" }}>
           <button className="btn btn-ink" onClick={() => go("coa")}>{FR ? "Voir les analyses" : "See the analyses"}</button>
@@ -3276,14 +3445,14 @@ const FAQPage = ({ lang, go }) => {
     const fix = (qStart, a) => { const i = faqs.findIndex(([q]) => q.startsWith(qStart)); if (i >= 0) faqs[i] = [faqs[i][0], a]; };
     if (FR) {
       fix("Quel est le délai", "Produits en stock : expédiés sous 24 h après confirmation du paiement, livrés en 2 à 3 jours en France. Produits sur commande : 3 à 4 semaines, car le lot est d'abord reçu puis analysé par Janoshik avant de vous être expédié. Vous recevez un email à chaque étape, puis votre numéro de suivi.");
-      fix("Comment payer", "Uniquement en Bitcoin, directement depuis le panier. Le montant est calculé en euros et la facture reste valable 60 minutes. Première fois ? Notre page « Payer en Bitcoin » explique tout en 3 étapes (Revolut, Kraken ou Coinbase).");
+      if (CONFIG.CARD_ON) fix("Comment payer", "Directement depuis le panier, au choix : carte bancaire (Visa, Mastercard, Apple Pay, Google Pay, via Stripe : nous ne voyons jamais vos donn\u00e9es de carte), Bitcoin (montant calcul\u00e9 en euros, facture valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email, commande r\u00e9serv\u00e9e 48 heures). Premi\u00e8re fois en Bitcoin ? Notre page \u00ab Payer en Bitcoin \u00bb explique tout en 3 \u00e9tapes."); else fix("Comment payer", "Uniquement en Bitcoin, directement depuis le panier. Le montant est calculé en euros et la facture reste valable 60 minutes. Première fois ? Notre page « Payer en Bitcoin » explique tout en 3 étapes (Revolut, Kraken ou Coinbase).");
       faqs.splice(5, 0,
         ["Que signifie « sur commande » ?", "Le produit est commandé auprès de notre fabricant dès votre paiement. À réception, nous envoyons un échantillon de ce lot chez Janoshik : votre flacon ne part qu'une fois l'analyse validée. Délai total : 3 à 4 semaines."],
         ["Pourquoi un minimum de flacons sur certains produits ?", "Pour les produits sur commande, chaque lot est acheté et analysé spécialement. Le minimum (2 à 4 flacons selon le produit) permet de lancer ce lot ; il vous fait aussi bénéficier automatiquement de nos remises par quantité (−10 à −20 %)."],
         ["Comment suivre ma commande ?", "Vous recevez un email à chaque étape : commande reçue, commandée auprès du fabricant, lot en analyse chez Janoshik, analyse validée (avec le lien du rapport), puis expédition avec votre numéro de suivi."]);
     } else {
       fix("How long is delivery", "In-stock products ship within 24 h of payment confirmation and arrive in 2–3 days in France. Made-to-order products take 3–4 weeks: the batch is received, then analysed by Janoshik before it ships to you. You get an email at every step, then your tracking number.");
-      fix("How do I pay", "Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for 60 minutes. First time? Our \"Pay with Bitcoin\" page explains everything in 3 steps (Revolut, Kraken or Coinbase).");
+      if (CONFIG.CARD_ON) fix("How do I pay", "Straight from the cart, as you prefer: bank card (Visa, Mastercard, Apple Pay, Google Pay, through Stripe: we never see your card details), Bitcoin (amount calculated in euros, invoice valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email, order reserved for 48 hours). First time with Bitcoin? Our \"Pay with Bitcoin\" page explains everything in 3 steps."); else fix("How do I pay", "Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for 60 minutes. First time? Our \"Pay with Bitcoin\" page explains everything in 3 steps (Revolut, Kraken or Coinbase).");
       faqs.splice(5, 0,
         ["What does \"made to order\" mean?", "The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to Janoshik: your vial only ships once the analysis is approved. Total time: 3–4 weeks."],
         ["Why is there a minimum on some products?", "Made-to-order products are bought and analysed batch by batch. The minimum (2 to 4 vials depending on the product) lets us launch that batch, and automatically gives you our quantity discounts (−10 to −20%)."],
@@ -3358,7 +3527,7 @@ const AmbassadorPage = ({ lang }) => {
             ["For your audience", "An instant discount at checkout."],
             ["For you", "A commission on every order placed with your code."],
             ["Tracking", "A monthly email recap of the sales your code generated."],
-          ]).map(([k, v]) => <div className="fact" key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
+          ]).map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
         </div>
 
         <div style={{ display: "grid", gap: 40 }} className="contact-grid">
@@ -3420,7 +3589,7 @@ const ContactPage = ({ lang }) => {
           )}
           <div className="facts" style={{ maxWidth: 640 }}>
             {[["Email", CONFIG.EMAIL], [FR ? "Réponse" : "Reply", FR ? "Sous 1 jour ouvré" : "Within 1 business day"], [FR ? "Adresse" : "Address", CONFIG.ADDRESS], ["SIRET", CONFIG.SIRET]].map(([k, v]) => (
-              <div className="fact" key={k}><div className="fact-k">{k}</div><div className="fact-v" style={{ wordBreak: "break-word" }}>{v}</div></div>
+              <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v" style={{ wordBreak: "break-word" }}>{v}</div></div>
             ))}
           </div>
 
@@ -3463,12 +3632,13 @@ const PrivacyPage = ({ lang="EN" }) => {
   const FR = lang === "FR";
   return (
   <Legal lang={lang} title={FR ? "Politique de Confidentialité" : "Privacy Policy"}>
-    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : avril 2026" : "Last updated: April 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
+    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : octobre 2026" : "Last updated: October 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
     <S t={FR ? "1. Qui Sommes-Nous" : "1. Who We Are"}><p>{FR ? "Novalyx exploite ce site web et est responsable de vos données personnelles conformément au RGPD." : "Novalyx operates this website and is responsible for your personal data in accordance with the GDPR."}</p></S>
     <S t={FR ? "2. Données Collectées" : "2. Data We Collect"}><p>{FR ? "Nom, email, adresse de livraison et détails de commande que vous fournissez directement. Données d'utilisation anonymisées via les analyses pour améliorer notre site." : "Name, email, shipping address, and order details you provide directly. Anonymised usage data via analytics to improve our site."}</p></S>
-    <S t={FR ? "3. Utilisation de Vos Données" : "3. How We Use Your Data"}><p>{FR ? "Pour traiter les commandes, fournir un support, envoyer des communications de commande et — avec consentement — des annonces de produits. Les données de paiement sont traitées par Stripe ; nous ne voyons ni ne stockons jamais les détails de votre carte." : "To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details."}</p></S>
-    <S t={FR ? "4. Partage des Données" : "4. Data Sharing"}><p>{FR ? "Nous ne vendons pas vos données. Nous les partageons uniquement avec les partenaires logistiques et de paiement (Stripe) dans le cadre d'accords de traitement stricts." : "We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements."}</p></S>
-    <S t={FR ? "5. Vos Droits" : "5. Your Rights"}><p>{FR ? "Selon le RGPD : accéder, rectifier, effacer, restreindre, porter vos données ou vous opposer au traitement. Email " : "Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email "}{CONFIG.EMAIL}.</p></S>
+    <S t={FR ? "3. Utilisation de Vos Données" : "3. How We Use Your Data"}><p>{CONFIG.BTC_ON ? (FR ? "Pour traiter et exp\u00e9dier vos commandes, r\u00e9pondre \u00e0 vos questions, vous envoyer les emails li\u00e9s \u00e0 votre commande et \u2014 uniquement avec votre accord \u2014 nos annonces de produits. Les donn\u00e9es de carte sont trait\u00e9es directement par Stripe : nous ne les voyons ni ne les stockons jamais." : "To process and ship your orders, answer your questions, send you emails about your order and \u2014 only with your consent \u2014 our product announcements. Card data is processed directly by Stripe: we never see or store it.") : (FR ? "Pour traiter les commandes, fournir un support, envoyer des communications de commande et — avec consentement — des annonces de produits. Les données de paiement sont traitées par Stripe ; nous ne voyons ni ne stockons jamais les détails de votre carte." : "To process orders, provide support, send order communications, and — with consent — product announcements. Payment data is processed by Stripe; we never see or store your card details.")}</p></S>
+    <S t={FR ? "4. Partage des Données" : "4. Data Sharing"}><p>{CONFIG.BTC_ON ? (FR ? "Nous ne vendons jamais vos donn\u00e9es. Nous les partageons uniquement avec les prestataires n\u00e9cessaires \u00e0 votre commande : Vercel (h\u00e9bergement du site), Stripe (paiement par carte), notre serveur BTCPay h\u00e9berg\u00e9 dans l'Union europ\u00e9enne (paiement en Bitcoin), Hostinger (envoi des emails) et le transporteur qui livre votre colis. Lorsque l'un d'eux traite des donn\u00e9es hors de l'Union europ\u00e9enne, ce transfert est encadr\u00e9 par les clauses contractuelles types de la Commission europ\u00e9enne." : "We never sell your data. We share it only with the providers needed for your order: Vercel (website hosting), Stripe (card payment), our BTCPay server hosted in the European Union (Bitcoin payment), Hostinger (sending emails) and the carrier delivering your parcel. When one of them processes data outside the European Union, the transfer is covered by the European Commission's standard contractual clauses.") : (FR ? "Nous ne vendons pas vos données. Nous les partageons uniquement avec les partenaires logistiques et de paiement (Stripe) dans le cadre d'accords de traitement stricts." : "We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements.")}</p></S>
+    {CONFIG.BTC_ON && <S t={FR ? "Durée de conservation" : "Data retention"}><p>{FR ? "Les donn\u00e9es de commande sont conserv\u00e9es 10 ans, dur\u00e9e impos\u00e9e par les obligations comptables (art. L123-22 du Code de commerce). Les autres donn\u00e9es sont supprim\u00e9es 3 ans apr\u00e8s notre dernier \u00e9change." : "Order data is kept for 10 years, as required by accounting obligations (art. L123-22 of the French Commercial Code). Other data is deleted 3 years after our last exchange."}</p></S>}
+    <S t={FR ? "5. Vos Droits" : "5. Your Rights"}><p>{FR ? "Selon le RGPD : accéder, rectifier, effacer, restreindre, porter vos données ou vous opposer au traitement. Email " : "Under GDPR: access, rectify, erase, restrict, port your data, or object to processing. Email "}{CONFIG.EMAIL}.</p>{CONFIG.BTC_ON && <p>{FR ? "Vous pouvez aussi adresser une r\u00e9clamation \u00e0 la CNIL, l'autorit\u00e9 fran\u00e7aise de protection des donn\u00e9es (cnil.fr)." : "You may also lodge a complaint with the CNIL, the French data protection authority (cnil.fr)."}</p>}</S>
     <S t={FR ? "6. Cookies" : "6. Cookies"}><p>{FR ? "Cookies essentiels pour la fonctionnalité uniquement. Cookies d'analyse placés avec consentement uniquement." : "Essential cookies for functionality only. Analytics cookies placed with consent only."}</p></S>
     <S t={FR ? "7. Contact" : "7. Contact"}><p>{FR ? "Demandes relatives aux données : " : "Data enquiries: "}{CONFIG.EMAIL}</p></S>
   </Legal>
@@ -3479,15 +3649,22 @@ const TermsPage = ({ lang="EN" }) => {
   const FR = lang === "FR";
   return (
   <Legal lang={lang} title={FR ? "Conditions Générales" : "Terms & Conditions"}>
-    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : avril 2026" : "Last updated: April 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
+    <p style={{marginBottom:14}}>{FR ? "Dernière mise à jour : octobre 2026" : "Last updated: October 2026"} · {CONFIG.BUSINESS_NAME} · SIRET {CONFIG.SIRET}</p>
     <S t={FR ? "1. Acceptation" : "1. Acceptance"}><p>{FR ? "En utilisant ce site web ou en passant une commande, vous acceptez ces Conditions. Si vous n'êtes pas d'accord, n'utilisez pas ce site." : "By using this website or placing an order you agree to these Terms. If you disagree, do not use this site."}</p></S>
     <S t={FR ? "2. Usage Recherche Uniquement" : "2. Research Use Only"}><p>{FR ? "Tous les produits sont destinés exclusivement à la recherche in-vitro en laboratoire. Pas pour usage humain ou vétérinaire. En achetant, vous confirmez être un chercheur qualifié agissant légalement." : "All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully."}</p></S>
     <S t={FR ? "3. Restriction d'Âge" : "3. Age Restriction"}><p>{FR ? "Vous devez avoir 18 ans ou plus pour acheter. Finaliser un achat confirme que vous remplissez cette condition." : "You must be 18+ to purchase. Completing a purchase confirms you meet this requirement."}</p></S>
-    <S t={FR ? "4. Commandes & Paiement" : "4. Orders & Payment"}><p>{FR ? "Les prix sont affichés en EUR et n'incluent pas la TVA (TVA non applicable, art. 293B du CGI — régime micro-entrepreneur français). Le paiement par carte est traité de manière sécurisée par Stripe ; le paiement par virement bancaire est également possible, la commande étant alors expédiée à réception du virement. Nous nous réservons le droit d'annuler des commandes, avec remboursement intégral." : "Prices are shown in EUR and do not include VAT (TVA non applicable, art. 293B du CGI — French micro-entrepreneur regime). Card payment is processed securely by Stripe; payment by bank transfer is also available, in which case the order is shipped once the transfer is received. We reserve the right to cancel orders, with a full refund issued."}</p></S>
-    <S t={FR ? "5. Livraison & Commandes Internationales" : "5. Shipping & International Orders"}><p>{FR ? "Les commandes sont traitées dans des conditions d'expédition contrôlées avec approvisionnement par lot et par commande auprès de nos partenaires de laboratoire vérifiés. Les commandes sont expédiées sous 24 h après confirmation du paiement. La livraison en France prend généralement 2 à 3 jours ; le reste de l'Union européenne 3 à 5 jours ouvrés ; les destinations internationales 7 à 14 jours ouvrés. Les délais de livraison sont des estimations, pas des garanties. Le risque est transféré à l'acheteur dès l'expédition." : "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within 24 h of payment confirmation. Delivery within France typically takes 2–3 days; the rest of the EU 3–5 business days; international destinations 7–14 business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch."}</p><p>{FR ? "Pour les commandes internationales (hors Union Européenne), l'acheteur est seul responsable de vérifier que les produits peuvent être légalement importés dans sa juridiction, de payer les droits de douane, taxes ou frais de dédouanement applicables, et de respecter toutes les lois locales régissant les composés de recherche. Novalyx Research n'agit pas en tant qu'importateur officiel. Les colis saisis, détruits, refusés ou retournés par les autorités douanières dans toute juridiction hors UE ne sont pas remboursables. En passant une commande internationale, l'acheteur reconnaît et accepte expressément ces risques." : "For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks."}</p></S>
+    <S t={FR ? "4. Commandes & Paiement" : "4. Orders & Payment"}><p>{(CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON) ? (FR ? "Les prix sont affich\u00e9s en euros, TVA non applicable (art. 293 B du CGI, r\u00e9gime micro-entrepreneur). Le paiement se fait \u00e0 la commande, au choix : par carte bancaire, trait\u00e9e de mani\u00e8re s\u00e9curis\u00e9e par Stripe (nous ne voyons ni ne stockons jamais vos donn\u00e9es de carte) ; en Bitcoin, par une facture en euros valable 60 minutes ; ou par virement bancaire, la commande \u00e9tant alors r\u00e9serv\u00e9e 48 heures et exp\u00e9di\u00e9e \u00e0 r\u00e9ception du virement. La vente est conclue \u00e0 la confirmation du paiement, confirm\u00e9e par email. Nous nous r\u00e9servons le droit d'annuler une commande, avec remboursement int\u00e9gral." : "Prices are shown in euros, VAT not applicable (art. 293 B of the French General Tax Code, micro-entrepreneur regime). Payment is made when ordering, as you prefer: by bank card, processed securely by Stripe (we never see or store your card details); in Bitcoin, through an invoice in euros valid for 60 minutes; or by bank transfer, in which case the order is reserved for 48 hours and shipped once the transfer is received. The sale is concluded when payment is confirmed, confirmed by email. We reserve the right to cancel an order, with a full refund.") : (FR ? "Les prix sont affichés en EUR et n'incluent pas la TVA (TVA non applicable, art. 293B du CGI — régime micro-entrepreneur français). Le paiement par carte est traité de manière sécurisée par Stripe ; le paiement par virement bancaire est également possible, la commande étant alors expédiée à réception du virement. Nous nous réservons le droit d'annuler des commandes, avec remboursement intégral." : "Prices are shown in EUR and do not include VAT (TVA non applicable, art. 293B du CGI — French micro-entrepreneur regime). Card payment is processed securely by Stripe; payment by bank transfer is also available, in which case the order is shipped once the transfer is received. We reserve the right to cancel orders, with a full refund issued.")}</p></S>
+    <S t={FR ? "5. Livraison & Commandes Internationales" : "5. Shipping & International Orders"}><p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement. Les produits sur commande sont exp\u00e9di\u00e9s sous 3 \u00e0 4 semaines, apr\u00e8s r\u00e9ception et analyse du lot par un laboratoire ind\u00e9pendant ; vous \u00eates inform\u00e9 par email \u00e0 chaque \u00e9tape. La livraison prend g\u00e9n\u00e9ralement 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne et 7 \u00e0 14 jours ouvr\u00e9s pour les destinations internationales ; ces d\u00e9lais sont des estimations. Le risque de perte ou d'endommagement vous est transf\u00e9r\u00e9 au moment o\u00f9 vous prenez physiquement possession du colis." : "In-stock products are shipped from Paris within 24 h of payment confirmation. Made-to-order products are shipped within 3 to 4 weeks, after the batch has been received and analysed by an independent laboratory; you are informed by email at every step. Delivery usually takes 2 to 3 days in France, 3 to 5 business days in the rest of the European Union and 7 to 14 business days for international destinations; these timescales are estimates. The risk of loss or damage passes to you when you take physical possession of the parcel.") : (FR ? "Les commandes sont traitées dans des conditions d'expédition contrôlées avec approvisionnement par lot et par commande auprès de nos partenaires de laboratoire vérifiés. Les commandes sont expédiées sous 24 h après confirmation du paiement. La livraison en France prend généralement 2 à 3 jours ; le reste de l'Union européenne 3 à 5 jours ouvrés ; les destinations internationales 7 à 14 jours ouvrés. Les délais de livraison sont des estimations, pas des garanties. Le risque est transféré à l'acheteur dès l'expédition." : "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within 24 h of payment confirmation. Delivery within France typically takes 2–3 days; the rest of the EU 3–5 business days; international destinations 7–14 business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.")}</p><p>{FR ? "Pour les commandes internationales (hors Union Européenne), l'acheteur est seul responsable de vérifier que les produits peuvent être légalement importés dans sa juridiction, de payer les droits de douane, taxes ou frais de dédouanement applicables, et de respecter toutes les lois locales régissant les composés de recherche. Novalyx Research n'agit pas en tant qu'importateur officiel. Les colis saisis, détruits, refusés ou retournés par les autorités douanières dans toute juridiction hors UE ne sont pas remboursables. En passant une commande internationale, l'acheteur reconnaît et accepte expressément ces risques." : "For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks."}</p></S>
+    {CONFIG.BTC_ON ? (<>
+    <S t={FR ? "6. Droit de rétractation et retours" : "6. Right of withdrawal and returns"}><p>{FR ? "Vous disposez de 14 jours \u00e0 compter de la r\u00e9ception de votre commande pour exercer votre droit de r\u00e9tractation, sans avoir \u00e0 vous justifier (art. L221-18 du Code de la consommation), en nous l'indiquant par email \u00e0 contact@novalyxresearch.com. Les produits doivent nous \u00eatre renvoy\u00e9s non ouverts, scell\u00e9s et dans leur emballage d'origine, au plus tard 14 jours apr\u00e8s votre demande ; les frais de retour restent \u00e0 votre charge. Nous vous remboursons toutes les sommes vers\u00e9es, livraison standard comprise, dans les 14 jours suivant votre demande ; ce remboursement peut \u00eatre diff\u00e9r\u00e9 jusqu'\u00e0 la r\u00e9ception du colis retourn\u00e9. Il est effectu\u00e9 avec le m\u00eame moyen de paiement, ou par virement pour un paiement en Bitcoin." : "You have 14 days from receipt of your order to exercise your right of withdrawal, without giving any reason (art. L221-18 of the French Consumer Code), by telling us by email at contact@novalyxresearch.com. The products must be sent back to us unopened, sealed and in their original packaging, no later than 14 days after your request; return costs are at your expense. We refund all sums paid, standard shipping included, within 14 days of your request; this refund may be deferred until the returned parcel is received. It is made with the same payment method, or by bank transfer for a Bitcoin payment."}</p><p>{FR ? "Conform\u00e9ment \u00e0 l'article L221-28, 5\u00b0 du Code de la consommation, le droit de r\u00e9tractation ne s'applique pas aux flacons descell\u00e9s apr\u00e8s la livraison, qui ne peuvent \u00eatre renvoy\u00e9s pour des raisons d'hygi\u00e8ne et de s\u00e9curit\u00e9." : "In accordance with article L221-28, 5\u00b0 of the French Consumer Code, the right of withdrawal does not apply to vials unsealed after delivery, which cannot be returned for hygiene and safety reasons."}</p><p>{FR ? "Produit endommag\u00e9 ou non conforme \u00e0 son rapport d'analyse : signalez-le-nous de pr\u00e9f\u00e9rence sous 7 jours, photos \u00e0 l'appui, \u00e0 contact@novalyxresearch.com ; nous le rempla\u00e7ons ou vous remboursons int\u00e9gralement. Vous b\u00e9n\u00e9ficiez en outre de la garantie l\u00e9gale de conformit\u00e9 (art. L217-3 et suivants du Code de la consommation) et de la garantie des vices cach\u00e9s (art. 1641 et suivants du Code civil)." : "Product damaged or not matching its analysis report: please report it to us, ideally within 7 days and with photos, at contact@novalyxresearch.com; we replace it or refund you in full. You also benefit from the legal guarantee of conformity (art. L217-3 et seq. of the French Consumer Code) and the guarantee against hidden defects (art. 1641 et seq. of the French Civil Code)."}</p></S>
+    <S t={FR ? "7. Limitation de Responsabilité" : "7. Limitation of Liability"}><p>{FR ? "Novalyx n'est pas responsable de la mauvaise utilisation des produits, ni des dommages indirects ou consécutifs résultant de l'utilisation de ce site web ou des produits." : "Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products."}</p></S>
+    <S t={FR ? "8. Réclamations et médiation" : "8. Complaints and mediation"}><p>{FR ? "En cas de difficult\u00e9, \u00e9crivez-nous d'abord \u00e0 contact@novalyxresearch.com : nous cherchons toujours une solution amiable, avec une r\u00e9ponse sous un jour ouvr\u00e9." : "If there is a problem, please write to us first at contact@novalyxresearch.com: we always look for an amicable solution, with a reply within one business day."}</p>{CONFIG.MEDIATOR && CONFIG.MEDIATOR.name ? <p>{FR ? "\u00c0 d\u00e9faut d'accord, vous pouvez recourir gratuitement au m\u00e9diateur de la consommation dont nous relevons : " : "Failing agreement, you may refer the matter free of charge to the consumer mediator we belong to:"} <a href={CONFIG.MEDIATOR.url} target="_blank" rel="noopener noreferrer">{CONFIG.MEDIATOR.name}</a>.</p> : null}</S>
+    <S t={FR ? "9. Droit applicable" : "9. Governing law"}><p>{FR ? "Régi par le droit français et les réglementations européennes applicables." : "Governed by French law and applicable EU regulations."}</p></S>
+    </>) : (<>
     <S t={FR ? "6. Retours" : "6. Returns"}><p>{FR ? "Contactez-nous dans les 7 jours si les produits arrivent endommagés ou ne correspondent pas aux spécifications du COA. Les composés ouverts ne peuvent pas être retournés pour des raisons de sécurité." : "Contact us within 7 days if products arrive damaged or do not match COA specs. Opened compounds cannot be returned for safety reasons."}</p></S>
     <S t={FR ? "7. Limitation de Responsabilité" : "7. Limitation of Liability"}><p>{FR ? "Novalyx n'est pas responsable de la mauvaise utilisation des produits, ni des dommages indirects ou consécutifs résultant de l'utilisation de ce site web ou des produits." : "Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products."}</p></S>
     <S t={FR ? "8. Droit Applicable" : "8. Governing Law"}><p>{FR ? "Régi par le droit français et les réglementations européennes applicables." : "Governed by French law and applicable EU regulations."}</p></S>
+    </>)}
   </Legal>
   );
 };
@@ -3506,6 +3683,33 @@ const DisclaimerPage = ({ lang="EN" }) => {
 };
 
 
+/* ─── MENTIONS LÉGALES (obligatoires en France, art. 6 de la loi LCEN) ─── */
+const LegalNoticePage = ({ lang }) => {
+  const FR = lang === "FR";
+  return (
+    <Legal title={FR ? "Mentions légales" : "Legal notice"}>
+      <p style={{ marginBottom: 14 }}>{FR ? "Dernière mise à jour : octobre 2026" : "Last updated: October 2026"}</p>
+      <S t={FR ? "Éditeur du site" : "Site publisher"}>
+        <div style={{ borderTop: "1px solid var(--line)" }}>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "Exploitant" : "Operator"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{CONFIG.BANK.holder}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "Statut" : "Legal status"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{FR ? "Entrepreneur individuel (micro-entreprise)" : "Sole trader (French micro-entreprise)"}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "Nom commercial" : "Trading name"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{CONFIG.BUSINESS_NAME}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "SIRET" : "SIRET"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{CONFIG.SIRET}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "Adresse" : "Address"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{CONFIG.ADDRESS}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "Email" : "Email"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{CONFIG.EMAIL}</span></div>
+        <div className="spec" style={{ fontSize: 14 }}><span>{FR ? "TVA" : "VAT"}</span><span style={{ color: "var(--ink)", textAlign: "right" }}>{FR ? "TVA non applicable, art. 293 B du CGI" : "VAT not applicable, art. 293 B of the French General Tax Code"}</span></div>
+        </div>
+      </S>
+      <S t={FR ? "Directeur de la publication" : "Publication director"}><p>{CONFIG.BANK.holder}</p></S>
+      <S t={FR ? "Hébergement" : "Hosting"}><p>{FR ? "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, \u00c9tats-Unis (vercel.com)." : "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, United States (vercel.com)."}</p></S>
+      <S t={FR ? "Paiements" : "Payments"}>{CONFIG.CARD_ON && <p>{FR ? "Les paiements par carte sont trait\u00e9s par Stripe Payments Europe, Limited (Dublin, Irlande), \u00e9tablissement de paiement agr\u00e9\u00e9 : nous ne voyons ni ne stockons jamais vos donn\u00e9es de carte." : "Card payments are processed by Stripe Payments Europe, Limited (Dublin, Ireland), a licensed payment institution: we never see or store your card details."}</p>}<p>{FR ? "Les paiements en Bitcoin passent par notre propre serveur BTCPay, sans interm\u00e9diaire. Les virements sont re\u00e7us sur un compte bancaire professionnel ouvert en France." : "Bitcoin payments go through our own BTCPay server, with no intermediary. Bank transfers are received on a business bank account opened in France."}</p></S>
+      {CONFIG.MEDIATOR && CONFIG.MEDIATOR.name ? <S t={FR ? "Médiation de la consommation" : "Consumer mediation"}><p><a href={CONFIG.MEDIATOR.url} target="_blank" rel="noopener noreferrer">{CONFIG.MEDIATOR.name}</a></p></S> : null}
+      <S t={FR ? "Propriété intellectuelle" : "Intellectual property"}><p>{FR ? "Les textes, photographies, logos et rapports pr\u00e9sent\u00e9s sur ce site appartiennent \u00e0 Novalyx Research ou sont utilis\u00e9s avec autorisation. Toute reproduction sans accord \u00e9crit pr\u00e9alable est interdite." : "The texts, photographs, logos and reports shown on this site belong to Novalyx Research or are used with permission. Any reproduction without prior written consent is prohibited."}</p></S>
+      <S t="Contact"><p>{FR ? "Pour toute question : contact@novalyxresearch.com. R\u00e9ponse sous un jour ouvr\u00e9." : "For any question: contact@novalyxresearch.com. Reply within one business day."}</p></S>
+    </Legal>
+  );
+};
+
 /* ─── LIVRAISON ──────────────────────────────────────────── */
 const ShippingPage = ({ lang }) => {
   const FR = lang === "FR";
@@ -3518,7 +3722,7 @@ const ShippingPage = ({ lang }) => {
   ];
   return (
     <Legal title={FR ? "Livraison & expédition" : "Shipping & delivery"}>
-      <p>{FR ? "Chaque commande est expédiée depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France, 3 à 5 jours ouvrés pour le reste de l'Union européenne. Un numéro de suivi est communiqué à l'expédition." : "Each order is shipped from Paris within 24 h of payment confirmation. Delivery in 2–3 days maximum within France, 3–5 business days for the rest of the EU. A tracking number is sent on dispatch."}</p>
+      <p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement ; les produits sur commande sous 3 \u00e0 4 semaines, une fois le lot analys\u00e9 par un laboratoire ind\u00e9pendant. Livraison en 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne. Un num\u00e9ro de suivi vous est envoy\u00e9 \u00e0 l'exp\u00e9dition." : "In-stock products are shipped from Paris within 24 h of payment confirmation; made-to-order products within 3 to 4 weeks, once the batch has been analysed by an independent laboratory. Delivery in 2 to 3 days in France, 3 to 5 business days in the rest of the European Union. A tracking number is sent to you on dispatch.") : (FR ? "Chaque commande est expédiée depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France, 3 à 5 jours ouvrés pour le reste de l'Union européenne. Un numéro de suivi est communiqué à l'expédition." : "Each order is shipped from Paris within 24 h of payment confirmation. Delivery in 2–3 days maximum within France, 3–5 business days for the rest of the EU. A tracking number is sent on dispatch.")}</p>
       <h3>{FR ? "Zones et tarifs" : "Zones and rates"}</h3>
       <div style={{ borderTop: "1px solid var(--line)" }}>
         {zones.map(([z, r, d]) => (
@@ -3528,7 +3732,7 @@ const ShippingPage = ({ lang }) => {
           </div>
         ))}
       </div>
-      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus."}</p>
+      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{CONFIG.BTC_ON ? (FR ? "Livraison offerte en France et dans l'Union europ\u00e9enne d\u00e8s 100 \u20ac d'achat. Eau bact\u00e9riostatique command\u00e9e seule : 3,99 \u20ac en France et dans l'UE. Nous n'exp\u00e9dions pas vers la Russie ni la Bi\u00e9lorussie." : "Free shipping in France and the European Union from \u20ac100 of purchases. Bacteriostatic water ordered on its own: \u20ac3.99 in France and the EU. We do not ship to Russia or Belarus.") : (FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus.")}</p>
       <h3>{FR ? "Commandes hors Union européenne" : "Orders outside the European Union"}</h3>
       <p>{FR ? "Les envois hors UE se font aux risques de l'acheteur. Il lui appartient de vérifier que les produits peuvent être importés légalement dans son pays et de régler les éventuels droits et taxes. Novalyx Research n'agit pas en tant qu'importateur. Les colis saisis, refusés ou détruits par les autorités douanières hors UE ne sont pas remboursables." : "Shipments outside the EU are at the buyer's risk. The buyer must check that the products may be lawfully imported and pay any duties or taxes. Novalyx Research does not act as importer of record. Parcels seized, refused or destroyed by customs outside the EU are non-refundable."}</p>
       <h3>{FR ? "Déclaration d'usage" : "Use declaration"}</h3>
@@ -4114,6 +4318,7 @@ const botAnswer = (text, ctx) => {
   if (qShip) return FR
     ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 6,90 €, UE 9,90 €, Suisse/Royaume-Uni 14,90 €, États-Unis/Canada 24,90 €, Australie, Nouvelle-Zélande et autres pays 29,90 € (offerte en France et dans l'UE sur les Packs de GLP-3RT ; eau bactériostatique 3,99 € en France et dans l'UE). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
     : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €6.90, EU €9.90, Switzerland/UK €14.90, USA/Canada €24.90, Australia, New Zealand and other countries €29.90 (free in France and the EU on GLP-3RT Packs; bacteriostatic water €3.99 in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
+  if (qPay && (CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON)) return FR ? "Trois moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos donn\u00e9es de carte ne transitent jamais par nos serveurs), Bitcoin (facture en euros valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email). Une question : " + email + "." : "Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: " + email + ".";
   if (qPay) return FR
     ? "Paiement par carte bancaire via Stripe (vos données bancaires ne transitent jamais par nos serveurs), ou par virement bancaire, même pour une petite commande : choisissez « Payer par virement bancaire » dans le panier. La commande est expédiée à réception du virement. Une question : " + email + "."
     : "Payment by card through Stripe (your banking data never touch our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received. Any question: " + email + ".";
@@ -4359,6 +4564,7 @@ const getSeo = (page, lang) => {
                 : ["Privacy policy | Novalyx Research", "How Novalyx Research collects and protects your personal data, in line with the GDPR."],
     terms: FR ? ["Conditions générales | Novalyx Research", "Conditions générales de vente de Novalyx Research : commandes, paiement, livraison, retours et responsabilité."]
               : ["Terms and conditions | Novalyx Research", "Novalyx Research terms and conditions: orders, payment, shipping, returns and liability."],
+    legal: FR ? ["Mentions légales | Novalyx Research", "Mentions l\u00e9gales de Novalyx Research : \u00e9diteur, SIRET, adresse, h\u00e9bergement, paiements et contact."] : ["Legal notice | Novalyx Research", "Legal notice of Novalyx Research: publisher, SIRET, address, hosting, payments and contact."],
     disclaimer: FR ? ["Avertissement | Novalyx Research", "Tous les produits sont destinés exclusivement à la recherche en laboratoire. Ni médicaments, ni compléments, aucun conseil médical."]
                    : ["Disclaimer | Novalyx Research", "All products are intended exclusively for laboratory research. Not medicines or supplements, no medical advice."],
   };
@@ -4459,6 +4665,7 @@ export default function App() {
   useEffect(() => { try { localStorage.setItem("novalyx_lang", lang); } catch (e) {} ; document.documentElement.lang = lang.toLowerCase(); }, [lang]);
   useDomTranslate(lang);
   useReveal(CONFIG.THEME === "modern");
+  useFitWords([lang]);
 
   // Depuis une fiche produit ouverte, on remplace son adresse au lieu d'empiler (sinon « retour » rouvrirait la fiche).
   const go = (p, filter) => { const fromModal = !!(window.history.state && window.history.state.modal); setPage(p); setProduct(null); if (filter !== undefined) setProductFilter(filter); pushPath(ROUTES[p] || "/", fromModal); window.scrollTo(0, 0); };
@@ -4477,6 +4684,12 @@ export default function App() {
     apply();
     window.addEventListener("popstate", apply);
     return () => window.removeEventListener("popstate", apply);
+  }, []);
+  // Commande par virement terminée : le panier est vidé
+  useEffect(() => {
+    const h = () => setCart([]);
+    window.addEventListener("nvx-cart-clear", h);
+    return () => window.removeEventListener("nvx-cart-clear", h);
   }, []);
   // Lien « Comment payer en Bitcoin » du panier
   useEffect(() => {
@@ -4528,6 +4741,7 @@ export default function App() {
     privacy: <PrivacyPage lang={lang} />,
     terms: <TermsPage lang={lang} />,
     disclaimer: <DisclaimerPage lang={lang} />,
+    legal: <LegalNoticePage lang={lang} />,
     bitcoin: <BitcoinGuide lang={lang} go={go} />,
   };
 
@@ -4535,6 +4749,7 @@ export default function App() {
     <div key={lang} style={{ minHeight: "100vh", background: "var(--paper)" }}>
       <style>{CSS}</style>
       {CONFIG.THEME === "modern" && <style>{MODERN_CSS}</style>}
+      {CONFIG.THEME === "modern" && CONFIG.ROSE && <style>{ROSE_CSS}</style>}
       {paidRef && (
         <div className="paid-banner" role="status">
           <div>
@@ -4585,7 +4800,7 @@ export default function App() {
                 "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
                 "Livraison offerte dès 100 €",
                 CONFIG.BTC_ON ? "Jusqu'à −20 % dès 2 flacons" : "Rapports d'analyse vérifiables",
-                CONFIG.BTC_ON ? "Paiement Bitcoin, facturé en euros" : "Paiement sécurisé",
+                CONFIG.BTC_ON ? (CONFIG.CARD_ON ? "Carte, Bitcoin ou virement" : "Paiement Bitcoin, facturé en euros") : "Paiement sécurisé",
                 "En stock : expédié sous 24 h",
                 "Entreprise française · Paris",
               ] : [
@@ -4593,7 +4808,7 @@ export default function App() {
                 "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
                 "Free shipping from €100",
                 CONFIG.BTC_ON ? "Up to −20% from 2 vials" : "Verifiable analysis reports",
-                CONFIG.BTC_ON ? "Bitcoin payment, billed in euros" : "Secure payment",
+                CONFIG.BTC_ON ? (CONFIG.CARD_ON ? "Card, Bitcoin or bank transfer" : "Bitcoin payment, billed in euros") : "Secure payment",
                 "In stock: ships within 24 h",
                 "French company · Paris",
               ]).map((m, i) => <span className="ticker-item" key={i}>{m}</span>)}
@@ -5048,6 +5263,76 @@ const XL_DE = {
 "Email us and we'll guide you step by step, the first time and every time after.": "Schreiben Sie uns, wir führen Sie Schritt für Schritt — beim ersten Mal und auch danach.",
 "Using Revolut:": "Mit Revolut:",
 "when asked about the recipient, choose “someone else's wallet” and enter Novalyx Research. Revolut sometimes deducts its fees from the amount: check that the amount received matches the invoice. Sending can take up to an hour; your payment counts as soon as it leaves.": "Bei der Frage nach dem Empfänger wählen Sie „Wallet einer anderen Person“ und geben Sie Novalyx Research an. Revolut zieht seine Gebühren manchmal vom Betrag ab: Prüfen Sie, ob der empfangene Betrag der Rechnung entspricht. Der Versand kann bis zu einer Stunde dauern; Ihre Zahlung zählt, sobald sie abgeschickt ist.",
+"Bank transfer payment": "Zahlung per Überweisung",
+"Enter your delivery address. You immediately receive the IBAN and the reference to quote by email.": "Geben Sie Ihre Lieferadresse ein. Sie erhalten sofort per E-Mail die IBAN und den anzugebenden Verwendungszweck.",
+"First name": "Vorname",
+"Last name": "Nachname",
+"Postcode": "Postleitzahl",
+"City": "Stadt",
+"Country": "Land",
+"Phone (optional)": "Telefon (optional)",
+"Sending your order…": "Bestellung wird gesendet…",
+"Confirm the order": "Bestellung bestätigen",
+"Cancel": "Abbrechen",
+"Order received": "Bestellung eingegangen",
+"Only the transfer is left.": "Jetzt fehlt nur noch die Überweisung.",
+"These details were also sent to you by email. Your order is reserved for {#} hours and ships as soon as the transfer arrives.": "Diese Angaben wurden Ihnen auch per E-Mail geschickt. Ihre Bestellung ist {#} Stunden reserviert und wird versandt, sobald die Überweisung eingeht.",
+"Amount": "Betrag",
+"Reference": "Verwendungszweck",
+"Copy": "Kopieren",
+"Account holder": "Kontoinhaber",
+"Make sure to quote the reference in the transfer label. The holder shown is the legal name on the account: it is the name your bank will check.": "Geben Sie unbedingt den Verwendungszweck an. Der angezeigte Inhaber ist der rechtliche Name des Kontos: Diesen Namen prüft Ihre Bank.",
+"Got it": "Verstanden",
+"The order could not be sent. Please try again shortly or contact us.": "Die Bestellung konnte nicht gesendet werden. Versuchen Sie es gleich noch einmal oder schreiben Sie uns.",
+"Delivery address": "Lieferadresse",
+"To ship your parcel and keep you informed by email at every step.": "Damit wir Ihr Paket versenden und Sie bei jedem Schritt per E-Mail informieren können.",
+"You immediately receive the IBAN and the reference by email.": "Sie erhalten sofort die IBAN und den Verwendungszweck per E-Mail.",
+"Fill in the delivery address to enable payment.": "Geben Sie die Lieferadresse ein, um die Zahlung freizuschalten.",
+"Pay by card": "Mit Karte bezahlen",
+"Opening secure checkout…": "Sichere Zahlung wird geöffnet…",
+"Card payment is temporarily unavailable. Pay with Bitcoin or by bank transfer, or try again shortly.": "Die Kartenzahlung ist vorübergehend nicht verfügbar. Zahlen Sie mit Bitcoin oder per Überweisung oder versuchen Sie es gleich noch einmal.",
+"Card, Bitcoin or bank transfer · billed in euros": "Karte, Bitcoin oder Überweisung · abgerechnet in Euro",
+"Card, Bitcoin or bank transfer": "Karte, Bitcoin oder Überweisung",
+"Straight from the cart, as you prefer: bank card (Visa, Mastercard, Apple Pay, Google Pay, through Stripe: we never see your card details), Bitcoin (amount calculated in euros, invoice valid for {#} minutes) or bank transfer (IBAN and reference sent immediately by email, order reserved for {#} hours). First time with Bitcoin? Our \"Pay with Bitcoin\" page explains everything in {#} steps.": "Direkt im Warenkorb, ganz wie Sie m\u00f6chten: Bankkarte (Visa, Mastercard, Apple Pay, Google Pay, \u00fcber Stripe: Wir sehen Ihre Kartendaten nie), Bitcoin (Betrag in Euro berechnet, Rechnung {#} Minuten g\u00fcltig) oder Bank\u00fcberweisung (IBAN und Referenz sofort per E-Mail, Bestellung {#} Stunden reserviert). Zum ersten Mal mit Bitcoin? Unsere Seite \u201eMit Bitcoin bezahlen\u201c erkl\u00e4rt alles in {#} Schritten.",
+"Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for {#} minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: contact@novalyxresearch.com.": "Drei Zahlungsarten, direkt im Warenkorb: Bankkarte \u00fcber Stripe (Ihre Kartendaten ber\u00fchren nie unsere Server), Bitcoin (Rechnung in Euro, {#} Minuten g\u00fcltig) oder Bank\u00fcberweisung (IBAN und Referenz sofort per E-Mail). Eine Frage: contact@novalyxresearch.com.",
+"Last updated: October {#}": "Zuletzt aktualisiert: Oktober {#}",
+"Prices are shown in euros, VAT not applicable (art. {#} B of the French General Tax Code, micro-entrepreneur regime). Payment is made when ordering, as you prefer: by bank card, processed securely by Stripe (we never see or store your card details); in Bitcoin, through an invoice in euros valid for {#} minutes; or by bank transfer, in which case the order is reserved for {#} hours and shipped once the transfer is received. The sale is concluded when payment is confirmed, confirmed by email. We reserve the right to cancel an order, with a full refund.": "Die Preise werden in Euro angezeigt, keine Mehrwertsteuer ausgewiesen (Art. {#} B des franz\u00f6sischen Steuergesetzbuchs, Kleinunternehmerregelung). Die Zahlung erfolgt bei der Bestellung, nach Wahl: per Bankkarte, sicher abgewickelt \u00fcber Stripe (wir sehen oder speichern Ihre Kartendaten nie); in Bitcoin, \u00fcber eine Rechnung in Euro, die {#} Minuten g\u00fcltig ist; oder per Bank\u00fcberweisung, wobei die Bestellung dann {#} Stunden reserviert und nach Zahlungseingang versendet wird. Der Kauf ist mit der Zahlungsbest\u00e4tigung abgeschlossen, die per E-Mail best\u00e4tigt wird. Wir behalten uns vor, eine Bestellung gegen vollst\u00e4ndige Erstattung zu stornieren.",
+"In-stock products are shipped from Paris within {#} h of payment confirmation. Made-to-order products are shipped within {#} to {#} weeks, after the batch has been received and analysed by an independent laboratory; you are informed by email at every step. Delivery usually takes {#} to {#} days in France, {#} to {#} business days in the rest of the European Union and {#} to {#} business days for international destinations; these timescales are estimates. The risk of loss or damage passes to you when you take physical possession of the parcel.": "Lagerware wird innerhalb von {#} h nach Zahlungsbest\u00e4tigung aus Paris versendet. Auf Bestellung gefertigte Produkte werden innerhalb von {#} bis {#} Wochen versendet, nachdem die Charge eingegangen und von einem unabh\u00e4ngigen Labor analysiert wurde; Sie werden bei jedem Schritt per E-Mail informiert. Die Lieferung dauert in der Regel {#} bis {#} Tage in Frankreich, {#} bis {#} Werktage in der \u00fcbrigen Europ\u00e4ischen Union und {#} bis {#} Werktage f\u00fcr internationale Ziele; diese Fristen sind Sch\u00e4tzungen. Die Gefahr des Verlusts oder der Besch\u00e4digung geht auf Sie \u00fcber, sobald Sie das Paket physisch in Besitz nehmen.",
+"You have {#} days from receipt of your order to exercise your right of withdrawal, without giving any reason (art. L{#}-{#} of the French Consumer Code), by telling us by email at contact@novalyxresearch.com. The products must be sent back to us unopened, sealed and in their original packaging, no later than {#} days after your request; return costs are at your expense. We refund all sums paid, standard shipping included, within {#} days of your request; this refund may be deferred until the returned parcel is received. It is made with the same payment method, or by bank transfer for a Bitcoin payment.": "Sie haben {#} Tage ab Erhalt Ihrer Bestellung Zeit, Ihr Widerrufsrecht ohne Angabe von Gr\u00fcnden auszu\u00fcben (Art. L{#}-{#} des franz\u00f6sischen Verbrauchergesetzbuchs), indem Sie uns per E-Mail an contact@novalyxresearch.com informieren. Die Produkte m\u00fcssen unge\u00f6ffnet, versiegelt und in der Originalverpackung sp\u00e4testens {#} Tage nach Ihrer Mitteilung an uns zur\u00fcckgesendet werden; die R\u00fccksendekosten tragen Sie. Wir erstatten alle gezahlten Betr\u00e4ge, einschlie\u00dflich Standardversand, innerhalb von {#} Tagen nach Ihrer Mitteilung; die Erstattung kann bis zum Eingang des zur\u00fcckgesendeten Pakets zur\u00fcckgehalten werden. Sie erfolgt mit demselben Zahlungsmittel oder per \u00dcberweisung bei einer Bitcoin-Zahlung.",
+"In accordance with article L{#}-{#}, {#}\u00b0 of the French Consumer Code, the right of withdrawal does not apply to vials unsealed after delivery, which cannot be returned for hygiene and safety reasons.": "Gem\u00e4\u00df Artikel L{#}-{#}, {#}\u00b0 des franz\u00f6sischen Verbrauchergesetzbuchs gilt das Widerrufsrecht nicht f\u00fcr Fl\u00e4schchen, die nach der Lieferung entsiegelt wurden und aus Hygiene- und Sicherheitsgr\u00fcnden nicht zur\u00fcckgegeben werden k\u00f6nnen.",
+"Product damaged or not matching its analysis report: please report it to us, ideally within {#} days and with photos, at contact@novalyxresearch.com; we replace it or refund you in full. You also benefit from the legal guarantee of conformity (art. L{#}-{#} et seq. of the French Consumer Code) and the guarantee against hidden defects (art. {#} et seq. of the French Civil Code).": "Produkt besch\u00e4digt oder nicht konform mit seinem Analysebericht: Melden Sie es uns bitte m\u00f6glichst innerhalb von {#} Tagen mit Fotos an contact@novalyxresearch.com; wir ersetzen es oder erstatten Ihnen den vollen Betrag. Zus\u00e4tzlich gelten die gesetzliche Konformit\u00e4tsgarantie (Art. L{#}-{#} ff. des franz\u00f6sischen Verbrauchergesetzbuchs) und die Gew\u00e4hrleistung f\u00fcr versteckte M\u00e4ngel (Art. {#} ff. des franz\u00f6sischen Zivilgesetzbuchs).",
+"If there is a problem, please write to us first at contact@novalyxresearch.com: we always look for an amicable solution, with a reply within one business day.": "Bei Problemen schreiben Sie uns bitte zuerst an contact@novalyxresearch.com: Wir suchen immer eine g\u00fctliche L\u00f6sung und antworten innerhalb eines Werktags.",
+"Failing agreement, you may refer the matter free of charge to the consumer mediator we belong to:": "Kommt keine Einigung zustande, k\u00f6nnen Sie sich kostenlos an die Verbraucherschlichtungsstelle wenden, der wir angeh\u00f6ren:",
+"{#}. Right of withdrawal and returns": "{#}. Widerrufsrecht und R\u00fccksendungen",
+"{#}. Complaints and mediation": "{#}. Beschwerden und Schlichtung",
+"{#}. Governing law": "{#}. Anwendbares Recht",
+"To process and ship your orders, answer your questions, send you emails about your order and \u2014 only with your consent \u2014 our product announcements. Card data is processed directly by Stripe: we never see or store it.": "Um Ihre Bestellungen zu bearbeiten und zu versenden, Ihre Fragen zu beantworten, Ihnen E-Mails zu Ihrer Bestellung zu senden und \u2014 nur mit Ihrer Zustimmung \u2014 unsere Produktank\u00fcndigungen. Kartendaten werden direkt von Stripe verarbeitet: Wir sehen oder speichern sie nie.",
+"We never sell your data. We share it only with the providers needed for your order: Vercel (website hosting), Stripe (card payment), our BTCPay server hosted in the European Union (Bitcoin payment), Hostinger (sending emails) and the carrier delivering your parcel. When one of them processes data outside the European Union, the transfer is covered by the European Commission's standard contractual clauses.": "Wir verkaufen Ihre Daten nie. Wir geben sie nur an die f\u00fcr Ihre Bestellung notwendigen Dienstleister weiter: Vercel (Hosting der Website), Stripe (Kartenzahlung), unseren in der Europ\u00e4ischen Union gehosteten BTCPay-Server (Bitcoin-Zahlung), Hostinger (E-Mail-Versand) und den Zusteller Ihres Pakets. Verarbeitet einer von ihnen Daten au\u00dferhalb der Europ\u00e4ischen Union, ist die \u00dcbermittlung durch die Standardvertragsklauseln der Europ\u00e4ischen Kommission abgesichert.",
+"Order data is kept for {#} years, as required by accounting obligations (art. L{#}-{#} of the French Commercial Code). Other data is deleted {#} years after our last exchange.": "Bestelldaten werden {#} Jahre lang aufbewahrt, wie es die Buchhaltungspflichten verlangen (Art. L{#}-{#} des franz\u00f6sischen Handelsgesetzbuchs). Andere Daten werden {#} Jahre nach unserem letzten Austausch gel\u00f6scht.",
+"You may also lodge a complaint with the CNIL, the French data protection authority (cnil.fr).": "Sie k\u00f6nnen au\u00dferdem eine Beschwerde bei der CNIL, der franz\u00f6sischen Datenschutzbeh\u00f6rde, einreichen (cnil.fr).",
+"Data retention": "Speicherdauer",
+"In-stock products are shipped from Paris within {#} h of payment confirmation; made-to-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Lagerware wird innerhalb von {#} h nach Zahlungsbest\u00e4tigung aus Paris versendet; Produkte auf Bestellung innerhalb von {#} bis {#} Wochen, sobald die Charge von einem unabh\u00e4ngigen Labor analysiert wurde. Lieferung in {#} bis {#} Tagen in Frankreich, {#} bis {#} Werktage in der \u00fcbrigen Europ\u00e4ischen Union. Beim Versand erhalten Sie eine Sendungsnummer.",
+"Free shipping in France and the European Union from {#}\u20ac of purchases. Bacteriostatic water ordered on its own: {#}\u20ac in France and the EU. We do not ship to Russia or Belarus.": "Kostenloser Versand in Frankreich und der Europ\u00e4ischen Union ab {#}\u20ac Einkaufswert. Bakteriostatisches Wasser allein bestellt: {#}\u20ac in Frankreich und der EU. Wir liefern nicht nach Russland oder Belarus.",
+"Operator": "Betreiber",
+"Legal status": "Rechtsform",
+"Trading name": "Handelsname",
+"VAT": "MwSt.",
+"Sole trader (French micro-entreprise)": "Einzelunternehmer (franz\u00f6sische Micro-Entreprise)",
+"VAT not applicable, art. {#} B of the French General Tax Code": "Keine MwSt. ausgewiesen, Art. {#} B des franz\u00f6sischen Steuergesetzbuchs",
+"Vercel Inc., {#} N Barranca Ave #{#}, Covina, CA {#}, United States (vercel.com).": "Vercel Inc., {#} N Barranca Ave #{#}, Covina, CA {#}, Vereinigte Staaten (vercel.com).",
+"Card payments are processed by Stripe Payments Europe, Limited (Dublin, Ireland), a licensed payment institution: we never see or store your card details.": "Kartenzahlungen werden von Stripe Payments Europe, Limited (Dublin, Irland), einem zugelassenen Zahlungsinstitut, abgewickelt: Wir sehen oder speichern Ihre Kartendaten nie.",
+"Bitcoin payments go through our own BTCPay server, with no intermediary. Bank transfers are received on a business bank account opened in France.": "Bitcoin-Zahlungen laufen \u00fcber unseren eigenen BTCPay-Server, ohne Zwischenh\u00e4ndler. \u00dcberweisungen gehen auf einem in Frankreich er\u00f6ffneten Gesch\u00e4ftskonto ein.",
+"The texts, photographs, logos and reports shown on this site belong to Novalyx Research or are used with permission. Any reproduction without prior written consent is prohibited.": "Die auf dieser Website gezeigten Texte, Fotos, Logos und Berichte geh\u00f6ren Novalyx Research oder werden mit Genehmigung verwendet. Jede Vervielf\u00e4ltigung ohne vorherige schriftliche Zustimmung ist untersagt.",
+"For any question: contact@novalyxresearch.com. Reply within one business day.": "Bei Fragen: contact@novalyxresearch.com. Antwort innerhalb eines Werktags.",
+"Legal notice": "Impressum",
+"Site publisher": "Herausgeber der Website",
+"Publication director": "Verantwortlich f\u00fcr den Inhalt",
+"Hosting": "Hosting",
+"Payments": "Zahlungen",
+"Intellectual property": "Geistiges Eigentum",
+"Consumer mediation": "Verbraucherschlichtung",
+"Legal notice of Novalyx Research: publisher, SIRET, address, hosting, payments and contact.": "Impressum von Novalyx Research: Herausgeber, SIRET, Adresse, Hosting, Zahlungen und Kontakt.",
+"Legal notice | Novalyx Research": "Impressum | Novalyx Research",
 "Got Revolut?": "Sie haben Revolut?",
 "How long does confirmation take?": "Wie lange dauert die Bestätigung?",
 "I paid slightly less because of fees.": "Ich habe wegen der Gebühren etwas weniger bezahlt.",
@@ -5519,6 +5804,76 @@ const XL_NL = {
 "GROWTH HORMONE RESEARCH": "ONDERZOEK GROEIHORMOON",
 "Using Revolut:": "Met Revolut:",
 "when asked about the recipient, choose “someone else's wallet” and enter Novalyx Research. Revolut sometimes deducts its fees from the amount: check that the amount received matches the invoice. Sending can take up to an hour; your payment counts as soon as it leaves.": "Bij de vraag naar de ontvanger kiest u „wallet van iemand anders” en vult u Novalyx Research in. Revolut trekt zijn kosten soms van het bedrag af: controleer of het ontvangen bedrag overeenkomt met de factuur. Verzenden kan tot een uur duren; uw betaling telt zodra ze vertrokken is.",
+"Bank transfer payment": "Betaling via overschrijving",
+"Enter your delivery address. You immediately receive the IBAN and the reference to quote by email.": "Vul uw leveringsadres in. U ontvangt meteen per e-mail de IBAN en de te vermelden referentie.",
+"First name": "Voornaam",
+"Last name": "Achternaam",
+"Postcode": "Postcode",
+"City": "Plaats",
+"Country": "Land",
+"Phone (optional)": "Telefoon (optioneel)",
+"Sending your order…": "Bestelling wordt verzonden…",
+"Confirm the order": "Bestelling bevestigen",
+"Cancel": "Annuleren",
+"Order received": "Bestelling ontvangen",
+"Only the transfer is left.": "Alleen de overschrijving ontbreekt nog.",
+"These details were also sent to you by email. Your order is reserved for {#} hours and ships as soon as the transfer arrives.": "Deze gegevens zijn u ook per e-mail toegestuurd. Uw bestelling is {#} uur gereserveerd en wordt verzonden zodra de overschrijving binnen is.",
+"Amount": "Bedrag",
+"Reference": "Referentie",
+"Copy": "Kopiëren",
+"Account holder": "Rekeninghouder",
+"Make sure to quote the reference in the transfer label. The holder shown is the legal name on the account: it is the name your bank will check.": "Vermeld zeker de referentie in de omschrijving. De getoonde houder is de wettelijke naam van de rekening: die naam controleert uw bank.",
+"Got it": "Begrepen",
+"The order could not be sent. Please try again shortly or contact us.": "De bestelling kon niet worden verzonden. Probeer het zo opnieuw of schrijf ons.",
+"Delivery address": "Leveringsadres",
+"To ship your parcel and keep you informed by email at every step.": "Om uw pakket te verzenden en u bij elke stap per e-mail op de hoogte te houden.",
+"You immediately receive the IBAN and the reference by email.": "U ontvangt meteen de IBAN en de referentie per e-mail.",
+"Fill in the delivery address to enable payment.": "Vul het leveringsadres in om de betaling te activeren.",
+"Pay by card": "Betalen met kaart",
+"Opening secure checkout…": "Beveiligde betaling wordt geopend…",
+"Card payment is temporarily unavailable. Pay with Bitcoin or by bank transfer, or try again shortly.": "Betalen met kaart is tijdelijk niet beschikbaar. Betaal met Bitcoin of per overschrijving, of probeer het zo opnieuw.",
+"Card, Bitcoin or bank transfer · billed in euros": "Kaart, Bitcoin of overschrijving · gefactureerd in euro",
+"Card, Bitcoin or bank transfer": "Kaart, Bitcoin of overschrijving",
+"Straight from the cart, as you prefer: bank card (Visa, Mastercard, Apple Pay, Google Pay, through Stripe: we never see your card details), Bitcoin (amount calculated in euros, invoice valid for {#} minutes) or bank transfer (IBAN and reference sent immediately by email, order reserved for {#} hours). First time with Bitcoin? Our \"Pay with Bitcoin\" page explains everything in {#} steps.": "Rechtstreeks vanuit de winkelwagen, naar keuze: bankkaart (Visa, Mastercard, Apple Pay, Google Pay, via Stripe: wij zien uw kaartgegevens nooit), Bitcoin (bedrag berekend in euro, factuur {#} minuten geldig) of bankoverschrijving (IBAN en referentie direct per e-mail, bestelling {#} uur gereserveerd). Voor het eerst met Bitcoin? Onze pagina \"Betalen met Bitcoin\" legt alles uit in {#} stappen.",
+"Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for {#} minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: contact@novalyxresearch.com.": "Drie betaalmethoden, rechtstreeks in de winkelwagen: bankkaart via Stripe (uw kaartgegevens komen nooit op onze servers), Bitcoin (factuur in euro, {#} minuten geldig) of bankoverschrijving (IBAN en referentie direct per e-mail). Een vraag: contact@novalyxresearch.com.",
+"Last updated: October {#}": "Laatst bijgewerkt: oktober {#}",
+"Prices are shown in euros, VAT not applicable (art. {#} B of the French General Tax Code, micro-entrepreneur regime). Payment is made when ordering, as you prefer: by bank card, processed securely by Stripe (we never see or store your card details); in Bitcoin, through an invoice in euros valid for {#} minutes; or by bank transfer, in which case the order is reserved for {#} hours and shipped once the transfer is received. The sale is concluded when payment is confirmed, confirmed by email. We reserve the right to cancel an order, with a full refund.": "Prijzen worden weergegeven in euro, btw niet van toepassing (art. {#} B van het Franse belastingwetboek, kleineondernemersregeling). De betaling gebeurt bij de bestelling, naar keuze: met bankkaart, veilig verwerkt door Stripe (wij zien of bewaren uw kaartgegevens nooit); in Bitcoin, via een factuur in euro die {#} minuten geldig is; of per bankoverschrijving, waarbij de bestelling dan {#} uur wordt gereserveerd en verzonden zodra de overschrijving binnen is. De koop is gesloten bij bevestiging van de betaling, bevestigd per e-mail. Wij behouden ons het recht voor een bestelling te annuleren, met volledige terugbetaling.",
+"In-stock products are shipped from Paris within {#} h of payment confirmation. Made-to-order products are shipped within {#} to {#} weeks, after the batch has been received and analysed by an independent laboratory; you are informed by email at every step. Delivery usually takes {#} to {#} days in France, {#} to {#} business days in the rest of the European Union and {#} to {#} business days for international destinations; these timescales are estimates. The risk of loss or damage passes to you when you take physical possession of the parcel.": "Producten op voorraad worden binnen {#} u na bevestiging van de betaling vanuit Parijs verzonden. Producten op bestelling worden binnen {#} tot {#} weken verzonden, nadat de batch is ontvangen en geanalyseerd door een onafhankelijk laboratorium; u wordt bij elke stap per e-mail ge\u00efnformeerd. De levering duurt meestal {#} tot {#} dagen in Frankrijk, {#} tot {#} werkdagen in de rest van de Europese Unie en {#} tot {#} werkdagen voor internationale bestemmingen; deze termijnen zijn schattingen. Het risico van verlies of beschadiging gaat op u over zodra u het pakket fysiek in ontvangst neemt.",
+"You have {#} days from receipt of your order to exercise your right of withdrawal, without giving any reason (art. L{#}-{#} of the French Consumer Code), by telling us by email at contact@novalyxresearch.com. The products must be sent back to us unopened, sealed and in their original packaging, no later than {#} days after your request; return costs are at your expense. We refund all sums paid, standard shipping included, within {#} days of your request; this refund may be deferred until the returned parcel is received. It is made with the same payment method, or by bank transfer for a Bitcoin payment.": "U heeft {#} dagen vanaf de ontvangst van uw bestelling om uw herroepingsrecht uit te oefenen, zonder opgave van redenen (art. L{#}-{#} van het Franse consumentenwetboek), door ons dit per e-mail te melden op contact@novalyxresearch.com. De producten moeten ongeopend, verzegeld en in de originele verpakking aan ons worden teruggestuurd, uiterlijk {#} dagen na uw verzoek; de retourkosten zijn voor uw rekening. Wij betalen alle betaalde bedragen terug, standaardverzending inbegrepen, binnen {#} dagen na uw verzoek; deze terugbetaling kan worden uitgesteld tot het teruggestuurde pakket is ontvangen. Zij gebeurt met hetzelfde betaalmiddel, of per overschrijving bij een betaling in Bitcoin.",
+"In accordance with article L{#}-{#}, {#}\u00b0 of the French Consumer Code, the right of withdrawal does not apply to vials unsealed after delivery, which cannot be returned for hygiene and safety reasons.": "Overeenkomstig artikel L{#}-{#}, {#}\u00b0 van het Franse consumentenwetboek geldt het herroepingsrecht niet voor flacons die na de levering zijn ontzegeld en om hygi\u00ebne- en veiligheidsredenen niet kunnen worden teruggestuurd.",
+"Product damaged or not matching its analysis report: please report it to us, ideally within {#} days and with photos, at contact@novalyxresearch.com; we replace it or refund you in full. You also benefit from the legal guarantee of conformity (art. L{#}-{#} et seq. of the French Consumer Code) and the guarantee against hidden defects (art. {#} et seq. of the French Civil Code).": "Product beschadigd of niet in overeenstemming met zijn analyserapport: meld het ons bij voorkeur binnen {#} dagen, met foto's, op contact@novalyxresearch.com; wij vervangen het of betalen u volledig terug. U geniet bovendien van de wettelijke conformiteitsgarantie (art. L{#}-{#} e.v. van het Franse consumentenwetboek) en de garantie tegen verborgen gebreken (art. {#} e.v. van het Franse burgerlijk wetboek).",
+"If there is a problem, please write to us first at contact@novalyxresearch.com: we always look for an amicable solution, with a reply within one business day.": "Bij een probleem schrijft u ons eerst op contact@novalyxresearch.com: wij zoeken altijd een minnelijke oplossing, met een antwoord binnen \u00e9\u00e9n werkdag.",
+"Failing agreement, you may refer the matter free of charge to the consumer mediator we belong to:": "Komen wij er niet uit, dan kunt u zich kosteloos wenden tot de consumentenbemiddelaar waarbij wij zijn aangesloten:",
+"{#}. Right of withdrawal and returns": "{#}. Herroepingsrecht en retouren",
+"{#}. Complaints and mediation": "{#}. Klachten en bemiddeling",
+"{#}. Governing law": "{#}. Toepasselijk recht",
+"To process and ship your orders, answer your questions, send you emails about your order and \u2014 only with your consent \u2014 our product announcements. Card data is processed directly by Stripe: we never see or store it.": "Om uw bestellingen te verwerken en te verzenden, uw vragen te beantwoorden, u e-mails over uw bestelling te sturen en \u2014 alleen met uw toestemming \u2014 onze productaankondigingen. Kaartgegevens worden rechtstreeks door Stripe verwerkt: wij zien of bewaren ze nooit.",
+"We never sell your data. We share it only with the providers needed for your order: Vercel (website hosting), Stripe (card payment), our BTCPay server hosted in the European Union (Bitcoin payment), Hostinger (sending emails) and the carrier delivering your parcel. When one of them processes data outside the European Union, the transfer is covered by the European Commission's standard contractual clauses.": "Wij verkopen uw gegevens nooit. Wij delen ze alleen met de dienstverleners die nodig zijn voor uw bestelling: Vercel (hosting van de website), Stripe (kaartbetaling), onze in de Europese Unie gehoste BTCPay-server (Bitcoin-betaling), Hostinger (verzending van e-mails) en de vervoerder die uw pakket levert. Wanneer een van hen gegevens buiten de Europese Unie verwerkt, is die doorgifte gedekt door de modelcontractbepalingen van de Europese Commissie.",
+"Order data is kept for {#} years, as required by accounting obligations (art. L{#}-{#} of the French Commercial Code). Other data is deleted {#} years after our last exchange.": "Bestelgegevens worden {#} jaar bewaard, zoals vereist door de boekhoudkundige verplichtingen (art. L{#}-{#} van het Franse wetboek van koophandel). Andere gegevens worden {#} jaar na ons laatste contact verwijderd.",
+"You may also lodge a complaint with the CNIL, the French data protection authority (cnil.fr).": "U kunt ook een klacht indienen bij de CNIL, de Franse gegevensbeschermingsautoriteit (cnil.fr).",
+"Data retention": "Bewaartermijn",
+"In-stock products are shipped from Paris within {#} h of payment confirmation; made-to-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Producten op voorraad worden binnen {#} u na bevestiging van de betaling vanuit Parijs verzonden; producten op bestelling binnen {#} tot {#} weken, zodra de batch door een onafhankelijk laboratorium is geanalyseerd. Levering in {#} tot {#} dagen in Frankrijk, {#} tot {#} werkdagen in de rest van de Europese Unie. Bij verzending ontvangt u een trackingnummer.",
+"Free shipping in France and the European Union from {#}\u20ac of purchases. Bacteriostatic water ordered on its own: {#}\u20ac in France and the EU. We do not ship to Russia or Belarus.": "Gratis verzending in Frankrijk en de Europese Unie vanaf {#}\u20ac aan aankopen. Bacteriostatisch water apart besteld: {#}\u20ac in Frankrijk en de EU. Wij verzenden niet naar Rusland of Belarus.",
+"Operator": "Exploitant",
+"Legal status": "Rechtsvorm",
+"Trading name": "Handelsnaam",
+"VAT": "Btw",
+"Sole trader (French micro-entreprise)": "Eenmanszaak (Franse micro-entreprise)",
+"VAT not applicable, art. {#} B of the French General Tax Code": "Btw niet van toepassing, art. {#} B van het Franse belastingwetboek",
+"Vercel Inc., {#} N Barranca Ave #{#}, Covina, CA {#}, United States (vercel.com).": "Vercel Inc., {#} N Barranca Ave #{#}, Covina, CA {#}, Verenigde Staten (vercel.com).",
+"Card payments are processed by Stripe Payments Europe, Limited (Dublin, Ireland), a licensed payment institution: we never see or store your card details.": "Kaartbetalingen worden verwerkt door Stripe Payments Europe, Limited (Dublin, Ierland), een erkende betaalinstelling: wij zien of bewaren uw kaartgegevens nooit.",
+"Bitcoin payments go through our own BTCPay server, with no intermediary. Bank transfers are received on a business bank account opened in France.": "Bitcoin-betalingen verlopen via onze eigen BTCPay-server, zonder tussenpersoon. Overschrijvingen worden ontvangen op een zakelijke bankrekening die in Frankrijk is geopend.",
+"The texts, photographs, logos and reports shown on this site belong to Novalyx Research or are used with permission. Any reproduction without prior written consent is prohibited.": "De teksten, foto's, logo's en rapporten op deze site zijn eigendom van Novalyx Research of worden met toestemming gebruikt. Elke reproductie zonder voorafgaande schriftelijke toestemming is verboden.",
+"For any question: contact@novalyxresearch.com. Reply within one business day.": "Voor vragen: contact@novalyxresearch.com. Antwoord binnen \u00e9\u00e9n werkdag.",
+"Legal notice": "Juridische vermelding",
+"Site publisher": "Uitgever van de website",
+"Publication director": "Verantwoordelijke uitgever",
+"Hosting": "Hosting",
+"Payments": "Betalingen",
+"Intellectual property": "Intellectueel eigendom",
+"Consumer mediation": "Consumentenbemiddeling",
+"Legal notice of Novalyx Research: publisher, SIRET, address, hosting, payments and contact.": "Juridische vermelding van Novalyx Research: uitgever, SIRET, adres, hosting, betalingen en contact.",
+"Legal notice | Novalyx Research": "Juridische vermelding | Novalyx Research",
 "Got Revolut?": "Heeft u Revolut?",
 "Governed by French law and applicable EU regulations.": "Beheerst door het Franse recht en de toepasselijke EU-regelgeving.",
 "Grade": "Kwaliteit",
@@ -5561,7 +5916,7 @@ const XL_NL = {
 "KTTKS pentapeptide coupled to palmitic acid, a cosmetic ingredient studied for collagen synthesis in skin models.": "Pentapeptide KTTKS gekoppeld aan palmitinezuur, een cosmetisch ingrediënt dat in huidmodellen wordt onderzocht op collageensynthese.",
 "LAB SUPPLY": "LABORATORIUMBENODIGDHEDEN",
 "LONGEVITY RESEARCH": "ONDERZOEK LEVENSDUUR",
-"Lab Supplies": "Laboratoriumbenodigdheden",
+"Lab Supplies": "Labbenodigdheden",
 "Laboratories and resellers: volume pricing, reports included.": "Laboratoria en wederverkopers: volumeprijzen, rapporten inbegrepen.",
 "Laboratory": "Laboratorium",
 "Laboratory / Organization (optional)": "Laboratorium / organisatie (optioneel)",

@@ -335,6 +335,16 @@ export default async function handler(req, res) {
   try { order = computeOrder(body && body.items, body && body.zone); }
   catch (e) { return res.status(400).json({ error: e.message }); }
 
+  // Client : email + adresse de livraison, transmis à BTCPay (emails automatiques + expédition)
+  const clean = (v, max) => String(v == null ? "" : v).replace(/[\r\n\t]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+  const c = (body && body.customer) || {};
+  const cu = {
+    firstName: clean(c.firstName, 60), lastName: clean(c.lastName, 60), email: clean(c.email, 120).toLowerCase(),
+    address: clean(c.address, 160), postcode: clean(c.postcode, 16), city: clean(c.city, 80), country: clean(c.country, 60), phone: clean(c.phone, 30),
+  };
+  if (!cu.firstName || !cu.lastName || !cu.address || !cu.postcode || !cu.city) return res.status(400).json({ error: "adresse incomplète" });
+  if (!/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/.test(cu.email)) return res.status(400).json({ error: "email invalide" });
+
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
   const site = (SITE_URL || "https://novalyxresearch.com").replace(/\/+$/, "");
   const desc = order.lines.map((l) => l.id + " " + l.size + " x" + l.qty).join(", ");
@@ -348,6 +358,13 @@ export default async function handler(req, res) {
         currency: "EUR",
         metadata: {
           orderId,
+          buyerName: cu.firstName + " " + cu.lastName,
+          buyerEmail: cu.email,
+          buyerAddress1: cu.address,
+          buyerZip: cu.postcode,
+          buyerCity: cu.city,
+          buyerCountry: cu.country,
+          buyerPhone: cu.phone || undefined,
           itemDesc: "Novalyx Research — " + orderId,
           zone: body.zone,
           lines: order.lines,

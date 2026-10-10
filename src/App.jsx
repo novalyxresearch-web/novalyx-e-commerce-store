@@ -1938,20 +1938,23 @@ html,body{background:#fff}
 /* ─── TOUCHE « ROSE POUDRÉ » (si CONFIG.ROSE) : le bleu nuit et le vert restent les couleurs principales,
    le rose ne touche que les fonds, les étiquettes, les bordures et les ombres. ─── */
 const ROSE_CSS = `
-:root{--paper:#FFFCFB; --soft:#FBF1EF; --line:#EFE3E2; --line2:#F5ECEB; --mute:#6A6164; --rose:#D8A0A7; --rose-soft:#F7E4E3; --rose-ink:#9A5560}
-html,body{background:#FFFCFB}
-.hero{background:radial-gradient(60% 50% at 88% 8%,rgba(216,160,167,.24),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(120,183,82,.08),transparent 70%),linear-gradient(180deg,#FBEDEB 0%,#FFFCFB 100%)}
-.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(216,160,167,.24),transparent 70%),linear-gradient(180deg,#FBF1EF,#FFFCFB)}
-.nav{background:rgba(255,252,251,.88)}
-.foot{background:#FBF1EF}
-.fact{background:#FBF1EF}
+/* Fond de page rose poudré ; cartes, fenêtres et formulaires restent clairs pour ressortir dessus. */
+:root{--page:#FAEDEB; --paper:#FFFBFA; --surface:#FFFFFF; --soft:#F6E4E2; --line:#EBD8D7; --line2:#F2E3E2; --mute:#6A6164; --rose:#D39AA2; --rose-soft:#F5DDDC; --rose-ink:#94505B}
+html,body{background:#FAEDEB}
+.hero{background:radial-gradient(65% 55% at 88% 8%,rgba(216,160,167,.36),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(120,183,82,.08),transparent 70%),linear-gradient(180deg,#F6DCD9 0%,#FAEDEB 100%)}
+.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(216,160,167,.38),transparent 70%),linear-gradient(180deg,#F7E1DE,#FAEDEB)}
+.nav{background:rgba(250,237,235,.9)}
+.foot{background:#F6E4E2}
+.fact{background:#FFFFFF}
+.pcard,.sheet,.gate-card{background:#FFFFFF}
 .tag{background:var(--rose-soft);color:var(--rose-ink);padding:4px 10px;border-radius:999px}
-.hs{box-shadow:0 14px 32px rgba(154,85,96,.16)}
-.pcard{box-shadow:0 1px 2px rgba(154,85,96,.05)}
-.pcard:hover{box-shadow:0 16px 36px rgba(154,85,96,.12);border-color:#EBD7D6}
-.sheet{box-shadow:0 12px 34px rgba(154,85,96,.08)}
-.btc-callout,.help-cta{box-shadow:0 12px 34px rgba(154,85,96,.07)}
-.gate-card{box-shadow:0 24px 60px rgba(154,85,96,.14)}
+.hs{box-shadow:0 14px 32px rgba(154,85,96,.2)}
+.pcard{box-shadow:0 1px 2px rgba(154,85,96,.06)}
+.pcard:hover{box-shadow:0 16px 36px rgba(154,85,96,.14);border-color:#E6CFCE}
+.sheet{box-shadow:0 12px 34px rgba(154,85,96,.1)}
+.btc-callout,.help-cta{box-shadow:0 12px 34px rgba(154,85,96,.09)}
+.gate-card{box-shadow:0 24px 60px rgba(154,85,96,.16)}
+.fchip:not(.on){background:#FFFFFF}
 .fchip:not(.on):hover{border-color:var(--rose)}
 .nav-links button.on,.nav-links button:hover{border-color:var(--rose)}
 `;
@@ -4747,7 +4750,7 @@ export default function App() {
   };
 
   return (
-    <div key={lang} style={{ minHeight: "100vh", background: "var(--paper)" }}>
+    <div key={lang} style={{ minHeight: "100vh", background: "var(--page, var(--paper))" }}>
       <style>{CSS}</style>
       {CONFIG.THEME === "modern" && <style>{MODERN_CSS}</style>}
       {CONFIG.THEME === "modern" && CONFIG.ROSE && <style>{ROSE_CSS}</style>}

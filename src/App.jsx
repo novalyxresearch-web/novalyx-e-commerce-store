@@ -2306,6 +2306,9 @@ a{color:inherit}
 .xsell img{width:52px!important;height:52px!important;border-radius:8px!important}
 .xsell-txt{display:grid;gap:2px;font-size:14px;color:var(--ink)}
 .xsell-price{font-family:var(--mono);font-size:13px;color:var(--ink)}
+.xsell-qty{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:12.5px;cursor:default}
+.xsell-qty button{width:26px;height:26px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:15px;line-height:1;cursor:pointer;padding:0}
+.xsell-qty b{min-width:14px;text-align:center}
 .added{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:#EEF5EF;border:1px solid var(--green);color:var(--green);font-size:13.5px}
 .added .link{background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:13px}
 .hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
@@ -2636,6 +2639,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const FR = lang === "FR";
   const [qty, setQty] = useState(1);
   const [withBac, setWithBac] = useState(false);
+  const [bacQty, setBacQty] = useState(null); // null = suit la quantité de peptide (1 eau par flacon)
   const [added, setAdded] = useState(false);
   const bac = PRODUCTS.find(x => x.id === "bac-water");
   const bacV = bac && bac.variants.find(x => !/pack/i.test(x.size));
@@ -2644,13 +2648,15 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const coa = coaFor(p, v.size);
   const coaOther = !coa && COAS[p.id];
   const showBac = XSELL_BAC && canBuy(p) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
-  const total = lineTotal(v.price, qty, v.size, p.id) + (showBac && withBac ? bacV.price : 0);
+  const bq = bacQty == null ? qty : bacQty;
+  const bacTotal = bacV ? lineTotal(bacV.price, bq, bacV.size, "bac-water") : 0;
+  const total = lineTotal(v.price, qty, v.size, p.id) + (showBac && withBac ? bacTotal : 0);
   const [zoom, setZoom] = useState(false);
-  useEffect(() => { setAdded(false); }, [idx, qty, withBac]);
+  useEffect(() => { setAdded(false); }, [idx, qty, withBac, bacQty]);
   useEffect(() => { const m = minQty(p, v.size); if (qty < m) setQty(m); }, [idx]); // eslint-disable-line
   const addAll = (buyNow) => {
     onAdd(p, v, qty, false);
-    if (showBac && withBac) onAdd(bac, bacV, 1, false);
+    if (showBac && withBac) onAdd(bac, bacV, bq, false);
     if (buyNow) onOpenCart(); else setAdded(true);
   };
   useEffect(() => {
@@ -2702,15 +2708,21 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               </div>
             )}
             {showBac && (
-              <label className={`xsell${withBac ? " on" : ""}`}>
-                <input type="checkbox" checked={withBac} onChange={e => setWithBac(e.target.checked)} />
+              <div className={`xsell${withBac ? " on" : ""}`} onClick={() => setWithBac(!withBac)} role="checkbox" aria-checked={withBac} tabIndex={0} onKeyDown={e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setWithBac(!withBac); } }}>
+                <input type="checkbox" checked={withBac} readOnly tabIndex={-1} aria-hidden="true" />
                 <ProductPhoto p={bac} size={bacV.size} h={52} />
                 <span className="xsell-txt">
                   <span className="tag">{FR ? "Souvent acheté avec" : "Frequently bought with"}</span>
                   <span>{FR ? "Eau bactériostatique 3 ml" : "Bacteriostatic water 3 ml"}</span>
+                  <span className="xsell-qty" onClick={e => e.stopPropagation()}>
+                    <button type="button" aria-label="-" onClick={() => { setBacQty(Math.max(1, bq - 1)); setWithBac(true); }}>−</button>
+                    <b>{bq}</b>
+                    <button type="button" aria-label="+" onClick={() => { setBacQty(bq + 1); setWithBac(true); }}>+</button>
+                    <span className="muted">{FR ? (bq > 1 ? "flacons" : "flacon") : (bq > 1 ? "vials" : "vial")}{qtyDiscount(bq, bacV.size, "bac-water", bacV.price) > 0.0001 ? (FR ? ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)} %` : ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)}%`) : ""}</span>
+                  </span>
                 </span>
-                <span className="xsell-price">+ {price(bacV.price, cur, lang)}</span>
-              </label>
+                <span className="xsell-price">+ {price(bacTotal, cur, lang)}</span>
+              </div>
             )}
             {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && (
               <div className="tiers">

@@ -1767,7 +1767,7 @@ const qtyDiscount = (q, size, id, unit) => {
 };
 const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
-const PROMOS = { FELLA10: 0.10 };
+const PROMOS = { SHINY10: 0.10 };
 const promoRateOf = (code) => PROMOS[String(code || "").trim().toUpperCase()] || 0;
 const cartShipping = (cart, zone, subtotal) => {
   if (!cart.length) return 0;

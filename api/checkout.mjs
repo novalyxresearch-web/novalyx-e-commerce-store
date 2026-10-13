@@ -301,7 +301,7 @@ const round2 = (n) => Math.round(n * 100) / 100;
 
 /* Codes promo : CODE → remise sur les articles (pas sur la livraison), cumulée avec les remises par quantité.
    ⚠ Garder identique à PROMOS dans src/App.jsx. Pour supprimer un code : retirer sa ligne. */
-export const PROMOS = { FELLA10: 0.10 };
+export const PROMOS = { SHINY10: 0.10 };
 export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
 
 export function computeOrder(items, zone, promoCode) {

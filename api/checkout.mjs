@@ -299,7 +299,13 @@ const lineTotalFor = (id, size, unit, q) => {
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 
-export function computeOrder(items, zone) {
+/* Codes promo : CODE → remise sur les articles (pas sur la livraison), cumulée avec les remises par quantité.
+   ⚠ Garder identique à PROMOS dans src/App.jsx. Pour supprimer un code : retirer sa ligne. */
+export const PROMOS = { FELLA10: 0.10 };
+export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
+
+export function computeOrder(items, zone, promoCode) {
+  const promo = promoOf(promoCode);
   if (!Array.isArray(items) || items.length === 0 || items.length > MAX_LINES) throw new Error("panier invalide");
   if (!Object.prototype.hasOwnProperty.call(ZONE_RATE, zone)) throw new Error("zone invalide");
   const lines = items.map((it) => {
@@ -310,16 +316,19 @@ export function computeOrder(items, zone) {
     if (!Number.isInteger(qty) || qty < 1 || qty > MAX_QTY) throw new Error("quantité invalide");
     const min = (inStock(id, size) || isPack(size)) ? 1 : (MIN_QTY[id + "_" + size] || 2);
     if (qty < min) throw new Error("minimum " + min + " flacons pour " + id + " " + size);
-    const total = lineTotalFor(id, size, unit, qty);
-    return { id, size, qty, unit, discount: round2(1 - total / (unit * qty)), total };
+    const gross = lineTotalFor(id, size, unit, qty);
+    const total = promo ? round2(gross * (1 - promo.rate)) : gross;
+    return { id, size, qty, unit, discount: round2(1 - total / (unit * qty)), total, gross };
   });
   const subtotal = round2(lines.reduce((s, l) => s + l.total, 0));
   const eu = zone === "FR" || zone === "EU";
   let shipping = ZONE_RATE[zone];
-  if (eu && subtotal >= FREE_SHIP_MIN) shipping = 0;
+  // Seuil de livraison offerte calculé AVANT le code promo : un code ne fait jamais perdre la livraison offerte.
+  const grossSubtotal = round2(lines.reduce((s, l) => s + l.gross, 0));
+  if (eu && grossSubtotal >= FREE_SHIP_MIN) shipping = 0;
   else if (eu && lines.some((l) => isPack(l.size))) shipping = 0;
   else if (lines.every((l) => l.id === "bac-water")) shipping = eu ? 3.99 : ZONE_RATE[zone];
-  return { lines, subtotal, shipping, total: round2(subtotal + shipping) };
+  return { lines, subtotal, shipping, total: round2(subtotal + shipping), promo };
 }
 
 export default async function handler(req, res) {
@@ -332,7 +341,7 @@ export default async function handler(req, res) {
   const lang = body && body.lang === "EN" ? "EN" : "FR";
 
   let order;
-  try { order = computeOrder(body && body.items, body && body.zone); }
+  try { order = computeOrder(body && body.items, body && body.zone, body && body.promo); }
   catch (e) { return res.status(400).json({ error: e.message }); }
 
   // Client : email + adresse de livraison, transmis à BTCPay (emails automatiques + expédition)
@@ -376,6 +385,7 @@ export default async function handler(req, res) {
           subtotal: order.subtotal,
           shipping: order.shipping,
           summary: desc.slice(0, 500),
+          promo: order.promo ? order.promo.code : undefined,
         },
         checkout: {
           expirationMinutes: 60,

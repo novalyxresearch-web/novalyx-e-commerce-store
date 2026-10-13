@@ -1766,6 +1766,9 @@ const qtyDiscount = (q, size, id, unit) => {
   return baseDisc(q);
 };
 const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE
+/* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
+const PROMOS = { FELLA10: 0.10 };
+const promoRateOf = (code) => PROMOS[String(code || "").trim().toUpperCase()] || 0;
 const cartShipping = (cart, zone, subtotal) => {
   if (!cart.length) return 0;
   const eu = zone === "FR" || zone === "EU";
@@ -2311,6 +2314,11 @@ a{color:inherit}
 .xsell-qty{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:12.5px;cursor:default}
 .xsell-qty button{width:26px;height:26px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:15px;line-height:1;cursor:pointer;padding:0}
 .xsell-qty b{min-width:14px;text-align:center}
+.promo-box{margin:0 0 12px}
+.promo-row{display:flex;gap:8px}
+.promo-row input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);background:#fff;font:inherit;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.promo-row .btn{padding:10px 14px;white-space:nowrap}
+.promo-x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;margin-left:6px;padding:0}
 .added{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:#EEF5EF;border:1px solid var(--green);color:var(--green);font-size:13.5px}
 .added .link{background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:13px}
 .hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
@@ -2809,7 +2817,15 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const [tfErr, setTfErr] = useState("");
   const [tfDone, setTfDone] = useState(null);
   const setF = (k) => (e) => setTf(v => ({ ...v, [k]: e.target.value }));
-  const total = cart.reduce((s, i) => s + lineTotal(i.price, i.qty, i.size, i.id), 0);
+  const [promoIn, setPromoIn] = useState("");
+  const [promo, setPromo] = useState("");
+  const [promoErr, setPromoErr] = useState("");
+  const promoRate = promoRateOf(promo);
+  const gross = cart.reduce((s, i) => s + lineTotal(i.price, i.qty, i.size, i.id), 0);
+  // Même calcul que le serveur : la remise du code s'applique ligne par ligne, arrondie au centime.
+  const total = promoRate ? cart.reduce((s, i) => s + Math.round(lineTotal(i.price, i.qty, i.size, i.id) * (1 - promoRate) * 100) / 100, 0) : gross;
+  const promoAmt = Math.round((gross - total) * 100) / 100;
+  const applyPromo = () => { const c = promoIn.trim().toUpperCase(); if (!c) return; if (promoRateOf(c)) { setPromo(c); setPromoErr(""); } else { setPromo(""); setPromoErr(FR ? "Ce code n'est pas valide." : "This code is not valid."); } };
   const count = cart.reduce((s, i) => s + i.qty, 0);
   const ready = ok1 && ok2 && !loading;
   // Virement : le montant est toujours en euros (compte en EUR) ; la livraison est confirmée par email
@@ -2835,10 +2851,10 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     FR ? "Je confirme que cette commande est strictement destinée à la recherche en laboratoire." : "I confirm this order is strictly for laboratory research purposes only.",
   ].join("\n"));
   const checkout = async () => { setLoading(true); try { await goToStripeCheckout(cart, zone); } finally { setLoading(false); } };
-  const ship = cartShipping(cart, zone, total);
+  const ship = cartShipping(cart, zone, gross); // seuil calculé avant le code promo
   const grand = Math.round((total + ship) * 100) / 100;
   const euZone = zone === "FR" || zone === "EU";
-  const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - total) : 0;
+  const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - gross) : 0;
   const allStock = cart.every(i => inStock({ id: i.id }, i.size));
   const tfReady = !!(tf.firstName.trim() && tf.lastName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tf.email.trim()) && tf.address.trim() && tf.postcode.trim() && tf.city.trim());
   const payBtc = async () => {
@@ -2846,7 +2862,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("btc"); setLoading(true); setBtcErr(""); setTfErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setBtcErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
@@ -2862,7 +2878,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("card"); setLoading(true); setCardErr(""); setBtcErr(""); setTfErr("");
     try {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setCardErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "card");
@@ -2879,7 +2895,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     try {
       const customer = { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) };
       const r = await fetch("/api/order", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer, website: tf.website }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setTfErr(d.error); return; }
       if (!r.ok || !d.orderId) throw new Error(d.error || "order");
@@ -2917,8 +2933,24 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
             <div style={{ paddingTop: 18 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
                 <span className="eyebrow">{FR ? "Sous-total" : "Subtotal"}</span>
-                <span style={{ fontFamily: "var(--serif)", fontSize: 28 }}>{price(total, cur, lang)}</span>
+                <span style={{ fontFamily: "var(--serif)", fontSize: 28 }}>{price(gross, cur, lang)}</span>
               </div>
+              {CONFIG.BTC_ON && (
+                <div className="promo-box">
+                  {promo ? (
+                    <div className="spec" style={{ color: "var(--green)" }}>
+                      <span>{FR ? "Code" : "Code"} <b>{promo}</b> · −{Math.round(promoRate * 100)} % <button type="button" className="promo-x" onClick={() => { setPromo(""); setPromoIn(""); }} aria-label={FR ? "Retirer le code" : "Remove code"}>✕</button></span>
+                      <span>−{price(promoAmt, cur, lang)}</span>
+                    </div>
+                  ) : (
+                    <div className="promo-row">
+                      <input value={promoIn} onChange={e => { setPromoIn(e.target.value); setPromoErr(""); }} onKeyDown={e => { if (e.key === "Enter") applyPromo(); }} placeholder={FR ? "Code promo" : "Promo code"} aria-label={FR ? "Code promo" : "Promo code"} autoCapitalize="characters" />
+                      <button type="button" className="btn btn-line" onClick={applyPromo}>{FR ? "Appliquer" : "Apply"}</button>
+                    </div>
+                  )}
+                  {promoErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12, margin: "6px 0 0" }}>{promoErr}</p>}
+                </div>
+              )}
               <div className="field" style={{ marginBottom: 10 }}>
                 <label>{FR ? "Pays de livraison" : "Delivery country"}</label>
                 <select value={zone} onChange={e => setZone(e.target.value)}>
@@ -2930,7 +2962,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 {freeLeft > 0 && (
                   <div className="freebar">
                     <div className="freebar-txt">{FR ? <>Plus que <b>{price(freeLeft, cur, lang)}</b> pour la livraison offerte</> : <>Only <b>{price(freeLeft, cur, lang)}</b> away from free shipping</>}</div>
-                    <div className="freebar-track"><i style={{ width: Math.min(100, (total / FREE_SHIP_MIN) * 100) + "%" }} /></div>
+                    <div className="freebar-track"><i style={{ width: Math.min(100, (gross / FREE_SHIP_MIN) * 100) + "%" }} /></div>
                   </div>
                 )}
                 <div className="spec" style={{ borderBottom: "none" }}><span><b>Total</b></span><span style={{ fontFamily: "var(--serif)", fontSize: 24 }}>{price(grand, cur, lang)}</span></div>

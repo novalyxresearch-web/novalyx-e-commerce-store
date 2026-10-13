@@ -108,7 +108,7 @@ export default async function handler(req, res) {
   if (!EMAIL_RE.test(cu.email)) return res.status(400).json({ error: "email invalide" });
 
   let order;
-  try { order = computeOrder(body.items, body.zone); }
+  try { order = computeOrder(body.items, body.zone, body.promo); }
   catch (e) { return res.status(400).json({ error: e.message }); }
   {
     const { checkStock } = await import("./stock.mjs");
@@ -121,6 +121,7 @@ export default async function handler(req, res) {
   const label = (l) => (names[l.id + "|" + l.size] || l.id) + " " + l.size;
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
   const lines = order.lines.map((l) => `- ${label(l)} × ${l.qty} : ${eur(l.total)}${l.discount > 0 ? ` (−${Math.round(l.discount * 100)} %)` : ""}`);
+  if (order.promo) lines.push(`(${FR ? "code promo" : "promo code"} ${order.promo.code} : −${Math.round(order.promo.rate * 100)} % ${FR ? "inclus" : "included"})`);
   const ship = order.shipping === 0 ? (FR ? "offerte" : "free") : eur(order.shipping);
   const addr = [`${cu.firstName} ${cu.lastName}`, cu.address, `${cu.postcode} ${cu.city}`, cu.country, cu.phone ? (FR ? "Tél. " : "Phone ") + cu.phone : null].filter(Boolean);
 

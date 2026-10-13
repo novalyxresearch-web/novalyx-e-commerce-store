@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   if (!EMAIL_RE.test(cu.email)) return res.status(400).json({ error: "email invalide" });
 
   let order;
-  try { order = computeOrder(body.items, body.zone); }
+  try { order = computeOrder(body.items, body.zone, body.promo); }
   catch (e) { return res.status(400).json({ error: e.message }); }
 
   const lang = ["EN", "DE", "NL"].includes(body.lang) ? body.lang : "FR";
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     p.append(`line_items[${i}][price_data][currency]`, "eur");
     p.append(`line_items[${i}][price_data][unit_amount]`, cents(l.total));
     p.append(`line_items[${i}][price_data][product_data][name]`, label.slice(0, 120));
-    if (l.discount > 0) p.append(`line_items[${i}][price_data][product_data][description]`, (FR ? "Remise quantité −" : "Quantity discount −") + Math.round(l.discount * 100) + " %");
+    if (l.discount > 0) p.append(`line_items[${i}][price_data][product_data][description]`, (order.promo ? (FR ? "Remise (dont code " : "Discount (incl. code ") + order.promo.code + ") −" : (FR ? "Remise quantité −" : "Quantity discount −")) + Math.round(l.discount * 100) + " %");
     i++;
   }
   if (order.shipping > 0) {
@@ -82,6 +82,7 @@ export default async function handler(req, res) {
     orderId, zone: String(body.zone), name: cu.firstName + " " + cu.lastName, email: cu.email,
     address: cu.address, postcode: cu.postcode, city: cu.city, country: cu.country, phone: cu.phone,
     items: encodeItems(order.lines),     // lu par /api/stock pour décompter le stock
+    promo: order.promo ? order.promo.code : "",
     summary: order.lines.map((l) => (names[l.id + "|" + l.size] || l.id) + " " + l.size + " x" + l.qty).join(", ").slice(0, 490),
   };
   for (const [k, v] of Object.entries(meta)) {

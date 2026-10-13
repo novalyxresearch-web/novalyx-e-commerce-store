@@ -4671,7 +4671,15 @@ export default function App() {
   // Les scripts de suivi ne se chargent QUE si l'utilisateur a accepté.
   useEffect(() => {
     if (consent && consent.analytics) {
-      // ICI : coller le script de mesure d'audience (ex. Google Analytics)
+      // Metricool : statistiques de visites (marque novalyxresearch). Chargé une seule fois, après accord.
+      if (!window.__nvxMetricool) {
+        window.__nvxMetricool = true;
+        const s = document.createElement("script");
+        s.src = "https://tracker.metricool.com/resources/be.js";
+        s.async = true;
+        s.onload = () => { try { window.beTracker && window.beTracker.t({ hash: "9fb6e4793f512412a10b9cf2152ea54d" }); } catch (e) {} };
+        document.head.appendChild(s);
+      }
     }
     if (consent && consent.marketing) {
       // ICI : coller les pixels publicitaires (Meta Pixel, Google Ads)

@@ -110,6 +110,11 @@ export default async function handler(req, res) {
   let order;
   try { order = computeOrder(body.items, body.zone); }
   catch (e) { return res.status(400).json({ error: e.message }); }
+  {
+    const { checkStock } = await import("./stock.mjs");
+    const short = await checkStock(order.lines, FR ? "FR" : "EN").catch(() => null);
+    if (short) return res.status(409).json({ error: short });
+  }
 
   const names = {};
   (Array.isArray(body.items) ? body.items : []).forEach((it) => { if (it && it.id) names[it.id + "|" + it.size] = clean(it.name, 60); });

@@ -12,6 +12,7 @@
    ⚠ Ne jamais écrire la clé dans ce fichier : il est public sur GitHub.
 ═══════════════════════════════════════════════════════════ */
 import { computeOrder } from "./checkout.mjs";
+import { checkStock, encodeItems } from "./stock.mjs";
 
 const clean = (v, max) => String(v == null ? "" : v).replace(/[\r\n\t]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 const EMAIL_RE = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/;
@@ -41,6 +42,9 @@ export default async function handler(req, res) {
 
   const lang = ["EN", "DE", "NL"].includes(body.lang) ? body.lang : "FR";
   const FR = lang === "FR";
+  // Stock du lot analysé : on refuse de vendre plus de flacons qu'il n'en reste.
+  const short = await checkStock(order.lines, FR ? "FR" : "EN").catch(() => null);
+  if (short) return res.status(409).json({ error: short });
   const names = {};
   (Array.isArray(body.items) ? body.items : []).forEach((it) => { if (it && it.id) names[it.id + "|" + it.size] = clean(it.name, 60); });
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -77,6 +81,7 @@ export default async function handler(req, res) {
   const meta = {
     orderId, zone: String(body.zone), name: cu.firstName + " " + cu.lastName, email: cu.email,
     address: cu.address, postcode: cu.postcode, city: cu.city, country: cu.country, phone: cu.phone,
+    items: encodeItems(order.lines),     // lu par /api/stock pour décompter le stock
     summary: order.lines.map((l) => (names[l.id + "|" + l.size] || l.id) + " " + l.size + " x" + l.qty).join(", ").slice(0, 490),
   };
   for (const [k, v] of Object.entries(meta)) {

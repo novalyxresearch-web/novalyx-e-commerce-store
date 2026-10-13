@@ -345,6 +345,11 @@ export default async function handler(req, res) {
   if (!cu.firstName || !cu.lastName || !cu.address || !cu.postcode || !cu.city) return res.status(400).json({ error: "adresse incomplète" });
   if (!/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/.test(cu.email)) return res.status(400).json({ error: "email invalide" });
 
+  // Stock du lot analysé : on refuse de vendre plus de flacons qu'il n'en reste.
+  const { checkStock } = await import("./stock.mjs");
+  const short = await checkStock(order.lines, lang).catch(() => null);
+  if (short) return res.status(409).json({ error: short });
+
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
   const site = (SITE_URL || "https://novalyxresearch.com").replace(/\/+$/, "");
   const desc = order.lines.map((l) => l.id + " " + l.size + " x" + l.qty).join(", ");

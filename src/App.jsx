@@ -1732,13 +1732,15 @@ const AVAILABLE = ["retatrutide", "bac-water"];
 const isAvail = (p) => AVAILABLE.includes(p.id);
 /* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
 const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
-const inStock = (p, size) => isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size));
+const inStock = (p, size) => isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
 /* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
 const BTC_ONLY_SIZES = { retatrutide: ["10mg", "20mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
    en stock (AVAILABLE) = expédié sous 24 h ; le reste = sur commande (~3 semaines). */
 const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
+/* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock
+   (stock de départ − ventes payées par carte et Bitcoin) et se met à jour tout seul. */
 const STOCK_LEFT = { retatrutide: 17 };
 /* Minimum de flacons pour un produit SUR COMMANDE : la commande rembourse au moins les 2 boîtes
    achetées au fournisseur (+ part de livraison). Le test Janoshik reste avancé par Novalyx.
@@ -2746,7 +2748,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               {canBuy(p) && <div className="qty">
                 <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>
                 <span>{qty}</span>
-                <button onClick={() => setQty(qty + 1)} aria-label="+">+</button>
+                <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[p.id] / ((v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
               </div>}
               {canBuy(p) ? (
                 <>
@@ -2837,7 +2839,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const grand = Math.round((total + ship) * 100) / 100;
   const euZone = zone === "FR" || zone === "EU";
   const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - total) : 0;
-  const allStock = cart.every(i => AVAILABLE.includes(i.id) && (!STOCK_SIZES[i.id] || STOCK_SIZES[i.id].includes(i.size)));
+  const allStock = cart.every(i => inStock({ id: i.id }, i.size));
   const tfReady = !!(tf.firstName.trim() && tf.lastName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tf.email.trim()) && tf.address.trim() && tf.postcode.trim() && tf.city.trim());
   const payBtc = async () => {
     if (!ready || !tfReady) return;
@@ -2846,6 +2848,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
       const d = await r.json().catch(() => ({}));
+      if (r.status === 409 && d.error) { setBtcErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
       window.location.href = d.url;
     } catch (e) {
@@ -2861,6 +2864,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website }) });
       const d = await r.json().catch(() => ({}));
+      if (r.status === 409 && d.error) { setCardErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "card");
       window.location.href = d.url;
     } catch (e) {
@@ -2877,6 +2881,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
       const r = await fetch("/api/order", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer, website: tf.website }) });
       const d = await r.json().catch(() => ({}));
+      if (r.status === 409 && d.error) { setTfErr(d.error); return; }
       if (!r.ok || !d.orderId) throw new Error(d.error || "order");
       setTfDone(d);
     } catch (err) {
@@ -4602,6 +4607,12 @@ const FAVICON = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://w
    ROOT
 ═══════════════════════════════════════════════════════════ */
 export default function App() {
+  const [, setStockTick] = useState(0);
+  useEffect(() => {
+    fetch("/api/stock").then(r => r.ok ? r.json() : null).then(d => {
+      if (d && d.left) { Object.assign(STOCK_LEFT, d.left); setStockTick(t => t + 1); }
+    }).catch(() => {});
+  }, []);
   const [ageOk, setAgeOk] = useState(false);
   const [gateOrg, setGateOrg] = useState("");
   const [gateAge, setGateAge] = useState(false);

@@ -256,6 +256,31 @@ const PRODUCT_FR = {
 
 const tp = (lang, txt) => (lang === "FR" && txt ? (PRODUCT_FR[txt] || txt) : txt);
 
+/* Noms des produits en français (affichés quand le site est en français). Les autres langues gardent le nom
+   international ; l'allemand et le néerlandais sont traduits par les dictionnaires XL_DE / XL_NL. */
+const NAME_FR = {
+  ghk: "GHK-Cuivre",
+  glutathione: "Glutathion",
+  tesamorelin: "Tésamoréline",
+  ipamorelin: "Ipamoréline",
+  sermorelin: "Sermoréline",
+  hexarelin: "Hexaréline",
+  cjc1295: "CJC-1295 (sans DAC)",
+  cjc1295dac: "CJC-1295 (avec DAC)",
+  epitalon: "Épitalon",
+  thymosinalpha1: "Thymosine alpha-1",
+  kisspeptin: "Kisspeptine-10",
+  cerebrolysin: "Cérébrolysine",
+  humanin: "Humanine",
+  hghfrag176191: "Fragment HGH 176-191",
+  matrixyl: "Matrixyl (palmitoyl pentapeptide-4)",
+  "bac-water": "Eau bactériostatique",
+  aceticwater: "Eau à l'acide acétique 0,6 %",
+};
+let UI_LANG = "FR";   // langue affichée, mise à jour à chaque rendu de <App>
+const pn = (p) => (p ? ((UI_LANG === "FR" && NAME_FR[p.id]) || p.name) : "");
+const pnId = (id, fallback) => { const p = PRODUCTS.find((x) => x.id === id); return p ? pn(p) : fallback; };
+
 const GLOBAL_FR = {
   "Explore Our Compounds": "Explorez Nos Composés",
   "VERIFIED BY INDEPENDENT EU LABORATORY": "VÉRIFIÉ PAR UN LABORATOIRE INDÉPENDANT UE",
@@ -2591,7 +2616,7 @@ const ProductPhoto = ({ p, size, h = 180, eager = false }) => {
   useEffect(() => { setMode("webp"); }, [src]);
   if (!src || mode === "vial") return <Vial name={p.name} size={size} tone={CAT_TONE[p.category]} h={h} />;
   const style = { width: h, height: h, objectFit: "cover", borderRadius: 14, display: "block" };
-  const alt = `${p.name} ${size || ""} — Novalyx Research`;
+  const alt = `${pn(p)} ${size || ""} — Novalyx Research`;
   if (mode === "jpg") return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" width={h} height={h} onError={() => setMode("vial")} style={style} />;
   return (
     <img src={webpFor(src, h > 240 ? 1200 : 480)} srcSet={`${webpFor(src, 480)} 480w, ${webpFor(src, 1200)} 1200w`} sizes={`${h}px`}
@@ -2605,7 +2630,7 @@ const PhotoZoom = ({ p, size, onClose, lang }) => {
   useEffect(() => { const k = (e) => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   return (
     <div className="zoom" role="dialog" aria-label={lang === "FR" ? "Photo agrandie" : "Enlarged photo"} onClick={onClose}>
-      <img src={jpg ? src : webpFor(src, 1200)} onError={() => setJpg(true)} alt={`${p.name} ${size || ""} — Novalyx Research`} onClick={(e) => e.stopPropagation()} />
+      <img src={jpg ? src : webpFor(src, 1200)} onError={() => setJpg(true)} alt={`${pn(p)} ${size || ""} — Novalyx Research`} onClick={(e) => e.stopPropagation()} />
       <button className="zoom-x" onClick={onClose} aria-label={lang === "FR" ? "Fermer" : "Close"}>✕</button>
     </div>
   );
@@ -2623,7 +2648,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
         {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Sur commande" : "Made to order") : (FR ? "Bientôt" : "Soon")}</span>}
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
-      <div className="pcard-name">{p.name}</div>
+      <div className="pcard-name">{pn(p)}</div>
       <div className="pcard-sizes">{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</div>
       <div className="pcard-foot">
         <div>
@@ -2695,7 +2720,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   }, [onClose]);
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()} role="dialog" aria-label={p.name}>
+      <div className="modal" onClick={e => e.stopPropagation()} role="dialog" aria-label={pn(p)}>
         <div className="modal-grid">
           <div className="modal-vial" style={{ flexDirection: "column", gap: 10 }}><button className="zoom-btn" onClick={() => setZoom(true)} aria-label={FR ? "Agrandir la photo" : "Enlarge the photo"}><ProductPhoto p={p} size={v.size} h={300} eager /><span className="zoom-hint" aria-hidden="true">⤢</span></button>{zoom && <PhotoZoom p={p} size={v.size} lang={lang} onClose={() => setZoom(false)} />}<div style={{ fontSize: 11.5, lineHeight: 1.45, color: "var(--mute)", textAlign: "center", maxWidth: 300 }}>{lang === "FR" ? "Visuel du produit. Le numéro de lot figure sur chaque flacon livré." : "Product visual. The batch number is printed on every vial shipped."}</div></div>
           <div className="modal-body">
@@ -2703,7 +2728,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               <span className="tag">{tp(lang, p.category)} · {tp(lang, p.tag)}</span>
               <button className="x" onClick={onClose} aria-label={FR ? "Fermer" : "Close"}>✕</button>
             </div>
-            <h2 className="h2" style={{ fontSize: 40, margin: "6px 0 14px" }}>{p.name}</h2>
+            <h2 className="h2" style={{ fontSize: 40, margin: "6px 0 14px" }}>{pn(p)}</h2>
             <p style={{ color: "var(--ink2)", fontSize: 14.5, lineHeight: 1.75 }}>{FR && p.desc_fr ? p.desc_fr : p.desc}</p>
 
             <div className="eyebrow" style={{ margin: "26px 0 10px" }}>{FR ? "Conditionnement" : "Size"}</div>
@@ -2788,7 +2813,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                   </div>
                 </>
               ) : (
-                <a className="btn btn-line" style={{ flex: 1 }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent((FR ? "Disponibilité " : "Availability ") + p.name + " " + v.size)}`}>
+                <a className="btn btn-line" style={{ flex: 1 }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent((FR ? "Disponibilité " : "Availability ") + pn(p) + " " + v.size)}`}>
                   {FR ? "Bientôt disponible — me prévenir" : "Coming soon — notify me"}
                 </a>
               )}
@@ -2858,7 +2883,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     FR ? "Je souhaite régler ma commande par virement bancaire." : "I would like to pay for my order by bank transfer.", "",
     (FR ? "Référence : " : "Reference: ") + bankRef, "",
     FR ? "Articles :" : "Items:",
-    ...cart.map(i => "- " + i.name + " " + i.size + " x" + i.qty + " : " + eur(i.price * i.qty)),
+    ...cart.map(i => "- " + pnId(i.id, i.name) + " " + i.size + " x" + i.qty + " : " + eur(i.price * i.qty)),
     (FR ? "Sous-total articles : " : "Items subtotal: ") + eur(total),
     (FR ? "Zone de livraison : " : "Delivery zone: ") + (FR ? zoneRow[1] : zoneRow[2]),
     shipEst !== null ? (FR ? "Livraison estimée : " : "Estimated shipping: ") + (shipEst === 0 ? (FR ? "offerte" : "free") : eur(shipEst)) : "", "",
@@ -2897,7 +2922,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("card"); setLoading(true); setCardErr(""); setBtcErr(""); setTfErr("");
     try {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setCardErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "card");
@@ -2914,7 +2939,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     try {
       const customer = { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) };
       const r = await fetch("/api/order", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: i.name })), zone, lang, customer, website: tf.website, promo }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setTfErr(d.error); return; }
       if (!r.ok || !d.orderId) throw new Error(d.error || "order");
@@ -2942,7 +2967,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
               {cart.map(i => (
                 <div key={i.lineId} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
                   <div>
-                    <div style={{ fontFamily: "var(--serif)", fontSize: 19 }}>{i.name}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 19 }}>{pnId(i.id, i.name)}</div>
                     <div className="mono muted" style={{ fontSize: 11.5 }}>{i.size} · {FR ? "Qté" : "Qty"} {i.qty} · {price(lineTotal(i.price, i.qty, i.size, i.id), cur, lang)}{qtyDiscount(i.qty, i.size, i.id, i.price) > 0.0001 && <span style={{ color: "var(--green)" }}> · −{Math.round(qtyDiscount(i.qty, i.size, i.id, i.price) * 100)} %</span>}</div>
                   </div>
                   <button className="x" style={{ width: 28, height: 28, fontSize: 16 }} onClick={() => onRemove(i.lineId)} aria-label={FR ? "Retirer" : "Remove"}>✕</button>
@@ -3334,7 +3359,7 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
   const norm = (t) => (t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
   const nq = norm(q);
   const base = filter === "All" ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)) : PRODUCTS.filter(p => p.category === filter);
-  const list = nq ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)).filter(p => norm(p.name + " " + p.id + " " + p.tag + " " + ((BOT_KB[p.id] || {}).aliases || []).join(" ") + " " + (((BOT_KB[p.id] || {})[FR ? "fr" : "en"] || [])[0] || "")).includes(nq)) : base;
+  const list = nq ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)).filter(p => norm(p.name + " " + pn(p) + " " + p.id + " " + p.tag + " " + ((BOT_KB[p.id] || {}).aliases || []).join(" ") + " " + (((BOT_KB[p.id] || {})[FR ? "fr" : "en"] || [])[0] || "")).includes(nq)) : base;
   return (
     <section className="sec" style={{ paddingTop: 56 }}>
       <div className="wrap">
@@ -3380,7 +3405,7 @@ const COAPage = ({ lang, openProduct }) => {
               <div className="coa-row" key={p.id}>
                 <div>
                   <div className="coa-label">{tp(lang, p.category)}</div>
-                  <button style={{ fontFamily: "var(--serif)", fontSize: 26, textAlign: "left" }} onClick={() => openProduct(p)}>{p.name} {c.size.replace("mg", " mg")}</button>
+                  <button style={{ fontFamily: "var(--serif)", fontSize: 26, textAlign: "left" }} onClick={() => openProduct(p)}>{pn(p)} {c.size.replace("mg", " mg")}</button>
                   <div className="mono muted" style={{ fontSize: 11.5 }}>{FR ? "Nom sur le rapport" : "Name on report"} : {c.sample}</div>
                 </div>
                 <div><div className="coa-label">{FR ? "Pureté HPLC" : "HPLC purity"}</div><div className="mono">{pct(c.purity, lang)}</div></div>
@@ -3402,7 +3427,7 @@ const COAPage = ({ lang, openProduct }) => {
           <div className="eyebrow" style={{ marginBottom: 18 }}>{FR ? "Analyse à venir" : "Analysis pending"} ({pending.length})</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {pending.map(p => (
-              <button key={p.id} className="fchip" onClick={() => openProduct(p)}>{p.name}</button>
+              <button key={p.id} className="fchip" onClick={() => openProduct(p)}>{pn(p)}</button>
             ))}
           </div>
           <p className="muted" style={{ fontSize: 13, marginTop: 16, maxWidth: 680, lineHeight: 1.7 }}>
@@ -3442,7 +3467,7 @@ const LearningPage = ({ lang, openProduct }) => {
             return (
               <div key={p.id} className="pcard" style={{ cursor: "default", display: "flex", flexDirection: "column" }}>
                 <span className="tag">{tp(lang, p.category)}</span>
-                <div className="pcard-name" style={{ margin: "14px 0 10px" }}>{p.name}</div>
+                <div className="pcard-name" style={{ margin: "14px 0 10px" }}>{pn(p)}</div>
                 <p style={{ fontSize: 14, color: "var(--ink2)", lineHeight: 1.7, margin: 0 }}>{nature}</p>
                 {status && <p style={{ fontSize: 12.5, color: "var(--mute)", lineHeight: 1.6, margin: "12px 0 0" }}><b>{FR ? "Statut : " : "Status: "}</b>{status}</p>}
                 {openProduct && <button className="link" style={{ marginTop: "auto", paddingTop: 16, alignSelf: "flex-start" }} onClick={() => openProduct(p)}>{FR ? "Voir le produit" : "View product"} →</button>}
@@ -4298,7 +4323,7 @@ const botFindProduct = (text) => {
   let best = null, bestLen = 0;
   for (const p of PRODUCTS) {
     const kb = BOT_KB[p.id];
-    const aliases = [p.name, p.id].concat(kb ? kb.aliases : []);
+    const aliases = [p.name, p.id, NAME_FR[p.id] || p.name].concat(kb ? kb.aliases : []);
     for (const a of aliases) {
       const n = botNorm(a);
       for (const v of [n, n.replace(/ /g, "")]) {
@@ -4323,12 +4348,12 @@ const botPriceLine = (p, cur, lang) => {
     : CONFIG.BTC_ON
       ? (lang === "FR" ? "Disponible sur commande : 3 à 4 semaines, lot analysé par Janoshik avant expédition, suivi à chaque étape." : "Available to order: 3–4 weeks, batch analysed by Janoshik before shipping, tracked at every step.")
       : (lang === "FR" ? "Pas encore disponible à l'achat en ligne (bientôt)." : "Not yet available to order online (coming soon).");
-  return p.name + "\n" + sizes + "\n\n" + avail;
+  return pn(p) + "\n" + sizes + "\n\n" + avail;
 };
 
 const botCatalogue = (lang) => {
   const lines = CATEGORY_ORDER.map((c) => {
-    const names = PRODUCTS.filter((p) => p.category === c).map((p) => p.name).join(", ");
+    const names = PRODUCTS.filter((p) => p.category === c).map((p) => pn(p)).join(", ");
     return names ? tp(lang, c) + " : " + names : null;
   }).filter(Boolean);
   return (lang === "FR" ? "Notre catalogue (" + PRODUCTS.length + " références) :\n\n" : "Our catalogue (" + PRODUCTS.length + " items):\n\n") + lines.join("\n");
@@ -4372,9 +4397,9 @@ const botAnswer = (text, ctx) => {
     if (qCoa) {
       const c = COAS[p.id];
       return (c
-        ? (FR ? p.name + " " + c.size + " : analyse Janoshik Analytical, pureté HPLC " + c.purity.replace(".", ",") + " %. Le rapport original et sa clé de vérification sont sur la page Analyses."
+        ? (FR ? pn(p) + " " + c.size + " : analyse Janoshik Analytical, pureté HPLC " + c.purity.replace(".", ",") + " %. Le rapport original et sa clé de vérification sont sur la page Analyses."
               : p.name + " " + c.size + ": Janoshik Analytical analysis, HPLC purity " + c.purity + "%. The original report and its verification key are on the Analyses page.")
-        : (FR ? "Le rapport d'analyse de " + p.name + " sera publié dès l'analyse du premier lot par Janoshik Analytical (laboratoire indépendant)."
+        : (FR ? "Le rapport d'analyse de " + pn(p) + " sera publié dès l'analyse du premier lot par Janoshik Analytical (laboratoire indépendant)."
               : "The analysis report for " + p.name + " will be published once the first batch has been analysed by Janoshik Analytical (independent laboratory)."))
         + "\n\n" + note;
     }
@@ -4432,7 +4457,7 @@ const botAnswer = (text, ctx) => {
       const stock = avail
         ? (FR ? "Sur Novalyx : disponible à l'achat." : "On Novalyx: available to order.")
         : (FR ? "Sur Novalyx : bientôt disponible (non achetable pour le moment)." : "On Novalyx: coming soon (not yet available to order).");
-      return p.name + "\n\n" + d[0] + "\n\n" + (FR ? "Statut (vérifié en " + BOT_DATE.FR + ") : " : "Status (checked " + BOT_DATE.EN + "): ") + d[1] + "\n\n" + stock + "\n\n" + note;
+      return pn(p) + "\n\n" + d[0] + "\n\n" + (FR ? "Statut (vérifié en " + BOT_DATE.FR + ") : " : "Status (checked " + BOT_DATE.EN + "): ") + d[1] + "\n\n" + stock + "\n\n" + note;
     }
   }
 
@@ -4754,6 +4779,7 @@ export default function App() {
   useEffect(() => { try { localStorage.setItem("novalyx_cart", JSON.stringify(cart)); } catch (e) {} }, [cart]);
   useEffect(() => { try { localStorage.setItem("novalyx_currency", cur); } catch (e) {} }, [cur]);
   useEffect(() => { try { localStorage.setItem("novalyx_lang", lang); } catch (e) {} ; document.documentElement.lang = lang.toLowerCase(); }, [lang]);
+  UI_LANG = lang;
   useDomTranslate(lang);
   useReveal(CONFIG.THEME === "modern");
   useFitWords([lang]);
@@ -5281,6 +5307,7 @@ const XL_DE = {
 "CJC-{#} (no DAC)": "CJC-{#} (ohne DAC)",
 "CJC-{#} (with DAC)": "CJC-{#} (mit DAC)",
 "GHK-Copper": "GHK-Kupfer",
+"Glutathione": "Glutathion",
 "HGH Fragment {#}-{#}": "HGH-Fragment {#}-{#}",
 "Lyophilised peptides supplied exclusively for in-vitro research. Published analysis reports are marked COA.": "Lyophilisierte Peptide ausschließlich für die In-vitro-Forschung. Veröffentlichte Analyseberichte sind mit COA gekennzeichnet.",
 "Made to order": "Auf Bestellung",
@@ -5896,6 +5923,9 @@ const XL_NL = {
 "GH-SECRETAGOGUE RESEARCH": "ONDERZOEK GH-SECRETAGOGEN",
 "GH-releasing and secretagogue research.": "Onderzoek naar GH-afgifte en secretagogen.",
 "GHK-Copper": "GHK-Koper",
+"Glutathione": "Glutathion",
+"Thymosin Alpha-{#}": "Thymosine alfa-{#}",
+"Kisspeptin-{#}": "Kisspeptine-{#}",
 "GHK-Cu (GHK-Cuivre)": "GHK-Cu (GHK-Koper)",
 "GHRH ANALOG RESEARCH": "ONDERZOEK GHRH-ANALOGEN",
 "GHRH RESEARCH": "GHRH-ONDERZOEK",

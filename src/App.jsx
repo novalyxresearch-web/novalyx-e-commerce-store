@@ -2741,41 +2741,11 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               ))}
             </div>
 
-            {coa && <CoaBlock coa={coa} lang={lang} compact />}
-            {coaOther && (
-              <p className="mono" style={{ fontSize: 11.5, color: "var(--green)", margin: "18px 0 0" }}>
-                {FR ? `Rapport d'analyse disponible pour le ${coaOther.size} — sélectionnez-le pour l'afficher.` : `Analysis report available for the ${coaOther.size} — select it to view.`}
-              </p>
-            )}
-
-            <div style={{ marginTop: coa ? 0 : 22 }}>
-              {p.commonSpecs.map(s => (
-                <div className="spec" key={s.label}><span>{tp(lang, s.label)}</span><span>{tp(lang, s.value)}</span></div>
-              ))}
-            </div>
-
             {CONFIG.BTC_ON && canBuy(p) && (
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
                 {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h" : "In stock · ships within 24 h") : (FR ? "Sur commande · 3 à 4 semaines · lot analysé par Janoshik avant expédition · suivi à chaque étape" : "Made to order · 3–4 weeks · batch analysed by Janoshik before shipping · tracked at every step")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
                 {inStock(p, v.size) && STOCK_LEFT[p.id] ? (FR ? ` · plus que ${STOCK_LEFT[p.id]} flacons du lot analysé` : ` · only ${STOCK_LEFT[p.id]} vials left from the analysed batch`) : ""}
-              </div>
-            )}
-            {showBac && (
-              <div className={`xsell${withBac ? " on" : ""}`} onClick={() => setWithBac(!withBac)} role="checkbox" aria-checked={withBac} tabIndex={0} onKeyDown={e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setWithBac(!withBac); } }}>
-                <input type="checkbox" checked={withBac} readOnly tabIndex={-1} aria-hidden="true" />
-                <ProductPhoto p={bac} size={bacV.size} h={52} />
-                <span className="xsell-txt">
-                  <span className="tag">{FR ? "Souvent acheté avec" : "Frequently bought with"}</span>
-                  <span>{FR ? "Eau bactériostatique 3 ml" : "Bacteriostatic water 3 ml"}</span>
-                  <span className="xsell-qty" onClick={e => e.stopPropagation()}>
-                    <button type="button" aria-label="-" onClick={() => { setBacQty(Math.max(1, bq - 1)); setWithBac(true); }}>−</button>
-                    <b>{bq}</b>
-                    <button type="button" aria-label="+" onClick={() => { setBacQty(bq + 1); setWithBac(true); }}>+</button>
-                    <span className="muted">{FR ? (bq > 1 ? "flacons" : "flacon") : (bq > 1 ? "vials" : "vial")}{qtyDiscount(bq, bacV.size, "bac-water", bacV.price) > 0.0001 ? (FR ? ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)} %` : ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)}%`) : ""}</span>
-                  </span>
-                </span>
-                <span className="xsell-price">+ {price(bacTotal, cur, lang)}</span>
               </div>
             )}
             {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && (
@@ -2796,6 +2766,36 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                 </div>
               </div>
             )}
+            {showBac && (
+              <div className={`xsell${withBac ? " on" : ""}`} onClick={() => setWithBac(!withBac)} role="checkbox" aria-checked={withBac} tabIndex={0} onKeyDown={e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setWithBac(!withBac); } }}>
+                <input type="checkbox" checked={withBac} readOnly tabIndex={-1} aria-hidden="true" />
+                <ProductPhoto p={bac} size={bacV.size} h={52} />
+                <span className="xsell-txt">
+                  <span className="tag">{FR ? "Souvent acheté avec" : "Frequently bought with"}</span>
+                  <span>{FR ? "Eau bactériostatique 3 ml" : "Bacteriostatic water 3 ml"}</span>
+                  <span className="xsell-qty" onClick={e => e.stopPropagation()}>
+                    <button type="button" aria-label="-" onClick={() => { setBacQty(Math.max(1, bq - 1)); setWithBac(true); }}>−</button>
+                    <b>{bq}</b>
+                    <button type="button" aria-label="+" onClick={() => { setBacQty(bq + 1); setWithBac(true); }}>+</button>
+                    <span className="muted">{FR ? (bq > 1 ? "flacons" : "flacon") : (bq > 1 ? "vials" : "vial")}{qtyDiscount(bq, bacV.size, "bac-water", bacV.price) > 0.0001 ? (FR ? ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)} %` : ` · −${Math.round(qtyDiscount(bq, bacV.size, "bac-water", bacV.price) * 100)}%`) : ""}</span>
+                  </span>
+                </span>
+                <span className="xsell-price">+ {price(bacTotal, cur, lang)}</span>
+              </div>
+            )}
+            {coa && <CoaBlock coa={coa} lang={lang} compact />}
+            {coaOther && (
+              <p className="mono" style={{ fontSize: 11.5, color: "var(--green)", margin: "18px 0 0" }}>
+                {FR ? `Rapport d'analyse disponible pour le ${coaOther.size} — sélectionnez-le pour l'afficher.` : `Analysis report available for the ${coaOther.size} — select it to view.`}
+              </p>
+            )}
+
+            <div style={{ marginTop: coa ? 0 : 22 }}>
+              {p.commonSpecs.map(s => (
+                <div className="spec" key={s.label}><span>{tp(lang, s.label)}</span><span>{tp(lang, s.value)}</span></div>
+              ))}
+            </div>
+
             <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 26, flexWrap: "wrap" }}>
               {canBuy(p) && <div className="qty">
                 <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>

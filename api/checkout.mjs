@@ -285,8 +285,9 @@ const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3
 const inStock = (id, size) => IN_STOCK.includes(id) && (!STOCK_SIZES[id] || STOCK_SIZES[id].includes(size));
 const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "retatrutide_10mg": 2, "retatrutide_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
 
-const ZONE_RATE = { FR: 6.9, EU: 9.9, CHUK: 14.9, USCA: 24.9, WORLD: 29.9 };
-const FREE_SHIP_MIN = 100;          // livraison offerte dès 100 € (France et UE)
+const ZONE_RATE = { FR: 7.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // Colissimo 2026 + emballage, payés par le client
+const BAC_ONLY_FR = 5.9;
+const FREE_SHIP_MIN = 0;            // 0 = pas de livraison offerte : frais toujours payés par le client
 const MAX_LINES = 30;
 const MAX_QTY = 20;
 
@@ -329,9 +330,8 @@ export function computeOrder(items, zone, promoCode) {
   let shipping = ZONE_RATE[zone];
   // Seuil de livraison offerte calculé AVANT le code promo : un code ne fait jamais perdre la livraison offerte.
   const grossSubtotal = round2(lines.reduce((s, l) => s + l.gross, 0));
-  if (eu && grossSubtotal >= FREE_SHIP_MIN) shipping = 0;
-  else if (eu && lines.some((l) => isPack(l.size))) shipping = 0;
-  else if (lines.every((l) => l.id === "bac-water")) shipping = eu ? 3.99 : ZONE_RATE[zone];
+  if (FREE_SHIP_MIN > 0 && eu && grossSubtotal >= FREE_SHIP_MIN) shipping = 0;
+  else if (lines.every((l) => l.id === "bac-water") && zone === "FR") shipping = BAC_ONLY_FR;
   return { lines, subtotal, shipping, total: round2(subtotal + shipping), promo };
 }
 

@@ -32,7 +32,8 @@ const SHIP_ZONES = [
   ["USCA", "États-Unis, Canada", "United States, Canada"],
   ["WORLD", "Australie, Nouvelle-Zélande, autres pays", "Australia, New Zealand, other countries"],
 ];
-const ZONE_RATE = { FR: 6.9, EU: 9.9, CHUK: 14.9, USCA: 24.9, WORLD: 29.9 };
+const ZONE_RATE = { FR: 7.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // tarifs Colissimo 2026 + emballage, payés par le client
+const BAC_ONLY_FR = 5.9;   // eau bactériostatique commandée seule, en France (Colissimo 250 g)
 const ZONE_LINKS = {
   "retatrutide_5mg": {
     FR: "https://buy.stripe.com/3cIcN55BV9Fgb1QgAA2Ry1c",
@@ -78,13 +79,8 @@ const ZONE_LINKS = {
   },
 };
 const linkFor = (item, zone) => ((ZONE_LINKS[item.id + "_" + item.size] || {})[zone]) || item.stripeLink || "";
-// Frais de livraison (indicatifs, identiques à ceux de Stripe) : packs offerts en France/UE, eau 3,99 € en France/UE
-const shipCost = (item, zone) => {
-  const eu = zone === "FR" || zone === "EU";
-  if (item.id === "bac-water") return eu ? 3.99 : ZONE_RATE[zone];
-  if (String(item.size).indexOf("Pack") >= 0) return eu ? 0 : ZONE_RATE[zone];
-  return ZONE_RATE[zone];
-};
+// Frais de livraison payés par le client, selon le pays (eau bactériostatique seule : tarif réduit en France)
+const shipCost = (item, zone) => (item.id === "bac-water" && zone === "FR") ? BAC_ONLY_FR : ZONE_RATE[zone];
 
 
 
@@ -1809,16 +1805,15 @@ const qtyDiscount = (q, size, id, unit) => {
   if (id && unit) return 1 - lineTotal(unit, q, size, id) / (unit * q);
   return baseDisc(q);
 };
-const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE
+const FREE_SHIP_MIN = 0;                           // 0 = pas de livraison offerte : les frais sont toujours payés par le client
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
 const PROMOS = { SHINY10: 0.10 };
 const promoRateOf = (code) => PROMOS[String(code || "").trim().toUpperCase()] || 0;
 const cartShipping = (cart, zone, subtotal) => {
   if (!cart.length) return 0;
   const eu = zone === "FR" || zone === "EU";
-  if (eu && subtotal >= FREE_SHIP_MIN) return 0;
-  if (eu && cart.some(i => isPackSize(i.size))) return 0;
-  if (cart.every(i => i.id === "bac-water")) return eu ? 3.99 : ZONE_RATE[zone];
+  if (FREE_SHIP_MIN > 0 && eu && subtotal >= FREE_SHIP_MIN) return 0;
+  if (cart.every(i => i.id === "bac-water") && zone === "FR") return BAC_ONLY_FR;
   return ZONE_RATE[zone];
 };
 const JANOSHIK_VERIFY = "https://janoshik.com/verify/";
@@ -2898,7 +2893,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const ship = cartShipping(cart, zone, gross); // seuil calculé avant le code promo
   const grand = Math.round((total + ship) * 100) / 100;
   const euZone = zone === "FR" || zone === "EU";
-  const freeLeft = euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - gross) : 0;
+  const freeLeft = FREE_SHIP_MIN > 0 && euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - gross) : 0;
   const allStock = cart.every(i => inStock({ id: i.id }, i.size));
   const tfReady = !!(tf.firstName.trim() && tf.lastName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tf.email.trim()) && tf.address.trim() && tf.postcode.trim() && tf.city.trim());
   const payBtc = async () => {
@@ -3810,11 +3805,11 @@ const LegalNoticePage = ({ lang }) => {
 const ShippingPage = ({ lang }) => {
   const FR = lang === "FR";
   const zones = [
-    ["France", "6,90 €", FR ? "2–3 jours max." : "2–3 days max."],
-    [FR ? "Union européenne" : "European Union", "9,90 €", FR ? "3–5 j. ouvrés" : "3–5 business days"],
-    [FR ? "Suisse, Royaume-Uni" : "Switzerland, UK", "14,90 €", FR ? "5–8 j. ouvrés" : "5–8 business days"],
-    [FR ? "États-Unis, Canada" : "USA, Canada", "24,90 €", FR ? "7–12 j. ouvrés" : "7–12 business days"],
-    [FR ? "Australie, Nouvelle-Zélande et autres pays" : "Australia, New Zealand and other countries", "29,90 €", FR ? "7–14 j. ouvrés (variable)" : "7–14 business days (variable)"],
+    ["France", "7,90 €", FR ? "2–3 jours max." : "2–3 days max."],
+    [FR ? "Union européenne" : "European Union", "15,90 €", FR ? "3–5 j. ouvrés" : "3–5 business days"],
+    [FR ? "Suisse, Royaume-Uni" : "Switzerland, UK", "19,90 €", FR ? "5–8 j. ouvrés" : "5–8 business days"],
+    [FR ? "États-Unis, Canada" : "USA, Canada", "37,90 €", FR ? "7–12 j. ouvrés" : "7–12 business days"],
+    [FR ? "Australie, Nouvelle-Zélande et autres pays" : "Australia, New Zealand and other countries", "37,90 €", FR ? "7–14 j. ouvrés (variable)" : "7–14 business days (variable)"],
   ];
   return (
     <Legal title={FR ? "Livraison & expédition" : "Shipping & delivery"}>
@@ -3828,7 +3823,7 @@ const ShippingPage = ({ lang }) => {
           </div>
         ))}
       </div>
-      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{CONFIG.BTC_ON ? (FR ? "Livraison offerte en France et dans l'Union europ\u00e9enne d\u00e8s 100 \u20ac d'achat. Eau bact\u00e9riostatique command\u00e9e seule : 3,99 \u20ac en France et dans l'UE. Nous n'exp\u00e9dions pas vers la Russie ni la Bi\u00e9lorussie." : "Free shipping in France and the European Union from \u20ac100 of purchases. Bacteriostatic water ordered on its own: \u20ac3.99 in France and the EU. We do not ship to Russia or Belarus.") : (FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus.")}</p>
+      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{CONFIG.BTC_ON ? (FR ? "Frais de livraison à la charge du client, selon le pays (Colissimo suivi). Eau bactériostatique commandée seule : 5,90 € en France. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Shipping costs are paid by the customer and depend on the country (tracked Colissimo). Bacteriostatic water ordered on its own: €5.90 in France. We do not ship to Russia or Belarus.") : (FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus.")}</p>
       <h3>{FR ? "Commandes hors Union européenne" : "Orders outside the European Union"}</h3>
       <p>{FR ? "Les envois hors UE se font aux risques de l'acheteur. Il lui appartient de vérifier que les produits peuvent être importés légalement dans son pays et de régler les éventuels droits et taxes. Novalyx Research n'agit pas en tant qu'importateur. Les colis saisis, refusés ou détruits par les autorités douanières hors UE ne sont pas remboursables." : "Shipments outside the EU are at the buyer's risk. The buyer must check that the products may be lawfully imported and pay any duties or taxes. Novalyx Research does not act as importer of record. Parcels seized, refused or destroyed by customs outside the EU are non-refundable."}</p>
       <h3>{FR ? "Déclaration d'usage" : "Use declaration"}</h3>
@@ -4417,8 +4412,8 @@ const botAnswer = (text, ctx) => {
       : "Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The GLP-3RT " + c.size + " report is published (HPLC purity " + c.purity + "%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.";
   }
   if (qShip) return FR
-    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 6,90 €, UE 9,90 €, Suisse/Royaume-Uni 14,90 €, États-Unis/Canada 24,90 €, Australie, Nouvelle-Zélande et autres pays 29,90 € (offerte en France et dans l'UE sur les Packs de GLP-3RT ; eau bactériostatique 3,99 € en France et dans l'UE). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
-    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €6.90, EU €9.90, Switzerland/UK €14.90, USA/Canada €24.90, Australia, New Zealand and other countries €29.90 (free in France and the EU on GLP-3RT Packs; bacteriostatic water €3.99 in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
+    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais à la charge du client, selon le pays : France 7,90 €, UE 15,90 €, Suisse/Royaume-Uni 19,90 €, États-Unis/Canada 37,90 €, Australie, Nouvelle-Zélande et autres pays 37,90 € (eau bactériostatique commandée seule : 5,90 € en France). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
+    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping is paid by the customer, by country: France €7.90, EU €15.90, Switzerland/UK €19.90, USA/Canada €37.90, Australia, New Zealand and other countries €37.90 (bacteriostatic water ordered on its own: €5.90 in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
   if (qPay && CONFIG.CARD_ON && CONFIG.BTC_ON && !CONFIG.TRANSFER_ON) return FR ? "Deux moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos données de carte ne transitent jamais par nos serveurs) ou Bitcoin (facture en euros valable 60 minutes). Une question : " + email + "." : "Two payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers) or Bitcoin (invoice in euros valid for 60 minutes). Any question: " + email + ".";
   if (qPay && (CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON)) return FR ? "Trois moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos donn\u00e9es de carte ne transitent jamais par nos serveurs), Bitcoin (facture en euros valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email). Une question : " + email + "." : "Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: " + email + ".";
   if (qPay) return FR
@@ -4915,7 +4910,7 @@ export default function App() {
               {(FR ? [
                 "Usage recherche uniquement — pas pour usage humain ou vétérinaire",
                 "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
-                "Livraison offerte dès 100 €",
+                "Livraison suivie Colissimo",
                 CONFIG.BTC_ON ? "Jusqu'à −20 % dès 2 flacons" : "Rapports d'analyse vérifiables",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Carte, Bitcoin ou virement" : "Carte bancaire ou Bitcoin") : "Paiement Bitcoin, facturé en euros") : "Paiement sécurisé",
                 "En stock : expédié sous 24 h",
@@ -4923,7 +4918,7 @@ export default function App() {
               ] : [
                 "Research use only — not for human or veterinary use",
                 "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
-                "Free shipping from €100",
+                "Tracked Colissimo shipping",
                 CONFIG.BTC_ON ? "Up to −20% from 2 vials" : "Verifiable analysis reports",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Card, Bitcoin or bank transfer" : "Card or Bitcoin") : "Bitcoin payment, billed in euros") : "Secure payment",
                 "In stock: ships within 24 h",
@@ -5083,6 +5078,8 @@ const XL_DE = {
 "For volume orders, recurring supply or a specific document request, write to us. Reply within one business day.": "Für Mengenbestellungen, regelmäßige Lieferungen oder eine bestimmte Dokumentenanfrage schreiben Sie uns. Antwort innerhalb eines Werktags.",
 "Four steps, nothing hidden.": "Vier Schritte, nichts verborgen.",
 "Free shipping from {#}€": "Kostenloser Versand ab {#}€",
+"Tracked Colissimo shipping": "Versand mit Sendungsverfolgung (Colissimo)",
+"Shipping costs are paid by the customer and depend on the country (tracked Colissimo). Bacteriostatic water ordered on its own: {#}€ in France. We do not ship to Russia or Belarus.": "Die Versandkosten trägt der Kunde, sie richten sich nach dem Land (Colissimo mit Sendungsverfolgung). Bakteriostatisches Wasser allein bestellt: {#}€ in Frankreich. Wir liefern nicht nach Russland oder Belarus.",
 "French company · Paris": "Französisches Unternehmen · Paris",
 "French · SIRET {#} {#} {#}": "Französisch · SIRET {#} {#} {#}",
 "From": "Ab",
@@ -5705,7 +5702,7 @@ const XL_DE = {
 "Novalyx assistant": "Novalyx-Assistent",
 "On Novalyx: available to order.": "Bei Novalyx: bestellbar.",
 "On Novalyx: coming soon (not yet available to order).": "Bei Novalyx: demnächst (noch nicht bestellbar).",
-"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (free in France and the EU on {N} Packs; bacteriostatic water {#}€ in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellungen werden innerhalb von {#} h nach Zahlungsbestätigung aus Paris versandt. Lieferung in maximal {#} bis {#} Tagen innerhalb Frankreichs; länger für die übrige Welt (siehe Seite Versand). Versand nach Land: Frankreich {#}€, EU {#}€, Schweiz/Vereinigtes Königreich {#}€, USA/Kanada {#}€, Australien, Neuseeland und andere Länder {#}€ (kostenlos in Frankreich und der EU für {N}-Packs; bakteriostatisches Wasser {#}€ in Frankreich und der EU). Beim Versand wird eine Sendungsnummer mitgeteilt. Außerhalb der Europäischen Union ist der Käufer für Zölle und die Einhaltung örtlicher Vorschriften verantwortlich.",
+"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping is paid by the customer, by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (bacteriostatic water ordered on its own: {#}€ in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellungen werden innerhalb von {#} h nach Zahlungsbestätigung aus Paris versandt. Lieferung in maximal {#} bis {#} Tagen innerhalb Frankreichs; länger für die übrige Welt (siehe Seite Versand). Die Versandkosten trägt der Kunde, je nach Land: Frankreich {#}€, EU {#}€, Schweiz/Vereinigtes Königreich {#}€, USA/Kanada {#}€, Australien, Neuseeland und andere Länder {#}€ (bakteriostatisches Wasser allein bestellt: {#}€ in Frankreich). Beim Versand wird eine Sendungsnummer mitgeteilt. Außerhalb der Europäischen Union ist der Käufer für Zölle und die Einhaltung örtlicher Vorschriften verantwortlich.",
 "Payment by card through Stripe (your banking data never touch our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received. Any question: contact@novalyxresearch.com.": "Zahlung per Karte über Stripe (Ihre Bankdaten berühren nie unsere Server) oder per Banküberweisung, auch bei kleinen Bestellungen: Wählen Sie „Per Banküberweisung bezahlen“ im Warenkorb. Die Bestellung wird nach Zahlungseingang versandt. Fragen: contact@novalyxresearch.com.",
 "What is {N}?": "Was ist {N}?",
 "Which product do you mean? Give its name (for example \"price of {N}\").": "Welches Produkt meinen Sie? Nennen Sie seinen Namen (zum Beispiel „Preis von {N}“).",
@@ -5908,6 +5905,8 @@ const XL_NL = {
 "Fragment {#}-{#} of human GHRH (sermorelin), which activates the GHRH receptor.": "Fragment {#}-{#} van menselijk GHRH (sermorelin), dat de GHRH-receptor activeert.",
 "France": "Frankrijk",
 "Free shipping from {#}€": "Gratis verzending vanaf {#}€",
+"Tracked Colissimo shipping": "Verzending met tracking (Colissimo)",
+"Shipping costs are paid by the customer and depend on the country (tracked Colissimo). Bacteriostatic water ordered on its own: {#}€ in France. We do not ship to Russia or Belarus.": "De verzendkosten zijn voor rekening van de klant en hangen af van het land (Colissimo met tracking). Bacteriostatisch water apart besteld: {#}€ in Frankrijk. Wij verzenden niet naar Rusland of Wit-Rusland.",
 "French company · Paris": "Frans bedrijf · Parijs",
 "French · SIRET {#} {#} {#}": "Frans · SIRET {#} {#} {#}",
 "Frequently asked questions": "Veelgestelde vragen",
@@ -6440,7 +6439,7 @@ const XL_NL = {
 "Novalyx research blend of two compounds: {N} ({#} mg) + {N} ({#} mg) in a single lyophilised vial. See the {N} and {N} entries for the nature of each component.": "Novalyx-onderzoeksmengsel van twee verbindingen: {N} ({#} mg) + {N} ({#} mg) in één gelyofiliseerde flacon. Zie de fiches van {N} en {N} voor de aard van elke component.",
 "Novalyx research blend of two compounds: {N} + {N}, in two sizes ({#} mg total: {#} mg + {#} mg; {#} mg total: {#} mg + {#} mg). See the {N} and {N} entries.": "Novalyx-onderzoeksmengsel van twee verbindingen: {N} + {N}, in twee formaten ({#} mg totaal: {#} mg + {#} mg; {#} mg totaal: {#} mg + {#} mg). Zie de fiches van {N} en {N}.",
 "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within {#} h of payment confirmation. Delivery within France typically takes {#}–{#} days; the rest of the EU {#}–{#} business days; international destinations {#}–{#} business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.": "Bestellingen worden onder gecontroleerde omstandigheden verwerkt, met batchtoewijzing per bestelling bij onze gecontroleerde laboratoriumpartners. Bestellingen worden binnen {#} u na betalingsbevestiging verzonden. Levering in Frankrijk duurt doorgaans {#}–{#} dagen; in de rest van de EU {#}–{#} werkdagen; internationale bestemmingen {#}–{#} werkdagen. Levertijden zijn schattingen, geen garanties. Het risico gaat bij verzending over op de koper.",
-"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (free in France and the EU on {N} Packs; bacteriostatic water {#}€ in France and the EU). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellingen worden binnen {#} u na betalingsbevestiging vanuit Parijs verzonden. Levering in maximaal {#} tot {#} dagen in Frankrijk; langer voor de rest van de wereld (zie de pagina Verzending). Verzending per land: Frankrijk {#}€, EU {#}€, Zwitserland/VK {#}€, VS/Canada {#}€, Australië, Nieuw-Zeeland en andere landen {#}€ (gratis in Frankrijk en de EU voor {N}-packs; bacteriostatisch water {#}€ in Frankrijk en de EU). Bij verzending ontvangt u een trackingnummer. Buiten de Europese Unie is de koper verantwoordelijk voor douanerechten en lokale naleving.",
+"Orders are shipped from Paris within {#} h of payment confirmation. Delivery in {#} to {#} days maximum within France; longer for the rest of the world (see the Shipping page). Shipping is paid by the customer, by country: France {#}€, EU {#}€, Switzerland/UK {#}€, USA/Canada {#}€, Australia, New Zealand and other countries {#}€ (bacteriostatic water ordered on its own: {#}€ in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.": "Bestellingen worden binnen {#} u na betalingsbevestiging vanuit Parijs verzonden. Levering in maximaal {#} tot {#} dagen in Frankrijk; langer voor de rest van de wereld (zie de pagina Verzending). De verzendkosten zijn voor rekening van de klant, per land: Frankrijk {#}€, EU {#}€, Zwitserland/VK {#}€, VS/Canada {#}€, Australië, Nieuw-Zeeland en andere landen {#}€ (bacteriostatisch water apart besteld: {#}€ in Frankrijk). Bij verzending ontvangt u een trackingnummer. Buiten de Europese Unie is de koper verantwoordelijk voor douanerechten en lokale naleving.",
 "Orders are shipped within {#} h of payment confirmation, then delivered in {#}–{#} days maximum within France. Allow {#}–{#} business days for the rest of the EU, and longer outside the EU depending on destination. A tracking number is sent on dispatch.": "Bestellingen worden binnen {#} u na betalingsbevestiging verzonden en daarna in maximaal {#}–{#} dagen in Frankrijk geleverd. Reken op {#}–{#} werkdagen voor de rest van de EU, en langer buiten de EU afhankelijk van de bestemming. Bij verzending ontvangt u een trackingnummer.",
 "PEGylated form of the MGF peptide (\"mechano growth factor\"), derived from an IGF-{#} splice variant, studied in muscle-cell models.": "Gepegyleerde vorm van het MGF-peptide („mechano growth factor”), afgeleid van een splicevariant van IGF-{#}, bestudeerd in modellen van spiercellen.",
 "Payment by card through Stripe (your banking data never touch our servers), or by bank transfer, even for a small order: choose \"Pay by bank transfer\" in the cart. The order is shipped once the transfer is received. Any question: contact@novalyxresearch.com.": "Betaling met een kaart via Stripe (uw bankgegevens komen nooit op onze servers), of per bankoverschrijving, ook voor een kleine bestelling: kies „Betalen per bankoverschrijving” in de winkelwagen. De bestelling wordt verzonden zodra de overschrijving is ontvangen. Vragen: contact@novalyxresearch.com.",

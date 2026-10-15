@@ -287,7 +287,7 @@ const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg"
 
 const ZONE_RATE = { FR: 7.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // Colissimo 2026 + emballage, payés par le client
 const BAC_ONLY_FR = 5.9;
-const FREE_SHIP_MIN = 0;            // 0 = pas de livraison offerte : frais toujours payés par le client
+const FREE_SHIP_MIN = 100;          // livraison offerte dès 100 € (France et UE) ; ailleurs, frais payés par le client
 const MAX_LINES = 30;
 const MAX_QTY = 20;
 

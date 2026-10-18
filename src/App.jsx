@@ -2740,7 +2740,6 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
                 {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h" : "In stock · ships within 24 h") : (FR ? "Sur commande · 3 à 4 semaines · lot analysé par Janoshik avant expédition · suivi à chaque étape" : "Made to order · 3–4 weeks · batch analysed by Janoshik before shipping · tracked at every step")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
-                {inStock(p, v.size) && STOCK_LEFT[p.id] ? (FR ? ` · plus que ${STOCK_LEFT[p.id]} flacons du lot analysé` : ` · only ${STOCK_LEFT[p.id]} vials left from the analysed batch`) : ""}
               </div>
             )}
             {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && (

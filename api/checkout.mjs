@@ -187,7 +187,7 @@ const PRICES = {
  },
  "novalyxformula06": {
   "10mg total (BPC5+TB5)": 64.99,
-  "20mg total (BPC10+TB10)": 109.99
+  "20mg total (BPC10+TB10)": 79.99
  },
  "novalyxformula07cagrisema": {
   "2.5mg+2.5mg": 64.99,

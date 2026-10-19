@@ -3190,7 +3190,6 @@ const HalloweenBanner = ({ lang, cur, openProduct, product }) => {
   );
 };
 const HW_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap');
 :root{--page:#090A14;--paper:#0D0F20;--surface:#13162E;--soft:#181C3A;--ink:#F3EFE8;--ink2:#C7CAE4;--mute:#9AA0C4;--line:#262B52;--line2:#1E2347;--green:#FFB43E;--green-soft:rgba(255,107,26,.13);--leaf:#FF6B1A;--rose:#FF6B1A;--rose-soft:rgba(255,107,26,.14);--rose-ink:#FFB43E}
 html,body{background:#090A14;color:#F3EFE8}
 .hero{background:radial-gradient(60% 50% at 85% 6%,rgba(255,107,26,.22),transparent 70%),radial-gradient(55% 45% at 4% 96%,rgba(91,69,224,.22),transparent 70%),linear-gradient(180deg,#0B0D1E,#090A14)}
@@ -3216,26 +3215,25 @@ html,body{background:#090A14;color:#F3EFE8}
 input,select,textarea{background:#181C3A !important;color:#F3EFE8 !important;border-color:#2c3260 !important}
 input::placeholder,textarea::placeholder{color:#7f86ad}
 .hs{box-shadow:0 14px 32px rgba(255,107,26,.25)}
-.display{font-family:'Syne',var(--serif);font-weight:800}
 .hw{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(70% 55% at 80% 18%,rgba(255,107,26,.34),transparent 70%),radial-gradient(60% 50% at 6% 100%,rgba(91,69,224,.3),transparent 70%),linear-gradient(180deg,#0d0f22,#090A14);padding:28px 0 30px}
 .hw-moon{position:absolute;top:-52px;right:-44px;width:132px;height:132px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe6b8,#f3b86a 55%,#b9742f);opacity:.8}
 .hw-bats{position:absolute;left:0;top:0;width:100%;height:46%;pointer-events:none;opacity:.7}
 .hw-in{position:relative;max-width:640px;margin:0 auto}
-.hw-kick{display:flex;gap:8px;align-items:center;font-family:'Space Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#FFB43E}
+.hw-kick{display:flex;gap:8px;align-items:center;font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#FFB43E}
 .hw-kick i{width:6px;height:6px;border-radius:50%;background:#FF6B1A;box-shadow:0 0 10px #FF6B1A;animation:hwp 1.8s ease-in-out infinite}
 @keyframes hwp{50%{opacity:.35}}
-.hw-h{font-family:'Syne',system-ui,sans-serif;font-weight:800;font-size:clamp(32px,9vw,48px);line-height:1;letter-spacing:-.02em;margin:12px 0 0;max-width:16ch;text-wrap:balance;color:#F3EFE8}
+.hw-h{font-family:var(--serif);font-weight:700;font-size:clamp(32px,9vw,48px);line-height:1;letter-spacing:-.02em;margin:12px 0 0;max-width:16ch;text-wrap:balance;color:#F3EFE8}
 .hw-h em{font-style:normal;color:#FF6B1A}
 .hw-sub{color:#B9BDDB;margin:12px 0 0;max-width:36ch;font-size:15px;line-height:1.5}
 .hw-row{display:flex;gap:16px;align-items:flex-end;margin-top:18px}
 .hw-photo{flex:0 0 auto;width:128px;border:1px solid #3a3f72;border-radius:14px;overflow:hidden;padding:0;background:#1a1e3f;box-shadow:0 0 34px rgba(255,107,26,.5);cursor:pointer;line-height:0}
 .hw-photo img{width:100%;height:auto;display:block}
 .hw-count{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
-.hw-lab,.hw-stock-top,.hw-tile small{font-family:'Space Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9AA0C4}
+.hw-lab,.hw-stock-top,.hw-tile small{font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9AA0C4}
 .hw-cd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .hw-cd div{border:1px solid #262B52;background:rgba(18,20,42,.75);border-radius:6px;padding:8px 0 6px;text-align:center;min-width:0}
-.hw-cd b{display:block;font-family:'Space Mono',ui-monospace,monospace;font-size:clamp(19px,5.6vw,28px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:#F3EFE8}
-.hw-cd span{font-family:'Space Mono',ui-monospace,monospace;font-size:9px;letter-spacing:.1em;color:#9AA0C4;text-transform:uppercase}
+.hw-cd b{display:block;font-family:var(--sans);font-size:clamp(19px,5.6vw,28px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:#F3EFE8}
+.hw-cd span{font-family:var(--sans);font-size:9px;letter-spacing:.1em;color:#9AA0C4;text-transform:uppercase}
 .hw-stock{margin-top:18px}
 .hw-stock-top{display:flex;justify-content:space-between}
 .hw-stock-top b{color:#FFB43E}
@@ -3244,14 +3242,14 @@ input::placeholder,textarea::placeholder{color:#7f86ad}
 .hw-tiles{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .hw-tile{border:1px solid #262B52;border-radius:6px;padding:10px 8px;background:rgba(18,20,42,.7);min-width:0}
 .hw-tile s{display:block;color:#9AA0C4;font-size:12px;margin-top:6px}
-.hw-tile b{display:block;font-family:'Syne',system-ui,sans-serif;font-size:clamp(16px,4.8vw,21px);line-height:1.1;color:#F3EFE8}
+.hw-tile b{display:block;font-family:var(--serif);font-size:clamp(16px,4.8vw,21px);line-height:1.1;color:#F3EFE8}
 .hw-tile.best{border-color:#FF6B1A;box-shadow:0 0 0 1px #FF6B1A inset}
 .hw-tile.best small{color:#FFB43E}
 .hw-cta{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 .hw-cta .btn{flex:1 1 190px;min-height:48px}
-.hw-code{flex:1 1 150px;min-height:48px;font-family:'Space Mono',ui-monospace,monospace;font-weight:700;letter-spacing:.1em;border:1px dashed #FFB43E;background:transparent;color:#FFB43E;border-radius:12px;font-size:14px;cursor:pointer}
+.hw-code{flex:1 1 150px;min-height:48px;font-family:var(--sans);font-weight:700;letter-spacing:.1em;border:1px dashed #FFB43E;background:transparent;color:#FFB43E;border-radius:12px;font-size:14px;cursor:pointer}
 .hw-how{margin:12px 0 0;font-size:12.5px;color:#9AA0C4}
-.hw-legal{margin:14px 0 0;padding-top:12px;border-top:1px solid #262B52;font-family:'Space Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9AA0C4;text-align:center}
+.hw-legal{margin:14px 0 0;padding-top:12px;border-top:1px solid #262B52;font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9AA0C4;text-align:center}
 @media (max-width:380px){.hw-row{flex-direction:column;align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){.hw-kick i{animation:none}}
 `;

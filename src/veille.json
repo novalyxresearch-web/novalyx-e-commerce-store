@@ -1,4 +1,197 @@
 {
-  "updated": "",
-  "entries": []
+  "updated": "2026-10-19",
+  "entries": [
+    {
+      "id": "2026-09-29-triumph2",
+      "date": "2026-09-29",
+      "products": [
+        "retatrutide",
+        "novalyxformula09glp3rtcagri"
+      ],
+      "sources": [
+        {
+          "name": "The Lancet – TRIUMPH-2",
+          "url": "https://doi.org/10.1016/S0140-6736(26)01861-1"
+        },
+        {
+          "name": "The Lancet – commentaire",
+          "url": "https://doi.org/10.1016/S0140-6736(26)01987-2"
+        }
+      ],
+      "title": {
+        "fr": "Retatrutide : publication de l'essai de phase 3 TRIUMPH-2 dans The Lancet",
+        "en": "Retatrutide: phase 3 trial TRIUMPH-2 published in The Lancet",
+        "de": "Retatrutid: Phase-3-Studie TRIUMPH-2 in The Lancet veröffentlicht",
+        "nl": "Retatrutide: fase 3-studie TRIUMPH-2 gepubliceerd in The Lancet"
+      },
+      "summary": {
+        "fr": "L'essai randomisé, en double aveugle et contrôlé par placebo, a inclus 1 152 adultes présentant une obésité et un diabète de type 2, répartis dans 92 centres de huit pays. Il évalue l'efficacité et la sécurité du retatrutide, agoniste des récepteurs GIP, GLP-1 et du glucagon. Les événements indésirables les plus fréquents étaient digestifs. Un commentaire éditorial du Pr Jens Juul Holst est paru dans le même numéro. L'étude est financée par le fabricant, Eli Lilly.",
+        "en": "The randomised, double-blind, placebo-controlled trial enrolled 1,152 adults with obesity and type 2 diabetes across 92 centres in eight countries, assessing the efficacy and safety of retatrutide, a GIP, GLP-1 and glucagon receptor agonist. The most frequent adverse events were gastrointestinal. An editorial commentary by Prof. Jens Juul Holst appeared in the same issue. The study was funded by the manufacturer, Eli Lilly.",
+        "de": "Die randomisierte, doppelblinde, placebokontrollierte Studie schloss 1.152 Erwachsene mit Adipositas und Typ-2-Diabetes an 92 Zentren in acht Ländern ein und untersucht Wirksamkeit und Sicherheit von Retatrutid, einem Agonisten der GIP-, GLP-1- und Glukagon-Rezeptoren. Die häufigsten unerwünschten Ereignisse betrafen den Magen-Darm-Trakt. Im selben Heft erschien ein Kommentar von Prof. Jens Juul Holst. Die Studie wurde vom Hersteller Eli Lilly finanziert.",
+        "nl": "De gerandomiseerde, dubbelblinde, placebogecontroleerde studie includeerde 1.152 volwassenen met obesitas en type 2-diabetes in 92 centra in acht landen en onderzoekt de werkzaamheid en veiligheid van retatrutide, een agonist van de GIP-, GLP-1- en glucagonreceptoren. De meest voorkomende bijwerkingen waren maag-darmklachten. In dezelfde uitgave verscheen een commentaar van prof. Jens Juul Holst. De studie werd gefinancierd door de fabrikant, Eli Lilly."
+      }
+    },
+    {
+      "id": "2026-09-15-cagri-reta-rats",
+      "date": "2026-09-15",
+      "products": [
+        "cagrilintide",
+        "retatrutide",
+        "novalyxformula09glp3rtcagri"
+      ],
+      "sources": [
+        {
+          "name": "Nature Metabolism",
+          "url": "https://doi.org/10.1038/s42255-026-01603-y"
+        }
+      ],
+      "title": {
+        "fr": "Cagrilintide + retatrutide : une étude préclinique chez le rat dans Nature Metabolism",
+        "en": "Cagrilintide + retatrutide: a preclinical rat study in Nature Metabolism",
+        "de": "Cagrilintid + Retatrutid: präklinische Rattenstudie in Nature Metabolism",
+        "nl": "Cagrilintide + retatrutide: preklinische studie bij ratten in Nature Metabolism"
+      },
+      "summary": {
+        "fr": "Des chercheurs de l'Université de Copenhague ont comparé, chez des rats mâles rendus obèses par le régime, l'association de cagrilintide et de retatrutide à chaque molécule seule et à des associations avec le sémaglutide ou le tirzépatide. Les analyses protéomiques plasmatiques et transcriptomiques cérébrales décrivent les voies impliquées. Résultats précliniques uniquement, non transposables à l'humain.",
+        "en": "Researchers at the University of Copenhagen compared the combination of cagrilintide and retatrutide with each molecule alone and with combinations including semaglutide or tirzepatide in diet-induced obese male rats. Plasma proteomic and brain transcriptomic profiling describe the pathways involved. Preclinical results only, not transferable to humans.",
+        "de": "Forschende der Universität Kopenhagen verglichen bei männlichen, durch Diät adipösen Ratten die Kombination aus Cagrilintid und Retatrutid mit den Einzelsubstanzen sowie mit Kombinationen mit Semaglutid oder Tirzepatid. Plasma-Proteomik und Transkriptomik des Gehirns beschreiben die beteiligten Signalwege. Nur präklinische Ergebnisse, nicht auf den Menschen übertragbar.",
+        "nl": "Onderzoekers van de Universiteit van Kopenhagen vergeleken bij mannelijke, door dieet obese ratten de combinatie van cagrilintide en retatrutide met elk afzonderlijk middel en met combinaties met semaglutide of tirzepatide. Proteomics van plasma en transcriptomics van de hersenen beschrijven de betrokken routes. Alleen preklinische resultaten, niet overdraagbaar op mensen."
+      }
+    },
+    {
+      "id": "2026-10-06-redefine3",
+      "date": "2026-10-06",
+      "products": [
+        "cagrilintide",
+        "semaglutide",
+        "novalyxformula07cagrisema"
+      ],
+      "sources": [
+        {
+          "name": "American Heart Journal",
+          "url": "https://doi.org/10.1016/j.ahj.2026.107626"
+        }
+      ],
+      "title": {
+        "fr": "CagriSema : conception et caractéristiques initiales de l'essai cardiovasculaire REDEFINE 3",
+        "en": "CagriSema: design and baseline characteristics of the REDEFINE 3 cardiovascular trial",
+        "de": "CagriSema: Design und Ausgangsmerkmale der kardiovaskulären Studie REDEFINE 3",
+        "nl": "CagriSema: opzet en uitgangskenmerken van de cardiovasculaire studie REDEFINE 3"
+      },
+      "summary": {
+        "fr": "L'article décrit le protocole de REDEFINE 3, essai randomisé en double aveugle contre placebo portant sur la sécurité et les effets cardiovasculaires de l'association cagrilintide-sémaglutide. 7 076 adultes atteints d'une maladie cardiovasculaire établie ont été randomisés dans 575 centres de 24 pays ; l'âge moyen est de 66 ans. Aucun résultat d'efficacité n'est encore publié.",
+        "en": "The article describes the protocol of REDEFINE 3, a randomised, double-blind, placebo-controlled trial of the cardiovascular safety and outcomes of the cagrilintide-semaglutide combination. 7,076 adults with established cardiovascular disease were randomised at 575 sites in 24 countries; mean age is 66 years. No efficacy results have been published yet.",
+        "de": "Der Artikel beschreibt das Protokoll von REDEFINE 3, einer randomisierten, doppelblinden, placebokontrollierten Studie zur kardiovaskulären Sicherheit und zu Ergebnissen der Kombination aus Cagrilintid und Semaglutid. 7.076 Erwachsene mit bestehender Herz-Kreislauf-Erkrankung wurden an 575 Zentren in 24 Ländern randomisiert; das Durchschnittsalter beträgt 66 Jahre. Ergebnisse zur Wirksamkeit liegen noch nicht vor.",
+        "nl": "Het artikel beschrijft het protocol van REDEFINE 3, een gerandomiseerde, dubbelblinde, placebogecontroleerde studie naar de cardiovasculaire veiligheid en uitkomsten van de combinatie cagrilintide-semaglutide. 7.076 volwassenen met bestaande hart- en vaatziekte zijn gerandomiseerd in 575 centra in 24 landen; de gemiddelde leeftijd is 66 jaar. Er zijn nog geen werkzaamheidsresultaten gepubliceerd."
+      }
+    },
+    {
+      "id": "2026-10-02-cagrisema-meta",
+      "date": "2026-10-02",
+      "products": [
+        "cagrilintide",
+        "semaglutide",
+        "novalyxformula07cagrisema"
+      ],
+      "sources": [
+        {
+          "name": "Frontiers in Endocrinology",
+          "url": "https://doi.org/10.3389/fendo.2026.1903335"
+        }
+      ],
+      "title": {
+        "fr": "CagriSema contre sémaglutide : méta-analyse de cinq essais randomisés",
+        "en": "CagriSema versus semaglutide: meta-analysis of five randomised trials",
+        "de": "CagriSema versus Semaglutid: Metaanalyse von fünf randomisierten Studien",
+        "nl": "CagriSema versus semaglutide: meta-analyse van vijf gerandomiseerde studies"
+      },
+      "summary": {
+        "fr": "Cette revue systématique (PRISMA 2020) regroupe cinq essais et 4 746 participants. Les auteurs concluent à des données insuffisantes pour comparer les événements indésirables graves entre les deux traitements, et à des incertitudes sur la durabilité, les résultats cardiovasculaires et la composition corporelle. Les réactions au site d'injection étaient plus fréquentes avec l'association.",
+        "en": "This PRISMA 2020 systematic review pools five trials and 4,746 participants. The authors conclude the evidence is insufficient to compare serious adverse events between the two treatments, and that durability, cardiovascular outcomes and body composition remain undetermined. Injection-site reactions were more frequent with the combination.",
+        "de": "Dieses systematische Review (PRISMA 2020) fasst fünf Studien mit 4.746 Teilnehmenden zusammen. Die Autoren halten die Evidenz für unzureichend, um schwere unerwünschte Ereignisse zwischen den Behandlungen zu vergleichen; Dauerhaftigkeit, kardiovaskuläre Ergebnisse und Körperzusammensetzung bleiben offen. Reaktionen an der Injektionsstelle traten unter der Kombination häufiger auf.",
+        "nl": "Deze systematische review (PRISMA 2020) bundelt vijf studies met 4.746 deelnemers. De auteurs stellen dat het bewijs onvoldoende is om ernstige bijwerkingen tussen beide behandelingen te vergelijken en dat duurzaamheid, cardiovasculaire uitkomsten en lichaamssamenstelling onduidelijk blijven. Reacties op de injectieplaats kwamen vaker voor bij de combinatie."
+      }
+    },
+    {
+      "id": "2026-10-15-reta-kidney",
+      "date": "2026-10-15",
+      "products": [
+        "retatrutide"
+      ],
+      "sources": [
+        {
+          "name": "Journal of Molecular Histology",
+          "url": "https://doi.org/10.1007/s10735-026-11013-9"
+        }
+      ],
+      "title": {
+        "fr": "Retatrutide chez le rat diabétique : inflammation rénale et expression de HIF-1α",
+        "en": "Retatrutide in diabetic rats: renal inflammation and HIF-1α expression",
+        "de": "Retatrutid bei diabetischen Ratten: renale Entzündung und HIF-1α-Expression",
+        "nl": "Retatrutide bij diabetische ratten: nierontsteking en HIF-1α-expressie"
+      },
+      "summary": {
+        "fr": "Une équipe turque a étudié, sur un modèle de diabète induit par la streptozotocine, les cytokines inflammatoires rénales, l'expression de HIF-1α et les lésions histologiques. L'expression de HIF-1α était plus faible chez les animaux traités, sans protection histologique statistiquement confirmée. Les auteurs soulignent les limites du modèle aigu et appellent à des études à plus long terme.",
+        "en": "A Turkish team studied renal inflammatory cytokines, HIF-1α expression and histological injury in a streptozotocin-induced diabetes model. HIF-1α expression was lower in treated animals, without statistically confirmed histological protection. The authors stress the limits of the acute model and call for longer-term studies.",
+        "de": "Ein türkisches Team untersuchte in einem Streptozotocin-Diabetesmodell renale Entzündungszytokine, die HIF-1α-Expression und histologische Schäden. Die HIF-1α-Expression war bei behandelten Tieren niedriger, ohne statistisch bestätigten histologischen Schutz. Die Autoren betonen die Grenzen des akuten Modells und fordern längerfristige Studien.",
+        "nl": "Een Turks team onderzocht in een door streptozotocine geïnduceerd diabetesmodel inflammatoire cytokines in de nier, HIF-1α-expressie en histologische schade. De HIF-1α-expressie was lager bij behandelde dieren, zonder statistisch bevestigde histologische bescherming. De auteurs benadrukken de beperkingen van het acute model en pleiten voor langere studies."
+      }
+    },
+    {
+      "id": "2026-10-14-hair-loss-review",
+      "date": "2026-10-14",
+      "products": [
+        "semaglutide",
+        "slupp322",
+        "retatrutide"
+      ],
+      "sources": [
+        {
+          "name": "Acta Diabetologica",
+          "url": "https://doi.org/10.1007/s00592-026-02812-3"
+        }
+      ],
+      "title": {
+        "fr": "Agonistes du GLP-1 et chute de cheveux : revue narrative",
+        "en": "GLP-1 receptor agonists and hair loss: a narrative review",
+        "de": "GLP-1-Rezeptoragonisten und Haarausfall: narratives Review",
+        "nl": "GLP-1-receptoragonisten en haaruitval: narratieve review"
+      },
+      "summary": {
+        "fr": "La revue rassemble essais cliniques, cohortes en vie réelle et données de pharmacovigilance sur le sémaglutide, le tirzépatide et le rétatrutide. Elle décrit un écart important de prévalence entre essais contrôlés et cohortes en vie réelle, et un effluvium télogène principalement lié à l'ampleur et à la vitesse de la perte de poids.",
+        "en": "The review gathers clinical trials, real-world cohorts and pharmacovigilance data on semaglutide, tirzepatide and retatrutide. It describes a large gap in prevalence between controlled trials and real-world cohorts, and a telogen effluvium mainly linked to the magnitude and speed of weight loss.",
+        "de": "Das Review bündelt klinische Studien, Real-World-Kohorten und Pharmakovigilanzdaten zu Semaglutid, Tirzepatid und Retatrutid. Es beschreibt eine große Prävalenzlücke zwischen kontrollierten Studien und Real-World-Kohorten sowie ein telogenes Effluvium, das vor allem mit Ausmaß und Geschwindigkeit des Gewichtsverlusts zusammenhängt.",
+        "nl": "De review bundelt klinische studies, real-world-cohorten en farmacovigilantiegegevens over semaglutide, tirzepatide en retatrutide. Ze beschrijft een groot verschil in prevalentie tussen gecontroleerde studies en real-world-cohorten en een telogeen effluvium dat vooral samenhangt met omvang en snelheid van het gewichtsverlies."
+      }
+    },
+    {
+      "id": "2026-10-07-bmj-case",
+      "date": "2026-10-07",
+      "products": [
+        "retatrutide"
+      ],
+      "sources": [
+        {
+          "name": "BMJ Case Reports",
+          "url": "https://doi.org/10.1136/bcr-2026-276106"
+        },
+        {
+          "name": "JAMA Network Open",
+          "url": "https://doi.org/10.1001/jamanetworkopen.2026.38929"
+        }
+      ],
+      "title": {
+        "fr": "Retatrutide non approuvé : un cas clinique et une analyse de signalements sur les réseaux sociaux",
+        "en": "Unapproved retatrutide: a case report and an analysis of social-media reports",
+        "de": "Nicht zugelassenes Retatrutid: ein Fallbericht und eine Analyse von Social-Media-Meldungen",
+        "nl": "Niet-goedgekeurd retatrutide: een casusbeschrijving en een analyse van meldingen op sociale media"
+      },
+      "summary": {
+        "fr": "Un cas publié dans BMJ Case Reports décrit des nausées réfractaires après des injections d'un produit non vérifié présenté comme contenant du retatrutide. Une étude de JAMA Network Open analyse les effets indésirables rapportés par des utilisateurs de réseaux sociaux. Rappel : nos produits sont destinés exclusivement à la recherche in vitro en laboratoire, et non à l'usage humain ou animal.",
+        "en": "A case in BMJ Case Reports describes refractory nausea after injections of an unverified product reported to contain retatrutide. A JAMA Network Open study analyses adverse effects self-reported by social-media users. Reminder: our products are intended exclusively for in-vitro laboratory research, not for human or animal use.",
+        "de": "Ein Fall in BMJ Case Reports beschreibt therapieresistente Übelkeit nach Injektionen eines ungeprüften Produkts, das angeblich Retatrutid enthielt. Eine Studie in JAMA Network Open analysiert selbst berichtete Nebenwirkungen von Social-Media-Nutzern. Hinweis: Unsere Produkte sind ausschließlich für die In-vitro-Laborforschung bestimmt, nicht für den Gebrauch bei Mensch oder Tier.",
+        "nl": "Een casus in BMJ Case Reports beschrijft hardnekkige misselijkheid na injecties met een niet-geverifieerd product dat naar verluidt retatrutide bevatte. Een studie in JAMA Network Open analyseert zelfgerapporteerde bijwerkingen van gebruikers van sociale media. Let op: onze producten zijn uitsluitend bedoeld voor in-vitro laboratoriumonderzoek, niet voor gebruik bij mens of dier."
+      }
+    }
+  ]
 }

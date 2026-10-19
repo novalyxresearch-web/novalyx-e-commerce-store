@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import VEILLE from "./veille.json";
 
 /* ═══════════════════════════════════════════════════════════
    🔧 CONFIG — swap these when you have your details
@@ -2434,6 +2435,7 @@ const NAV_ITEMS = [
   ["products", "Catalogue", "Catalogue"],
   ["coa", "Analyses", "Analyses"],
   ["learning", "Fiches composés", "Compound notes"],
+  ["veille", "Veille scientifique", "Scientific watch"],
   ["about", "Méthode", "Method"],
   ["faq", "FAQ", "FAQ"],
   ...(CONFIG.BTC_ON ? [["bitcoin", "Payer en Bitcoin", "Pay with Bitcoin"]] : []),
@@ -2526,6 +2528,7 @@ const Footer = ({ go, lang, onCookies }) => {
             <h4>Novalyx</h4>
             <button onClick={() => go("coa")}>{FR ? "Analyses" : "Analyses"}</button>
             <button onClick={() => go("learning")}>{FR ? "Fiches composés" : "Compound notes"}</button>
+            <button onClick={() => go("veille")}>{FR ? "Veille scientifique" : "Scientific watch"}</button>
             <button onClick={() => go("about")}>{FR ? "Méthode" : "Method"}</button>
             <button onClick={() => go("shipping")}>{FR ? "Livraison" : "Shipping"}</button>
             {CONFIG.BTC_ON && <button onClick={() => go("bitcoin")}>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"}</button>}
@@ -3313,7 +3316,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
 /* ─── ADRESSES DES PAGES ─────────────────────────────────────
    Une adresse par page (/payer-en-bitcoin, /catalogue…) et par produit (/produit/bpc157) :
    un lien copié ouvre directement la bonne page. Actif uniquement sur le vrai domaine (et en test local). */
-const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", about: "/methode", faq: "/faq",
+const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", veille: "/veille-scientifique", about: "/methode", faq: "/faq",
   ambassador: "/ambassadeurs", contact: "/contact", shipping: "/livraison", privacy: "/confidentialite", terms: "/cgv",
   disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin", legal: "/mentions-legales" };
 const ROUTING_OK = typeof window !== "undefined" && /(^|\.)novalyxresearch\.com$|\.vercel\.app$|^localhost$|^127\.0\.0\.1$/.test(window.location.hostname);
@@ -3414,6 +3417,102 @@ const COAPage = ({ lang, openProduct }) => {
             {FR ? "Le rapport de ces composés sera publié dès l'analyse du premier lot. Pour toute question, écrivez-nous." : "Reports for these compounds will be published once the first batch has been analysed. Questions are welcome."}
           </p>
         </div>
+      </div>
+    </section>
+  );
+};
+
+/* ─── VEILLE SCIENTIFIQUE ────────────────────────────────────
+   Les entrées viennent de src/veille.json (mis à jour chaque lundi par la tâche planifiée).
+   Chaque entrée : { id, date, products:[id produit], sources:[{name,url}], title:{fr,en,de,nl}, summary:{fr,en,de,nl} }.
+   Les quatre langues sont écrites dans le fichier : aucune traduction automatique à l'affichage. */
+const VEILLE_UI = {
+  FR: { eyebrow: "Veille", title: "Veille scientifique",
+    lead: "Les nouvelles de la recherche sur les molécules du catalogue, issues de sources indépendantes uniquement : PubMed, ClinicalTrials.gov, le registre européen des essais cliniques et les grandes revues médicales. Mise à jour chaque lundi s'il y a du nouveau ; rien n'est publié sinon.",
+    sources: "Sources suivies", all: "Toutes", updated: "Dernière mise à jour", src: "Source", product: "Voir le produit", more: "Voir plus d'actualités",
+    empty: "Aucune actualité publiée pour le moment. La veille paraît chaque lundi, uniquement lorsqu'une nouvelle étude ou un nouveau registre d'essai le justifie.",
+    none: "Aucune actualité pour cette molécule pour le moment.",
+    note: "Informations factuelles issues de publications tierces, résumées sans interprétation. Elles ne constituent ni un avis médical, ni une allégation de santé, ni une incitation à l'usage. Produits destinés exclusivement à la recherche en laboratoire." },
+  EN: { eyebrow: "Watch", title: "Scientific watch",
+    lead: "Research news on the molecules in our catalogue, drawn from independent sources only: PubMed, ClinicalTrials.gov, the EU clinical trials register and the major medical journals. Updated every Monday when there is something new; nothing is published otherwise.",
+    sources: "Sources followed", all: "All", updated: "Last updated", src: "Source", product: "View product", more: "Show more news",
+    empty: "No news published yet. The watch appears every Monday, only when a new study or trial registration justifies it.",
+    none: "No news for this molecule yet.",
+    note: "Factual information from third-party publications, summarised without interpretation. It is neither medical advice, nor a health claim, nor an encouragement to use. Products are intended exclusively for laboratory research." },
+  DE: { eyebrow: "Monitor", title: "Forschungsmonitor",
+    lead: "Neuigkeiten aus der Forschung zu den Molekülen unseres Katalogs, ausschließlich aus unabhängigen Quellen: PubMed, ClinicalTrials.gov, dem EU-Register für klinische Prüfungen und den großen medizinischen Fachzeitschriften. Jeden Montag aktualisiert, wenn es etwas Neues gibt; andernfalls wird nichts veröffentlicht.",
+    sources: "Beobachtete Quellen", all: "Alle", updated: "Zuletzt aktualisiert", src: "Quelle", product: "Produkt ansehen", more: "Weitere Meldungen anzeigen",
+    empty: "Noch keine Meldungen veröffentlicht. Der Monitor erscheint jeden Montag und nur dann, wenn eine neue Studie oder Studienregistrierung es rechtfertigt.",
+    none: "Noch keine Meldungen zu diesem Molekül.",
+    note: "Sachliche Informationen aus Veröffentlichungen Dritter, ohne Interpretation zusammengefasst. Sie sind weder ärztlicher Rat noch eine Gesundheitsaussage noch eine Aufforderung zur Anwendung. Die Produkte sind ausschließlich für die Laborforschung bestimmt." },
+  NL: { eyebrow: "Monitor", title: "Onderzoeksmonitor",
+    lead: "Onderzoeksnieuws over de moleculen in onze catalogus, uitsluitend uit onafhankelijke bronnen: PubMed, ClinicalTrials.gov, het EU-register voor klinische studies en de grote medische tijdschriften. Elke maandag bijgewerkt als er iets nieuws is; anders wordt er niets gepubliceerd.",
+    sources: "Gevolgde bronnen", all: "Alle", updated: "Laatst bijgewerkt", src: "Bron", product: "Product bekijken", more: "Meer nieuws tonen",
+    empty: "Nog geen nieuws gepubliceerd. De monitor verschijnt elke maandag en alleen als een nieuwe studie of studieregistratie dat rechtvaardigt.",
+    none: "Nog geen nieuws over deze molecuul.",
+    note: "Feitelijke informatie uit publicaties van derden, zonder interpretatie samengevat. Het is geen medisch advies, geen gezondheidsclaim en geen aansporing tot gebruik. De producten zijn uitsluitend bestemd voor laboratoriumonderzoek." },
+};
+const VEILLE_SOURCES = ["PubMed", "ClinicalTrials.gov", "EU CTR / CTIS", "NEJM · The Lancet · Nature Medicine"];
+const VeillePage = ({ lang, openProduct }) => {
+  const U = VEILLE_UI[lang] || VEILLE_UI.EN;
+  const key = lang.toLowerCase();
+  const entries = [...(VEILLE.entries || [])].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  const [filter, setFilter] = useState("all");
+  const [shown, setShown] = useState(12);
+  const ids = [...new Set(entries.flatMap(e => e.products || []))];
+  const chips = ids.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  const list = filter === "all" ? entries : entries.filter(e => (e.products || []).includes(filter));
+  const wrapText = { overflowWrap: "anywhere", hyphens: "auto", WebkitHyphens: "auto" };
+  return (
+    <section className="sec" style={{ paddingTop: 56 }} lang={key}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 14 }}>{U.eyebrow}</div>
+        <h1 className="display" style={{ fontSize: "clamp(34px,6vw,64px)", marginBottom: 18, ...wrapText }}>{U.title}</h1>
+        <p className="lead" style={wrapText}>{U.lead}</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "22px 0 6px", alignItems: "center" }}>
+          <span className="mono muted" style={{ fontSize: 11.5, letterSpacing: ".06em", textTransform: "uppercase" }}>{U.sources}</span>
+          {VEILLE_SOURCES.map(n => <span key={n} className="fchip" style={{ cursor: "default", ...wrapText }}>{n}</span>)}
+        </div>
+        {VEILLE.updated && <div className="mono muted" style={{ fontSize: 12, marginTop: 10 }}>{U.updated} : {fmtDate(VEILLE.updated, lang)}</div>}
+
+        {chips.length > 1 && (
+          <div className="filters" style={{ margin: "30px 0 8px" }}>
+            <button className={"fchip" + (filter === "all" ? " on" : "")} onClick={() => { setFilter("all"); setShown(12); }}>{U.all} ({entries.length})</button>
+            {chips.map(p => (
+              <button key={p.id} className={"fchip" + (filter === p.id ? " on" : "")} onClick={() => { setFilter(p.id); setShown(12); }}>
+                {pn(p)} ({entries.filter(e => (e.products || []).includes(p.id)).length})
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div style={{ marginTop: 28, display: "grid", gap: 16 }}>
+          {entries.length === 0 && <p className="muted" style={{ fontSize: 15, lineHeight: 1.7, maxWidth: 680, ...wrapText }}>{U.empty}</p>}
+          {entries.length > 0 && list.length === 0 && <p className="muted" style={{ fontSize: 15, ...wrapText }}>{U.none}</p>}
+          {list.slice(0, shown).map(e => {
+            const prods = (e.products || []).map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+            const title = (e.title && (e.title[key] || e.title.en)) || "";
+            const summary = (e.summary && (e.summary[key] || e.summary.en)) || "";
+            return (
+              <article key={e.id} style={{ border: "1px solid var(--line)", borderRadius: 14, padding: "20px 20px 18px", background: "#fff", minWidth: 0 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 10 }}>
+                  <span className="mono muted" style={{ fontSize: 12 }}>{fmtDate(e.date, lang)}</span>
+                  {prods.map(p => <span key={p.id} className="tag" style={{ ...wrapText }}>{pn(p)}</span>)}
+                </div>
+                <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(19px,4.6vw,24px)", lineHeight: 1.25, margin: "0 0 10px", fontWeight: 500, ...wrapText }}>{title}</h2>
+                <p style={{ fontSize: 14.5, lineHeight: 1.7, color: "var(--ink2)", margin: "0 0 14px", ...wrapText }}>{summary}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 18px", alignItems: "center" }}>
+                  {(e.sources || []).map(sc => (
+                    <a key={sc.url} className="link" href={sc.url} target="_blank" rel="noopener noreferrer" style={wrapText}>{U.src} : {sc.name} ↗</a>
+                  ))}
+                  {prods.length === 1 && openProduct && <button className="link" onClick={() => openProduct(prods[0])}>{U.product} →</button>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        {list.length > shown && <button className="btn btn-line" style={{ marginTop: 24 }} onClick={() => setShown(shown + 12)}>{U.more}</button>}
+        <p className="muted" style={{ fontSize: 12.5, lineHeight: 1.7, marginTop: 40, maxWidth: 720, ...wrapText }}>{U.note}</p>
       </div>
     </section>
   );
@@ -4625,6 +4724,8 @@ const getSeo = (page, lang) => {
             : ["Independent Janoshik analyses (COA) | Novalyx Research", "Janoshik Analytical reports published with their verification key: HPLC purity and measured content, verifiable at the source."],
     learning: FR ? ["Fiches composés | Novalyx Research", "Informations factuelles et scientifiques sur les composés du catalogue. Aucune allégation de santé. Usage recherche uniquement."]
                  : ["Compound notes | Novalyx Research", "Factual, scientific information on the compounds in the catalogue. No health claims. Research use only."],
+    veille: FR ? ["Veille scientifique | Novalyx Research", "Les nouvelles de la recherche sur les molécules du catalogue, issues de sources indépendantes : PubMed, ClinicalTrials.gov, registre européen des essais cliniques, grandes revues médicales."]
+               : ["Scientific watch | Novalyx Research", "Research news on the molecules in the catalogue, from independent sources: PubMed, ClinicalTrials.gov, the EU clinical trials register and major medical journals."],
     about: FR ? ["Notre méthode | Novalyx Research", "Analyses indépendantes, rapports vérifiables et traçabilité des lots : la méthode de Novalyx Research, entreprise française basée à Paris."]
               : ["Our method | Novalyx Research", "Independent analyses, verifiable reports and batch traceability: the method of Novalyx Research, a French company based in Paris."],
     bitcoin: FR ? ["Payer en Bitcoin | Novalyx Research", "Comment payer votre commande en Bitcoin en trois étapes : acheter du Bitcoin, passer commande, envoyer le paiement. Montant facturé en euros."]
@@ -4825,6 +4926,7 @@ export default function App() {
     products: <ProductsPage cur={cur} lang={lang} openProduct={openProduct} initialFilter={productFilter} setProductFilter={setProductFilter} />,
     coa: <COAPage lang={lang} openProduct={openProduct} />,
     learning: <LearningPage lang={lang} openProduct={openProduct} />,
+    veille: <VeillePage lang={lang} openProduct={openProduct} />,
     about: <AboutPage go={go} lang={lang} />,
     faq: <FAQPage lang={lang} go={go} />,
     ambassador: <AmbassadorPage lang={lang} />,
@@ -5745,6 +5847,7 @@ const XL_DE = {
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (geprüft im Oktober {#}): War in den USA zugelassen (Marke Geref) und wurde später aus kommerziellen Gründen zurückgezogen. Von der WADA verboten.",
 "Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen.",
 "{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} ist eine eigene Forschungsmischung aus {N} und {N} in einem einzigen lyophilisierten Fläschchen, in zwei Größen erhältlich. Entwickelt für Forschende, die kombinierte regenerative Signalwege untersuchen. Neue Chargen werden von Janoshik unabhängig analysiert.",
+"Scientific watch": "Forschungsmonitor",
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
@@ -6570,4 +6673,5 @@ const XL_NL = {
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
 "Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten.",
 "{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} is een eigen onderzoeksmengsel met {N} en {N} in één gelyofiliseerde flacon, verkrijgbaar in twee formaten. Samengesteld voor onderzoekers die gecombineerde regeneratieve signaalroutes bestuderen. Nieuwe batches worden onafhankelijk geanalyseerd door Janoshik.",
+"Scientific watch": "Onderzoeksmonitor",
 };

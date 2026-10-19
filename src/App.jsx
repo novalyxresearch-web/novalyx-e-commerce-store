@@ -1794,8 +1794,14 @@ const qtyDiscount = (q, size, id, unit) => {
 };
 const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE ; ailleurs, frais payés par le client
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
-const PROMOS = { SHINY10: 0.10 };
-const promoRateOf = (code) => PROMOS[String(code || "").trim().toUpperCase()] || 0;
+const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
+/* Offre Halloween : le code HALLOWEEN15 et le décor s'arrêtent seuls le 31 octobre 2026 à 23 h 59 (heure de Paris, UTC+1). */
+const HW_END = Date.UTC(2026, 9, 31, 22, 59, 59);
+const HW_CODE = "HALLOWEEN15";
+const HW_START_STOCK = 17;
+const hwOn = () => Date.now() < HW_END;
+const PROMO_END = { HALLOWEEN15: HW_END };
+const promoRateOf = (code) => { const c = String(code || "").trim().toUpperCase(); if (PROMO_END[c] && Date.now() >= PROMO_END[c]) return 0; return PROMOS[c] || 0; };
 const cartShipping = (cart, zone, subtotal) => {
   if (!cart.length) return 0;
   const eu = zone === "FR" || zone === "EU";
@@ -2844,7 +2850,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const [tfErr, setTfErr] = useState("");
   const [tfDone, setTfDone] = useState(null);
   const setF = (k) => (e) => setTf(v => ({ ...v, [k]: e.target.value }));
-  const [promoIn, setPromoIn] = useState("");
+  const [promoIn, setPromoIn] = useState(hwOn() ? HW_CODE : "");
   const [promo, setPromo] = useState("");
   const [promoErr, setPromoErr] = useState("");
   const promoRate = promoRateOf(promo);
@@ -3117,6 +3123,139 @@ const SecHead = ({ n, label, title, children }) => (
   </div>
 );
 
+/* ─── OFFRE HALLOWEEN : bannière d'accueil (décor, compte à rebours, stock réel, prix remisés) ─── */
+const HW_UI = {
+  FR: { kick: "Offre Halloween · un seul lot", h: <><em>−15&nbsp;%</em> pour Halloween</>, sub: "Avec le code HALLOWEEN15, au paiement par carte ou Bitcoin. Jusqu'au 31 octobre à minuit, ou jusqu'au dernier flacon du lot analysé.", end: "Fin de l'offre dans", u: ["jours", "h", "min", "sec"], left: "Flacons restants", t: ["1 flacon", "Pack de 2", "Pack de 3"], go: "Voir le GLP-3RT", copied: "Code copié", how: "Saisissez le code dans le panier, avant le paiement.", legal: "Pour la recherche en laboratoire uniquement · pas d'usage humain ou animal", over: "Offre terminée" },
+  EN: { kick: "Halloween offer · one batch", h: <><em>15% off</em> for Halloween</>, sub: "With code HALLOWEEN15, paying by card or Bitcoin. Until midnight on 31 October, or until the last vial of the analysed batch.", end: "Offer ends in", u: ["days", "h", "min", "sec"], left: "Vials left", t: ["1 vial", "Pack of 2", "Pack of 3"], go: "View GLP-3RT", copied: "Code copied", how: "Enter the code in the cart, before payment.", legal: "For laboratory research use only · no human or animal use", over: "Offer ended" },
+  DE: { kick: "Halloween-Angebot · eine Charge", h: <><em>15&nbsp;% Rabatt</em> zu Halloween</>, sub: "Mit dem Code HALLOWEEN15, bei Zahlung per Karte oder Bitcoin. Bis zum 31. Oktober um Mitternacht oder bis zum letzten Fläschchen der analysierten Charge.", end: "Angebot endet in", u: ["Tage", "Std", "Min", "Sek"], left: "Fläschchen übrig", t: ["1 Stück", "2er-Pack", "3er-Pack"], go: "GLP-3RT ansehen", copied: "Code kopiert", how: "Code im Warenkorb eingeben, vor der Zahlung.", legal: "Nur für die Laborforschung · keine Anwendung bei Mensch oder Tier", over: "Angebot beendet" },
+  NL: { kick: "Halloween-aanbieding · één batch", h: <><em>15&nbsp;% korting</em> voor Halloween</>, sub: "Met de code HALLOWEEN15, bij betaling met kaart of Bitcoin. Tot 31 oktober middernacht, of tot het laatste flesje van de geanalyseerde batch.", end: "Aanbieding eindigt over", u: ["dagen", "u", "min", "sec"], left: "Flesjes over", t: ["1 flesje", "Pak van 2", "Pak van 3"], go: "Bekijk GLP-3RT", copied: "Code gekopieerd", how: "Voer de code in de winkelwagen in, vóór de betaling.", legal: "Alleen voor laboratoriumonderzoek · niet voor gebruik bij mens of dier", over: "Aanbieding afgelopen" },
+};
+const HalloweenBanner = ({ lang, cur, openProduct, product }) => {
+  const T = HW_UI[lang] || HW_UI.EN;
+  const [now, setNow] = useState(() => Date.now());
+  const [copied, setCopied] = useState(false);
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
+  const s = Math.max(0, Math.floor((HW_END - now) / 1000));
+  const v = [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60];
+  const left = STOCK_LEFT.retatrutide != null ? Math.max(0, STOCK_LEFT.retatrutide) : HW_START_STOCK;
+  const pct = Math.max(4, Math.min(100, Math.round(left / HW_START_STOCK * 100)));
+  const tiles = product ? ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"].map((sz, i) => { const vv = product.variants.find(x => x.size === sz); return vv ? { label: T.t[i], was: vv.price, now: Math.round(vv.price * 0.85 * 100) / 100, best: i === 1 } : null; }).filter(Boolean) : [];
+  const copy = () => { try { navigator.clipboard.writeText(HW_CODE).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1800); }, () => {}); } catch (e) {} };
+  return (
+    <section className="hw" lang={lang.toLowerCase()}>
+      <div className="hw-moon" aria-hidden="true" />
+      <svg className="hw-bats" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g fill="#05060d" opacity=".95">
+          <path d="M60 52c-8-10-20-12-30-6 6 2 9 6 10 11-5-2-12-2-18 3 8 1 12 5 14 9 4-5 10-6 15-4 4-4 6-9 9-13z" />
+          <path d="M168 24c-6-8-15-9-22-4 4 2 7 5 7 8-4-1-9-1-13 2 6 1 9 4 10 7 3-3 7-4 11-3 3-3 5-6 7-10z" />
+          <path d="M262 74c-5-6-12-7-17-3 3 1 5 4 5 6-3-1-7 0-10 2 4 1 7 3 8 6 2-3 5-3 8-2 2-3 4-5 6-9z" />
+        </g>
+      </svg>
+      <div className="wrap hw-in">
+        <div className="hw-kick"><i />{T.kick}</div>
+        <h2 className="hw-h">{T.h}</h2>
+        <p className="hw-sub">{T.sub}</p>
+        <div className="hw-row">
+          <button className="hw-photo" onClick={() => product && openProduct(product)} aria-label={T.go}>
+            {product && <ProductPhoto p={product} size="5mg" h={150} eager />}
+          </button>
+          <div className="hw-count">
+            <div className="hw-lab">{T.end}</div>
+            <div className="hw-cd" role="timer">
+              {v.map((n, i) => <div key={i}><b>{String(n).padStart(2, "0")}</b><span>{T.u[i]}</span></div>)}
+            </div>
+          </div>
+        </div>
+        <div className="hw-stock">
+          <div className="hw-stock-top"><span>{T.left}</span><span><b>{left}</b> / {HW_START_STOCK}</span></div>
+          <div className="hw-bar"><i style={{ width: pct + "%" }} /></div>
+        </div>
+        <div className="hw-tiles">
+          {tiles.map((t, i) => (
+            <div key={i} className={"hw-tile" + (t.best ? " best" : "")}>
+              <small>{t.label}</small>
+              <s>{price(t.was, cur, lang)}</s>
+              <b>{price(t.now, cur, lang)}</b>
+            </div>
+          ))}
+        </div>
+        <div className="hw-cta">
+          <button className="btn btn-ink" onClick={() => product && openProduct(product)}>{T.go} →</button>
+          <button className="hw-code" onClick={copy} aria-label={HW_CODE}>{copied ? T.copied : HW_CODE}</button>
+        </div>
+        <p className="hw-how">{T.how}</p>
+        <p className="hw-legal">{T.legal}</p>
+      </div>
+    </section>
+  );
+};
+const HW_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap');
+:root{--page:#090A14;--paper:#0D0F20;--surface:#13162E;--soft:#181C3A;--ink:#F3EFE8;--ink2:#C7CAE4;--mute:#9AA0C4;--line:#262B52;--line2:#1E2347;--green:#FFB43E;--green-soft:rgba(255,107,26,.13);--leaf:#FF6B1A;--rose:#FF6B1A;--rose-soft:rgba(255,107,26,.14);--rose-ink:#FFB43E}
+html,body{background:#090A14;color:#F3EFE8}
+.hero{background:radial-gradient(60% 50% at 85% 6%,rgba(255,107,26,.22),transparent 70%),radial-gradient(55% 45% at 4% 96%,rgba(91,69,224,.22),transparent 70%),linear-gradient(180deg,#0B0D1E,#090A14)}
+.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(255,107,26,.25),transparent 70%),linear-gradient(180deg,#0B0D1E,#090A14)}
+.nav{background:rgba(9,10,20,.92)}
+.notice{background:#05060d;color:#C7CAE4;border-bottom:1px solid #262B52}
+.bot-fab{background:#FF6B1A;color:#1a0b00}
+.foot{background:#070810}
+.fact,.pcard,.sheet,.gate-card{background:var(--surface)}
+.btn-ink,.buy-btn.btn-ink,.hero-cta .btn-ink,.drawer-in .btn-ink:last-child,.mbar .btn-ink{background:#FF6B1A;color:#1a0b00;box-shadow:0 8px 24px rgba(255,107,26,.35)}
+.btn-ink:hover{background:#FF8240}
+.btn-line{background:transparent;color:var(--ink);border-color:var(--line)}
+.fchip:not(.on){background:var(--surface)}
+.fchip.on,.tier-pop,.bot-msg.user{background:#FF6B1A;color:#1a0b00;border-color:#FF6B1A}
+.btn-line:hover{background:#FF6B1A;color:#1a0b00;border-color:#FF6B1A}
+.band{background:linear-gradient(180deg,#181C3A,#10132A);color:#F3EFE8;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.band .lead{color:#B9BDDB}
+.band .eyebrow{color:#FFB43E}
+.mbar{background:#0D0F20 !important;border-top:1px solid var(--line) !important;color:#F3EFE8}
+.mbar .btn-line{background:transparent;color:#F3EFE8}
+.drawer-in{background:#0D0F20}
+.drawer{background:rgba(3,4,10,.6)}
+input,select,textarea{background:#181C3A !important;color:#F3EFE8 !important;border-color:#2c3260 !important}
+input::placeholder,textarea::placeholder{color:#7f86ad}
+.hs{box-shadow:0 14px 32px rgba(255,107,26,.25)}
+.display{font-family:'Syne',var(--serif);font-weight:800}
+.hw{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(70% 55% at 80% 18%,rgba(255,107,26,.34),transparent 70%),radial-gradient(60% 50% at 6% 100%,rgba(91,69,224,.3),transparent 70%),linear-gradient(180deg,#0d0f22,#090A14);padding:28px 0 30px}
+.hw-moon{position:absolute;top:-52px;right:-44px;width:132px;height:132px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe6b8,#f3b86a 55%,#b9742f);opacity:.8}
+.hw-bats{position:absolute;left:0;top:0;width:100%;height:46%;pointer-events:none;opacity:.7}
+.hw-in{position:relative;max-width:640px;margin:0 auto}
+.hw-kick{display:flex;gap:8px;align-items:center;font-family:'Space Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#FFB43E}
+.hw-kick i{width:6px;height:6px;border-radius:50%;background:#FF6B1A;box-shadow:0 0 10px #FF6B1A;animation:hwp 1.8s ease-in-out infinite}
+@keyframes hwp{50%{opacity:.35}}
+.hw-h{font-family:'Syne',system-ui,sans-serif;font-weight:800;font-size:clamp(32px,9vw,48px);line-height:1;letter-spacing:-.02em;margin:12px 0 0;max-width:16ch;text-wrap:balance;color:#F3EFE8}
+.hw-h em{font-style:normal;color:#FF6B1A}
+.hw-sub{color:#B9BDDB;margin:12px 0 0;max-width:36ch;font-size:15px;line-height:1.5}
+.hw-row{display:flex;gap:16px;align-items:flex-end;margin-top:18px}
+.hw-photo{flex:0 0 auto;width:128px;border:1px solid #3a3f72;border-radius:14px;overflow:hidden;padding:0;background:#1a1e3f;box-shadow:0 0 34px rgba(255,107,26,.5);cursor:pointer;line-height:0}
+.hw-photo img{width:100%;height:auto;display:block}
+.hw-count{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.hw-lab,.hw-stock-top,.hw-tile small{font-family:'Space Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9AA0C4}
+.hw-cd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.hw-cd div{border:1px solid #262B52;background:rgba(18,20,42,.75);border-radius:6px;padding:8px 0 6px;text-align:center;min-width:0}
+.hw-cd b{display:block;font-family:'Space Mono',ui-monospace,monospace;font-size:clamp(19px,5.6vw,28px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:#F3EFE8}
+.hw-cd span{font-family:'Space Mono',ui-monospace,monospace;font-size:9px;letter-spacing:.1em;color:#9AA0C4;text-transform:uppercase}
+.hw-stock{margin-top:18px}
+.hw-stock-top{display:flex;justify-content:space-between}
+.hw-stock-top b{color:#FFB43E}
+.hw-bar{height:6px;border-radius:3px;background:#262B52;margin-top:6px;overflow:hidden}
+.hw-bar i{display:block;height:100%;background:linear-gradient(90deg,#FF6B1A,#FFB43E);border-radius:3px;transition:width .6s ease}
+.hw-tiles{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hw-tile{border:1px solid #262B52;border-radius:6px;padding:10px 8px;background:rgba(18,20,42,.7);min-width:0}
+.hw-tile s{display:block;color:#9AA0C4;font-size:12px;margin-top:6px}
+.hw-tile b{display:block;font-family:'Syne',system-ui,sans-serif;font-size:clamp(16px,4.8vw,21px);line-height:1.1;color:#F3EFE8}
+.hw-tile.best{border-color:#FF6B1A;box-shadow:0 0 0 1px #FF6B1A inset}
+.hw-tile.best small{color:#FFB43E}
+.hw-cta{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.hw-cta .btn{flex:1 1 190px;min-height:48px}
+.hw-code{flex:1 1 150px;min-height:48px;font-family:'Space Mono',ui-monospace,monospace;font-weight:700;letter-spacing:.1em;border:1px dashed #FFB43E;background:transparent;color:#FFB43E;border-radius:12px;font-size:14px;cursor:pointer}
+.hw-how{margin:12px 0 0;font-size:12.5px;color:#9AA0C4}
+.hw-legal{margin:14px 0 0;padding-top:12px;border-top:1px solid #262B52;font-family:'Space Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9AA0C4;text-align:center}
+@media (max-width:380px){.hw-row{flex-direction:column;align-items:flex-start}}
+@media (prefers-reduced-motion:reduce){.hw-kick i{animation:none}}
+`;
+
 const Home = ({ go, cur, openProduct, lang }) => {
   const FR = lang === "FR";
   const hero = COAS.retatrutide;
@@ -3137,6 +3276,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
   const cats = CATEGORY_ORDER.filter(c => PRODUCTS.some(p => p.category === c));
   return (
     <div>
+      {hwOn() && <HalloweenBanner lang={lang} cur={cur} openProduct={openProduct} product={heroP} />}
       {/* HERO */}
       <section className="hero">
         <div className="wrap hero-grid">
@@ -4651,7 +4791,7 @@ const BitcoinGuide = ({ lang, go }) => {
       <div className="btc-steps" style={{ display: "grid", gap: 18, marginTop: 28 }}>
         <div style={card}>
           {head("01", T("Achetez du Bitcoin", "Buy Bitcoin"), "~5 min")}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 18, borderRadius: 14, background: "var(--ink)", color: "#fff" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 18, borderRadius: 14, background: hwOn() ? "#1b1f45" : "var(--ink)", color: "#F3EFE8" }}>
             <span className="mono" style={{ fontSize: 11, letterSpacing: ".14em", color: "#7FCB68" }}>{T("LE PLUS RAPIDE", "THE FASTEST WAY")}</span>
             <span style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{T("Vous avez Revolut ?", "Got Revolut?")}</span>
             <span style={{ fontSize: 14.5, lineHeight: 1.6, color: "#D6DEE7" }}>{T("Onglet ", "Open the ")}<b style={{ color: "#fff" }}>Crypto</b>{T(", puis ", " tab, then ")}<b style={{ color: "#fff" }}>Bitcoin</b>{T(". Achetez le montant de votre commande, plus 2 à 3 € pour les frais d'envoi.", ". Buy your order amount, plus €2–3 for sending fees.")}</span>
@@ -4948,6 +5088,7 @@ export default function App() {
       <style>{CSS}</style>
       {CONFIG.THEME === "modern" && <style>{MODERN_CSS}</style>}
       {CONFIG.THEME === "modern" && CONFIG.ROSE && <style>{ROSE_CSS}</style>}
+      {hwOn() && <style>{HW_CSS}</style>}
       {paidRef && (
         <div className="paid-banner" role="status">
           <div>
@@ -4994,6 +5135,7 @@ export default function App() {
           {[0, 1].map(k => (
             <span className="ticker-set" key={k}>
               {(FR ? [
+                ...(hwOn() ? ["Halloween : −15 % avec le code HALLOWEEN15, jusqu'au 31 octobre"] : []),
                 "Usage recherche uniquement — pas pour usage humain ou vétérinaire",
                 "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
                 "Livraison offerte dès 100 € (France, UE)",
@@ -5002,6 +5144,7 @@ export default function App() {
                 "En stock : expédié sous 24 h",
                 "Entreprise française · Paris",
               ] : [
+                ...(hwOn() ? ["Halloween: −15% with code HALLOWEEN15, until 31 October"] : []),
                 "Research use only — not for human or veterinary use",
                 "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
                 "Free shipping from €100 (France, EU)",
@@ -5852,6 +5995,7 @@ const XL_DE = {
 "Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen.",
 "{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} ist eine eigene Forschungsmischung aus {N} und {N} in einem einzigen lyophilisierten Fläschchen, in zwei Größen erhältlich. Entwickelt für Forschende, die kombinierte regenerative Signalwege untersuchen. Neue Chargen werden von Janoshik unabhängig analysiert.",
 "Scientific watch": "Forschungsmonitor",
+"Halloween: −15% with code HALLOWEEN15, until 31 October": "Halloween: −15 % mit dem Code HALLOWEEN15, bis zum 31. Oktober",
 "Our \"Scientific watch\" section (in the site menu) gathers, every Monday, the latest research news on the compounds in our catalogue, taken from independent sources: PubMed, ClinicalTrials.gov, the European clinical trials register and the major medical journals. Nothing is published in weeks without news. This is scientific information, not advice on use.": "Unsere Rubrik „Forschungsmonitor“ (im Menü der Website) fasst jeden Montag die neuesten Forschungsnachrichten zu den Verbindungen unseres Katalogs zusammen, aus unabhängigen Quellen: PubMed, ClinicalTrials.gov, dem europäischen Register für klinische Studien und den großen medizinischen Fachzeitschriften. In Wochen ohne Neuigkeiten wird nichts veröffentlicht. Es handelt sich um wissenschaftliche Informationen, nicht um Anwendungsempfehlungen.",
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
@@ -6679,5 +6823,6 @@ const XL_NL = {
 "Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten.",
 "{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} is een eigen onderzoeksmengsel met {N} en {N} in één gelyofiliseerde flacon, verkrijgbaar in twee formaten. Samengesteld voor onderzoekers die gecombineerde regeneratieve signaalroutes bestuderen. Nieuwe batches worden onafhankelijk geanalyseerd door Janoshik.",
 "Scientific watch": "Onderzoeksmonitor",
+"Halloween: −15% with code HALLOWEEN15, until 31 October": "Halloween: −15% met de code HALLOWEEN15, tot 31 oktober",
 "Our \"Scientific watch\" section (in the site menu) gathers, every Monday, the latest research news on the compounds in our catalogue, taken from independent sources: PubMed, ClinicalTrials.gov, the European clinical trials register and the major medical journals. Nothing is published in weeks without news. This is scientific information, not advice on use.": "Onze rubriek „Onderzoeksmonitor” (in het menu van de site) bundelt elke maandag het laatste onderzoeksnieuws over de verbindingen in onze catalogus, uit onafhankelijke bronnen: PubMed, ClinicalTrials.gov, het Europese register voor klinische studies en de grote medische tijdschriften. In weken zonder nieuws wordt niets gepubliceerd. Het gaat om wetenschappelijke informatie, niet om gebruiksadvies.",
 };

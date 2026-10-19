@@ -306,8 +306,10 @@ const round2 = (n) => Math.round(n * 100) / 100;
 
 /* Codes promo : CODE → remise sur les articles (pas sur la livraison), cumulée avec les remises par quantité.
    ⚠ Garder identique à PROMOS dans src/App.jsx. Pour supprimer un code : retirer sa ligne. */
-export const PROMOS = { SHINY10: 0.10 };
-export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
+export const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
+/* HALLOWEEN15 expire le 31 octobre 2026 à 23 h 59 (heure de Paris, UTC+1). */
+export const PROMO_END = { HALLOWEEN15: Date.UTC(2026, 9, 31, 22, 59, 59) };
+export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); if (PROMO_END[c] && Date.now() >= PROMO_END[c]) return null; return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
 
 export function computeOrder(items, zone, promoCode) {
   const promo = promoOf(promoCode);

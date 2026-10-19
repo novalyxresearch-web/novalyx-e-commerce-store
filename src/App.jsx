@@ -989,8 +989,8 @@ const PRODUCTS = [
     name: "PULSE",
     tag: "GH-RELEASING RESEARCH BLEND",
     category: "Signature Blends",
-    desc: "Novalyx PULSE is a proprietary research blend containing CJC-1295 (5mg, no DAC) and Ipamorelin (5mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.",
-    desc_fr: "Novalyx PULSE est un mélange de recherche propriétaire contenant CJC-1295 (5mg, sans DAC) et Ipamorelin (5mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de libération de GH dans un protocole intégré.",
+    desc: "PULSE is a proprietary research blend containing CJC-1295 (5mg, no DAC) and Ipamorelin (5mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.",
+    desc_fr: "PULSE est un mélange de recherche propriétaire contenant CJC-1295 (5mg, sans DAC) et Ipamorelin (5mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de libération de GH dans un protocole intégré.",
     variants: [
       { size: "5mg+5mg", price: 64.99 },
     ],
@@ -1007,8 +1007,8 @@ const PRODUCTS = [
     name: "GLOW",
     tag: "REGENERATIVE TRIPLE BLEND",
     category: "Signature Blends",
-    desc: "Novalyx GLOW is our flagship triple-peptide research blend containing BPC-157 (10mg), GHK-Copper (50mg), and TB-500 (10mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.",
-    desc_fr: "Novalyx GLOW est notre mélange de recherche phare à triple peptide contenant BPC-157 (10mg), GHK-Cuivre (50mg) et TB-500 (10mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant la signalisation régénérative complète à travers plusieurs voies simultanément.",
+    desc: "GLOW is our flagship triple-peptide research blend containing BPC-157 (10mg), GHK-Copper (50mg), and TB-500 (10mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.",
+    desc_fr: "GLOW est notre mélange de recherche phare à triple peptide contenant BPC-157 (10mg), GHK-Cuivre (50mg) et TB-500 (10mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant la signalisation régénérative complète à travers plusieurs voies simultanément.",
     variants: [
       { size: "70mg total", price: 79.99 },
     ],
@@ -1047,8 +1047,8 @@ const PRODUCTS = [
     name: "KLOW",
     tag: "COMPLETE RESEARCH COMPLEX",
     category: "Signature Blends",
-    desc: "Novalyx KLOW is our premium four-peptide research complex containing BPC-157 (10mg), GHK-Copper (50mg), TB-500 (10mg), and KPV (10mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.",
-    desc_fr: "Novalyx KLOW est notre complexe de recherche premium à quatre peptides contenant BPC-157 (10mg), GHK-Cuivre (50mg), TB-500 (10mg) et KPV (10mg) dans un seul flacon lyophilisé. Le mélange de recherche régénératif le plus complet de notre catalogue.",
+    desc: "KLOW is our premium four-peptide research complex containing BPC-157 (10mg), GHK-Copper (50mg), TB-500 (10mg), and KPV (10mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.",
+    desc_fr: "KLOW est notre complexe de recherche premium à quatre peptides contenant BPC-157 (10mg), GHK-Cuivre (50mg), TB-500 (10mg) et KPV (10mg) dans un seul flacon lyophilisé. Le mélange de recherche régénératif le plus complet de notre catalogue.",
     variants: [
       { size: "80mg total", price: 84.99 },
     ],
@@ -1169,8 +1169,8 @@ const PRODUCTS = [
     name: "TWIN",
     tag: "REGENERATIVE RESEARCH BLEND",
     category: "Signature Blends",
-    desc: "Novalyx TWIN is a proprietary research blend containing BPC-157 and TB-500 combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.",
-    desc_fr: "Novalyx TWIN est un mélange de recherche propriétaire contenant du BPC-157 et du TB-500 combinés dans un seul flacon lyophilisé, en deux conditionnements. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
+    desc: "TWIN is a proprietary research blend containing BPC-157 and TB-500 combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.",
+    desc_fr: "TWIN est un mélange de recherche propriétaire contenant du BPC-157 et du TB-500 combinés dans un seul flacon lyophilisé, en deux conditionnements. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
     variants: [
       { size: "10mg total (BPC5+TB5)", price: 64.99 },
       { size: "20mg total (BPC10+TB10)", price: 109.99 },
@@ -1188,13 +1188,14 @@ const PRODUCTS = [
     name: "CagriSema",
     tag: "REGENERATIVE RESEARCH BLEND",
     category: "Signature Blends",
-    desc: "CagriSema (cagrilintide + semaglutide) is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    desc_fr: "CagriSema (cagrilintide + sémaglutide) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    desc: "CagriSema is supplied exclusively for in-vitro laboratory research. Each vial contains lyophilized compound. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "CagriSema est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
       { size: "2.5mg+2.5mg", price: 64.99 },
       { size: "5mg+5mg", price: 109.99 },
     ],
     commonSpecs: [
+      { label: "Composition", value: "Cagrilintide + Semaglutide" },
       { label: "Format",     value: "Lyophilised vial" },
       { label: "Purity",     value: "≥99% target (HPLC)" },
       { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
@@ -1207,12 +1208,13 @@ const PRODUCTS = [
     name: "SYNAPSE",
     tag: "NEUROPEPTIDE RESEARCH",
     category: "Signature Blends",
-    desc: "SYNAPSE (Semax + Selank) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    desc_fr: "SYNAPSE (Semax + Selank) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    desc: "SYNAPSE is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "SYNAPSE est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
       { size: "10mg+10mg", price: 69.99 },
     ],
     commonSpecs: [
+      { label: "Composition", value: "Semax + Selank" },
       { label: "Format",     value: "Lyophilised vial" },
       { label: "Purity",     value: "≥99% target (HPLC)" },
       { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
@@ -1224,12 +1226,13 @@ const PRODUCTS = [
     name: "TRIA",
     tag: "MULTI-RECEPTOR RESEARCH",
     category: "Signature Blends",
-    desc: "TRIA (GLP-3RT + Cagrilintide) is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
-    desc_fr: "TRIA (GLP-3RT + Cagrilintide) est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
+    desc: "TRIA is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
+    desc_fr: "TRIA est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
       { size: "5mg+5mg", price: 74.99 },
     ],
     commonSpecs: [
+      { label: "Composition", value: "GLP-3RT + Cagrilintide" },
       { label: "Format",     value: "Lyophilised vial" },
       { label: "Purity",     value: "≥99% target (HPLC)" },
       { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
@@ -5740,7 +5743,8 @@ const XL_DE = {
 "Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (geprüft im Oktober {#}): Forschungsreagenz; nicht als Arzneimittel zugelassen.",
 "Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (geprüft im Oktober {#}): In der Kosmetik verwendet (topische Anwendung); keine Zulassung als injizierbares Arzneimittel. Die Forschung betrifft hauptsächlich Zellmodelle und topische Anwendungen.",
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (geprüft im Oktober {#}): War in den USA zugelassen (Marke Geref) und wurde später aus kommerziellen Gründen zurückgezogen. Von der WADA verboten.",
-"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen."
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen.",
+"{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} ist eine eigene Forschungsmischung aus {N} und {N} in einem einzigen lyophilisierten Fläschchen, in zwei Größen erhältlich. Entwickelt für Forschende, die kombinierte regenerative Signalwege untersuchen. Neue Chargen werden von Janoshik unabhängig analysiert.",
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
@@ -6564,5 +6568,6 @@ const XL_NL = {
 "Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksreagens; niet als geneesmiddel toegelaten.",
 "Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (gecontroleerd in oktober {#}): Gebruikt in cosmetica (topische toepassing); geen vergunning als injecteerbaar geneesmiddel. Het onderzoek betreft vooral celmodellen en topische toepassingen.",
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
-"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten."
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten.",
+"{N} is a proprietary research blend containing {N} and {N} combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.": "{N} is een eigen onderzoeksmengsel met {N} en {N} in één gelyofiliseerde flacon, verkrijgbaar in twee formaten. Samengesteld voor onderzoekers die gecombineerde regeneratieve signaalroutes bestuderen. Nieuwe batches worden onafhankelijk geanalyseerd door Janoshik.",
 };

@@ -28,12 +28,13 @@ const getStripeLink = (id, size) => STRIPE_LINKS[`${id}_${size}`] || "";
    USCA États-Unis/Canada · WORLD Australie, Nouvelle-Zélande et autres pays (Russie/Biélorussie exclues). */
 const SHIP_ZONES = [
   ["FR", "France", "France"],
+  ["OM", "Outre-mer (Martinique, Guadeloupe, Guyane, Réunion, Mayotte…)", "Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)"],
   ["EU", "Union européenne (hors France)", "European Union (excl. France)"],
   ["CHUK", "Suisse, Royaume-Uni", "Switzerland, United Kingdom"],
   ["USCA", "États-Unis, Canada", "United States, Canada"],
   ["WORLD", "Australie, Nouvelle-Zélande, autres pays", "Australia, New Zealand, other countries"],
 ];
-const ZONE_RATE = { FR: 7.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // tarifs Colissimo 2026 + emballage (offerte dès 100 € en France/UE)
+const ZONE_RATE = { FR: 7.9, OM: 12.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // OM : Colissimo Outre-mer 500 g (12,02 à 12,21 €) + emballage ; tarifs Colissimo 2026 + emballage (offerte dès 100 € en France/UE)
 const BAC_ONLY_FR = 5.9;   // eau bactériostatique commandée seule, en France (Colissimo 250 g)
 const ZONE_LINKS = {
   "retatrutide_5mg": {
@@ -3927,6 +3928,7 @@ const ShippingPage = ({ lang }) => {
   const FR = lang === "FR";
   const zones = [
     ["France", "7,90 €", FR ? "2–3 jours max." : "2–3 days max."],
+    [FR ? "Outre-mer (Martinique, Guadeloupe, Guyane, Réunion, Mayotte…)" : "Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)", "12,90 €", FR ? "6–18 jours (variable)" : "6–18 days (variable)"],
     [FR ? "Union européenne" : "European Union", "15,90 €", FR ? "3–5 j. ouvrés" : "3–5 business days"],
     [FR ? "Suisse, Royaume-Uni" : "Switzerland, UK", "19,90 €", FR ? "5–8 j. ouvrés" : "5–8 business days"],
     [FR ? "États-Unis, Canada" : "USA, Canada", "37,90 €", FR ? "7–12 j. ouvrés" : "7–12 business days"],
@@ -5081,6 +5083,8 @@ const XL_DE = {
 "DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID {#} MIN": "DIREKTE BITCOIN-ZAHLUNG · ABRECHNUNG IN EURO · RECHNUNG {#} MIN GÜLTIG",
 "Delivery country": "Lieferland",
 "European Union (excl. France)": "Europäische Union (ohne Frankreich)",
+"Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)": "Französische Überseegebiete (Martinique, Guadeloupe, Französisch-Guayana, Réunion, Mayotte…)",
+"{#}–{#} days (variable)": "{#}–{#} Tage (variabel)",
 "First time? How to pay with Bitcoin": "Zum ersten Mal? So bezahlen Sie mit Bitcoin",
 "I acknowledge this shipment may be subject to customs inspection and I am responsible for compliance with local regulations.": "Ich nehme zur Kenntnis, dass diese Sendung einer Zollkontrolle unterliegen kann, und bin für die Einhaltung der örtlichen Vorschriften verantwortlich.",
 "I confirm this order is strictly for laboratory research purposes only.": "Ich bestätige, dass diese Bestellung ausschließlich für Laborforschungszwecke bestimmt ist.",
@@ -6021,6 +6025,8 @@ const XL_NL = {
 "Essential cookies for functionality only. Analytics cookies placed with consent only.": "Alleen cookies die nodig zijn voor de werking. Analysecookies alleen met toestemming.",
 "European Union": "Europese Unie",
 "European Union (excl. France)": "Europese Unie (zonder Frankrijk)",
+"Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)": "Franse overzeese gebieden (Martinique, Guadeloupe, Frans-Guyana, Réunion, Mayotte…)",
+"{#}–{#} days (variable)": "{#}–{#} dagen (variabel)",
 "Experimental compound; no medicine authorisation.": "Experimentele verbinding; geen geneesmiddelvergunning.",
 "Factual, strictly scientific information on catalogue compounds. No health claims.": "Feitelijke, strikt wetenschappelijke informatie over de verbindingen uit de catalogus. Geen gezondheidsclaims.",
 "Fermer": "Sluiten",

@@ -3381,67 +3381,6 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
   );
 };
 /* ─── ANALYSES (COA) ─────────────────────────────────────── */
-/* ─── VÉRIFIER MON LOT ───────────────────────────────────── */
-// Le numéro de lot est comparé sans tenir compte des majuscules, espaces, tirets ou points.
-const normLot = (v) => String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-const findLot = (q) => {
-  const n = normLot(q);
-  if (n.length < 3) return null;
-  for (const [id, c] of Object.entries(COAS)) {
-    const lots = [c.batch, ...(c.lots || [])].filter(Boolean);
-    if (lots.some(l => normLot(l) === n)) return { id, c };
-  }
-  return null;
-};
-const LotCheck = ({ lang, openProduct }) => {
-  const FR = lang === "FR";
-  const [q, setQ] = useState("");
-  const [done, setDone] = useState(null);   // null = pas encore cherché, sinon { q, hit }
-  const submit = (e) => { e.preventDefault(); if (q.trim()) setDone({ q: q.trim(), hit: findLot(q) }); };
-  const hit = done && done.hit;
-  const prod = hit ? PRODUCTS.find(x => x.id === hit.id) : null;
-  return (
-    <div style={{ marginTop: 40, padding: "28px 26px", border: "1px solid var(--line)", borderRadius: 14, background: "#fff", maxWidth: 760 }}>
-      <div className="eyebrow" style={{ marginBottom: 10 }}>{FR ? "Vérifier mon lot" : "Check my batch"}</div>
-      <p style={{ fontSize: 14.5, color: "var(--ink2)", lineHeight: 1.65, margin: "0 0 18px" }}>
-        {FR ? "Saisissez le numéro de lot imprimé sur l'étiquette de votre flacon : vous verrez l'analyse indépendante de ce lot." : "Enter the batch number printed on your vial's label to see that batch's independent analysis."}
-      </p>
-      <form onSubmit={submit} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <input
-          value={q}
-          onChange={e => { setQ(e.target.value); setDone(null); }}
-          placeholder={FR ? "Ex. NLR-2026-001" : "e.g. NLR-2026-001"}
-          aria-label={FR ? "Numéro de lot" : "Batch number"}
-          autoCapitalize="characters" autoCorrect="off" spellCheck={false}
-          style={{ flex: "1 1 220px", minWidth: 0, padding: "13px 14px", border: "1.5px solid var(--line)", borderRadius: 10, background: "#fff" }}
-        />
-        <button type="submit" className="btn btn-ink" disabled={!q.trim()}>{FR ? "Vérifier" : "Check"}</button>
-      </form>
-      {done && hit && (
-        <div role="status" style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--line)" }}>
-          <div className="coa-label">{FR ? "Lot reconnu" : "Batch found"} · <span className="mono">{hit.c.batch}</span></div>
-          <div style={{ fontFamily: "var(--serif)", fontSize: 24, margin: "6px 0 14px" }}>{prod ? pn(prod) : hit.c.sample} {hit.c.size.replace("mg", " mg")}</div>
-          <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 16 }}>
-            <div><div className="coa-label">{FR ? "Pureté HPLC" : "HPLC purity"}</div><div className="mono">{pct(hit.c.purity, lang)}</div></div>
-            <div><div className="coa-label">{FR ? "Mesuré" : "Measured"}</div><div className="mono">{num(hit.c.measured, lang)}</div></div>
-            <div><div className="coa-label">{FR ? "Date d'analyse" : "Analysis date"}</div><div className="mono">{fmtDate(hit.c.date, lang)}</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <a className="btn btn-line" href={coaLink(hit.c)} target="_blank" rel="noopener noreferrer">{FR ? "Voir le rapport Janoshik" : "View Janoshik report"} ↗</a>
-            {hit.c.file && <a className="link" href={hit.c.file} target="_blank" rel="noopener noreferrer">PDF</a>}
-            {prod && openProduct && <button className="link" onClick={() => openProduct(prod)}>{FR ? "Voir le produit" : "View product"} →</button>}
-          </div>
-        </div>
-      )}
-      {done && !hit && (
-        <div role="status" style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--line)", fontSize: 14.5, lineHeight: 1.65, color: "var(--ink2)" }}>
-          {FR ? "Aucun rapport n'est encore publié pour ce numéro de lot. Vérifiez la saisie (tirets et majuscules sans importance) ; si le numéro est bien celui de votre flacon, écrivez-nous et nous vous répondrons rapidement." : "No report is published yet for this batch number. Check what you typed (dashes and capitals don't matter); if it matches your vial, write to us and we will reply quickly."}
-        </div>
-      )}
-    </div>
-  );
-};
-
 const COAPage = ({ lang, openProduct }) => {
   const FR = lang === "FR";
   const withCoa = PRODUCTS.filter(p => COAS[p.id]);
@@ -3452,8 +3391,6 @@ const COAPage = ({ lang, openProduct }) => {
         <div className="eyebrow" style={{ marginBottom: 14 }}>{FR ? "Transparence" : "Transparency"}</div>
         <h1 className="display" style={{ fontSize: "clamp(38px,6vw,64px)", marginBottom: 18 }}>{FR ? "Analyses publiées" : "Published analyses"}</h1>
         <p className="lead">{FR ? "Chaque rapport ci-dessous a été émis par Janoshik Analytical (République tchèque). Chaque lien ouvre le rapport original sur le site de Janoshik : il ne peut pas être modifié." : "Each report below was issued by Janoshik Analytical (Czech Republic). Each link opens the original report on Janoshik's website: it cannot be altered."}</p>
-
-        <LotCheck lang={lang} openProduct={openProduct} />
 
         <div className="rule" style={{ marginTop: 44 }}>
           {withCoa.map(p => {
@@ -5825,15 +5762,7 @@ const XL_DE = {
 "Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (geprüft im Oktober {#}): Forschungsreagenz; nicht als Arzneimittel zugelassen.",
 "Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (geprüft im Oktober {#}): In der Kosmetik verwendet (topische Anwendung); keine Zulassung als injizierbares Arzneimittel. Die Forschung betrifft hauptsächlich Zellmodelle und topische Anwendungen.",
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (geprüft im Oktober {#}): War in den USA zugelassen (Marke Geref) und wurde später aus kommerziellen Gründen zurückgezogen. Von der WADA verboten.",
-"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen.",
-"Check my batch": "Meine Charge prüfen",
-"Enter the batch number printed on your vial's label to see that batch's independent analysis.": "Geben Sie die auf dem Etikett Ihrer Ampulle aufgedruckte Chargennummer ein, um die unabhängige Analyse dieser Charge zu sehen.",
-"e.g. NLR-2026-001": "z. B. NLR-2026-001",
-"Batch number": "Chargennummer",
-"Check": "Prüfen",
-"Batch found": "Charge erkannt",
-"View Janoshik report": "Janoshik-Bericht ansehen",
-"No report is published yet for this batch number. Check what you typed (dashes and capitals don't matter); if it matches your vial, write to us and we will reply quickly.": "Für diese Chargennummer ist noch kein Bericht veröffentlicht. Prüfen Sie Ihre Eingabe (Bindestriche und Groß-/Kleinschreibung spielen keine Rolle); stimmt sie mit Ihrer Ampulle überein, schreiben Sie uns, wir antworten schnell.",
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (geprüft im Oktober {#}): {N} und {N} sind in Russland als Arzneimittel zugelassen (nasale Anwendung); keines von beiden ist in der Europäischen Union oder den USA zugelassen."
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
@@ -6657,13 +6586,5 @@ const XL_NL = {
 "Status (checked October {#}): Research reagent; not authorised as a medicine.": "Status (gecontroleerd in oktober {#}): Onderzoeksreagens; niet als geneesmiddel toegelaten.",
 "Status (checked October {#}): Used in cosmetics (topical application); no authorisation as an injectable medicine. Research mainly involves cell models and topical applications.": "Status (gecontroleerd in oktober {#}): Gebruikt in cosmetica (topische toepassing); geen vergunning als injecteerbaar geneesmiddel. Het onderzoek betreft vooral celmodellen en topische toepassingen.",
 "Status (checked October {#}): Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Status (gecontroleerd in oktober {#}): Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
-"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten.",
-"Check my batch": "Controleer mijn batch",
-"Enter the batch number printed on your vial's label to see that batch's independent analysis.": "Voer het batchnummer in dat op het etiket van je flacon staat om de onafhankelijke analyse van die batch te zien.",
-"e.g. NLR-2026-001": "bijv. NLR-2026-001",
-"Batch number": "Batchnummer",
-"Check": "Controleren",
-"Batch found": "Batch gevonden",
-"View Janoshik report": "Janoshik-rapport bekijken",
-"No report is published yet for this batch number. Check what you typed (dashes and capitals don't matter); if it matches your vial, write to us and we will reply quickly.": "Voor dit batchnummer is nog geen rapport gepubliceerd. Controleer je invoer (streepjes en hoofdletters maken niet uit); komt het overeen met je flacon, schrijf ons dan en we antwoorden snel.",
+"Status (checked October {#}): {N} and {N} are authorised as medicines in Russia (nasal route); neither is authorised in the European Union or the United States.": "Status (gecontroleerd in oktober {#}): {N} en {N} zijn in Rusland als geneesmiddel toegelaten (via de neus); geen van beide is toegelaten in de Europese Unie of de Verenigde Staten."
 };

@@ -192,6 +192,93 @@
         "de": "Ein Fall in BMJ Case Reports beschreibt therapieresistente Übelkeit nach Injektionen eines ungeprüften Produkts, das angeblich Retatrutid enthielt. Eine Studie in JAMA Network Open analysiert selbst berichtete Nebenwirkungen von Social-Media-Nutzern. Hinweis: Unsere Produkte sind ausschließlich für die In-vitro-Laborforschung bestimmt, nicht für den Gebrauch bei Mensch oder Tier.",
         "nl": "Een casus in BMJ Case Reports beschrijft hardnekkige misselijkheid na injecties met een niet-geverifieerd product dat naar verluidt retatrutide bevatte. Een studie in JAMA Network Open analyseert zelfgerapporteerde bijwerkingen van gebruikers van sociale media. Let op: onze producten zijn uitsluitend bedoeld voor in-vitro laboratoriumonderzoek, niet voor gebruik bij mens of dier."
       }
+    },
+    {
+      "id": "2026-10-19-survodutide-registry",
+      "date": "2026-10-19",
+      "products": [
+        "survodutide"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov NCT07850050",
+          "url": "https://clinicaltrials.gov/study/NCT07850050"
+        },
+        {
+          "name": "ClinicalTrials.gov NCT07855900",
+          "url": "https://clinicaltrials.gov/study/NCT07855900"
+        },
+        {
+          "name": "ClinicalTrials.gov NCT07850063",
+          "url": "https://clinicaltrials.gov/study/NCT07850063"
+        }
+      ],
+      "title": {
+        "fr": "Survodutide : trois nouveaux essais de phase IIIb enregistrés",
+        "en": "Survodutide: three new phase IIIb trials registered",
+        "de": "Survodutid: drei neue Phase-IIIb-Studien registriert",
+        "nl": "Survodutide: drie nieuwe fase IIIb-studies geregistreerd"
+      },
+      "summary": {
+        "fr": "Le registre ClinicalTrials.gov recense trois nouveaux essais de phase IIIb du promoteur Boehringer Ingelheim : SYNCHRONIZE-HERA (600 participantes, femmes péri- et post-ménopausées en surpoids ou obésité, contrôlé par placebo), SYNCHRONIZE-START (350 participants, essai ouvert sur les modalités d'initiation) et ELEVATE-LIVER (600 participants, structure et fonction cardiaques en cas de surpoids ou obésité avec stéatose hépatique métabolique). Aucun n'a encore commencé le recrutement ; ce sont des fiches d'enregistrement, pas des résultats.",
+        "en": "The ClinicalTrials.gov registry lists three new phase IIIb trials from sponsor Boehringer Ingelheim: SYNCHRONIZE-HERA (600 participants, peri- and post-menopausal women with overweight or obesity, placebo-controlled), SYNCHRONIZE-START (350 participants, open-label study of initiation strategies) and ELEVATE-LIVER (600 participants, cardiac structure and function in overweight or obesity with metabolic steatotic liver disease). None has started recruiting yet; these are registration records, not results.",
+        "de": "Das Register ClinicalTrials.gov führt drei neue Phase-IIIb-Studien des Sponsors Boehringer Ingelheim: SYNCHRONIZE-HERA (600 Teilnehmerinnen, peri- und postmenopausale Frauen mit Übergewicht oder Adipositas, placebokontrolliert), SYNCHRONIZE-START (350 Teilnehmende, offene Studie zu Einleitungsstrategien) und ELEVATE-LIVER (600 Teilnehmende, Herzstruktur und -funktion bei Übergewicht oder Adipositas mit metabolisch bedingter Fettleber). Keine der Studien rekrutiert bereits; es handelt sich um Registereinträge, nicht um Ergebnisse.",
+        "nl": "Het register ClinicalTrials.gov vermeldt drie nieuwe fase IIIb-studies van sponsor Boehringer Ingelheim: SYNCHRONIZE-HERA (600 deelnemers, vrouwen in de peri- en postmenopauze met overgewicht of obesitas, placebogecontroleerd), SYNCHRONIZE-START (350 deelnemers, open-label studie naar startstrategieën) en ELEVATE-LIVER (600 deelnemers, hartstructuur en -functie bij overgewicht of obesitas met metabolisch gerelateerde leververvetting). Geen van de studies werft al deelnemers; het zijn registratiegegevens, geen resultaten."
+      }
+    },
+    {
+      "id": "2026-10-19-mazdutide-registry",
+      "date": "2026-10-19",
+      "products": [
+        "mazdutide"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov NCT07657676",
+          "url": "https://clinicaltrials.gov/study/NCT07657676"
+        }
+      ],
+      "title": {
+        "fr": "Mazdutide : essai de phase 4 sur la progression de la plaque coronarienne",
+        "en": "Mazdutide: phase 4 trial on coronary plaque progression",
+        "de": "Mazdutid: Phase-4-Studie zur Progression koronarer Plaques",
+        "nl": "Mazdutide: fase 4-studie naar progressie van coronaire plaque"
+      },
+      "summary": {
+        "fr": "Un essai multicentrique randomisé, en double aveugle et contrôlé par placebo, promu par le Centre national chinois des maladies cardiovasculaires, étudie la progression de la plaque coronarienne chez 116 adultes en surpoids ou obèses atteints d'athérosclérose coronarienne. Le recrutement est en cours depuis septembre 2026 ; il s'agit d'une fiche d'enregistrement, sans résultat.",
+        "en": "A multicentre, randomised, double-blind, placebo-controlled trial sponsored by the China National Center for Cardiovascular Diseases is studying coronary plaque progression in 116 adults with overweight or obesity and coronary atherosclerosis. Recruitment has been under way since September 2026; this is a registration record, without results.",
+        "de": "Eine multizentrische, randomisierte, doppelblinde, placebokontrollierte Studie unter der Leitung des chinesischen Nationalen Zentrums für Herz-Kreislauf-Erkrankungen untersucht die Progression koronarer Plaques bei 116 Erwachsenen mit Übergewicht oder Adipositas und koronarer Atherosklerose. Die Rekrutierung läuft seit September 2026; es handelt sich um einen Registereintrag ohne Ergebnisse.",
+        "nl": "Een multicentrische, gerandomiseerde, dubbelblinde, placebogecontroleerde studie onder leiding van het Chinese nationale centrum voor hart- en vaatziekten onderzoekt de progressie van coronaire plaque bij 116 volwassenen met overgewicht of obesitas en coronaire atherosclerose. De werving loopt sinds september 2026; dit is een registratiegegeven zonder resultaten."
+      }
+    },
+    {
+      "id": "2026-10-19-thymosin-registry",
+      "date": "2026-10-19",
+      "products": [
+        "thymosinalpha1"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov NCT07866118",
+          "url": "https://clinicaltrials.gov/study/NCT07866118"
+        },
+        {
+          "name": "ClinicalTrials.gov NCT07675980",
+          "url": "https://clinicaltrials.gov/study/NCT07675980"
+        }
+      ],
+      "title": {
+        "fr": "Thymosine alpha-1 : deux essais cliniques en cours de recrutement",
+        "en": "Thymosin alpha-1: two clinical trials currently recruiting",
+        "de": "Thymosin alpha-1: zwei Studien in der Rekrutierungsphase",
+        "nl": "Thymosine alfa-1: twee klinische studies in de wervingsfase"
+      },
+      "summary": {
+        "fr": "Le registre ClinicalTrials.gov signale deux essais récents : une étude mécanistique randomisée chez 60 patients en sepsis avec immunosuppression (hôpital Zhongshan, Shanghai, début le 6 octobre 2026) et un essai de phase 2/3 contre placebo dans l'échec d'implantation embryonnaire récurrent (136 participantes, centre Fakih IVF). Ce sont des fiches d'enregistrement, sans résultat.",
+        "en": "The ClinicalTrials.gov registry lists two recent trials: a randomised mechanistic study in 60 patients with sepsis and immunosuppression (Zhongshan Hospital, Shanghai, started 6 October 2026) and a phase 2/3 placebo-controlled trial in recurrent implantation failure (136 participants, Fakih IVF Fertility Center). These are registration records, without results.",
+        "de": "Das Register ClinicalTrials.gov führt zwei aktuelle Studien: eine randomisierte Mechanismusstudie mit 60 Patienten mit Sepsis und Immunsuppression (Zhongshan-Krankenhaus, Shanghai, Beginn am 6. Oktober 2026) und eine placebokontrollierte Phase-2/3-Studie bei wiederholtem Implantationsversagen (136 Teilnehmerinnen, Fakih IVF Fertility Center). Es handelt sich um Registereinträge ohne Ergebnisse.",
+        "nl": "Het register ClinicalTrials.gov vermeldt twee recente studies: een gerandomiseerde mechanistische studie bij 60 patiënten met sepsis en immuunsuppressie (Zhongshan-ziekenhuis, Shanghai, gestart op 6 oktober 2026) en een placebogecontroleerde fase 2/3-studie bij herhaald implantatiefalen (136 deelnemers, Fakih IVF Fertility Center). Het zijn registratiegegevens zonder resultaten."
+      }
     }
   ]
 }

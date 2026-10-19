@@ -992,7 +992,7 @@ const PRODUCTS = [
     desc: "PULSE is a proprietary research blend containing CJC-1295 (5mg, no DAC) and Ipamorelin (5mg) in a single lyophilized vial. Formulated for researchers investigating GH-releasing pathways in an integrated protocol.",
     desc_fr: "PULSE est un mélange de recherche propriétaire contenant CJC-1295 (5mg, sans DAC) et Ipamorelin (5mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant les voies de libération de GH dans un protocole intégré.",
     variants: [
-      { size: "5mg+5mg", price: 64.99 },
+      { size: "5mg+5mg", price: 69.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "CJC-1295 5mg + Ipamorelin 5mg" },
@@ -1010,7 +1010,7 @@ const PRODUCTS = [
     desc: "GLOW is our flagship triple-peptide research blend containing BPC-157 (10mg), GHK-Copper (50mg), and TB-500 (10mg) in a single lyophilized vial. Formulated for researchers investigating comprehensive regenerative signalling across multiple pathways simultaneously.",
     desc_fr: "GLOW est notre mélange de recherche phare à triple peptide contenant BPC-157 (10mg), GHK-Cuivre (50mg) et TB-500 (10mg) dans un seul flacon lyophilisé. Formulé pour les chercheurs étudiant la signalisation régénérative complète à travers plusieurs voies simultanément.",
     variants: [
-      { size: "70mg total", price: 79.99 },
+      { size: "70mg total", price: 129.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg" },
@@ -1050,7 +1050,7 @@ const PRODUCTS = [
     desc: "KLOW is our premium four-peptide research complex containing BPC-157 (10mg), GHK-Copper (50mg), TB-500 (10mg), and KPV (10mg) in a single lyophilized vial. The most comprehensive regenerative research blend in our catalog.",
     desc_fr: "KLOW est notre complexe de recherche premium à quatre peptides contenant BPC-157 (10mg), GHK-Cuivre (50mg), TB-500 (10mg) et KPV (10mg) dans un seul flacon lyophilisé. Le mélange de recherche régénératif le plus complet de notre catalogue.",
     variants: [
-      { size: "80mg total", price: 84.99 },
+      { size: "80mg total", price: 149.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 10mg + GHK-Cu 50mg + TB-500 10mg + KPV 10mg" },
@@ -1172,8 +1172,8 @@ const PRODUCTS = [
     desc: "TWIN is a proprietary research blend containing BPC-157 and TB-500 combined in a single lyophilized vial, available in two sizes. Formulated for researchers investigating combined regenerative signalling pathways. New batches are submitted for independent analysis by Janoshik.",
     desc_fr: "TWIN est un mélange de recherche propriétaire contenant du BPC-157 et du TB-500 combinés dans un seul flacon lyophilisé, en deux conditionnements. Formulé pour les chercheurs étudiant les voies de signalisation régénératives combinées. Les nouveaux lots sont soumis à une analyse indépendante par Janoshik.",
     variants: [
-      { size: "10mg total (BPC5+TB5)", price: 64.99 },
-      { size: "20mg total (BPC10+TB10)", price: 109.99 },
+      { size: "10mg total (BPC5+TB5)", price: 74.99 },
+      { size: "20mg total (BPC10+TB10)", price: 119.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "BPC-157 + TB-500" },
@@ -1211,7 +1211,7 @@ const PRODUCTS = [
     desc: "SYNAPSE is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "SYNAPSE est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "10mg+10mg", price: 69.99 },
+      { size: "10mg+10mg", price: 89.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "Semax + Selank" },
@@ -1229,7 +1229,7 @@ const PRODUCTS = [
     desc: "TRIA is supplied exclusively for in-vitro laboratory research. Each vial contains a lyophilised peptide. The Janoshik analysis report is published once the batch has been tested. Not a medicine, supplement, or cosmetic. Not for human or veterinary use.",
     desc_fr: "TRIA est fourni exclusivement pour la recherche in-vitro en laboratoire. Chaque flacon contient un composé lyophilisé. Le rapport d'analyse Janoshik est publié dès que le lot a été testé. Pas un médicament, complément ou cosmétique. Pas pour usage humain ou vétérinaire.",
     variants: [
-      { size: "5mg+5mg", price: 74.99 },
+      { size: "5mg+5mg", price: 99.99 },
     ],
     commonSpecs: [
       { label: "Composition", value: "GLP-3RT + Cagrilintide" },

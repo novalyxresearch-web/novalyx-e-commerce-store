@@ -153,10 +153,10 @@ const PRICES = {
   "10mg+10mg": 79.99
  },
  "formula02": {
-  "5mg+5mg": 64.99
+  "5mg+5mg": 69.99
  },
  "formula03": {
-  "70mg total": 79.99
+  "70mg total": 129.99
  },
  "bac-water": {
   "3ml vial": 6.99,
@@ -164,7 +164,7 @@ const PRICES = {
   "3ml · Pack de 3": 18.99
  },
  "formula04": {
-  "80mg total": 84.99
+  "80mg total": 149.99
  },
  "melanotanii": {
   "10mg": 54.99
@@ -186,18 +186,18 @@ const PRICES = {
   "2mg": 56.99
  },
  "novalyxformula06": {
-  "10mg total (BPC5+TB5)": 64.99,
-  "20mg total (BPC10+TB10)": 109.99
+  "10mg total (BPC5+TB5)": 74.99,
+  "20mg total (BPC10+TB10)": 119.99
  },
  "novalyxformula07cagrisema": {
   "2.5mg+2.5mg": 64.99,
   "5mg+5mg": 109.99
  },
  "novalyxformula08semaxselank": {
-  "10mg+10mg": 69.99
+  "10mg+10mg": 89.99
  },
  "novalyxformula09glp3rtcagri": {
-  "5mg+5mg": 74.99
+  "5mg+5mg": 99.99
  },
  "dihexa": {
   "10mg": 64.99

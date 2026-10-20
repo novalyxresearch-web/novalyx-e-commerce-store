@@ -273,6 +273,7 @@ const NAME_FR = {
   hghfrag176191: "Fragment HGH 176-191",
   matrixyl: "Matrixyl (palmitoyl pentapeptide-4)",
   "bac-water": "Eau bactériostatique",
+  "kit-glp3rt": "Kit GLP-3RT",
   aceticwater: "Eau à l'acide acétique 0,6 %",
 };
 let UI_LANG = "FR";   // langue affichée, mise à jour à chaque rendu de <App>
@@ -441,6 +442,24 @@ const PRODUCTS = [
     commonSpecs: [
       { label: "Format",     value: "Lyophilised vial" },
       { label: "Purity",     value: "≥99% target (HPLC)" },
+      { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
+      { label: "COA",        value: "Janoshik (per batch)" },
+    ],
+  },
+  {
+    id: "kit-glp3rt",
+    name: "GLP-3RT Kit",
+    tag: "RESEARCH KIT",
+    category: "Metabolic",
+    desc: "The GLP-3RT Kit groups what a laboratory needs to start a reconstitution in a single order: GLP-3RT 5 mg lyophilised peptide from the analysed batch, together with sterile Bacteriostatic Water 3 ml. Kit 1 contains 1 vial of each, Kit 2 contains 2 vials of each, at a lower price than buying the items separately. Supplied exclusively for laboratory research use.",
+    desc_fr: "Le Kit GLP-3RT réunit en une seule commande ce dont un laboratoire a besoin pour démarrer une reconstitution : du GLP-3RT 5 mg lyophilisé issu du lot analysé, et de l'eau bactériostatique stérile 3 ml. Le Kit 1 contient 1 flacon de chaque, le Kit 2 en contient 2 de chaque, à un prix inférieur à l'achat séparé. Fourni exclusivement pour la recherche en laboratoire.",
+    variants: [
+      { size: "Kit · 1 + 1", price: 62.99 },
+      { size: "Kit · 2 + 2", price: 109.99 },
+    ],
+    commonSpecs: [
+      { label: "Contents",   value: "Kit 1: 1 × GLP-3RT 5 mg + 1 × Bacteriostatic Water 3 ml. Kit 2: 2 × GLP-3RT 5 mg + 2 × Bacteriostatic Water 3 ml" },
+      { label: "Format",     value: "Lyophilised vial + sterile sealed vial" },
       { label: "Storage",    value: "Dry, room temperature, away from light before reconstitution; 2–8°C after reconstitution" },
       { label: "COA",        value: "Janoshik (per batch)" },
     ],
@@ -1756,11 +1775,14 @@ const COAS = {
    Passe à true quand le paiement Bitcoin encaisse tout le panier d'un coup. */
 const XSELL_BAC = CONFIG.BTC_ON;
 /* Produits achetables en ligne. Pour en ouvrir un nouveau : ajoute son id ici. */
-const AVAILABLE = ["retatrutide", "bac-water"];
+const AVAILABLE = ["retatrutide", "bac-water", "kit-glp3rt"];
+/* Kit GLP-3RT : puise des flacons de GLP-3RT dans le stock (1 ou 2 selon le format). Garder identique dans api/stock.mjs. */
+const KIT_UNITS = { "kit-glp3rt": { "Kit · 1 + 1": 1, "Kit · 2 + 2": 2 } };
+const isKit = (id) => !!KIT_UNITS[id];
 const isAvail = (p) => AVAILABLE.includes(p.id);
 /* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
 const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
-const inStock = (p, size) => isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
+const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.retatrutide != null && STOCK_LEFT.retatrutide < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
 /* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
 const BTC_ONLY_SIZES = { retatrutide: ["10mg", "20mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
@@ -1774,14 +1796,14 @@ const STOCK_LEFT = { retatrutide: 17 };
    achetées au fournisseur (+ part de livraison). Le test Janoshik reste avancé par Novalyx.
    Recalculé à partir du fichier novalyx-calcul-prix.xlsx — à garder identique dans api/checkout.mjs. */
 const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "retatrutide_10mg": 2, "retatrutide_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
-const minQty = (p, size) => (CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
+const minQty = (p, size) => (CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size) && !isKit(p.id)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
 const isPackSize = (s) => /pack/i.test(String(s));
 /* Remises par quantité (paiement Bitcoin). Les anciens « packs » du GLP-3RT et de l'eau sont remplacés par des
    paliers aux MÊMES prix (TIER_TOTALS). Règle identique dans api/checkout.mjs. */
 const TIER_TOTALS = { "retatrutide|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
 const baseDisc = (q) => q >= 5 ? 0.2 : q >= 3 ? 0.15 : q >= 2 ? 0.1 : 0;
 const lineTotal = (unit, q, size, id) => {
-  if (!CONFIG.BTC_ON || isPackSize(size)) return Math.round(unit * q * 100) / 100;
+  if (!CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return Math.round(unit * q * 100) / 100;
   const t = TIER_TOTALS[id + "|" + size];
   if (t && t[q]) return t[q];
   let d = baseDisc(q);
@@ -1789,7 +1811,7 @@ const lineTotal = (unit, q, size, id) => {
   return Math.round(unit * q * (1 - d) * 100) / 100;
 };
 const qtyDiscount = (q, size, id, unit) => {
-  if (!CONFIG.BTC_ON || isPackSize(size)) return 0;
+  if (!CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return 0;
   if (id && unit) return 1 - lineTotal(unit, q, size, id) / (unit * q);
   return baseDisc(q);
 };
@@ -2574,7 +2596,7 @@ const photoDose = (s = "") => {
   if (/^3ml/.test(s)) return "3-ml";
   return null;
 };
-const photoFor = (id, size) => { const d = photoDose(size); return d ? `${PHOTO_BASE}${id}-${d}.jpg` : null; };
+const photoFor = (id, size) => { if (isKit(id)) return `${PHOTO_BASE}${id}-${String(size).includes("2 + 2") ? 2 : 1}.jpg`; const d = photoDose(size); return d ? `${PHOTO_BASE}${id}-${d}.jpg` : null; };
 /* Chiffre qui défile jusqu'à sa valeur quand il apparaît à l'écran (ex. 99,008 % de pureté). */
 const CountUp = ({ value, lang }) => {
   const target = parseFloat(value); const dec = (String(value).split(".")[1] || "").length;
@@ -2640,12 +2662,12 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{pn(p)}</div>
-      <div className="pcard-sizes">{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</div>
+      <div className="pcard-sizes">{isKit(p.id) ? (FR ? "GLP-3RT 5 mg + eau bactériostatique · 2 formats" : "GLP-3RT 5 mg + bacteriostatic water · 2 formats") : <>{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</>}</div>
       <div className="pcard-foot">
         <div>
           <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}</div>
-          {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials"}</div>}
+          {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
         <span className="link">{FR ? "Détails" : "Details"}</span>
       </div>
@@ -2690,9 +2712,10 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const bacV = bac && bac.variants.find(x => !/pack/i.test(x.size));
   const [idx, setIdx] = useState(Math.max(0, p.variants.findIndex(x => COAS[p.id] && x.size === COAS[p.id].size)));
   const v = visVariants(p)[idx] || visVariants(p)[0];
-  const coa = coaFor(p, v.size);
-  const coaOther = !coa && COAS[p.id];
-  const showBac = XSELL_BAC && canBuy(p) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
+  const coaP = isKit(p.id) ? PRODUCTS.find(x => x.id === "retatrutide") : p;   // le kit contient du GLP-3RT : on montre son rapport d'analyse
+  const coa = coaFor(coaP, isKit(p.id) ? "5mg" : v.size);
+  const coaOther = !coa && COAS[coaP.id];
+  const showBac = XSELL_BAC && canBuy(p) && !isKit(p.id) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
   const bq = bacQty == null ? qty : bacQty;
   const bacTotal = bacV ? lineTotal(bacV.price, bq, bacV.size, "bac-water") : 0;
   const total = lineTotal(v.price, qty, v.size, p.id) + (showBac && withBac ? bacTotal : 0);
@@ -2727,6 +2750,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               {visVariants(p).map((x, i) => (
                 <button key={x.size} className={`size ${i === idx ? "on" : ""}`} onClick={() => setIdx(i)}>
                   <div className="mono" style={{ fontSize: 12, color: "var(--mute)" }}>{x.size}</div>
+                  {isKit(p.id) && <div style={{ fontSize: 11.5, color: "var(--ink2)", margin: "2px 0 2px" }}>{(KIT_UNITS[p.id][x.size] || 1) + " × GLP-3RT + " + (KIT_UNITS[p.id][x.size] || 1) + " × " + (FR ? "eau" : "water")}</div>}
                   <div style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{price(x.price, cur, lang)}</div>
                 </button>
               ))}
@@ -2738,7 +2762,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
               </div>
             )}
-            {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && (
+            {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && !isKit(p.id) && (
               <div className="tiers">
                 <div className="tag" style={{ marginBottom: 8 }}>{FR ? "Prix dégressif : plus vous en prenez, moins c'est cher" : "Volume pricing: the more you take, the less you pay"}</div>
                 <div className="tiers-row">
@@ -2790,7 +2814,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               {canBuy(p) && <div className="qty">
                 <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>
                 <span>{qty}</span>
-                <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[p.id] / ((v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
+                <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[isKit(p.id) ? "retatrutide" : p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[isKit(p.id) ? "retatrutide" : p.id] / (isKit(p.id) ? (KIT_UNITS[p.id][v.size] || 1) : (v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
               </div>}
               {canBuy(p) ? (
                 <>

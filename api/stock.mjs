@@ -21,6 +21,13 @@ export const MANUAL_SOLD = { retatrutide: 0 };               // virements payés
 // Formats qui puisent dans le stock, et combien de flacons chacun retire.
 const UNITS = { retatrutide: { "5mg": 1, "5mg · Pack de 2": 2, "5mg · Pack de 3": 3 } };
 
+// Le Kit GLP-3RT retire aussi des flacons de GLP-3RT du stock (garder identique à KIT_UNITS dans src/App.jsx).
+const KIT_UNITS = { "kit-glp3rt": { "Kit · 1 + 1": 1, "Kit · 2 + 2": 2 } };
+const addSold = (sold, l) => {
+  if (UNITS[l.id]) sold[l.id] = (sold[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
+  if (KIT_UNITS[l.id]) sold.retatrutide = (sold.retatrutide || 0) + (KIT_UNITS[l.id][l.size] || 0) * (Number(l.qty) || 0);
+};
+
 const startUnix = () => Math.floor(Date.parse(START_DATE) / 1000);
 const unitsOf = (id, size, qty) => (UNITS[id] && UNITS[id][size] ? UNITS[id][size] * (Number(qty) || 0) : 0);
 
@@ -38,7 +45,7 @@ async function soldStripe(key, sold) {
     const d = await r.json();
     for (const s of d.data || []) {
       if (s.payment_status !== "paid") continue;
-      for (const l of decodeItems(s.metadata && s.metadata.items)) if (UNITS[l.id]) sold[l.id] = (sold[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
+      for (const l of decodeItems(s.metadata && s.metadata.items)) addSold(sold, l);
     }
     after = d.has_more && d.data.length ? d.data[d.data.length - 1].id : null;
   } while (after && ++pages < 20);
@@ -54,7 +61,7 @@ async function soldBtc(env, sold) {
   const list = await r.json();
   for (const inv of Array.isArray(list) ? list : []) {
     const lines = inv.metadata && Array.isArray(inv.metadata.lines) ? inv.metadata.lines : [];
-    for (const l of lines) if (l && UNITS[l.id]) sold[l.id] = (sold[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
+    for (const l of lines) if (l) addSold(sold, l);
   }
 }
 
@@ -71,7 +78,10 @@ export async function getStock(env = process.env) {
 /* Vérifie qu'un panier ne dépasse pas le stock. Renvoie un message d'erreur, ou null si c'est bon. */
 export async function checkStock(lines, lang = "FR") {
   const need = {};
-  for (const l of lines) if (UNITS[l.id] && UNITS[l.id][l.size]) need[l.id] = (need[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
+  for (const l of lines) {
+    if (UNITS[l.id] && UNITS[l.id][l.size]) need[l.id] = (need[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
+    if (KIT_UNITS[l.id] && KIT_UNITS[l.id][l.size]) need.retatrutide = (need.retatrutide || 0) + KIT_UNITS[l.id][l.size] * (Number(l.qty) || 0);
+  }
   if (!Object.keys(need).length) return null;
   const { left } = await getStock();
   for (const id of Object.keys(need)) {

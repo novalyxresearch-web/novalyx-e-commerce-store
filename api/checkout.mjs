@@ -163,6 +163,10 @@ const PRICES = {
   "3ml · Pack de 2": 12.99,
   "3ml · Pack de 3": 18.99
  },
+ "kit-glp3rt": {
+  "Kit · 1 + 1": 62.99,
+  "Kit · 2 + 2": 109.99
+ },
  "formula04": {
   "80mg total": 149.99
  },
@@ -280,7 +284,7 @@ const PRICES = {
 };
 
 // Produits en stock (pas de minimum). Les autres sont « sur commande » avec un minimum par format.
-const IN_STOCK = ["retatrutide", "bac-water"];
+const IN_STOCK = ["retatrutide", "bac-water", "kit-glp3rt"];
 const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
 const inStock = (id, size) => IN_STOCK.includes(id) && (!STOCK_SIZES[id] || STOCK_SIZES[id].includes(size));
 const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "retatrutide_10mg": 2, "retatrutide_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
@@ -295,7 +299,7 @@ const isPack = (size) => /pack/i.test(String(size));
 const TIER_TOTALS = { "retatrutide|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
 const baseDisc = (q) => q >= 5 ? 0.2 : q >= 3 ? 0.15 : q >= 2 ? 0.1 : 0;
 const lineTotalFor = (id, size, unit, q) => {
-  if (isPack(size)) return round2(unit * q);
+  if (isPack(size) || id === "kit-glp3rt") return round2(unit * q);   // le kit est déjà remisé : pas de remise par quantité en plus
   const t = TIER_TOTALS[id + "|" + size];
   if (t && t[q]) return t[q];
   let d = baseDisc(q);

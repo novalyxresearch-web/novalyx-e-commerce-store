@@ -48,7 +48,7 @@ export default async function handler(req, res) {
   const names = {};
   (Array.isArray(body.items) ? body.items : []).forEach((it) => { if (it && it.id) names[it.id + "|" + it.size] = clean(it.name, 60); });
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-  const site = (SITE_URL || "https://novalyxresearch.com").replace(/\/+$/, "");
+  const site = (SITE_URL || "https://novalyxresearch.com").trim().replace(/[\/.\s]+$/, ""); // retire un « / » ou un « . » final : https://site.com. casse le retour après paiement
 
   const p = new URLSearchParams();
   p.append("mode", "payment");

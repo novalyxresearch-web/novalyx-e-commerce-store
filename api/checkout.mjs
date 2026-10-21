@@ -370,7 +370,7 @@ export default async function handler(req, res) {
   if (short) return res.status(409).json({ error: short });
 
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-  const site = (SITE_URL || "https://novalyxresearch.com").replace(/\/+$/, "");
+  const site = (SITE_URL || "https://novalyxresearch.com").trim().replace(/[\/.\s]+$/, ""); // retire un « / » ou un « . » final : https://site.com. casse le retour après paiement
   const desc = order.lines.map((l) => l.id + " " + l.size + " x" + l.qty).join(", ");
 
   try {

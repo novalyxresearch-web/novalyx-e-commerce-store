@@ -1998,6 +1998,24 @@ html,body{background:#fff}
 /* ─── TOUCHE « ROSE POUDRÉ » (si CONFIG.ROSE) : le bleu nuit et le vert restent les couleurs principales,
    le rose ne touche que les fonds, les étiquettes, les bordures et les ombres. ─── */
 const ROSE_CSS = `
+/* ─── LA CHAÎNE (hero) ─── */
+.hero{position:relative;overflow:hidden;isolation:isolate}
+
+.hero{padding-top:20px!important}.chain{position:relative;z-index:1;height:190px;max-width:1180px;margin:0 auto 6px;pointer-events:none}.chain-cap{position:absolute;left:0;right:0;bottom:-2px;text-align:center;font:600 10.5px/1 Poppins,sans-serif;letter-spacing:.34em;color:#7F2F51;opacity:.8}
+.chain svg{width:100%;height:100%;overflow:visible}
+.chain-bond{stroke:#7F2F51;stroke-opacity:.42;stroke-width:3.4;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;animation:bond-draw .55s ease-out forwards;animation-delay:calc(var(--i)*.14s + .3s)}
+.chain-bead{animation:bead-float 6.5s ease-in-out infinite;animation-delay:calc(var(--i)*-.55s)}
+.chain-in{transform-box:fill-box;transform-origin:center;opacity:0;animation:bead-in .7s cubic-bezier(.2,1.4,.4,1) forwards,bead-glow 7s ease-in-out infinite;animation-delay:calc(var(--i)*.14s),calc(var(--i)*.3s + 2.5s)}
+.chain text{font-family:Poppins,sans-serif;font-weight:700;font-size:21px}
+@keyframes bond-draw{to{stroke-dashoffset:0}}
+@keyframes bead-in{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+@keyframes bead-float{0%,100%{transform:translate(0,0)}50%{transform:translate(var(--fx),-7px)}}
+@keyframes bead-glow{0%,86%,100%{filter:none}93%{filter:drop-shadow(0 0 10px rgba(224,69,127,.85)) brightness(1.25)}}
+.hero::after{content:"";position:absolute;z-index:0;width:520px;height:520px;left:-180px;bottom:-240px;border-radius:50%;background:radial-gradient(closest-side,rgba(224,69,127,.18),transparent);filter:blur(10px);pointer-events:none}
+.display em{background:linear-gradient(100deg,#7F2F51,#E0457F);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media(max-width:979px){.chain{height:130px;margin:0 -8% 14px}.chain-cap{font-size:8.5px;letter-spacing:.24em;bottom:-8px}}
+@media (prefers-reduced-motion:reduce){.chain-bond{stroke-dashoffset:0;animation:none}.chain-bead,.chain-in{animation:none;opacity:1}}
+
 /* Fond de page rose poudré ; cartes, fenêtres et formulaires restent clairs pour ressortir dessus. */
 :root{--page:#FAEDEB; --paper:#FFFBFA; --surface:#FFFFFF; --soft:#F6E4E2; --line:#EBD8D7; --line2:#F2E3E2; --mute:#6A6164; --rose:#D39AA2; --rose-soft:#F5DDDC; --rose-ink:#94505B}
 html,body{background:#FAEDEB}
@@ -2410,6 +2428,31 @@ a{color:inherit}
 .bot-form .btn{padding:11px 16px;font-size:13px}
 .gate-card{max-width:460px;width:100%;margin:auto;border:1px solid var(--line);background:var(--surface);padding:34px 28px}
 `;
+
+
+/* ─── LA CHAÎNE : une vraie séquence peptidique (BPC-157, 15 acides aminés) dessinée avec les nœuds du logo.
+   Couleur = famille d'acide aminé (chargé, polaire, hydrophobe, spécial). Décor pur, sans lien ni interaction. */
+const CHAIN_SEQ = "GEPPPGKPADDAGLV";
+const CHAIN_COL = { G:"#B4B9C9", A:"#2A0F1C", L:"#2A0F1C", V:"#2A0F1C", P:"#7F2F51", E:"#E0457F", D:"#E0457F", K:"#A14A73" };
+const PeptideChain = () => {
+  const n = CHAIN_SEQ.length, W = 1000, X0 = 50, DX = (W - 2 * X0) / (n - 1);
+  const pts = CHAIN_SEQ.split("").map((c, i) => ({ c, x: X0 + i * DX, y: 120 + 62 * Math.sin(i * 0.82 + 0.5) + (i % 2 ? 10 : -10) }));
+  return (
+    <div className="chain" aria-hidden="true">
+      <svg viewBox="0 0 1000 250" preserveAspectRatio="xMidYMid meet">
+        {pts.slice(1).map((p, i) => <line key={"b" + i} className="chain-bond" style={{ "--i": i }} x1={pts[i].x} y1={pts[i].y} x2={p.x} y2={p.y} />)}
+        {pts.map((p, i) => (
+          <g key={i} transform={`translate(${p.x} ${p.y})`}>
+            <g className="chain-bead" style={{ "--i": i, "--fx": (i % 2 ? 1 : -1) * (3 + (i % 3)) + "px" }}>
+              <g className="chain-in"><circle r={i % 4 === 1 ? 25 : 21} fill={CHAIN_COL[p.c]} /><text y="7" textAnchor="middle" fill={p.c === "G" ? "#2A0F1C" : "#fff"}>{p.c}</text></g>
+            </g>
+          </g>
+        ))}
+      </svg>
+      <div className="chain-cap">BPC-157 · {CHAIN_SEQ} · 15 AA</div>
+    </div>
+  );
+};
 
 /* ─── LOGO (reprend ton logo : nœuds + A vert) ───────────── */
 const Logo = ({ s = 34, light = false }) => {
@@ -3200,7 +3243,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
   return (
     <div>
       {/* HERO */}
-      <section className="hero">
+      <section className="hero"><PeptideChain />
         <div className="wrap hero-grid">
           <div className="hero-vials">
             <button ref={stackRef} className="hero-stack" onClick={() => go("products", "All")} aria-label={FR ? "Voir tout le catalogue" : "View the whole catalogue"}>

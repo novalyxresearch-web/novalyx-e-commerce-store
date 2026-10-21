@@ -2002,7 +2002,7 @@ const ROSE_CSS = `
 .hero{position:relative;overflow:hidden;isolation:isolate}
 
 .hero{padding-top:20px!important}
-.hplc{position:relative;z-index:1;max-width:1180px;margin:0 auto 14px;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.hplc{position:relative;z-index:1;max-width:780px;margin:0 auto 14px;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
 .hplc svg{display:block;width:100%;height:auto;overflow:visible}
 .hplc-trace{fill:none;stroke:#7F2F51;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
 .hplc-area{opacity:0}
@@ -2019,7 +2019,7 @@ const ROSE_CSS = `
 .hplc.done .hplc-trace{stroke-dashoffset:0}.hplc.done .hplc-area{opacity:1}
 @keyframes hplc-draw{to{stroke-dashoffset:0}}
 @keyframes hplc-fill{to{opacity:1}}
-@media(max-width:700px){.hplc{margin:0 -4px 10px}.hplc-t{font-size:19px}.hplc-t.big{font-size:25px}.hplc-tagt{font-size:20px}.hplc-trace{stroke-width:3.6}}
+@media(max-width:700px){.hplc{max-width:none;margin:0 -4px 10px}.hplc-t{font-size:19px}.hplc-t.big{font-size:25px}.hplc-tagt{font-size:20px}.hplc-trace{stroke-width:3.6}}
 @media (prefers-reduced-motion:reduce){.hplc .hplc-trace{animation:none!important;stroke-dashoffset:0}.hplc .hplc-area{animation:none!important;opacity:1}}
 .hero::after{content:"";position:absolute;z-index:0;width:520px;height:520px;left:-180px;bottom:-240px;border-radius:50%;background:radial-gradient(closest-side,rgba(224,69,127,.18),transparent);filter:blur(10px);pointer-events:none}
 .display em{background:linear-gradient(100deg,#7F2F51,#E0457F);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -2117,7 +2117,7 @@ const CSS = `
 /* Langues à mots longs (allemand, néerlandais) : coupure propre avec trait d'union, colonnes jamais plus larges que l'écran. */
 h1,h2,h3,.display,.h2,.pcard-name,.hero-prod-name,.lead,.eyebrow,.btn,p{overflow-wrap:break-word;hyphens:manual;-webkit-hyphens:manual}
 .hero-grid > *,.grid > *,.facts > *,.wrap > *{min-width:0}
-html,body{background:var(--paper);color:var(--ink);overflow-x:hidden}
+html,body{background:var(--paper);color:var(--ink)}html{overflow-x:hidden}body{overflow-x:clip}
 body{font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
 img,svg{max-width:100%;display:block}
 button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
@@ -2460,7 +2460,7 @@ const HplcSignature = ({ purity, lang }) => {
   const move = (e) => { const r = e.currentTarget.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width) * W; setCur(Math.max(0, Math.min(TMAX, ((x - X0) / (X1 - X0)) * TMAX))); };
   const v = hplcSig(cur), cx = X(cur), cy = Y(v), right = cx > 760;
   const fmt = (n, d) => num(n.toFixed(d), lang);
-  const tag = `${fmt(cur, 2)} min · ${fmt(v * 12.4, 0)} mAU`;
+  const tag = `${fmt(cur, 2)} min · ${fmt(v / hplcSig(4.82) * 100, 0)} %`;
   const sm = typeof window !== "undefined" && window.innerWidth < 700; const TW = sm ? 232 : 144, TH = sm ? 38 : 26;
   return (
     <div className="hplc" ref={ref} onPointerMove={move} onPointerDown={move} onPointerLeave={() => setCur(4.82)} role="img" aria-label={FRl ? `Chromatogramme HPLC du lot publié : un pic unique, pureté ${purity} %` : `HPLC chromatogram of the published batch: a single peak, ${purity} % purity`}>
@@ -2473,7 +2473,7 @@ const HplcSignature = ({ purity, lang }) => {
         <path className="hplc-trace" pathLength="1" d={d} />
         <line className="hplc-axis" x1={X0} x2={X1} y1={YB} y2={YB} />
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(t => <g key={t}><line className="hplc-axis" x1={X(t)} x2={X(t)} y1={YB} y2={YB + (t % 2 ? 5 : 9)} />{t % 2 === 0 && <text className="hplc-t" x={X(t)} y={YB + 26} textAnchor="middle">{t}</text>}</g>)}
-        <text className="hplc-t" x={X1} y={YB + 58} textAnchor="end">{FRl ? "TEMPS DE RÉTENTION (MIN)" : "RETENTION TIME (MIN)"} · UV 220 NM</text>
+        <text className="hplc-t" x={X1} y={YB + 58} textAnchor="end">{FRl ? "TEMPS DE RÉTENTION (MIN)" : "RETENTION TIME (MIN)"} · ILLUSTRATION</text>
         <text className="hplc-t big" x={X(4.82) - 22} y={Y(100) + 4} textAnchor="end">{FRl ? "Un seul pic" : "One single peak"}</text>
         <text className="hplc-t" x={X(4.82) - 22} y={Y(100) + 24} textAnchor="end">{FRl ? "PURETÉ" : "PURITY"} {num(String(purity), lang)} %</text>
         <line className="hplc-cur" x1={cx} x2={cx} y1="18" y2={YB} />

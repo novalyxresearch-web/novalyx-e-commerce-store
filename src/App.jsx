@@ -1836,9 +1836,9 @@ const JANOSHIK_VERIFY = "https://janoshik.com/verify/";
 
 /* Couleur de capsule par catégorie — sobre, façon étiquette de labo */
 const CAT_TONE = {
-  "Metabolic":"#A8792A", "Regenerative":"#1E6A43", "Longevity":"#5A4B86", "GH Research":"#2E5A86",
-  "Immune":"#9A4B2C", "Cognitive":"#26706E", "Specialized":"#86394A", "Signature Blends":"#0B1B2E",
-  "Growth & Cellular":"#3E6B4E", "Lab Supplies":"#5B7A99", "Bioregulators":"#8A6D2F", "Cosmetic Peptides":"#9A4B6E",
+  "Metabolic":"#A8792A", "Regenerative":"#7F2F51", "Longevity":"#5A4B86", "GH Research":"#2E5A86",
+  "Immune":"#9A4B2C", "Cognitive":"#26706E", "Specialized":"#86394A", "Signature Blends":"#2A0F1C",
+  "Growth & Cellular":"#8A2A52", "Lab Supplies":"#5B7A99", "Bioregulators":"#8A6D2F", "Cosmetic Peptides":"#9A4B6E",
 };
 const CAT_DESC = {
   "Signature Blends": ["Mélanges multi-peptides en un seul flacon.","Multi-peptide blends in a single vial."],
@@ -1937,12 +1937,12 @@ const shortName = (n) => n.replace("Novalyx Formula ", "FORMULA ").replace(" (no
    Fond blanc, police géométrique du logo (Poppins) pour les titres, vert du logo
    pour les actions d'achat, cartes arrondies avec ombres, animations douces. */
 const MODERN_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap');
 :root{
-  --paper:#FFFFFF; --surface:#FFFFFF; --soft:#F5F7FA; --ink:#09193B; --ink2:#3A4659; --mute:#667085;
-  --line:#E4E8EE; --line2:#EEF1F5; --green:#2E7D32; --green-soft:#EAF5E4; --leaf:#78B752;
-  --serif:'Poppins',system-ui,-apple-system,sans-serif; --sans:'Inter',system-ui,-apple-system,sans-serif;
-  --mono:'Inter',system-ui,-apple-system,sans-serif;
+  --paper:#FFFFFF; --surface:#FFFFFF; --soft:#F5F7FA; --ink:#2A0F1C; --ink2:#5A3A47; --mute:#667085;
+  --line:#E4E8EE; --line2:#EEF1F5; --green:#7F2F51; --green-soft:#FBE9F0; --leaf:#7F2F51;
+  --serif:'Poppins',system-ui,-apple-system,sans-serif; --sans:'Poppins',system-ui,-apple-system,sans-serif;
+  --mono:'Poppins',system-ui,-apple-system,sans-serif;
 }
 .cart-btn{border-radius:10px;border-width:1.5px}
 .display em,.h2 em{font-style:italic;font-weight:600;color:var(--green)}
@@ -1962,33 +1962,33 @@ html,body{background:#fff}
 .btn{border-radius:12px;font-weight:600;transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease}
 .btn:hover{transform:translateY(-1px)}
 .btn:active{transform:translateY(0) scale(.98)}
-.btn-ink{background:var(--ink);box-shadow:0 8px 20px rgba(9,25,59,.18)}
-.btn-ink:hover{background:#142a5c}
+.btn-ink{background:var(--ink);box-shadow:0 8px 20px rgba(42,15,28,.18)}
+.btn-ink:hover{background:#3A0F22}
 .btn-line{border:1.5px solid var(--line);background:#fff}
 .btn-line:hover{border-color:var(--ink)}
-.buy-btn.btn-ink,.hero-cta .btn-ink,.drawer-in .btn-ink:last-child,.mbar .btn-ink{background:var(--leaf);color:var(--ink);box-shadow:0 8px 22px rgba(120,183,82,.35)}
-.buy-btn.btn-ink:hover,.hero-cta .btn-ink:hover,.drawer-in .btn-ink:last-child:hover,.mbar .btn-ink:hover{background:#6aa947}
+.buy-btn.btn-ink,.hero-cta .btn-ink,.drawer-in .btn-ink:last-child,.mbar .btn-ink{background:var(--green);color:#fff;box-shadow:0 8px 22px rgba(127,47,81,.35)}
+.buy-btn.btn-ink:hover,.hero-cta .btn-ink:hover,.drawer-in .btn-ink:last-child:hover,.mbar .btn-ink:hover{background:#6A2644}
 .nav{background:rgba(255,255,255,.86);border-bottom-color:var(--line2)}
 .nav-links button.on,.nav-links button:hover{border-color:var(--leaf)}
-.hero{background:radial-gradient(60% 50% at 88% 8%,rgba(120,183,82,.16),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(9,25,59,.06),transparent 70%)}
+.hero{background:radial-gradient(60% 50% at 88% 8%,rgba(127,47,81,.16),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(42,15,28,.06),transparent 70%)}
 .grid{gap:16px;background:transparent;border:0}
-.pcard{border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(9,25,59,.04);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
-.pcard:hover{background:#fff;transform:translateY(-4px);box-shadow:0 16px 36px rgba(9,25,59,.10);border-color:#d6dce6}
+.pcard{border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(42,15,28,.04);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.pcard:hover{background:#fff;transform:translateY(-4px);box-shadow:0 16px 36px rgba(42,15,28,.10);border-color:#d6dce6}
 .pcard-vial img{border-radius:14px}
-.sheet{border-radius:22px;border-color:var(--line);box-shadow:0 12px 34px rgba(9,25,59,.07)}
+.sheet{border-radius:22px;border-color:var(--line);box-shadow:0 12px 34px rgba(42,15,28,.07)}
 .facts{border:0;gap:12px}
 .fact{border:1px solid var(--line);border-radius:16px;background:var(--soft)}
 .fchip{border-radius:999px;font-family:var(--sans);font-weight:500;font-size:12.5px;letter-spacing:0;padding:9px 14px}
 .fchip.on{background:var(--ink);border-color:var(--ink)}
 .qty{border-radius:12px;overflow:hidden}
 .tier{border-radius:16px}
-.modal{border-radius:24px 24px 0 0;border:0;box-shadow:0 -10px 40px rgba(9,25,59,.18)}
+.modal{border-radius:24px 24px 0 0;border:0;box-shadow:0 -10px 40px rgba(42,15,28,.18)}
 @media(min-width:760px){.modal{border-radius:24px}}
-.drawer-in{background:#fff;border-left:0;box-shadow:-20px 0 50px rgba(9,25,59,.15)}
-.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(120,183,82,.18),transparent 70%),linear-gradient(180deg,#F5F7FA,#fff)}
-.gate-card{border-radius:24px;border-color:var(--line);box-shadow:0 24px 60px rgba(9,25,59,.12)}
+.drawer-in{background:#fff;border-left:0;box-shadow:-20px 0 50px rgba(42,15,28,.15)}
+.gate{background:radial-gradient(70% 60% at 85% 0%,rgba(127,47,81,.18),transparent 70%),linear-gradient(180deg,#F5F7FA,#fff)}
+.gate-card{border-radius:24px;border-color:var(--line);box-shadow:0 24px 60px rgba(42,15,28,.12)}
 .foot{background:var(--soft);border-top:0}
-.btc-callout,.help-cta{border-radius:22px;box-shadow:0 12px 34px rgba(9,25,59,.06)}
+.btc-callout,.help-cta{border-radius:22px;box-shadow:0 12px 34px rgba(42,15,28,.06)}
 .cookie > div{border-radius:18px}
 /* Apparition douce au défilement */
 .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
@@ -2001,7 +2001,7 @@ const ROSE_CSS = `
 /* Fond de page rose poudré ; cartes, fenêtres et formulaires restent clairs pour ressortir dessus. */
 :root{--page:#FAEDEB; --paper:#FFFBFA; --surface:#FFFFFF; --soft:#F6E4E2; --line:#EBD8D7; --line2:#F2E3E2; --mute:#6A6164; --rose:#D39AA2; --rose-soft:#F5DDDC; --rose-ink:#94505B}
 html,body{background:#FAEDEB}
-.hero{background:radial-gradient(65% 55% at 88% 8%,rgba(216,160,167,.36),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(120,183,82,.08),transparent 70%),linear-gradient(180deg,#F6DCD9 0%,#FAEDEB 100%)}
+.hero{background:radial-gradient(65% 55% at 88% 8%,rgba(216,160,167,.36),transparent 70%),radial-gradient(50% 45% at 6% 92%,rgba(127,47,81,.08),transparent 70%),linear-gradient(180deg,#F6DCD9 0%,#FAEDEB 100%)}
 .gate{background:radial-gradient(70% 60% at 85% 0%,rgba(216,160,167,.38),transparent 70%),linear-gradient(180deg,#F7E1DE,#FAEDEB)}
 .nav{background:rgba(250,237,235,.9)}
 .foot{background:#F6E4E2}
@@ -2081,11 +2081,11 @@ const useReveal = (on) => {
 };
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500;1,600&display=swap');
 :root{
-  --paper:#F5F3EE; --surface:#FFFFFF; --ink:#0B1B2E; --ink2:#34404F; --mute:#6A7380;
-  --line:#DCD7CC; --line2:#EAE6DD; --green:#1E6A43; --green-soft:#E4EEE7; --leaf:#62B94A;
-  --serif:'Newsreader',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --paper:#F5F3EE; --surface:#FFFFFF; --ink:#2A0F1C; --ink2:#4A3640; --mute:#6A7380;
+  --line:#DCD7CC; --line2:#EAE6DD; --green:#7F2F51; --green-soft:#FBE9F0; --leaf:#7F2F51;
+  --serif:'Poppins',system-ui,-apple-system,sans-serif; --sans:'Poppins',system-ui,-apple-system,sans-serif; --mono:'Poppins',system-ui,-apple-system,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 /* Langues à mots longs (allemand, néerlandais) : coupure propre avec trait d'union, colonnes jamais plus larges que l'écran. */
@@ -2133,7 +2133,7 @@ a{color:inherit}
 .ticker:hover .ticker-track{animation-play-state:paused}
 .ticker-set{display:inline-flex}
 .ticker-item{display:inline-flex;align-items:center;padding:0 22px}
-.ticker-item:before{content:"";width:5px;height:5px;border-radius:50%;background:#7FCB68;margin-right:22px;flex-shrink:0}
+.ticker-item:before{content:"";width:5px;height:5px;border-radius:50%;background:#F07AA3;margin-right:22px;flex-shrink:0}
 @keyframes nvx-tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion: reduce){.ticker-track{display:none}.ticker-static{display:block}}
 .nav{position:sticky;top:0;z-index:50;background:rgba(245,243,238,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -2166,7 +2166,7 @@ a{color:inherit}
 @media(min-width:980px){.hero-grid{grid-template-columns:1.15fr .85fr;gap:64px}}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
 .hero-stack{position:relative;display:block;width:100%;max-width:560px;height:200px;margin:0 auto;background:none;border:0;padding:0;cursor:pointer}
-.hs{position:absolute;bottom:6px;width:31%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 14px 32px rgba(9,25,59,.14);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;animation:nvx-fan .9s cubic-bezier(.2,.8,.2,1) backwards,nvx-float var(--fd,6s) ease-in-out infinite;animation-play-state:paused}
+.hs{position:absolute;bottom:6px;width:31%;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 14px 32px rgba(42,15,28,.14);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;animation:nvx-fan .9s cubic-bezier(.2,.8,.2,1) backwards,nvx-float var(--fd,6s) ease-in-out infinite;animation-play-state:paused}
 .hero-stack.play .hs{animation-play-state:running}
 .hs img{width:100% !important;height:100% !important;object-fit:cover;border-radius:0 !important}
 .hs0{left:0;--r:-6deg;--s:.8;--dx:111%;--fd:6.4s;z-index:1;animation-delay:.32s,1.6s}.hs1{left:17%;--r:-3deg;--s:.9;--dx:56%;--fd:5.6s;z-index:2;animation-delay:.2s,2.3s}
@@ -2176,11 +2176,11 @@ a{color:inherit}
    Le flottement utilise la propriété translate (indépendante de transform) : le survol et l'éventail restent intacts. */
 @keyframes nvx-float{0%,100%{translate:0 0}50%{translate:0 -7px}}
 @keyframes nvx-fan{from{opacity:0;transform:translateX(var(--dx)) rotate(0deg) scale(.72)}to{opacity:1;transform:rotate(var(--r)) scale(var(--s))}}
-@media (hover:hover){.hero-stack .hs:hover{transform:rotate(var(--r)) scale(calc(var(--s) * 1.06)) translateY(-10px);box-shadow:0 26px 50px rgba(9,25,59,.22);z-index:6}}
+@media (hover:hover){.hero-stack .hs:hover{transform:rotate(var(--r)) scale(calc(var(--s) * 1.06)) translateY(-10px);box-shadow:0 26px 50px rgba(42,15,28,.22);z-index:6}}
 .hero-vials{padding-top:6px}
 @media(max-width:979px){.hero-stack{height:150px}.hero-grid{gap:28px}}
 @media(min-width:980px){.hero-vials{margin-top:0}.hero-stack{height:170px;margin:0;max-width:520px}.hero-stack-cap{text-align:left;max-width:520px}}
-.hero-stack:hover .hs2{box-shadow:0 24px 50px rgba(9,25,59,.22)}
+.hero-stack:hover .hs2{box-shadow:0 24px 50px rgba(42,15,28,.22)}
 .hero-stack-cap{margin-top:12px;font-size:13px;color:var(--mute);text-align:center}
 .row-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .best-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}
@@ -2333,8 +2333,8 @@ a{color:inherit}
 @media (min-width:860px){.btc-steps{grid-template-columns:1fr 1fr}.btc-after{grid-template-columns:1fr 1.4fr}}
 .buy-btn{flex:1 1 170px;justify-content:center}
 .zoom-btn{position:relative;display:block;background:none;border:0;padding:0;cursor:zoom-in;border-radius:14px}
-.zoom-hint{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 12px rgba(9,25,59,.15)}
-.zoom{position:fixed;inset:0;z-index:200;background:rgba(9,25,59,.92);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));cursor:zoom-out;touch-action:pinch-zoom}
+.zoom-hint{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 12px rgba(42,15,28,.15)}
+.zoom{position:fixed;inset:0;z-index:200;background:rgba(42,15,28,.92);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));cursor:zoom-out;touch-action:pinch-zoom}
 .zoom img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.4);cursor:default}
 .zoom-x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:var(--ink);font-size:18px;cursor:pointer}
 .mbar{display:none}
@@ -2345,7 +2345,7 @@ a{color:inherit}
 .tiers{margin-top:22px}
 .tiers-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
 .tier{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 12px 10px;border:1px solid var(--line);background:var(--paper);border-radius:12px;cursor:pointer;font:inherit;color:inherit;text-align:left;min-height:44px}
-.tier.on{border-color:var(--green);background:#EEF5EF;box-shadow:0 0 0 1px var(--green) inset}
+.tier.on{border-color:var(--green);background:#FBE9F0;box-shadow:0 0 0 1px var(--green) inset}
 .tier-n{font-weight:600;font-size:14px}
 .tier-p{font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
 .tier-d{font-family:var(--mono);font-size:11.5px;color:#fff;background:var(--green);padding:2px 7px;border-radius:999px;margin-top:2px}
@@ -2353,15 +2353,15 @@ a{color:inherit}
 .saving{margin-top:12px;font-size:13.5px;color:var(--green)}
 .pcard-deal{margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--green)}
 .ship-note{margin-top:14px;padding:9px 12px;border-radius:8px;background:#FBF3E4;color:#7A4E0E;font-size:13px;line-height:1.45}
-.ship-note.ok{background:#EEF5EF;color:var(--green)}
+.ship-note.ok{background:#FBE9F0;color:var(--green)}
 .freebar{margin:8px 0 6px}
 .freebar-txt{font-size:12.5px;color:var(--ink2);margin-bottom:6px}
 .freebar-track{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
 .freebar-track i{display:block;height:100%;background:var(--green);border-radius:6px;transition:width .4s}
-.paid-banner{position:sticky;top:0;z-index:60;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:14px 20px;background:#EEF5EF;border-bottom:1px solid var(--green);color:var(--ink);font-size:14px;line-height:1.5}
+.paid-banner{position:sticky;top:0;z-index:60;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:14px 20px;background:#FBE9F0;border-bottom:1px solid var(--green);color:var(--ink);font-size:14px;line-height:1.5}
 @media (max-width:480px){.packs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .xsell{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:22px;padding:10px 12px;border:1px solid var(--line);background:var(--paper);cursor:pointer}
-.xsell.on{border-color:var(--green);background:#EEF5EF}
+.xsell.on{border-color:var(--green);background:#FBE9F0}
 .xsell input{accent-color:var(--green);width:18px;height:18px}
 .xsell img{width:52px!important;height:52px!important;border-radius:8px!important}
 .xsell-txt{display:grid;gap:2px;font-size:14px;color:var(--ink)}
@@ -2374,7 +2374,7 @@ a{color:inherit}
 .promo-row input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);background:#fff;font:inherit;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
 .promo-row .btn{padding:10px 14px;white-space:nowrap}
 .promo-x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;margin-left:6px;padding:0}
-.added{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:#EEF5EF;border:1px solid var(--green);color:var(--green);font-size:13.5px}
+.added{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:#FBE9F0;border:1px solid var(--green);color:var(--green);font-size:13.5px}
 .added .link{background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:13px}
 .hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
 @media (max-width:480px){.hero-prod{gap:12px;padding:10px}.hero-prod img{width:96px!important;height:96px!important}.hero-prod-name{font-size:24px!important}}
@@ -2413,23 +2413,23 @@ a{color:inherit}
 
 /* ─── LOGO (reprend ton logo : nœuds + A vert) ───────────── */
 const Logo = ({ s = 34, light = false }) => {
-  const node = light ? "#FFFFFF" : "#0B1B2E";
+  const node = light ? "#FFFFFF" : "#2A0F1C";
   return (
     <svg width={s} height={s} viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <line x1="19" y1="20" x2="31" y2="15" stroke="#62B94A" strokeWidth="2.2"/>
-      <line x1="34" y1="14" x2="35" y2="28" stroke="#62B94A" strokeWidth="2.2"/>
+      <line x1="19" y1="20" x2="31" y2="15" stroke="#7F2F51" strokeWidth="2.2"/>
+      <line x1="34" y1="14" x2="35" y2="28" stroke="#7F2F51" strokeWidth="2.2"/>
       <line x1="19" y1="20" x2="33" y2="30" stroke={node} strokeWidth="2.2"/>
-      <line x1="17" y1="21" x2="12" y2="30" stroke="#A9B3C1" strokeWidth="2.2"/>
-      <circle cx="34" cy="12" r="5.5" fill="#62B94A"/>
+      <line x1="17" y1="21" x2="12" y2="30" stroke="#B4B9C9" strokeWidth="2.2"/>
+      <circle cx="34" cy="12" r="5.5" fill="#7F2F51"/>
       <circle cx="18" cy="19" r="5" fill={node}/>
       <circle cx="34" cy="31" r="5" fill={node}/>
-      <circle cx="11" cy="32" r="3.8" fill="#A9B3C1"/>
+      <circle cx="11" cy="32" r="3.8" fill="#B4B9C9"/>
     </svg>
   );
 };
 
 /* ─── FLACON dessiné par produit (étiquette propre, sans dosage d'usage) ── */
-const Vial = ({ name, size, tone = "#1E6A43", h = 180 }) => {
+const Vial = ({ name, size, tone = "#7F2F51", h = 180 }) => {
   const label = shortName(name).toUpperCase();
   const fs = Math.min(8.6, 46 / (label.length * 0.62));
   const id = "g" + label.replace(/[^A-Z0-9]/g, "") + (size || "").replace(/[^a-z0-9]/gi, "");
@@ -2441,7 +2441,7 @@ const Vial = ({ name, size, tone = "#1E6A43", h = 180 }) => {
           <stop offset=".55" stopColor="#F3F6F8"/><stop offset=".85" stopColor="#FFFFFF"/><stop offset="1" stopColor="#E3E8EC"/>
         </linearGradient>
       </defs>
-      <ellipse cx="50" cy="172" rx="30" ry="3.5" fill="#0B1B2E" opacity=".08"/>
+      <ellipse cx="50" cy="172" rx="30" ry="3.5" fill="#2A0F1C" opacity=".08"/>
       <rect x="31" y="6" width="38" height="13" rx="2" fill={tone}/>
       <rect x="31" y="6" width="38" height="4" rx="2" fill="#fff" opacity=".18"/>
       <rect x="33" y="19" width="34" height="12" fill="#C4CBD3"/>
@@ -2450,11 +2450,11 @@ const Vial = ({ name, size, tone = "#1E6A43", h = 180 }) => {
       <rect x="29" y="142" width="42" height="24" rx="2" fill="#FAFAF8" opacity=".95"/>
       <rect x="25" y="66" width="50" height="64" fill="#FFFFFF" stroke="#D5D9DE" strokeWidth=".6"/>
       <rect x="25" y="66" width="50" height="3" fill={tone}/>
-      <text x="50" y="80" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="4.6" letterSpacing="1.4" fill="#0B1B2E">NOVALYX</text>
+      <text x="50" y="80" textAnchor="middle" fontFamily="Poppins, sans-serif" fontSize="4.6" letterSpacing="1.4" fill="#2A0F1C">NOVALYX</text>
       <line x1="32" y1="84" x2="68" y2="84" stroke="#E1E4E8" strokeWidth=".5"/>
-      <text x="50" y="97" textAnchor="middle" fontFamily="IBM Plex Sans, sans-serif" fontWeight="600" fontSize={fs} fill="#0B1B2E">{label}</text>
-      <text x="50" y="108" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="6" fill={tone}>{size || ""}</text>
-      <text x="50" y="121" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="3.3" letterSpacing=".6" fill="#6A7380">RESEARCH USE ONLY</text>
+      <text x="50" y="97" textAnchor="middle" fontFamily="Poppins, sans-serif" fontWeight="600" fontSize={fs} fill="#2A0F1C">{label}</text>
+      <text x="50" y="108" textAnchor="middle" fontFamily="Poppins, sans-serif" fontSize="6" fill={tone}>{size || ""}</text>
+      <text x="50" y="121" textAnchor="middle" fontFamily="Poppins, sans-serif" fontSize="3.3" letterSpacing=".6" fill="#6A7380">RESEARCH USE ONLY</text>
     </svg>
   );
 };
@@ -4681,7 +4681,7 @@ const BitcoinGuide = ({ lang, go }) => {
         <span style={{ fontFamily: "var(--serif)", fontSize: 44, lineHeight: 0.9, color: "var(--green)" }}>{n}</span>
         <span style={{ fontFamily: "var(--serif)", fontSize: 24, lineHeight: 1.15 }}>{title}</span>
       </div>
-      <span className="mono" style={{ flexShrink: 0, marginTop: 4, padding: "4px 9px", borderRadius: 999, background: "#E8F1EA", fontSize: 11, color: "var(--green)" }}>{dur}</span>
+      <span className="mono" style={{ flexShrink: 0, marginTop: 4, padding: "4px 9px", borderRadius: 999, background: "#FBE9F0", fontSize: 11, color: "var(--green)" }}>{dur}</span>
     </div>
   );
   const p = { fontSize: 15, lineHeight: 1.6, color: "var(--ink2)", margin: 0 };
@@ -4715,7 +4715,7 @@ const BitcoinGuide = ({ lang, go }) => {
         <div style={card}>
           {head("01", T("Achetez du Bitcoin", "Buy Bitcoin"), "~5 min")}
           <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 18, borderRadius: 14, background: "var(--ink)", color: "#F3EFE8" }}>
-            <span className="mono" style={{ fontSize: 11, letterSpacing: ".14em", color: "#7FCB68" }}>{T("LE PLUS RAPIDE", "THE FASTEST WAY")}</span>
+            <span className="mono" style={{ fontSize: 11, letterSpacing: ".14em", color: "#F07AA3" }}>{T("LE PLUS RAPIDE", "THE FASTEST WAY")}</span>
             <span style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{T("Vous avez Revolut ?", "Got Revolut?")}</span>
             <span style={{ fontSize: 14.5, lineHeight: 1.6, color: "#D6DEE7" }}>{T("Onglet ", "Open the ")}<b style={{ color: "#fff" }}>Crypto</b>{T(", puis ", " tab, then ")}<b style={{ color: "#fff" }}>Bitcoin</b>{T(". Achetez le montant de votre commande, plus 2 à 3 € pour les frais d'envoi.", ". Buy your order amount, plus €2–3 for sending fees.")}</span>
           </div>
@@ -4767,7 +4767,7 @@ const BitcoinGuide = ({ lang, go }) => {
           ))}
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 22, borderRadius: 18, background: "#E8F1EA", marginTop: 36, maxWidth: 560 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 22, borderRadius: 18, background: "#FBE9F0", marginTop: 36, maxWidth: 560 }}>
         <span style={{ fontFamily: "var(--serif)", fontSize: 22 }}>{T("Bloqué à une étape ?", "Stuck at a step?")}</span>
         <p style={p}>{T("Écrivez-nous, nous vous guidons pas à pas, la première fois comme les suivantes.", "Email us and we'll guide you step by step, the first time and every time after.")}</p>
         <a className="btn btn-ink" href={"mailto:" + CONFIG.EMAIL} style={{ justifyContent: "center", textDecoration: "none" }}><BtcIco d={ICO.mail} c="#fff" s={17} />&nbsp;{CONFIG.EMAIL}</a>
@@ -4825,7 +4825,7 @@ const setLink = (rel, href) => {
   if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
   el.setAttribute("href", href);
 };
-const FAVICON = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='#F5F3EE'/><line x1='19' y1='20' x2='31' y2='15' stroke='#62B94A' stroke-width='2.2'/><line x1='34' y1='14' x2='35' y2='28' stroke='#62B94A' stroke-width='2.2'/><line x1='19' y1='20' x2='33' y2='30' stroke='#0B1B2E' stroke-width='2.2'/><line x1='17' y1='21' x2='12' y2='30' stroke='#A9B3C1' stroke-width='2.2'/><circle cx='34' cy='12' r='5.5' fill='#62B94A'/><circle cx='18' cy='19' r='5' fill='#0B1B2E'/><circle cx='34' cy='31' r='5' fill='#0B1B2E'/><circle cx='11' cy='32' r='3.8' fill='#A9B3C1'/></svg>");
+const FAVICON = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='#F5F3EE'/><line x1='19' y1='20' x2='31' y2='15' stroke='#7F2F51' stroke-width='2.2'/><line x1='34' y1='14' x2='35' y2='28' stroke='#7F2F51' stroke-width='2.2'/><line x1='19' y1='20' x2='33' y2='30' stroke='#2A0F1C' stroke-width='2.2'/><line x1='17' y1='21' x2='12' y2='30' stroke='#B4B9C9' stroke-width='2.2'/><circle cx='34' cy='12' r='5.5' fill='#7F2F51'/><circle cx='18' cy='19' r='5' fill='#2A0F1C'/><circle cx='34' cy='31' r='5' fill='#2A0F1C'/><circle cx='11' cy='32' r='3.8' fill='#B4B9C9'/></svg>");
 
 /* ═══════════════════════════════════════════════════════════
    ROOT
@@ -5028,7 +5028,7 @@ export default function App() {
           <div className="gate-card fade">
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
               <div className="gate-seal" style={{ borderRadius: "50%", border: "1.5px solid var(--green)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#1E6A43" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#7F2F51" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
               <div className="eyebrow">{FR ? "Accès professionnel" : "Professional access"}</div>
             </div>

@@ -3367,7 +3367,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
           <p className="lead">{FR ? "Pour les commandes en volume, les approvisionnements réguliers ou une demande de document spécifique, écrivez-nous. Réponse sous un jour ouvré." : "For volume orders, recurring supply or a specific document request, write to us. Reply within one business day."}</p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <a className="btn btn-light" style={{ background: "#fff", color: "var(--ink)" }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent("Demande tarifs professionnels - Novalyx Research")}`}>{FR ? "Demander un tarif" : "Request pricing"}</a>
-            <a className="btn btn-light" href="/novalyx-catalogue.pdf" download>{FR ? "Catalogue PDF" : "PDF catalogue"}</a>
+            <a className="btn btn-light" href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download>{FR ? "Catalogue PDF" : "PDF catalogue"}</a>
           </div>
         </div>
       </section>

@@ -11,7 +11,7 @@
    Variables d'environnement déjà présentes : STRIPE_SECRET_KEY, SMTP_USER, SMTP_PASS
    (facultatif : ORDER_EMAIL, SMTP_HOST, SMTP_PORT).
 ═══════════════════════════════════════════════════════════ */
-import { smtpSend } from "./order.mjs";
+import { smtpSend } from "./_smtp.mjs";
 
 const eur = (n) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(n);
 const MAX_AGE_S = 24 * 3600;

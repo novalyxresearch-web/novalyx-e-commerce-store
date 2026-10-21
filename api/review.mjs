@@ -6,7 +6,7 @@
    L'avis n'est JAMAIS publié automatiquement : il arrive par email chez le vendeur, qui décide
    (les bons comme les mauvais) ; la ligne prête à ajouter dans public/reviews.json est dans l'email.
 ═══════════════════════════════════════════════════════════ */
-import { smtpSend } from "./order.mjs";
+import { smtpSend } from "./_smtp.mjs";
 
 const clean = (s, max) => String(s || "").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 

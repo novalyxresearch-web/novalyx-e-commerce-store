@@ -2001,24 +2001,28 @@ const ROSE_CSS = `
 /* ─── LA CHAÎNE (hero) ─── */
 .hero{position:relative;overflow:hidden;isolation:isolate}
 
-.hero{padding-top:20px!important}.chain{position:relative;z-index:1;height:190px;max-width:1180px;margin:0 auto 6px;pointer-events:none}.chain-cap{position:absolute;left:0;right:0;bottom:-2px;text-align:center;font:600 10.5px/1 Poppins,sans-serif;letter-spacing:.34em;color:#7F2F51;opacity:.8}
-.chain svg{width:100%;height:100%;overflow:visible}
-.chain{--step:3s}
-.chain-bond{stroke:#7F2F51;stroke-opacity:.42;stroke-width:3.4;stroke-linecap:round;stroke-dasharray:1 1;opacity:0}
-.chain-thread{fill:none;stroke:#E0457F;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:1;filter:drop-shadow(0 0 5px rgba(224,69,127,.6))}
-.chain-in{transform-box:fill-box;transform-origin:center;opacity:0}
-.chain text{font-family:Poppins,sans-serif;font-weight:700;font-size:21px}
-.chain.go .chain-in{animation:bead-in .8s cubic-bezier(.2,1.4,.4,1) forwards;animation-delay:calc(var(--i)*var(--step) + .6s)}
-.chain.go .chain-bond{animation:bond-show .5s ease-out forwards;animation-delay:calc(var(--i)*var(--step) + .6s)}
-.chain.go .chain-thread{animation:thread-run 4.5s cubic-bezier(.45,0,.25,1) forwards;animation-delay:calc(14*var(--step) + 2s)}
-.chain.done .chain-in{opacity:1}.chain.done .chain-bond{opacity:1}.chain.done .chain-thread{stroke-dashoffset:0}
-@keyframes bond-show{from{opacity:0}to{opacity:1}}
-@keyframes bead-in{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
-@keyframes thread-run{to{stroke-dashoffset:0}}
+.hero{padding-top:20px!important}
+.hplc{position:relative;z-index:1;max-width:1180px;margin:0 auto 14px;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.hplc svg{display:block;width:100%;height:auto;overflow:visible}
+.hplc-trace{fill:none;stroke:#7F2F51;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.hplc-area{opacity:0}
+.hplc-grid{stroke:#7F2F51;stroke-opacity:.14;stroke-width:1;stroke-dasharray:2 6}
+.hplc-axis{stroke:#2A0F1C;stroke-opacity:.55;stroke-width:1.2}
+.hplc-t{font:600 10.5px/1 Poppins,sans-serif;fill:#7F2F51;letter-spacing:.14em}
+.hplc-t.big{font-size:13px;fill:#2A0F1C;letter-spacing:.04em}
+.hplc-cur{stroke:#E0457F;stroke-width:1.6}
+.hplc-dot{fill:#E0457F;stroke:#fff;stroke-width:2.5;filter:drop-shadow(0 0 6px rgba(224,69,127,.7))}
+.hplc-tag{fill:#2A0F1C}.hplc-tagt{font:600 12px/1 Poppins,sans-serif;fill:#fff;letter-spacing:.03em}
+.hplc-trace{stroke-dasharray:1 1;stroke-dashoffset:1}
+.hplc.go .hplc-trace{animation:hplc-draw 2.2s cubic-bezier(.5,0,.2,1) forwards}
+.hplc.go .hplc-area{animation:hplc-fill .9s ease-out 1.7s forwards}
+.hplc.done .hplc-trace{stroke-dashoffset:0}.hplc.done .hplc-area{opacity:1}
+@keyframes hplc-draw{to{stroke-dashoffset:0}}
+@keyframes hplc-fill{to{opacity:1}}
+@media(max-width:700px){.hplc{margin:0 -4px 10px}.hplc-t{font-size:19px}.hplc-t.big{font-size:25px}.hplc-tagt{font-size:20px}.hplc-trace{stroke-width:3.6}}
+@media (prefers-reduced-motion:reduce){.hplc .hplc-trace{animation:none!important;stroke-dashoffset:0}.hplc .hplc-area{animation:none!important;opacity:1}}
 .hero::after{content:"";position:absolute;z-index:0;width:520px;height:520px;left:-180px;bottom:-240px;border-radius:50%;background:radial-gradient(closest-side,rgba(224,69,127,.18),transparent);filter:blur(10px);pointer-events:none}
 .display em{background:linear-gradient(100deg,#7F2F51,#E0457F);-webkit-background-clip:text;background-clip:text;color:transparent}
-@media(max-width:979px){.chain{height:130px;margin:0 -8% 14px}.chain-cap{font-size:8.5px;letter-spacing:.24em;bottom:-8px}}
-@media (prefers-reduced-motion:reduce){.chain .chain-in,.chain .chain-bond{animation:none!important;opacity:1}.chain .chain-thread{animation:none!important;stroke-dashoffset:0}}
 
 /* Fond de page rose poudré ; cartes, fenêtres et formulaires restent clairs pour ressortir dessus. */
 :root{--page:#FAEDEB; --paper:#FFFBFA; --surface:#FFFFFF; --soft:#F6E4E2; --line:#EBD8D7; --line2:#F2E3E2; --mute:#6A6164; --rose:#D39AA2; --rose-soft:#F5DDDC; --rose-ink:#94505B}
@@ -2434,35 +2438,48 @@ a{color:inherit}
 `;
 
 
-/* ─── LA CHAÎNE : une vraie séquence peptidique (BPC-157, 15 acides aminés) dessinée avec les nœuds du logo.
-   Couleur = famille d'acide aminé (chargé, polaire, hydrophobe, spécial). Décor pur, sans lien ni interaction. */
-const CHAIN_SEQ = "GEPPPGKPADDAGLV";
-const CHAIN_COL = { G:"#B4B9C9", A:"#2A0F1C", L:"#2A0F1C", V:"#2A0F1C", P:"#7F2F51", E:"#E0457F", D:"#E0457F", K:"#A14A73" };
-const PeptideChain = () => {
-  const ref = useRef(null);
-  const n = CHAIN_SEQ.length, W = 1000, X0 = 50, DX = (W - 2 * X0) / (n - 1);
-  const pts = CHAIN_SEQ.split("").map((c, i) => ({ c, x: X0 + i * DX, y: 120 + 62 * Math.sin(i * 0.82 + 0.5) + (i % 2 ? 10 : -10) }));
-  /* Une bille toute les 3 s (variable --step), puis un fil rose parcourt toute la chaîne. L'animation ne démarre qu'après la porte d'âge,
-     et ne se rejoue pas à chaque retour sur l'accueil pendant la même visite. */
+/* ─── LA SIGNATURE DU LOT : un chromatogramme HPLC (UV 220 nm) tracé une seule fois à l'arrivée, puis immobile.
+   Un pic net = un composé pur. On le parcourt au doigt ou à la souris : lecture du temps et du signal en direct. */
+const HPLC_PEAKS = [[1.15, 5.5, 0.11], [3.92, 2.1, 0.07], [4.82, 100, 0.15], [4.98, 17, 0.2], [5.62, 1.7, 0.09], [6.45, 0.9, 0.1]];
+const hplcSig = (t) => { let v = 1.2 + 0.35 * Math.sin(t * 7.3) * Math.exp(-t / 9); HPLC_PEAKS.forEach(([c, h, w]) => { v += h * Math.exp(-((t - c) ** 2) / (2 * w * w)); }); return v; };
+const HplcSignature = ({ purity, lang }) => {
+  const ref = useRef(null); const FRl = lang === "FR";
+  const W = 1000, H = 268, X0 = 28, X1 = 972, YB = 206, TMAX = 8, K = 1.62;
+  const X = (t) => X0 + (t / TMAX) * (X1 - X0), Y = (v) => YB - v * K;
+  const [cur, setCur] = useState(4.82);
+  const pts = []; for (let i = 0; i <= 480; i++) { const t = (i / 480) * TMAX; pts.push([X(t), Y(hplcSig(t))]); }
+  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
+  const area = d + `L${X1} ${YB}L${X0} ${YB}Z`;
   useEffect(() => {
     const el = ref.current; if (!el) return;
-    let seen = false; try { seen = sessionStorage.getItem("nvx_chain") === "1"; } catch (e) {}
+    let seen = false; try { seen = sessionStorage.getItem("nvx_hplc") === "1"; } catch (e) {}
     if (seen) { el.classList.add("done"); return; }
-    const t = setInterval(() => { if (!document.querySelector(".gate")) { clearInterval(t); el.classList.add("go"); try { sessionStorage.setItem("nvx_chain", "1"); } catch (e) {} } }, 150);
+    const t = setInterval(() => { if (!document.querySelector(".gate")) { clearInterval(t); el.classList.add("go"); try { sessionStorage.setItem("nvx_hplc", "1"); } catch (e) {} } }, 150);
     return () => clearInterval(t);
   }, []);
+  const move = (e) => { const r = e.currentTarget.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width) * W; setCur(Math.max(0, Math.min(TMAX, ((x - X0) / (X1 - X0)) * TMAX))); };
+  const v = hplcSig(cur), cx = X(cur), cy = Y(v), right = cx > 760;
+  const fmt = (n, d) => num(n.toFixed(d), lang);
+  const tag = `${fmt(cur, 2)} min · ${fmt(v * 12.4, 0)} mAU`;
+  const sm = typeof window !== "undefined" && window.innerWidth < 700; const TW = sm ? 232 : 144, TH = sm ? 38 : 26;
   return (
-    <div className="chain" ref={ref} aria-hidden="true">
-      <svg viewBox="0 0 1000 250" preserveAspectRatio="xMidYMid meet">
-        {pts.slice(1).map((p, i) => <line key={"b" + i} className="chain-bond" style={{ "--i": i }} x1={pts[i].x} y1={pts[i].y} x2={p.x} y2={p.y} />)}
-        <polyline className="chain-thread" pathLength="1" points={pts.map(p => p.x + "," + p.y).join(" ")} />
-        {pts.map((p, i) => (
-          <g key={i} transform={`translate(${p.x} ${p.y})`}>
-            <g className="chain-in" style={{ "--i": i }}><circle r={i % 4 === 1 ? 25 : 21} fill={CHAIN_COL[p.c]} /><text y="7" textAnchor="middle" fill={p.c === "G" ? "#2A0F1C" : "#fff"}>{p.c}</text></g>
-          </g>
-        ))}
+    <div className="hplc" ref={ref} onPointerMove={move} onPointerDown={move} onPointerLeave={() => setCur(4.82)} role="img" aria-label={FRl ? `Chromatogramme HPLC du lot publié : un pic unique, pureté ${purity} %` : `HPLC chromatogram of the published batch: a single peak, ${purity} % purity`}>
+      <svg viewBox={`0 0 ${W} ${H}`}>
+        <defs>
+          <linearGradient id="hpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E0457F" stopOpacity=".85" /><stop offset=".55" stopColor="#7F2F51" stopOpacity=".38" /><stop offset="1" stopColor="#7F2F51" stopOpacity="0" /></linearGradient>
+        </defs>
+        {[0, 2, 4, 6, 8].map(t => <line key={t} className="hplc-grid" x1={X(t)} x2={X(t)} y1="18" y2={YB} />)}
+        <path className="hplc-area" d={area} fill="url(#hpg)" />
+        <path className="hplc-trace" pathLength="1" d={d} />
+        <line className="hplc-axis" x1={X0} x2={X1} y1={YB} y2={YB} />
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(t => <g key={t}><line className="hplc-axis" x1={X(t)} x2={X(t)} y1={YB} y2={YB + (t % 2 ? 5 : 9)} />{t % 2 === 0 && <text className="hplc-t" x={X(t)} y={YB + 26} textAnchor="middle">{t}</text>}</g>)}
+        <text className="hplc-t" x={X1} y={YB + 58} textAnchor="end">{FRl ? "TEMPS DE RÉTENTION (MIN)" : "RETENTION TIME (MIN)"} · UV 220 NM</text>
+        <text className="hplc-t big" x={X(4.82) - 22} y={Y(100) + 4} textAnchor="end">{FRl ? "Un seul pic" : "One single peak"}</text>
+        <text className="hplc-t" x={X(4.82) - 22} y={Y(100) + 24} textAnchor="end">{FRl ? "PURETÉ" : "PURITY"} {num(String(purity), lang)} %</text>
+        <line className="hplc-cur" x1={cx} x2={cx} y1="18" y2={YB} />
+        <circle className="hplc-dot" cx={cx} cy={cy} r="6" />
+        <g transform={`translate(${right ? cx - (TW + 12) : cx + 12} 14)`}><rect className="hplc-tag" width={TW} height={TH} rx={TH / 2} /><text className="hplc-tagt" x={TW / 2} y={TH / 2 + 6} textAnchor="middle">{tag}</text></g>
       </svg>
-      <div className="chain-cap">BPC-157 · {CHAIN_SEQ} · 15 AA</div>
     </div>
   );
 };
@@ -3256,7 +3273,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
   return (
     <div>
       {/* HERO */}
-      <section className="hero"><PeptideChain />
+      <section className="hero"><HplcSignature purity={hero.purity} lang={lang} />
         <div className="wrap hero-grid">
           <div className="hero-vials">
             <button ref={stackRef} className="hero-stack" onClick={() => go("products", "All")} aria-label={FR ? "Voir tout le catalogue" : "View the whole catalogue"}>
@@ -3296,7 +3313,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
               </button>
             )}
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "20px 0 8px" }}>
-              <span className="big-num">{hero.purity ? <CountUp value={hero.purity} lang={lang} /> : "—"}</span>
+              <span className="big-num">{hero.purity ? num(String(hero.purity), lang) : "—"}</span>
               <span className="mono" style={{ fontSize: 14 }}>% {FR ? "pureté HPLC" : "HPLC purity"}</span>
             </div>
             <div className="sheet-row"><span>{FR ? "Quantité mesurée" : "Measured content"}</span><span>{num(hero.measured, lang)} / 5 mg</span></div>

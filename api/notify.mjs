@@ -12,6 +12,7 @@
    (facultatif : ORDER_EMAIL, SMTP_HOST, SMTP_PORT).
 ═══════════════════════════════════════════════════════════ */
 import { smtpSend } from "./_smtp.mjs";
+import { buildCustomerMail } from "./_mail.mjs";
 
 const eur = (n) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(n);
 const MAX_AGE_S = 24 * 3600;
@@ -37,6 +38,22 @@ export function buildOwnerMail(s, to) {
   };
 }
 
+/* Mail de confirmation pour le client, à partir d'une session Stripe payée (lignes lues chez Stripe, pas dans le navigateur). */
+const SHIP_NAMES = ["Livraison suivie", "Tracked shipping"];
+export function buildCustomerFromSession(s, replyTo, site) {
+  const m = s.metadata || {};
+  const items = (s.line_items && s.line_items.data) || [];
+  const rows = items.filter((l) => !SHIP_NAMES.includes(l.description)).map((l) => ({ label: l.description || "Article", amount: (l.amount_total || 0) / 100 }));
+  const ship = items.filter((l) => SHIP_NAMES.includes(l.description)).reduce((a, l) => a + (l.amount_total || 0) / 100, 0);
+  const email = m.email || (s.customer_details && s.customer_details.email);
+  if (!email) return null;
+  return buildCustomerMail({
+    orderId: m.orderId, name: m.name, email, lang: String(s.locale || "fr").toLowerCase() === "fr" ? "FR" : "EN", pay: "card",
+    rows, promo: m.promo || "", shipping: ship, total: (s.amount_total || 0) / 100, site,
+    address: [m.name, m.address, [m.postcode, m.city].filter(Boolean).join(" "), m.country],
+  }, replyTo);
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") { res.setHeader("Allow", "POST"); return res.status(405).json({ error: "méthode non autorisée" }); }
   const { STRIPE_SECRET_KEY, SMTP_USER, SMTP_PASS, ORDER_EMAIL, SMTP_HOST, SMTP_PORT } = process.env;
@@ -51,7 +68,7 @@ export default async function handler(req, res) {
 
   let s;
   try {
-    const r = await fetch("https://api.stripe.com/v1/checkout/sessions/" + id, { headers: { Authorization: "Bearer " + STRIPE_SECRET_KEY } });
+    const r = await fetch("https://api.stripe.com/v1/checkout/sessions/" + id + "?expand[]=line_items", { headers: { Authorization: "Bearer " + STRIPE_SECRET_KEY } });
     if (!r.ok) return res.status(502).json({ error: "stripe " + r.status });
     s = await r.json();
   } catch (e) { return res.status(502).json({ error: "Stripe injoignable" }); }
@@ -60,7 +77,11 @@ export default async function handler(req, res) {
   if (s.payment_status !== "paid" || !(s.metadata && s.metadata.orderId) || !fresh) return res.status(200).json({ ignored: true });
 
   try {
-    await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, [buildOwnerMail(s, ORDER_EMAIL || SMTP_USER)]);
+    const mails = [buildOwnerMail(s, ORDER_EMAIL || SMTP_USER)];
+    const site = (process.env.SITE_URL || "https://novalyxresearch.com").trim().replace(/[\/.\s]+$/, "");
+    const cm = buildCustomerFromSession(s, SMTP_USER, site);   // confirmation au client, envoyée depuis la boîte contact@
+    if (cm) mails.push(cm);
+    await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, mails);
   } catch (e) { return res.status(502).json({ error: "email non envoyé" }); }   // Stripe réessaiera
   return res.status(200).json({ ok: true });
 }

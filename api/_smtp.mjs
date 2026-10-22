@@ -4,10 +4,10 @@ import tls from "node:tls";
 /* ── Envoi d'email en SMTP (TLS direct, port 465), sans dépendance externe ── */
 const b64 = (s) => Buffer.from(s, "utf8").toString("base64");
 const encHeader = (s) => /^[\x20-\x7E]*$/.test(s) ? s : "=?UTF-8?B?" + b64(s) + "?=";
-function buildMessage({ from, fromName, to, replyTo, subject, text }) {
-  const body = b64(text.replace(/\r?\n/g, "\r\n")).replace(/.{1,76}/g, "$&\r\n");
+export function buildMessage({ from, fromName, to, replyTo, subject, text, html }) {
+  const wrap = (t) => b64(t.replace(/\r?\n/g, "\r\n")).replace(/.{1,76}/g, "$&\r\n");
   const domain = from.split("@")[1] || "localhost";
-  return [
+  const head = [
     `From: ${encHeader(fromName)} <${from}>`,
     `To: <${to}>`,
     replyTo ? `Reply-To: <${replyTo}>` : null,
@@ -15,11 +15,13 @@ function buildMessage({ from, fromName, to, replyTo, subject, text }) {
     `Date: ${new Date().toUTCString().replace("GMT", "+0000")}`,
     `Message-ID: <${Date.now().toString(36)}.${Math.random().toString(36).slice(2)}@${domain}>`,
     "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-    "",
-    body,
-  ].filter((l) => l !== null).join("\r\n");
+  ];
+  if (!html) {
+    return [...head, "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: base64", "", wrap(text)].filter((l) => l !== null).join("\r\n");
+  }
+  const bd = "nvx_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  const part = (type, body) => [`--${bd}`, `Content-Type: ${type}; charset=UTF-8`, "Content-Transfer-Encoding: base64", "", wrap(body)].join("\r\n");
+  return [...head, `Content-Type: multipart/alternative; boundary="${bd}"`, "", part("text/plain", text), part("text/html", html), `--${bd}--`, ""].filter((l) => l !== null).join("\r\n");
 }
 export function smtpSend(cfg, mails, connect = tls.connect) {
   return new Promise((resolve, reject) => {

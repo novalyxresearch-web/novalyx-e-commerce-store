@@ -371,6 +371,8 @@ export default async function handler(req, res) {
 
   const orderId = "NVX-" + Math.random().toString(36).slice(2, 8).toUpperCase();
   const site = (SITE_URL || "https://novalyxresearch.com").trim().replace(/[\/.\s]+$/, ""); // retire un « / » ou un « . » final : https://site.com. casse le retour après paiement
+  const names = {};
+  (Array.isArray(body.items) ? body.items : []).forEach((it) => { if (it && it.id) names[it.id + "|" + it.size] = clean(it.name, 60); });
   const desc = order.lines.map((l) => l.id + " " + l.size + " x" + l.qty).join(", ");
 
   try {
@@ -391,7 +393,8 @@ export default async function handler(req, res) {
           buyerPhone: cu.phone || undefined,
           itemDesc: "Novalyx Research — " + orderId,
           zone: body.zone,
-          lines: order.lines,
+          lines: order.lines.map((l) => ({ ...l, label: (names[l.id + "|" + l.size] || l.id) + " " + l.size + " × " + l.qty })),
+          lang: String((body && body.lang) || "FR"),
           subtotal: order.subtotal,
           shipping: order.shipping,
           summary: desc.slice(0, 500),

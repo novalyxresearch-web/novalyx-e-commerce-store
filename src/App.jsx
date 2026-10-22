@@ -2905,7 +2905,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("btc"); setLoading(true); setBtcErr(""); setTfErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setBtcErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");

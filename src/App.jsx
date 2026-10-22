@@ -1999,26 +1999,6 @@ const ROSE_CSS = `
 /* ─── LA CHAÎNE (hero) ─── */
 .hero{position:relative;overflow:hidden;isolation:isolate}
 
-.hero{padding-top:20px!important}
-.hplc{position:relative;z-index:1;max-width:780px;margin:0 auto 14px;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
-.hplc svg{display:block;width:100%;height:auto;overflow:visible}
-.hplc-trace{fill:none;stroke:#7F2F51;stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
-.hplc-area{opacity:0}
-.hplc-grid{stroke:#7F2F51;stroke-opacity:.14;stroke-width:1;stroke-dasharray:2 6}
-.hplc-axis{stroke:#2A0F1C;stroke-opacity:.55;stroke-width:1.2}
-.hplc-t{font:600 10.5px/1 Poppins,sans-serif;fill:#7F2F51;letter-spacing:.14em}
-.hplc-t.big{font-size:13px;fill:#2A0F1C;letter-spacing:.04em}
-.hplc-cur{stroke:#E0457F;stroke-width:1.6}
-.hplc-dot{fill:#E0457F;stroke:#fff;stroke-width:2.5;filter:drop-shadow(0 0 6px rgba(224,69,127,.7))}
-.hplc-tag{fill:#2A0F1C}.hplc-tagt{font:600 12px/1 Poppins,sans-serif;fill:#fff;letter-spacing:.03em}
-.hplc-trace{stroke-dasharray:1 1;stroke-dashoffset:1}
-.hplc.go .hplc-trace{animation:hplc-draw 2.2s cubic-bezier(.5,0,.2,1) forwards}
-.hplc.go .hplc-area{animation:hplc-fill .9s ease-out 1.7s forwards}
-.hplc.done .hplc-trace{stroke-dashoffset:0}.hplc.done .hplc-area{opacity:1}
-@keyframes hplc-draw{to{stroke-dashoffset:0}}
-@keyframes hplc-fill{to{opacity:1}}
-@media(max-width:700px){.hplc{max-width:none;margin:0 -4px 10px}.hplc-t{font-size:19px}.hplc-t.big{font-size:25px}.hplc-tagt{font-size:20px}.hplc-trace{stroke-width:3.6}}
-@media (prefers-reduced-motion:reduce){.hplc .hplc-trace{animation:none!important;stroke-dashoffset:0}.hplc .hplc-area{animation:none!important;opacity:1}}
 .hero::after{content:"";position:absolute;z-index:0;width:520px;height:520px;left:-180px;bottom:-240px;border-radius:50%;background:radial-gradient(closest-side,rgba(224,69,127,.18),transparent);filter:blur(10px);pointer-events:none}
 .display em{background:linear-gradient(100deg,#7F2F51,#E0457F);-webkit-background-clip:text;background-clip:text;color:transparent}
 
@@ -2435,52 +2415,6 @@ a{color:inherit}
 .gate-card{max-width:460px;width:100%;margin:auto;border:1px solid var(--line);background:var(--surface);padding:34px 28px}
 `;
 
-
-/* ─── LA SIGNATURE DU LOT : un chromatogramme HPLC (UV 220 nm) tracé une seule fois à l'arrivée, puis immobile.
-   Un pic net = un composé pur. On le parcourt au doigt ou à la souris : lecture du temps et du signal en direct. */
-const HPLC_PEAKS = [[1.15, 5.5, 0.11], [3.92, 2.1, 0.07], [4.82, 100, 0.15], [4.98, 17, 0.2], [5.62, 1.7, 0.09], [6.45, 0.9, 0.1]];
-const hplcSig = (t) => { let v = 1.2 + 0.35 * Math.sin(t * 7.3) * Math.exp(-t / 9); HPLC_PEAKS.forEach(([c, h, w]) => { v += h * Math.exp(-((t - c) ** 2) / (2 * w * w)); }); return v; };
-const HplcSignature = ({ purity, lang }) => {
-  const ref = useRef(null); const FRl = lang === "FR";
-  const W = 1000, H = 268, X0 = 28, X1 = 972, YB = 206, TMAX = 8, K = 1.62;
-  const X = (t) => X0 + (t / TMAX) * (X1 - X0), Y = (v) => YB - v * K;
-  const [cur, setCur] = useState(4.82);
-  const pts = []; for (let i = 0; i <= 480; i++) { const t = (i / 480) * TMAX; pts.push([X(t), Y(hplcSig(t))]); }
-  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
-  const area = d + `L${X1} ${YB}L${X0} ${YB}Z`;
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
-    let seen = false; try { seen = sessionStorage.getItem("nvx_hplc") === "1"; } catch (e) {}
-    if (seen) { el.classList.add("done"); return; }
-    const t = setInterval(() => { if (!document.querySelector(".gate")) { clearInterval(t); el.classList.add("go"); try { sessionStorage.setItem("nvx_hplc", "1"); } catch (e) {} } }, 150);
-    return () => clearInterval(t);
-  }, []);
-  const move = (e) => { const r = e.currentTarget.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width) * W; setCur(Math.max(0, Math.min(TMAX, ((x - X0) / (X1 - X0)) * TMAX))); };
-  const v = hplcSig(cur), cx = X(cur), cy = Y(v), right = cx > 760;
-  const fmt = (n, d) => num(n.toFixed(d), lang);
-  const tag = `${fmt(cur, 2)} min · ${fmt(v / hplcSig(4.82) * 100, 0)} %`;
-  const sm = typeof window !== "undefined" && window.innerWidth < 700; const TW = sm ? 232 : 144, TH = sm ? 38 : 26;
-  return (
-    <div className="hplc" ref={ref} onPointerMove={move} onPointerDown={move} onPointerLeave={() => setCur(4.82)} role="img" aria-label={FRl ? `Chromatogramme HPLC du lot publié : un pic unique, pureté ${purity} %` : `HPLC chromatogram of the published batch: a single peak, ${purity} % purity`}>
-      <svg viewBox={`0 0 ${W} ${H}`}>
-        <defs>
-          <linearGradient id="hpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E0457F" stopOpacity=".85" /><stop offset=".55" stopColor="#7F2F51" stopOpacity=".38" /><stop offset="1" stopColor="#7F2F51" stopOpacity="0" /></linearGradient>
-        </defs>
-        {[0, 2, 4, 6, 8].map(t => <line key={t} className="hplc-grid" x1={X(t)} x2={X(t)} y1="18" y2={YB} />)}
-        <path className="hplc-area" d={area} fill="url(#hpg)" />
-        <path className="hplc-trace" pathLength="1" d={d} />
-        <line className="hplc-axis" x1={X0} x2={X1} y1={YB} y2={YB} />
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(t => <g key={t}><line className="hplc-axis" x1={X(t)} x2={X(t)} y1={YB} y2={YB + (t % 2 ? 5 : 9)} />{t % 2 === 0 && <text className="hplc-t" x={X(t)} y={YB + 26} textAnchor="middle">{t}</text>}</g>)}
-        <text className="hplc-t" x={X1} y={YB + 58} textAnchor="end">{FRl ? "TEMPS DE RÉTENTION (MIN)" : "RETENTION TIME (MIN)"} · ILLUSTRATION</text>
-        <text className="hplc-t big" x={X(4.82) - 22} y={Y(100) + 4} textAnchor="end">{FRl ? "Un seul pic" : "One single peak"}</text>
-        <text className="hplc-t" x={X(4.82) - 22} y={Y(100) + 24} textAnchor="end">{FRl ? "PURETÉ" : "PURITY"} {num(String(purity), lang)} %</text>
-        <line className="hplc-cur" x1={cx} x2={cx} y1="18" y2={YB} />
-        <circle className="hplc-dot" cx={cx} cy={cy} r="6" />
-        <g transform={`translate(${right ? cx - (TW + 12) : cx + 12} 14)`}><rect className="hplc-tag" width={TW} height={TH} rx={TH / 2} /><text className="hplc-tagt" x={TW / 2} y={TH / 2 + 6} textAnchor="middle">{tag}</text></g>
-      </svg>
-    </div>
-  );
-};
 
 /* ─── LOGO (reprend ton logo : nœuds + A vert) ───────────── */
 const Logo = ({ s = 34, light = false }) => {
@@ -3204,7 +3138,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
   return (
     <div>
       {/* HERO */}
-      <section className="hero"><HplcSignature purity={hero.purity} lang={lang} />
+      <section className="hero">
         <div className="wrap hero-grid">
           <div className="hero-vials">
             <button ref={stackRef} className="hero-stack" onClick={() => go("products", "All")} aria-label={FR ? "Voir tout le catalogue" : "View the whole catalogue"}>

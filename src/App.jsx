@@ -2568,7 +2568,6 @@ const Footer = ({ go, lang, onCookies }) => {
             {CONFIG.BTC_ON && <button onClick={() => go("bitcoin")}>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"}</button>}
             <button onClick={() => go("faq")}>FAQ</button>
             <button onClick={() => go("ambassador")}>{FR ? "Ambassadeurs" : "Ambassadors"}</button>
-            <button onClick={() => go("reviews")}>{FR ? "Avis clients" : "Customer reviews"}</button>
             <button onClick={() => go("contact")}>Contact</button>
           </div>
           <div>
@@ -3101,22 +3100,6 @@ const HW_CSS = `
 .hwbar span{opacity:.85;font-variant-numeric:tabular-nums}
 `;
 
-const HomeReviews = ({ go, lang }) => {
-  const FR = lang === "FR"; const list = useReviews(); if (!list.length) return null;
-  const avg = list.reduce((a, r) => a + r.rating, 0) / list.length;
-  return (
-    <section className="sec" style={{ paddingTop: 34, paddingBottom: 10 }}>
-      <div className="wrap">
-        <div className="row-head">
-          <div><div className="eyebrow">{FR ? "Avis clients" : "Customer reviews"}</div>
-            <div style={{ marginTop: 8, display: "flex", gap: 10, alignItems: "center" }}><Stars n={Math.round(avg)} size={22} /><span className="mono">{num(avg.toFixed(1), lang)} / 5 · {list.length} {FR ? "avis" : list.length > 1 ? "reviews" : "review"}</span></div></div>
-          <button className="link" onClick={() => go("reviews")}>{FR ? "Tous les avis" : "All reviews"} →</button>
-        </div>
-        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>{list.slice(0, 3).map((r, i) => <ReviewCard key={i} r={r} FR={FR} />)}</div>
-      </div>
-    </section>
-  );
-};
 const Home = ({ go, cur, openProduct, lang }) => {
   const FR = lang === "FR";
   const hero = COAS.retatrutide;
@@ -3222,7 +3205,6 @@ const Home = ({ go, cur, openProduct, lang }) => {
         </div>
       </section>
 
-      <HomeReviews go={go} lang={lang} />
 
       {CONFIG.BTC_ON && (
         <section className="sec" style={{ paddingTop: 34, paddingBottom: 10 }}>
@@ -3320,7 +3302,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
    un lien copié ouvre directement la bonne page. Actif uniquement sur le vrai domaine (et en test local). */
 const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", veille: "/veille-scientifique", about: "/methode", faq: "/faq",
   ambassador: "/ambassadeurs", contact: "/contact", shipping: "/livraison", privacy: "/confidentialite", terms: "/cgv",
-  reviews: "/avis", disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin", legal: "/mentions-legales" };
+  disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin", legal: "/mentions-legales" };
 const ROUTING_OK = typeof window !== "undefined" && /(^|\.)novalyxresearch\.com$|\.vercel\.app$|^localhost$|^127\.0\.0\.1$/.test(window.location.hostname);
 const parsePath = (path) => {
   const clean = (path || "/").replace(/\/+$/, "") || "/";
@@ -3728,61 +3710,6 @@ const AmbassadorPage = ({ lang }) => {
                 : "Each application is reviewed individually. The program is aimed at creators covering scientific, laboratory and research content. As with the rest of the catalogue, all communication must stay within a laboratory-research framework — research use only."}
             </p>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* ─── AVIS CLIENTS : liste lue dans /reviews.json (avis validés à la main, jamais générés) + formulaire de dépôt. ─── */
-const useReviews = () => {
-  const [list, setList] = useState([]);
-  useEffect(() => { let off = false; fetch("/reviews.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : []).then(d => { if (!off && Array.isArray(d)) setList(d.filter(x => x && x.rating >= 1 && x.text)); }).catch(() => {}); return () => { off = true; }; }, []);
-  return list;
-};
-const Stars = ({ n, size = 16 }) => <span aria-label={n + "/5"} style={{ color: "#7F2F51", fontSize: size, letterSpacing: 2 }}>{"★".repeat(n)}<span style={{ color: "#E5CFD8" }}>{"★".repeat(5 - n)}</span></span>;
-const ReviewCard = ({ r, FR }) => (
-  <div className="sheet" style={{ display: "grid", gap: 10, alignContent: "start" }}>
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}><Stars n={r.rating} /><span className="mono muted" style={{ fontSize: 11 }}>{r.date}</span></div>
-    <p style={{ margin: 0, lineHeight: 1.55 }}>{r.text}</p>
-    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}><strong style={{ fontSize: 14 }}>{r.name}</strong>{r.verified && <span className="tag">{FR ? "Achat vérifié" : "Verified purchase"}</span>}</div>
-  </div>
-);
-const ReviewsPage = ({ lang }) => {
-  const FR = lang === "FR"; const list = useReviews();
-  const [f, setF] = useState({ name: "", orderId: "", email: "", rating: 5, text: "", website: "" });
-  const [st, setSt] = useState("idle");
-  const avg = list.length ? (list.reduce((a, r) => a + r.rating, 0) / list.length) : 0;
-  const ok = f.name.trim() && /^NVX-[A-Za-z0-9]{6}$/.test(f.orderId.trim()) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.trim()) && f.text.trim().length >= 15;
-  const send = async () => {
-    if (!ok || st === "sending") return; setSt("sending");
-    try { const r = await fetch("/api/review", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...f, orderId: f.orderId.trim().toUpperCase() }) }); setSt(r.ok ? "done" : "error"); } catch (e) { setSt("error"); }
-  };
-  return (
-    <section className="sec" style={{ paddingTop: 56 }}>
-      <div className="wrap" style={{ display: "grid", gap: 40 }}>
-        <div>
-          <div className="eyebrow" style={{ marginBottom: 14 }}>{FR ? "Avis clients" : "Customer reviews"}</div>
-          <h1 className="display" style={{ fontSize: "clamp(38px,6vw,64px)", marginBottom: 18 }}>{FR ? "Ce que disent ceux qui ont commandé." : "What those who ordered say."}</h1>
-          <p className="lead">{FR ? "Seuls les clients ayant passé commande peuvent déposer un avis. Nous publions les avis reçus, favorables ou non, sans les réécrire." : "Only customers who placed an order can leave a review. We publish the reviews we receive, favourable or not, without rewriting them."}</p>
-          {list.length > 0 && <div style={{ marginTop: 18, display: "flex", gap: 12, alignItems: "center" }}><Stars n={Math.round(avg)} size={22} /><span className="mono">{num(avg.toFixed(1), lang)} / 5 · {list.length} {FR ? (list.length > 1 ? "avis" : "avis") : (list.length > 1 ? "reviews" : "review")}</span></div>}
-        </div>
-        {list.length > 0 ? <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>{list.map((r, i) => <ReviewCard key={i} r={r} FR={FR} />)}</div>
-          : <div className="sheet muted">{FR ? "Les premiers avis seront publiés ici après vérification." : "The first reviews will be published here after verification."}</div>}
-        <div className="sheet" style={{ maxWidth: 640 }}>
-          <div className="h3" style={{ marginBottom: 14 }}>{FR ? "Déposer un avis" : "Leave a review"}</div>
-          {st === "done" ? <p>{FR ? "Merci, votre avis nous est bien parvenu. Il sera publié après vérification." : "Thank you, we received your review. It will be published after verification."}</p> : (
-            <div style={{ display: "grid", gap: 14 }}>
-              <div className="field"><label>{FR ? "Prénom affiché" : "Displayed first name"}</label><input value={f.name} maxLength={40} onChange={e => setF({ ...f, name: e.target.value })} /></div>
-              <div className="field"><label>{FR ? "Numéro de commande (ex. NVX-AB12CD)" : "Order number (e.g. NVX-AB12CD)"}</label><input value={f.orderId} maxLength={10} autoCapitalize="characters" onChange={e => setF({ ...f, orderId: e.target.value })} /></div>
-              <div className="field"><label>Email {FR ? "utilisé pour la commande" : "used for the order"}</label><input type="email" value={f.email} onChange={e => setF({ ...f, email: e.target.value })} /></div>
-              <div className="field"><label>{FR ? "Note" : "Rating"}</label><div style={{ display: "flex", gap: 6 }}>{[1, 2, 3, 4, 5].map(n => <button key={n} type="button" onClick={() => setF({ ...f, rating: n })} aria-label={n + "/5"} style={{ background: "none", border: 0, padding: 2, cursor: "pointer", fontSize: 30, lineHeight: 1, color: n <= f.rating ? "#7F2F51" : "#E5CFD8" }}>★</button>)}</div></div>
-              <div className="field"><label>{FR ? "Votre avis (livraison, emballage, documents…)" : "Your review (delivery, packaging, documents…)"}</label><textarea rows={5} maxLength={700} value={f.text} onChange={e => setF({ ...f, text: e.target.value })} /></div>
-              <input type="text" tabIndex={-1} autoComplete="off" value={f.website} onChange={e => setF({ ...f, website: e.target.value })} style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }} aria-hidden="true" />
-              {st === "error" && <p style={{ color: "#7F2F51", margin: 0 }}>{FR ? "Envoi impossible pour le moment. Vérifiez les champs ou écrivez-nous via Contact." : "Could not send. Check the fields or write to us via Contact."}</p>}
-              <div><button className="btn btn-ink" onClick={send} disabled={!ok || st === "sending"}>{st === "sending" ? "…" : FR ? "Envoyer mon avis" : "Send my review"}</button></div>
-            </div>
-          )}
         </div>
       </div>
     </section>
@@ -4975,7 +4902,6 @@ export default function App() {
     faq: <FAQPage lang={lang} go={go} />,
     ambassador: <AmbassadorPage lang={lang} />,
     contact: <ContactPage lang={lang} />,
-    reviews: <ReviewsPage lang={lang} />,
     shipping: <ShippingPage lang={lang} />,
     privacy: <PrivacyPage lang={lang} />,
     terms: <TermsPage lang={lang} />,

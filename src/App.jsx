@@ -2252,8 +2252,8 @@ a{color:inherit}
 /* filters */
 .filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:28px;scrollbar-width:none}
 .search{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.search input{flex:1;max-width:520px;min-height:46px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;font-size:16px;color:var(--ink)}
-.search input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(30,106,67,.12)}
+.search input{flex:1;min-width:0;max-width:520px;min-height:46px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;font-size:16px;color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(127,47,81,.14)}
 .search-n{font-family:var(--mono);font-size:12px;color:var(--mute)}
 .filters::-webkit-scrollbar{display:none}
 .fchip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:8px 12px;border:1px solid var(--line);border-radius:2px;white-space:nowrap;color:var(--ink2);background:var(--surface)}
@@ -5000,6 +5000,35 @@ export default function App() {
 /* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
 /* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
 const XL_DE = {
+"Added to cart": "Zum Warenkorb hinzugefügt",
+"Keep shopping": "Weiter einkaufen",
+"View cart": "Warenkorb ansehen",
+"Your cart is empty.": "Ihr Warenkorb ist leer.",
+"Apply": "Anwenden",
+"Promo code": "Aktionscode",
+"Remove code": "Code entfernen",
+"This code is not valid.": "Dieser Code ist ungültig.",
+"Code": "Code",
+"Free": "Kostenlos",
+"free": "kostenlos",
+"Creating invoice…": "Rechnung wird erstellt…",
+"Redirecting…": "Weiterleitung…",
+"Bitcoin payment is temporarily unavailable. Please try again shortly or contact us.": "Die Bitcoin-Zahlung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es gleich erneut oder kontaktieren Sie uns.",
+"Search a compound (e.g. BPC-157, Semax…)": "Substanz suchen (z. B. BPC-157, Semax…)",
+"No compound matches. Try another name, or write to us.": "Keine Substanz gefunden. Versuchen Sie einen anderen Namen oder schreiben Sie uns.",
+"Save my choices": "Meine Auswahl speichern",
+"Download report": "Bericht herunterladen",
+"Bacteriostatic water 3 ml": "Bakteriostatisches Wasser 3 ml",
+"Cheaper than buying separately": "Günstiger als Einzelkauf",
+"Up to −20% from 2 vials": "Bis zu −20 % ab 2 Fläschchen",
+"In stock · ships within 24 h": "Auf Lager · Versand innerhalb von 24 h",
+"Within 24 h, tracked, plain packaging": "Innerhalb von 24 h, mit Sendungsverfolgung, neutrale Verpackung",
+"Your mail app has opened.": "Ihre Mail-App wurde geöffnet.",
+"You're welcome. Feel free to ask anything else.": "Gern geschehen. Fragen Sie ruhig weiter.",
+"You must be 18+ to purchase. Completing a purchase confirms you meet this requirement.": "Sie müssen mindestens 18 Jahre alt sein. Mit dem Kauf bestätigen Sie dies.",
+"Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: 3–4 Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
+"View GLP-3RT 5 mg": "GLP-3RT 5 mg ansehen",
+"Within 1 business day": "Innerhalb eines Werktags",
 "Help": "Hilfe",
 "Another question?": "Noch eine Frage?",
 "Write to us: reply within one business day.": "Schreiben Sie uns: Antwort innerhalb eines Werktags.",
@@ -5828,6 +5857,35 @@ const XL_DE = {
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
+"Added to cart": "Toegevoegd aan winkelwagen",
+"Keep shopping": "Verder winkelen",
+"View cart": "Winkelwagen bekijken",
+"Your cart is empty.": "Uw winkelwagen is leeg.",
+"Apply": "Toepassen",
+"Promo code": "Actiecode",
+"Remove code": "Code verwijderen",
+"This code is not valid.": "Deze code is ongeldig.",
+"Code": "Code",
+"Free": "Gratis",
+"free": "gratis",
+"Creating invoice…": "Factuur wordt aangemaakt…",
+"Redirecting…": "Doorsturen…",
+"Bitcoin payment is temporarily unavailable. Please try again shortly or contact us.": "Betalen met Bitcoin is tijdelijk niet beschikbaar. Probeer het zo opnieuw of neem contact met ons op.",
+"Search a compound (e.g. BPC-157, Semax…)": "Zoek een stof (bijv. BPC-157, Semax…)",
+"No compound matches. Try another name, or write to us.": "Geen stof gevonden. Probeer een andere naam of schrijf ons.",
+"Save my choices": "Mijn keuzes opslaan",
+"Download report": "Rapport downloaden",
+"Bacteriostatic water 3 ml": "Bacteriostatisch water 3 ml",
+"Cheaper than buying separately": "Goedkoper dan los kopen",
+"Up to −20% from 2 vials": "Tot −20 % vanaf 2 flacons",
+"In stock · ships within 24 h": "Op voorraad · verzonden binnen 24 u",
+"Within 24 h, tracked, plain packaging": "Binnen 24 u, met tracking, neutrale verpakking",
+"Your mail app has opened.": "Uw mailapp is geopend.",
+"You're welcome. Feel free to ask anything else.": "Graag gedaan. Stel gerust nog een vraag.",
+"You must be 18+ to purchase. Completing a purchase confirms you meet this requirement.": "U moet 18+ zijn om te kopen. Met uw aankoop bevestigt u dit.",
+"Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: 3–4 weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
+"View GLP-3RT 5 mg": "GLP-3RT 5 mg bekijken",
+"Within 1 business day": "Binnen 1 werkdag",
 ", documented, verifiable.": ", gedocumenteerd, verifieerbaar.",
 ". An invoice appears with a QR code and the exact amount, valid for {#} minutes.": ". Er verschijnt een factuur met een QR-code en het exacte bedrag, {#} minuten geldig.",
 ". Buy your order amount, plus {#}€–{#} for sending fees.": ". Koop het bedrag van uw bestelling, plus {#}€–{#} voor de verzendkosten.",

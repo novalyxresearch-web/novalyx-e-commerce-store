@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    Novalyx Research — stock en temps réel du lot analysé
-   Fonction serveur Vercel : /api/stock   →   { left: { retatrutide: 17 }, ... }
+   Fonction serveur Vercel : /api/stock   →   { left: { glp3rt: 17 }, ... }
 
    Stock affiché = stock de départ − flacons PAYÉS depuis la date de départ :
      • carte bancaire : sessions Stripe Checkout terminées et payées (métadonnée « items ») ;
@@ -15,25 +15,25 @@
    si la clé principale ne peut que créer des factures.
 ═══════════════════════════════════════════════════════════ */
 
-export const START_STOCK = { retatrutide: 17 };
+export const START_STOCK = { glp3rt: 17 };
 export const START_DATE = "2026-10-13T19:30:00Z";            // ventes comptées à partir de ce moment
-export const MANUAL_SOLD = { retatrutide: 0 };               // virements payés, ventes hors site…
+export const MANUAL_SOLD = { glp3rt: 0 };               // virements payés, ventes hors site…
 // Formats qui puisent dans le stock, et combien de flacons chacun retire.
-const UNITS = { retatrutide: { "5mg": 1, "5mg · Pack de 2": 2, "5mg · Pack de 3": 3 } };
+const UNITS = { glp3rt: { "5mg": 1, "5mg · Pack de 2": 2, "5mg · Pack de 3": 3 } };
 
 // Le Kit GLP-3RT retire aussi des flacons de GLP-3RT du stock (garder identique à KIT_UNITS dans src/App.jsx).
 const KIT_UNITS = { "kit-glp3rt": { "Kit · 1 + 1": 1, "Kit · 2 + 2": 2 } };
 const addSold = (sold, l) => {
   if (UNITS[l.id]) sold[l.id] = (sold[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
-  if (KIT_UNITS[l.id]) sold.retatrutide = (sold.retatrutide || 0) + (KIT_UNITS[l.id][l.size] || 0) * (Number(l.qty) || 0);
+  if (KIT_UNITS[l.id]) sold.glp3rt = (sold.glp3rt || 0) + (KIT_UNITS[l.id][l.size] || 0) * (Number(l.qty) || 0);
 };
 
 const startUnix = () => Math.floor(Date.parse(START_DATE) / 1000);
 const unitsOf = (id, size, qty) => (UNITS[id] && UNITS[id][size] ? UNITS[id][size] * (Number(qty) || 0) : 0);
 
-/* Format compact écrit par /api/card : "retatrutide|5mg|2;bac-water|3ml vial|2" */
+/* Format compact écrit par /api/card : "glp3rt|5mg|2;bac-water|3ml vial|2" */
 export const encodeItems = (lines) => lines.map((l) => [l.id, l.size, l.qty].join("|")).join(";").slice(0, 490);
-const decodeItems = (s) => String(s || "").split(";").filter(Boolean).map((x) => { const [id, size, qty] = x.split("|"); return { id, size, qty: Number(qty) }; });
+const decodeItems = (s) => String(s || "").split(";").filter(Boolean).map((x) => { const [id, size, qty] = x.split("|"); return { id: id === "retatrutide" ? "glp3rt" : id, size, qty: Number(qty) }; });   // anciennes commandes
 
 async function soldStripe(key, sold) {
   let after = null, pages = 0;
@@ -80,7 +80,7 @@ export async function checkStock(lines, lang = "FR") {
   const need = {};
   for (const l of lines) {
     if (UNITS[l.id] && UNITS[l.id][l.size]) need[l.id] = (need[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
-    if (KIT_UNITS[l.id] && KIT_UNITS[l.id][l.size]) need.retatrutide = (need.retatrutide || 0) + KIT_UNITS[l.id][l.size] * (Number(l.qty) || 0);
+    if (KIT_UNITS[l.id] && KIT_UNITS[l.id][l.size]) need.glp3rt = (need.glp3rt || 0) + KIT_UNITS[l.id][l.size] * (Number(l.qty) || 0);
   }
   if (!Object.keys(need).length) return null;
   const { left } = await getStock();

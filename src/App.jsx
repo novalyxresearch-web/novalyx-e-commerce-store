@@ -12,9 +12,9 @@ import VEILLE from "./veille.json";
 // ============================================================
 /* Liens Stripe encore utilisés tant que le paiement Bitcoin n'est pas activé (GLP-3RT et eau). */
 const STRIPE_LINKS = {
-  "retatrutide_5mg": "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19",
-  "retatrutide_5mg · Pack de 2": "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a",
-  "retatrutide_5mg · Pack de 3": "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b",
+  "glp3rt_5mg": "https://buy.stripe.com/3cIfZhfcv5p03zo1FG2Ry19",
+  "glp3rt_5mg · Pack de 2": "https://buy.stripe.com/cNi14naWf18Kgmadoo2Ry1a",
+  "glp3rt_5mg · Pack de 3": "https://buy.stripe.com/00wbJ1d4n5p0fi6gAA2Ry1b",
   "bac-water_3ml vial": "https://buy.stripe.com/dRm14nfcvdVw8TIckk2Ry16",
   "bac-water_3ml · Pack de 2": "https://buy.stripe.com/3cI9ATc0j2cO8TI7002Ry17",
   "bac-water_3ml · Pack de 3": "https://buy.stripe.com/28E7sL0hBcRs4Ds2JK2Ry18",
@@ -37,21 +37,21 @@ const SHIP_ZONES = [
 const ZONE_RATE = { FR: 7.9, OM: 12.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // OM : Colissimo Outre-mer 500 g (12,02 à 12,21 €) + emballage ; tarifs Colissimo 2026 + emballage (offerte dès 100 € en France/UE)
 const BAC_ONLY_FR = 5.9;   // eau bactériostatique commandée seule, en France (Colissimo 250 g)
 const ZONE_LINKS = {
-  "retatrutide_5mg": {
+  "glp3rt_5mg": {
     FR: "https://buy.stripe.com/3cIcN55BV9Fgb1QgAA2Ry1c",
     EU: "https://buy.stripe.com/4gM8wP0hBcRsfi65VW2Ry1d",
     CHUK: "https://buy.stripe.com/5kQeVd6FZ9Fg3zo1FG2Ry1e",
     USCA: "https://buy.stripe.com/6oU00jd4neZA9XM7002Ry1f",
     WORLD: "https://buy.stripe.com/6oUdR9c0j3gS0ncckk2Ry1g",
   },
-  "retatrutide_5mg · Pack de 2": {
+  "glp3rt_5mg · Pack de 2": {
     FR: "https://buy.stripe.com/9B68wPe8reZAd9Y9882Ry1h",
     EU: "https://buy.stripe.com/00w6oHaWf8Bc5Hw5VW2Ry1i",
     CHUK: "https://buy.stripe.com/4gM14nc0j18K2vkckk2Ry1j",
     USCA: "https://buy.stripe.com/7sYdR97K37x88TI4RS2Ry1k",
     WORLD: "https://buy.stripe.com/4gM14n4xR8Bc2vk3NO2Ry1l",
   },
-  "retatrutide_5mg · Pack de 3": {
+  "glp3rt_5mg · Pack de 3": {
     FR: "https://buy.stripe.com/8x214nc0j9Fgd9Yfww2Ry1m",
     EU: "https://buy.stripe.com/4gMcN5c0j4kWgma4RS2Ry1n",
     CHUK: "https://buy.stripe.com/eVqfZh1lF18Kfi69882Ry1o",
@@ -424,7 +424,7 @@ const PRODUCTS = [
 
   /* ─────────── METABOLIC RESEARCH ─────────── */
   {
-    id: "retatrutide",
+    id: "glp3rt",
     name: "GLP-3RT",
     tag: "TRIPLE-RECEPTOR RESEARCH",
     category: "Metabolic",
@@ -1755,7 +1755,7 @@ const goToStripeCheckout = async (cartIn, zone = "FR") => {
    Laisse "" si tu n'as pas le fichier : le bouton "Vérifier" reste.
 ═══════════════════════════════════════════════════════════ */
 const COAS = {
-  retatrutide: {
+  glp3rt: {
     size: "5mg",                 // le rapport ne concerne QUE le 5mg
     sample: "GLP-3RT",           // nom exact écrit sur le rapport, ne pas modifier
     batch: "NLR-2026-001",
@@ -1773,32 +1773,32 @@ const COAS = {
    Passe à true quand le paiement Bitcoin encaisse tout le panier d'un coup. */
 const XSELL_BAC = CONFIG.BTC_ON;
 /* Produits achetables en ligne. Pour en ouvrir un nouveau : ajoute son id ici. */
-const AVAILABLE = ["retatrutide", "bac-water", "kit-glp3rt"];
+const AVAILABLE = ["glp3rt", "bac-water", "kit-glp3rt"];
 /* Kit GLP-3RT : puise des flacons de GLP-3RT dans le stock (1 ou 2 selon le format). Garder identique dans api/stock.mjs. */
 const KIT_UNITS = { "kit-glp3rt": { "Kit · 1 + 1": 1, "Kit · 2 + 2": 2 } };
 const isKit = (id) => !!KIT_UNITS[id];
 const isAvail = (p) => AVAILABLE.includes(p.id);
 /* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
-const STOCK_SIZES = { retatrutide: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
-const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.retatrutide != null && STOCK_LEFT.retatrutide < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
+const STOCK_SIZES = { glp3rt: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
+const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.glp3rt != null && STOCK_LEFT.glp3rt < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
 /* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
-const BTC_ONLY_SIZES = { retatrutide: ["10mg", "20mg"] };
+const BTC_ONLY_SIZES = { glp3rt: ["10mg", "20mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
    en stock (AVAILABLE) = expédié sous 24 h ; le reste = sur commande (~3 semaines). */
 const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
 /* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock
    (stock de départ − ventes payées par carte et Bitcoin) et se met à jour tout seul. */
-const STOCK_LEFT = { retatrutide: 17 };
+const STOCK_LEFT = { glp3rt: 17 };
 /* Minimum de flacons pour un produit SUR COMMANDE : la commande rembourse au moins les 2 boîtes
    achetées au fournisseur (+ part de livraison). Le test Janoshik reste avancé par Novalyx.
    Recalculé à partir du fichier novalyx-calcul-prix.xlsx — à garder identique dans api/checkout.mjs. */
-const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "retatrutide_10mg": 2, "retatrutide_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
+const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "glp3rt_10mg": 2, "glp3rt_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
 const minQty = (p, size) => (CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size) && !isKit(p.id)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
 const isPackSize = (s) => /pack/i.test(String(s));
 /* Remises par quantité (paiement Bitcoin). Les anciens « packs » du GLP-3RT et de l'eau sont remplacés par des
    paliers aux MÊMES prix (TIER_TOTALS). Règle identique dans api/checkout.mjs. */
-const TIER_TOTALS = { "retatrutide|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
+const TIER_TOTALS = { "glp3rt|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
 const baseDisc = (q) => q >= 5 ? 0.2 : q >= 3 ? 0.15 : q >= 2 ? 0.1 : 0;
 const lineTotal = (unit, q, size, id) => {
   if (!CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return Math.round(unit * q * 100) / 100;
@@ -2623,8 +2623,8 @@ const CountUp = ({ value, lang }) => {
 };
 
 /* Produits mis en avant sur l'accueil (vitrine de flacons + rangée « Les plus demandés »). */
-const HERO_STACK = ["bpc157", "ghk", "retatrutide", "tb500", "nad"];
-const BESTSELLERS = ["retatrutide", "bpc157", "tb500", "ghk", "slupp322", "semaglutide", "nad", "novalyxformula06"];
+const HERO_STACK = ["bpc157", "ghk", "glp3rt", "tb500", "nad"];
+const BESTSELLERS = ["glp3rt", "bpc157", "tb500", "ghk", "slupp322", "semaglutide", "nad", "novalyxformula06"];
 
 /* Photos produits « à la façon d'Apple » : le navigateur choisit la bonne taille (WebP 480 px pour les cartes,
    1200 px pour la fiche et le zoom), et reprend automatiquement la photo JPG d'origine si un fichier WebP manque. */
@@ -2718,7 +2718,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const bacV = bac && bac.variants.find(x => !/pack/i.test(x.size));
   const [idx, setIdx] = useState(Math.max(0, p.variants.findIndex(x => COAS[p.id] && x.size === COAS[p.id].size)));
   const v = visVariants(p)[idx] || visVariants(p)[0];
-  const coaP = isKit(p.id) ? PRODUCTS.find(x => x.id === "retatrutide") : p;   // le kit contient du GLP-3RT : on montre son rapport d'analyse
+  const coaP = isKit(p.id) ? PRODUCTS.find(x => x.id === "glp3rt") : p;   // le kit contient du GLP-3RT : on montre son rapport d'analyse
   const coa = coaFor(coaP, isKit(p.id) ? "5mg" : v.size);
   const coaOther = !coa && COAS[coaP.id];
   const showBac = XSELL_BAC && canBuy(p) && !isKit(p.id) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
@@ -2820,7 +2820,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               {canBuy(p) && <div className="qty">
                 <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>
                 <span>{qty}</span>
-                <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[isKit(p.id) ? "retatrutide" : p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[isKit(p.id) ? "retatrutide" : p.id] / (isKit(p.id) ? (KIT_UNITS[p.id][v.size] || 1) : (v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
+                <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] / (isKit(p.id) ? (KIT_UNITS[p.id][v.size] || 1) : (v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
               </div>}
               {canBuy(p) ? (
                 <>
@@ -3103,7 +3103,7 @@ const HW_CSS = `
 
 const Home = ({ go, cur, openProduct, lang }) => {
   const FR = lang === "FR";
-  const hero = COAS.retatrutide;
+  const hero = COAS.glp3rt;
   // L'éventail de flacons ne se joue que lorsque l'accueil est vraiment visible (page d'accès refermée, vitrine à l'écran).
   const stackRef = useRef(null);
   useEffect(() => {
@@ -3115,7 +3115,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
     const safety = setTimeout(() => { clearInterval(t); play(); }, 15000);
     return () => { clearInterval(t); clearTimeout(safety); if (io) io.disconnect(); };
   }, []);
-  const heroP = PRODUCTS.find(p => p.id === "retatrutide");
+  const heroP = PRODUCTS.find(p => p.id === "glp3rt");
   const heroMin = heroP ? Math.min(...heroP.variants.map(v => v.price)) : 0;
   const withCoa = PRODUCTS.filter(p => COAS[p.id]);
   const cats = CATEGORY_ORDER.filter(c => PRODUCTS.some(p => p.category === c));
@@ -3301,6 +3301,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
 /* ─── ADRESSES DES PAGES ─────────────────────────────────────
    Une adresse par page (/payer-en-bitcoin, /catalogue…) et par produit (/produit/bpc157) :
    un lien copié ouvre directement la bonne page. Actif uniquement sur le vrai domaine (et en test local). */
+try { if (typeof window !== "undefined" && window.location.pathname === "/produit/retatrutide") window.history.replaceState(null, "", "/produit/glp3rt" + window.location.search + window.location.hash); } catch (e) {}   // ancien lien : on affiche la nouvelle adresse
 const ROUTES = { home: "/", products: "/catalogue", coa: "/analyses", learning: "/fiches-composes", veille: "/veille-scientifique", about: "/methode", faq: "/faq",
   ambassador: "/ambassadeurs", contact: "/contact", shipping: "/livraison", privacy: "/confidentialite", terms: "/cgv",
   disclaimer: "/avertissement", bitcoin: "/payer-en-bitcoin", legal: "/mentions-legales" };
@@ -3308,7 +3309,7 @@ const ROUTING_OK = typeof window !== "undefined" && /(^|\.)novalyxresearch\.com$
 const parsePath = (path) => {
   const clean = (path || "/").replace(/\/+$/, "") || "/";
   const m = clean.match(/^\/produit\/([^/]+)$/);
-  if (m) { const prod = PRODUCTS.find(x => x.id === decodeURIComponent(m[1])); return { page: "products", product: prod || null }; }
+  if (m) { const slug = decodeURIComponent(m[1]); const prod = PRODUCTS.find(x => x.id === (slug === "retatrutide" ? "glp3rt" : slug)); return { page: "products", product: prod || null }; }
   const page = Object.keys(ROUTES).find(k => ROUTES[k] === clean);
   return { page: page || "home", product: null };
 };
@@ -3948,7 +3949,7 @@ const BOT_KB = {
      "Non autorisé comme médicament ; recherche essentiellement préclinique."],
     ["Tripeptide (lysine-proline-valine) matching the C-terminal end of α-MSH (melanocyte-stimulating hormone). Studied in vitro and in animals for its effects on inflammatory signalling, notably in the intestinal epithelium.",
      "Not authorised as a medicine; research is essentially preclinical."]),
-  retatrutide: K(["retatrutide", "glp-3rt", "glp3rt", "glp 3rt", "ly3437943"],
+  glp3rt: K(["retatrutide", "glp-3rt", "glp3rt", "glp 3rt", "ly3437943"],
     ["Retatrutide (nom du produit sur ce site : GLP-3RT) est un agoniste triple des récepteurs GIP, GLP-1 et du glucagon, développé par Eli Lilly (code LY3437943). Il active simultanément trois récepteurs impliqués dans le métabolisme énergétique et glucidique.",
      "Médicament expérimental : en phase 3 d'essais cliniques, non autorisé à ce jour. Selon les annonces du laboratoire, un dépôt de dossier d'autorisation aux États-Unis est visé début 2027. Le produit Novalyx est un composé de recherche, pas un médicament."],
     ["Retatrutide (product name on this site: GLP-3RT) is a triple agonist of the GIP, GLP-1 and glucagon receptors, developed by Eli Lilly (code LY3437943). It activates three receptors involved in energy and glucose metabolism at the same time.",
@@ -4458,7 +4459,7 @@ const botAnswer = (text, ctx) => {
     : "Compounds are supplied lyophilised; reconstitution is done in the laboratory with a suitable sterile solvent (for example our bacteriostatic water). We provide no protocol or volumes. After reconstitution, store between 2 and 8 °C.";
   if (qStorage) return botStorage(p, lang);
   if (qCoa) {
-    const c = COAS.retatrutide;
+    const c = COAS.glp3rt;
     return FR
       ? "Les analyses sont réalisées par Janoshik Analytical (République tchèque), laboratoire indépendant. Le rapport du GLP-3RT " + c.size + " est publié (pureté HPLC " + c.purity.replace(".", ",") + " %) avec sa clé de vérification : voir la page Analyses. Pour les autres composés, le rapport sera publié dès l'analyse du premier lot."
       : "Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The GLP-3RT " + c.size + " report is published (HPLC purity " + c.purity + "%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.";
@@ -4819,7 +4820,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).filter(i => CONFIG.BTC_ON || AVAILABLE.includes(i.id)));
+      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).map(i => (i && i.id === "retatrutide" ? { ...i, id: "glp3rt" } : i)).filter(i => CONFIG.BTC_ON || AVAILABLE.includes(i.id)));
       const k = localStorage.getItem("novalyx_currency"); if (k && CURRENCIES[k]) setCur(k);
       const l = localStorage.getItem("novalyx_lang"); if (LANGS.includes(l)) setLang(l);
       if (sessionStorage.getItem("novalyx_gate") === "1") setAgeOk(true);

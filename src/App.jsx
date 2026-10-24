@@ -2315,8 +2315,8 @@ a{color:inherit}
 .foot-grid{display:grid;gap:36px}
 @media(min-width:900px){.foot-grid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
 .foot h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:400;margin-bottom:14px}
-.foot button{display:block;font-size:14px;color:var(--ink2);padding:4px 0;text-align:left}
-.foot button:hover{color:var(--green)}
+.foot button,.foot a.dl{display:block;font-size:14px;color:var(--ink2);padding:4px 0;text-align:left}
+.foot button:hover,.foot a.dl:hover{color:var(--green)}
 .foot-legal{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--mute);text-transform:uppercase}
 
 /* gate */
@@ -2557,6 +2557,7 @@ const Footer = ({ go, lang, onCookies }) => {
             <h4>{FR ? "Catalogue" : "Catalogue"}</h4>
             {CATEGORY_ORDER.slice(0, 5).map(c => <button key={c} onClick={() => go("products", c)}>{tp(lang, c)}</button>)}
             <button onClick={() => go("products", "All")}>{FR ? "Tout le catalogue" : "Full catalogue"}</button>
+            <a className="dl" href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download>{FR ? "Télécharger le catalogue (PDF)" : "Download the catalogue (PDF)"}</a>
           </div>
           <div>
             <h4>Novalyx</h4>
@@ -3337,6 +3338,7 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
           <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={FR ? "Rechercher un composé (ex. BPC-157, Semax…)" : "Search a compound (e.g. BPC-157, Semax…)"} aria-label={FR ? "Rechercher un composé" : "Search a compound"} />
           {q && <span className="search-n">{list.length} {FR ? (list.length > 1 ? "résultats" : "résultat") : (list.length === 1 ? "result" : "results")}</span>}
         </div>
+        <a href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download style={{ display: "inline-block", margin: "-14px 0 26px", fontSize: 14, fontWeight: 600, color: "var(--green)", textDecoration: "underline" }}>{FR ? "Télécharger le catalogue et les tarifs (PDF)" : "Download the catalogue and price list (PDF)"}</a>
         {!nq && <div className="filters">
           <button className={`fchip ${filter === "All" ? "on" : ""}`} onClick={() => change("All")}>{FR ? "Tout" : "All"} ({PRODUCTS.length})</button>
           {cats.map(c => (
@@ -5000,6 +5002,8 @@ export default function App() {
 /* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
 /* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
 const XL_DE = {
+"Download the catalogue and price list (PDF)": "Katalog und Preisliste herunterladen (PDF)",
+"Download the catalogue (PDF)": "Katalog herunterladen (PDF)",
 "Added to cart": "Zum Warenkorb hinzugefügt",
 "Keep shopping": "Weiter einkaufen",
 "View cart": "Warenkorb ansehen",
@@ -5857,6 +5861,8 @@ const XL_DE = {
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
+"Download the catalogue and price list (PDF)": "Catalogus en prijslijst downloaden (PDF)",
+"Download the catalogue (PDF)": "Catalogus downloaden (PDF)",
 "Added to cart": "Toegevoegd aan winkelwagen",
 "Keep shopping": "Verder winkelen",
 "View cart": "Winkelwagen bekijken",

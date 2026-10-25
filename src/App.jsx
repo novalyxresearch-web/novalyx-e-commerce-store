@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import VEILLE from "./veille.json";
 
 /* ═══════════════════════════════════════════════════════════
@@ -2248,6 +2248,13 @@ a{color:inherit}
 .pcard-sizes{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin-top:6px}
 .pcard-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid var(--line2)}
 .pcard-price{font-family:var(--serif);font-size:22px}
+.pcard-lot{font-family:var(--mono);font-size:11px;color:var(--bord,#7F2F51);margin-top:6px;letter-spacing:.01em}
+.qa{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.qa-sel{flex:1 1 100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:#fff;padding:11px 10px;font:inherit;font-size:14px;color:var(--ink)}
+.qa-btn{flex:1 1 100%;border-radius:12px;background:var(--ink,#2A0F1C);color:#fff;font-weight:600;font-size:14px;padding:12px 14px;transition:background .2s}
+.sortbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 22px}.sort-sel{flex:0 1 230px}
+.qa-btn:hover{background:#7F2F51}.qa-btn.ok{background:#7F2F51}
+.pcard:focus-visible{outline:2px solid #7F2F51;outline-offset:2px}
 
 /* filters */
 .filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:28px;scrollbar-width:none}
@@ -2655,13 +2662,32 @@ const PhotoZoom = ({ p, size, onClose, lang }) => {
   );
 };
 
+const QuickAddCtx = createContext(null);
+/* Ajout direct au panier depuis la carte : uniquement les formats en stock (les produits sur commande ont un minimum de flacons, ils passent par la fiche). */
+const QuickAdd = ({ p, cur, lang }) => {
+  const FR = lang === "FR";
+  const add = useContext(QuickAddCtx);
+  const opts = visVariants(p).filter(v => inStock(p, v.size));
+  const [sz, setSz] = useState(opts[0] ? opts[0].size : "");
+  const [done, setDone] = useState(false);
+  if (!add || !canBuy(p) || opts.length === 0) return null;
+  const v = opts.find(o => o.size === sz) || opts[0];
+  const go = (e) => { e.stopPropagation(); add(p, v, 1, false); setDone(true); setTimeout(() => setDone(false), 1600); };
+  return (
+    <div className="qa" onClick={(e) => e.stopPropagation()}>
+      {opts.length > 1 && <select className="qa-sel" value={v.size} onChange={(e) => setSz(e.target.value)} aria-label={FR ? "Choisir le format" : "Choose the size"}>{opts.map(o => <option key={o.size} value={o.size}>{o.size.replace("mg", " mg")} · {price(o.price, cur, lang)}</option>)}</select>}
+      <button type="button" className={"qa-btn" + (done ? " ok" : "")} onClick={go}>{done ? (FR ? "✓ Ajouté" : "✓ Added") : (FR ? "Ajouter au panier" : "Add to cart")}{!done && opts.length === 1 ? ` · ${price(v.price, cur, lang)}` : ""}</button>
+    </div>
+  );
+};
+
 const ProductCard = ({ p, cur, onClick, lang }) => {
   const FR = lang === "FR";
   const min = Math.min(...visVariants(p).map(v => v.price));
   const coa = COAS[p.id];
   const main = visVariants(p).find(v => inStock(p, v.size)) || visVariants(p)[visVariants(p).length - 1];
   return (
-    <button className="pcard" onClick={onClick}>
+    <div className="pcard" role="link" tabIndex={0} onClick={onClick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}>
       <div className="pcard-top">
         <span className="tag">{tp(lang, p.category)}</span>
         {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Sur commande" : "Made to order") : (FR ? "Bientôt" : "Soon")}</span>}
@@ -2669,6 +2695,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{pn(p)}</div>
       <div className="pcard-sizes">{isKit(p.id) ? (FR ? "GLP-3RT 5 mg + eau bactériostatique · 2 formats" : "GLP-3RT 5 mg + bacteriostatic water · 2 formats") : <>{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</>}</div>
+      {coa && coa.batch && <div className="pcard-lot">{FR ? "Lot" : "Batch"} {coa.batch} · {FR ? "analysé par Janoshik" : "analysed by Janoshik"}</div>}
       <div className="pcard-foot">
         <div>
           <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
@@ -2677,7 +2704,8 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
         </div>
         <span className="link">{FR ? "Détails" : "Details"}</span>
       </div>
-    </button>
+      <QuickAdd p={p} cur={cur} lang={lang} />
+    </div>
   );
 };
 
@@ -3183,7 +3211,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
         <div className="facts">
           {[
             [FR ? "Entreprise" : "Company", FR ? "Française · SIRET 898 509 369" : "French · SIRET 898 509 369"],
-            [FR ? "Analyses" : "Analyses", FR ? "Janoshik, clé publique" : "Janoshik, public key"],
+            [FR ? "Analyses" : "Analyses", FR ? `GLP-3RT : ${pct(COAS.glp3rt.purity, lang)} · Janoshik, clé publique` : `GLP-3RT: ${pct(COAS.glp3rt.purity, lang)} · Janoshik`],
             [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? (FR ? "Carte, Bitcoin ou virement" : "Card, Bitcoin or bank transfer") : (FR ? "Carte bancaire ou Bitcoin" : "Card or Bitcoin")) : (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros")) : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
             [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h · sur commande : 3 à 4 semaines" : "In stock: 24 h · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
           ].map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
@@ -3327,8 +3355,16 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
   const [q, setQ] = useState("");
   const norm = (t) => (t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
   const nq = norm(q);
+  const [onlyStock, setOnlyStock] = useState(false);
+  const [sort, setSort] = useState("def");
   const base = filter === "All" ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)) : PRODUCTS.filter(p => p.category === filter);
   const list = nq ? cats.flatMap(c => PRODUCTS.filter(p => p.category === c)).filter(p => norm(p.name + " " + pn(p) + " " + p.id + " " + p.tag + " " + ((BOT_KB[p.id] || {}).aliases || []).join(" ") + " " + (((BOT_KB[p.id] || {})[FR ? "fr" : "en"] || [])[0] || "")).includes(nq)) : base;
+  const minP = (p) => Math.min(...visVariants(p).map(v => v.price));
+  const hasStock = (p) => canBuy(p) && visVariants(p).some(v => inStock(p, v.size));
+  let shown = onlyStock ? list.filter(hasStock) : list;
+  if (sort === "asc") shown = [...shown].sort((a, b) => minP(a) - minP(b));
+  else if (sort === "desc") shown = [...shown].sort((a, b) => minP(b) - minP(a));
+  else if (sort === "az") shown = [...shown].sort((a, b) => pn(a).localeCompare(pn(b)));
   return (
     <section className="sec" style={{ paddingTop: 56 }}>
       <div className="wrap">
@@ -3348,9 +3384,19 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
             </button>
           ))}
         </div>}
+        <div className="sortbar">
+          <button type="button" className={`fchip ${onlyStock ? "on" : ""}`} aria-pressed={onlyStock} onClick={() => setOnlyStock(v => !v)}>{FR ? "En stock uniquement" : "In stock only"}</button>
+          <select className="qa-sel sort-sel" value={sort} onChange={(e) => setSort(e.target.value)} aria-label={FR ? "Trier" : "Sort"}>
+            <option value="def">{FR ? "Tri : ordre par défaut" : "Sort: default order"}</option>
+            <option value="asc">{FR ? "Prix croissant" : "Price: low to high"}</option>
+            <option value="desc">{FR ? "Prix décroissant" : "Price: high to low"}</option>
+            <option value="az">{FR ? "Nom A → Z" : "Name A → Z"}</option>
+          </select>
+        </div>
+        {(nq || onlyStock) && shown.length === 0 && <p className="muted" style={{ margin: "10px 0 30px" }}>{FR ? "Aucun produit en stock pour cette sélection." : "No product in stock for this selection."}</p>}
         {nq && list.length === 0 && <p className="muted" style={{ margin: "10px 0 30px" }}>{FR ? "Aucun composé ne correspond. Essayez un autre nom, ou écrivez-nous." : "No compound matches. Try another name, or write to us."}</p>}
         <div className="grid">
-          {list.map(p => <ProductCard key={p.id} p={p} cur={cur} lang={lang} onClick={() => openProduct(p)} />)}
+          {shown.map(p => <ProductCard key={p.id} p={p} cur={cur} lang={lang} onClick={() => openProduct(p)} />)}
         </div>
       </div>
     </section>
@@ -4987,7 +5033,7 @@ export default function App() {
         </div>
       </div>
       <Nav page={page} go={go} cur={cur} setCur={setCur} cartCount={cartCount} openCart={() => setCartOpen(true)} lang={lang} setLang={setLang} />
-      <main className="fade" key={`${page}-${lang}`}>{pages[page] || pages.home}</main>
+      <QuickAddCtx.Provider value={addToCart}><main className="fade" key={`${page}-${lang}`}>{pages[page] || pages.home}</main></QuickAddCtx.Provider>
       <Footer go={go} lang={lang} onCookies={() => setCookieOpen(true)} />
 
       {product && <ProductModal p={product} cur={cur} lang={lang} onAdd={addToCart} onOpenCart={() => { closeProduct(); setCartOpen(true); }} onClose={closeProduct} />}
@@ -5003,6 +5049,16 @@ export default function App() {
 /* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
 /* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
 const XL_DE = {
+"In stock only": "Nur auf Lager",
+"Sort: default order": "Sortierung: Standard",
+"Price: low to high": "Preis aufsteigend",
+"Price: high to low": "Preis absteigend",
+"Name A → Z": "Name A → Z",
+"No product in stock for this selection.": "Kein Produkt auf Lager für diese Auswahl.",
+"Choose the size": "Format wählen",
+"✓ Added": "✓ Hinzugefügt",
+"analysed by Janoshik": "von Janoshik analysiert",
+"Sort": "Sortieren",
 "Download the catalogue and price list (PDF)": "Katalog und Preisliste herunterladen (PDF)",
 "Download the catalogue (PDF)": "Katalog herunterladen (PDF)",
 "Added to cart": "Zum Warenkorb hinzugefügt",
@@ -5862,6 +5918,16 @@ const XL_DE = {
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
+"In stock only": "Alleen op voorraad",
+"Sort: default order": "Sorteren: standaard",
+"Price: low to high": "Prijs oplopend",
+"Price: high to low": "Prijs aflopend",
+"Name A → Z": "Naam A → Z",
+"No product in stock for this selection.": "Geen product op voorraad voor deze selectie.",
+"Choose the size": "Kies het formaat",
+"✓ Added": "✓ Toegevoegd",
+"analysed by Janoshik": "geanalyseerd door Janoshik",
+"Sort": "Sorteren",
 "Download the catalogue and price list (PDF)": "Catalogus en prijslijst downloaden (PDF)",
 "Download the catalogue (PDF)": "Catalogus downloaden (PDF)",
 "Added to cart": "Toegevoegd aan winkelwagen",

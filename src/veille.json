@@ -1,6 +1,170 @@
 {
-  "updated": "2026-10-19",
+  "updated": "2026-10-26",
   "entries": [
+    {
+      "id": "2026-10-21-retatrutide-osa",
+      "date": "2026-10-21",
+      "products": [
+        "retatrutide",
+        "novalyxformula09glp3rtcagri"
+      ],
+      "sources": [
+        {
+          "name": "PubMed – NEJM, TRIUMPH-OSA",
+          "url": "https://doi.org/10.1056/NEJMoa2611477"
+        },
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT05929066"
+        },
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT05929079"
+        }
+      ],
+      "title": {
+        "fr": "Retatrutide : deux essais de phase 3 sur l'apnée obstructive du sommeil publiés dans le NEJM",
+        "en": "Retatrutide: two phase 3 trials in obstructive sleep apnoea published in the NEJM",
+        "de": "Retatrutid: zwei Phase-3-Studien zu obstruktiver Schlafapnoe im NEJM veröffentlicht",
+        "nl": "Retatrutide: twee fase 3-studies bij obstructieve slaapapneu gepubliceerd in het NEJM"
+      },
+      "summary": {
+        "fr": "Deux essais randomisés, en double aveugle et contrôlés par placebo (TRIUMPH-1-OSA et TRIUMPH-2-OSA), ont inclus respectivement 243 et 448 adultes présentant une apnée obstructive du sommeil modérée à sévère et un IMC d'au moins 27, sans ou avec diabète de type 2. Le critère principal est l'évolution de l'indice d'apnées-hypopnées à 80 semaines. Les événements indésirables les plus fréquents étaient digestifs. Étude financée par le fabricant, Eli Lilly.",
+        "en": "Two randomised, double-blind, placebo-controlled trials (TRIUMPH-1-OSA and TRIUMPH-2-OSA) enrolled 243 and 448 adults respectively with moderate-to-severe obstructive sleep apnoea and a BMI of at least 27, without or with type 2 diabetes. The primary endpoint is the change in the apnoea-hypopnoea index at 80 weeks. The most common adverse events were gastrointestinal. The studies were funded by the manufacturer, Eli Lilly.",
+        "de": "Zwei randomisierte, doppelblinde, placebokontrollierte Studien (TRIUMPH-1-OSA und TRIUMPH-2-OSA) schlossen 243 bzw. 448 Erwachsene mit mittelschwerer bis schwerer obstruktiver Schlafapnoe und einem BMI von mindestens 27 ein, ohne beziehungsweise mit Typ-2-Diabetes. Der primäre Endpunkt ist die Veränderung des Apnoe-Hypopnoe-Index nach 80 Wochen. Die häufigsten unerwünschten Ereignisse betrafen den Magen-Darm-Trakt. Die Studien wurden vom Hersteller Eli Lilly finanziert.",
+        "nl": "Twee gerandomiseerde, dubbelblinde, placebogecontroleerde studies (TRIUMPH-1-OSA en TRIUMPH-2-OSA) includeerden respectievelijk 243 en 448 volwassenen met matige tot ernstige obstructieve slaapapneu en een BMI van minstens 27, zonder of met type 2-diabetes. Het primaire eindpunt is de verandering van de apneu-hypopneu-index na 80 weken. De meest voorkomende bijwerkingen waren maag-darmklachten. De studies werden gefinancierd door de fabrikant, Eli Lilly."
+      }
+    },
+    {
+      "id": "2026-10-23-eloralintide-registry",
+      "date": "2026-10-23",
+      "products": [
+        "eloralintide"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov – AMPLIFY-1 (NCT07881432)",
+          "url": "https://clinicaltrials.gov/study/NCT07881432"
+        },
+        {
+          "name": "ClinicalTrials.gov – AMPLIFY-2 (NCT07881458)",
+          "url": "https://clinicaltrials.gov/study/NCT07881458"
+        }
+      ],
+      "title": {
+        "fr": "Éloralintide : deux essais de phase 3 (AMPLIFY-1 et -2) nouvellement enregistrés",
+        "en": "Eloralintide: two phase 3 trials (AMPLIFY-1 and -2) newly registered",
+        "de": "Eloralintid: zwei Phase-3-Studien (AMPLIFY-1 und -2) neu registriert",
+        "nl": "Eloralintide: twee fase 3-studies (AMPLIFY-1 en -2) nieuw geregistreerd"
+      },
+      "summary": {
+        "fr": "Le registre ClinicalTrials.gov recense deux essais de phase 3 promus par Eli Lilly et évaluant une co-formulation d'éloralintide et de tirzépatide : AMPLIFY-1 (2 115 participants prévus, adultes obèses sans diabète de type 2) et AMPLIFY-2 (1 000 participants prévus, adultes en surpoids ou obèses avec diabète de type 2). Statut : pas encore en recrutement, démarrage prévu fin 2026, critère principal à 100 semaines.",
+        "en": "ClinicalTrials.gov lists two phase 3 trials sponsored by Eli Lilly evaluating a coformulation of eloralintide and tirzepatide: AMPLIFY-1 (2,115 participants planned, adults with obesity without type 2 diabetes) and AMPLIFY-2 (1,000 participants planned, adults with overweight or obesity and type 2 diabetes). Status: not yet recruiting, start planned for late 2026, primary endpoint at 100 weeks.",
+        "de": "ClinicalTrials.gov führt zwei von Eli Lilly gesponserte Phase-3-Studien zu einer Kofomulierung von Eloralintid und Tirzepatid: AMPLIFY-1 (geplant 2.115 Teilnehmende, Erwachsene mit Adipositas ohne Typ-2-Diabetes) und AMPLIFY-2 (geplant 1.000 Teilnehmende, Erwachsene mit Übergewicht oder Adipositas und Typ-2-Diabetes). Status: noch nicht rekrutierend, Beginn Ende 2026 geplant, primärer Endpunkt nach 100 Wochen.",
+        "nl": "ClinicalTrials.gov vermeldt twee door Eli Lilly gesponsorde fase 3-studies naar een co-formulering van eloralintide en tirzepatide: AMPLIFY-1 (2.115 deelnemers gepland, volwassenen met obesitas zonder type 2-diabetes) en AMPLIFY-2 (1.000 deelnemers gepland, volwassenen met overgewicht of obesitas en type 2-diabetes). Status: nog niet in rekrutering, start gepland eind 2026, primair eindpunt na 100 weken."
+      }
+    },
+    {
+      "id": "2026-10-23-thymalfasin-registry",
+      "date": "2026-10-23",
+      "products": [
+        "thymosinalpha1"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT07884201"
+        }
+      ],
+      "title": {
+        "fr": "Thymosine alpha-1 (thymalfasine) : nouvel essai de phase II enregistré en oncologie du sein",
+        "en": "Thymosin alpha-1 (thymalfasin): new phase II trial registered in breast oncology",
+        "de": "Thymosin alpha-1 (Thymalfasin): neue Phase-II-Studie in der Brustonkologie registriert",
+        "nl": "Thymosine alfa-1 (thymalfasine): nieuwe fase II-studie geregistreerd in de borstoncologie"
+      },
+      "summary": {
+        "fr": "Le registre ClinicalTrials.gov recense un essai de phase II, randomisé, ouvert et monocentrique, promu par l'Université Fudan, portant sur la thymalfasine associée à une chimiothérapie et une immunothérapie néoadjuvantes dans le cancer du sein triple négatif. Participants prévus : 572 femmes. Statut : pas encore en recrutement, démarrage prévu en novembre 2026.",
+        "en": "ClinicalTrials.gov lists a randomised, open-label, single-centre phase II trial sponsored by Fudan University on thymalfasin combined with neoadjuvant chemotherapy and immunotherapy in triple-negative breast cancer. Planned participants: 572 women. Status: not yet recruiting, start planned for November 2026.",
+        "de": "ClinicalTrials.gov führt eine randomisierte, offene, monozentrische Phase-II-Studie der Fudan-Universität zu Thymalfasin in Kombination mit neoadjuvanter Chemo- und Immuntherapie beim triple-negativen Mammakarzinom. Geplante Teilnehmende: 572 Frauen. Status: noch nicht rekrutierend, Beginn im November 2026 geplant.",
+        "nl": "ClinicalTrials.gov vermeldt een gerandomiseerde, open-label, monocentrische fase II-studie van de Fudan-universiteit over thymalfasine in combinatie met neoadjuvante chemo- en immunotherapie bij triple-negatieve borstkanker. Geplande deelnemers: 572 vrouwen. Status: nog niet in rekrutering, start gepland in november 2026."
+      }
+    },
+    {
+      "id": "2026-10-22-mazdutide-dulaglutide-meta",
+      "date": "2026-10-22",
+      "products": [
+        "mazdutide"
+      ],
+      "sources": [
+        {
+          "name": "PubMed – Diabetol Metab Syndr",
+          "url": "https://doi.org/10.1186/s13098-026-02248-3"
+        }
+      ],
+      "title": {
+        "fr": "Mazdutide vs dulaglutide : méta-analyse d'essais randomisés dans le diabète de type 2",
+        "en": "Mazdutide vs dulaglutide: meta-analysis of randomised trials in type 2 diabetes",
+        "de": "Mazdutid vs. Dulaglutid: Metaanalyse randomisierter Studien bei Typ-2-Diabetes",
+        "nl": "Mazdutide versus dulaglutide: meta-analyse van gerandomiseerde studies bij type 2-diabetes"
+      },
+      "summary": {
+        "fr": "Cette revue systématique avec méta-analyse (modèles à effets aléatoires, évaluation GRADE) regroupe trois essais randomisés comparant le mazdutide, agoniste double des récepteurs du GLP-1 et du glucagon, au dulaglutide chez des adultes atteints de diabète de type 2. Les auteurs décrivent davantage d'effets indésirables digestifs sous mazdutide et qualifient leurs conclusions de préliminaires, le nombre d'essais étant limité.",
+        "en": "This systematic review and meta-analysis (random-effects models, GRADE assessment) pools three randomised trials comparing mazdutide, a dual GLP-1 and glucagon receptor agonist, with dulaglutide in adults with type 2 diabetes. The authors report more gastrointestinal adverse events with mazdutide and describe their conclusions as preliminary given the small number of trials.",
+        "de": "Dieses systematische Review mit Metaanalyse (Modelle mit zufälligen Effekten, GRADE-Bewertung) fasst drei randomisierte Studien zusammen, die Mazdutid, einen dualen GLP-1- und Glukagon-Rezeptor-Agonisten, mit Dulaglutid bei Erwachsenen mit Typ-2-Diabetes vergleichen. Die Autoren berichten über mehr gastrointestinale Nebenwirkungen unter Mazdutid und bezeichnen ihre Schlussfolgerungen wegen der geringen Studienzahl als vorläufig.",
+        "nl": "Deze systematische review met meta-analyse (random-effectsmodellen, GRADE-beoordeling) bundelt drie gerandomiseerde studies die mazdutide, een dubbele agonist van de GLP-1- en glucagonreceptoren, vergelijken met dulaglutide bij volwassenen met type 2-diabetes. De auteurs melden meer maag-darmbijwerkingen met mazdutide en noemen hun conclusies voorlopig vanwege het beperkte aantal studies."
+      }
+    },
+    {
+      "id": "2026-10-21-semaglutide-mdd",
+      "date": "2026-10-21",
+      "products": [
+        "semaglutide",
+        "slupp322"
+      ],
+      "sources": [
+        {
+          "name": "PubMed – Psychol Med",
+          "url": "https://doi.org/10.1017/S0033291726106412"
+        }
+      ],
+      "title": {
+        "fr": "Sémaglutide : analyse secondaire d'un essai randomisé sur la prise de décision dans la dépression majeure",
+        "en": "Semaglutide: secondary analysis of a randomised trial on decision-making in major depressive disorder",
+        "de": "Semaglutid: Sekundäranalyse einer randomisierten Studie zur Entscheidungsfindung bei Major Depression",
+        "nl": "Semaglutide: secundaire analyse van een gerandomiseerde studie over besluitvorming bij ernstige depressie"
+      },
+      "summary": {
+        "fr": "Dans cette analyse secondaire d'un essai randomisé, 72 adultes atteints de trouble dépressif majeur ont reçu du sémaglutide oral (35) ou un placebo (37) pendant 16 semaines. Leur comportement d'exploration et d'exploitation a été évalué par une tâche de décision et une modélisation computationnelle. Les auteurs observent des différences de comportement entre les groupes, indépendantes de la perte de poids, et qualifient ces résultats d'exploratoires.",
+        "en": "In this secondary analysis of a randomised trial, 72 adults with major depressive disorder received oral semaglutide (35) or placebo (37) for 16 weeks. Explore/exploit behaviour was assessed with a decision task and computational modelling. The authors report between-group behavioural differences that were independent of weight change, and present the findings as exploratory.",
+        "de": "In dieser Sekundäranalyse einer randomisierten Studie erhielten 72 Erwachsene mit Major Depression 16 Wochen lang orales Semaglutid (35) oder Placebo (37). Das Explorations-/Exploitationsverhalten wurde mit einer Entscheidungsaufgabe und computergestützter Modellierung erfasst. Die Autoren berichten über Verhaltensunterschiede zwischen den Gruppen, unabhängig von der Gewichtsveränderung, und stellen die Ergebnisse als explorativ dar.",
+        "nl": "In deze secundaire analyse van een gerandomiseerde studie kregen 72 volwassenen met ernstige depressie gedurende 16 weken orale semaglutide (35) of placebo (37). Het explore/exploit-gedrag werd beoordeeld met een beslissingstaak en computationele modellering. De auteurs melden gedragsverschillen tussen de groepen die onafhankelijk waren van gewichtsverandering en presenteren de bevindingen als verkennend."
+      }
+    },
+    {
+      "id": "2026-10-05-ss31-ovary-mouse",
+      "date": "2026-10-05",
+      "products": [
+        "ss31"
+      ],
+      "sources": [
+        {
+          "name": "PubMed – Front Pharmacol",
+          "url": "https://doi.org/10.3389/fphar.2026.1960111"
+        }
+      ],
+      "title": {
+        "fr": "Élamipretide (SS-31) : étude préclinique chez la souris sur les lésions ovariennes induites par le cisplatine",
+        "en": "Elamipretide (SS-31): preclinical mouse study on cisplatin-induced ovarian damage",
+        "de": "Elamipretid (SS-31): präklinische Mausstudie zu Cisplatin-induzierter Ovarschädigung",
+        "nl": "Elamipretide (SS-31): preklinische muisstudie over cisplatine-geïnduceerde eierstokschade"
+      },
+      "summary": {
+        "fr": "Étude préclinique chez la souris : un modèle d'insuffisance ovarienne induite par le cisplatine a été utilisé pour examiner l'effet du peptide ciblant les mitochondries élamipretide (SS-31) sur la morphologie ovarienne, les marqueurs de stress oxydant et la voie Nrf2/HO-1. Les résultats concernent uniquement l'animal et ne permettent aucune conclusion chez l'humain.",
+        "en": "Preclinical mouse study: a cisplatin-induced ovarian failure model was used to examine the effect of the mitochondria-targeted peptide elamipretide (SS-31) on ovarian morphology, oxidative stress markers and the Nrf2/HO-1 pathway. The findings are limited to animals and allow no conclusion in humans.",
+        "de": "Präklinische Mausstudie: An einem Modell des Cisplatin-induzierten Ovarialversagens wurde die Wirkung des mitochondrial gerichteten Peptids Elamipretid (SS-31) auf Ovarmorphologie, Marker des oxidativen Stresses und den Nrf2/HO-1-Signalweg untersucht. Die Ergebnisse beschränken sich auf Tiere und erlauben keine Schlüsse für den Menschen.",
+        "nl": "Preklinische muisstudie: in een model van cisplatine-geïnduceerd ovarieel falen werd het effect van het mitochondriaal gerichte peptide elamipretide (SS-31) op de morfologie van de eierstokken, markers van oxidatieve stress en de Nrf2/HO-1-route onderzocht. De bevindingen beperken zich tot dieren en laten geen conclusies bij mensen toe."
+      }
+    },
     {
       "id": "2026-09-29-triumph2",
       "date": "2026-09-29",

@@ -315,8 +315,12 @@ export const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
 export const PROMO_END = { HALLOWEEN15: Date.UTC(2026, 9, 31, 22, 59, 59) };
 export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); if (PROMO_END[c] && Date.now() >= PROMO_END[c]) return null; return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
 
-export function computeOrder(items, zone, promoCode) {
+/* Remise de 5 % pour un paiement en Bitcoin (frais évités, paiement définitif). Pas de cumul avec un code promo : le code, toujours ≥ 5 %, s'applique seul. */
+export const BTC_DISCOUNT = 0.05;
+
+export function computeOrder(items, zone, promoCode, pay) {
   const promo = promoOf(promoCode);
+  const btcRate = pay === "btc" && !promo ? BTC_DISCOUNT : 0;
   if (!Array.isArray(items) || items.length === 0 || items.length > MAX_LINES) throw new Error("panier invalide");
   if (!Object.prototype.hasOwnProperty.call(ZONE_RATE, zone)) throw new Error("zone invalide");
   const lines = items.map((it0) => {
@@ -329,7 +333,8 @@ export function computeOrder(items, zone, promoCode) {
     const min = (inStock(id, size) || isPack(size)) ? 1 : (MIN_QTY[id + "_" + size] || 2);
     if (qty < min) throw new Error("minimum " + min + " flacons pour " + id + " " + size);
     const gross = lineTotalFor(id, size, unit, qty);
-    const total = promo ? round2(gross * (1 - promo.rate)) : gross;
+    const rate = promo ? promo.rate : btcRate;
+    const total = rate ? round2(gross * (1 - rate)) : gross;
     return { id, size, qty, unit, discount: round2(1 - total / (unit * qty)), total, gross };
   });
   const subtotal = round2(lines.reduce((s, l) => s + l.total, 0));
@@ -339,7 +344,7 @@ export function computeOrder(items, zone, promoCode) {
   const grossSubtotal = round2(lines.reduce((s, l) => s + l.gross, 0));
   if (FREE_SHIP_MIN > 0 && eu && grossSubtotal >= FREE_SHIP_MIN) shipping = 0;
   else if (lines.every((l) => l.id === "bac-water") && zone === "FR") shipping = BAC_ONLY_FR;
-  return { lines, subtotal, shipping, total: round2(subtotal + shipping), promo };
+  return { lines, subtotal, shipping, total: round2(subtotal + shipping), promo, btcRate };
 }
 
 export default async function handler(req, res) {
@@ -352,7 +357,7 @@ export default async function handler(req, res) {
   const lang = body && body.lang === "EN" ? "EN" : "FR";
 
   let order;
-  try { order = computeOrder(body && body.items, body && body.zone, body && body.promo); }
+  try { order = computeOrder(body && body.items, body && body.zone, body && body.promo, "btc"); }
   catch (e) { return res.status(400).json({ error: e.message }); }
 
   // Client : email + adresse de livraison, transmis à BTCPay (emails automatiques + expédition)
@@ -399,7 +404,7 @@ export default async function handler(req, res) {
           subtotal: order.subtotal,
           shipping: order.shipping,
           summary: desc.slice(0, 500),
-          promo: order.promo ? order.promo.code : undefined,
+          promo: order.promo ? order.promo.code : (order.btcRate ? "BITCOIN-5" : undefined),
         },
         checkout: {
           expirationMinutes: 60,

@@ -1815,6 +1815,7 @@ const qtyDiscount = (q, size, id, unit) => {
 };
 const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE ; ailleurs, frais payés par le client
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
+const BTC_DISCOUNT = 0.05;   // −5 % en Bitcoin (doit rester égal à BTC_DISCOUNT dans api/checkout.mjs)
 const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
 /* Offre Halloween : le code HALLOWEEN15 et le décor s'arrêtent seuls le 31 octobre 2026 à 23 h 59 (heure de Paris, UTC+1). */
 const HW_END = Date.UTC(2026, 9, 31, 22, 59, 59);
@@ -2913,6 +2914,9 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   // Même calcul que le serveur : la remise du code s'applique ligne par ligne, arrondie au centime.
   const total = promoRate ? cart.reduce((s, i) => s + Math.round(lineTotal(i.price, i.qty, i.size, i.id) * (1 - promoRate) * 100) / 100, 0) : gross;
   const promoAmt = Math.round((gross - total) * 100) / 100;
+  // Paiement en Bitcoin : −5 % sur les produits, sans cumul avec un code (même calcul que le serveur).
+  const btcRate = CONFIG.BTC_ON && !promoRate ? BTC_DISCOUNT : 0;
+  const btcTotal = btcRate ? cart.reduce((s, i) => s + Math.round(lineTotal(i.price, i.qty, i.size, i.id) * (1 - btcRate) * 100) / 100, 0) : total;
   const applyPromo = () => { const c = promoIn.trim().toUpperCase(); if (!c) return; if (promoRateOf(c)) { setPromo(c); setPromoErr(""); } else { setPromo(""); setPromoErr(FR ? "Ce code n'est pas valide." : "This code is not valid."); } };
   const count = cart.reduce((s, i) => s + i.qty, 0);
   const ready = ok1 && ok2 && !loading;
@@ -2924,6 +2928,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const checkout = async () => { setLoading(true); try { await goToStripeCheckout(cart, zone); } finally { setLoading(false); } };
   const ship = cartShipping(cart, zone, gross); // seuil calculé avant le code promo
   const grand = Math.round((total + ship) * 100) / 100;
+  const btcGrand = Math.round((btcTotal + ship) * 100) / 100;
+  const btcSave = Math.round((grand - btcGrand) * 100) / 100;
   const euZone = zone === "FR" || zone === "EU";
   const freeLeft = FREE_SHIP_MIN > 0 && euZone && ship > 0 ? Math.max(0, FREE_SHIP_MIN - gross) : 0;
   const allStock = cart.every(i => inStock({ id: i.id }, i.size));
@@ -3052,8 +3058,9 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                   <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>
                 </>)}
                 <button className={"btn " + (CONFIG.CARD_ON ? "btn-line" : "btn-ink")} style={{ width: "100%", marginTop: CONFIG.CARD_ON ? 0 : 12 }} disabled={!ready || !tfReady} onClick={payBtc}>
-                  {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(grand, "EUR", lang)}</>}
+                  {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(btcGrand, "EUR", lang)}</>}
                 </button>
+                {btcSave > 0 && <p style={{ textAlign: "center", fontSize: 12.5, fontWeight: 600, color: "var(--green)", margin: "8px 0 0" }}>{FR ? "−5 % en Bitcoin" : "−5% with Bitcoin"} · {FR ? "vous économisez" : "you save"} {price(btcSave, "EUR", lang)}</p>}
                 {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
                 <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 12, letterSpacing: ".05em" }}>
                   {FR ? "PAIEMENT BITCOIN DIRECT · FACTURÉ EN EUROS · FACTURE VALABLE 60 MIN" : "DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID 60 MIN"}
@@ -5049,6 +5056,13 @@ export default function App() {
 /* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
 /* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
 const XL_DE = {
+"−{#}% with Bitcoin": "−{#} % mit Bitcoin",
+"Search a compound (e.g. BPC-{#}, Semax…)": "Substanz suchen (z. B. BPC-{#}, Semax…)",
+"Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: {#}–{#} Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
+"View GLP-{#}RT {#} mg": "GLP-{#}RT {#} mg ansehen",
+"Halloween: −{#}% with code HALLOWEEN{#}, until {#} October": "Halloween: −{#} % mit dem Code HALLOWEEN{#}, bis zum {#}. Oktober",
+"−5% with Bitcoin": "−5 % mit Bitcoin",
+"you save": "Sie sparen",
 "In stock only": "Nur auf Lager",
 "Sort: default order": "Sortierung: Standard",
 "Price: low to high": "Preis aufsteigend",
@@ -5918,6 +5932,13 @@ const XL_DE = {
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
+"−{#}% with Bitcoin": "−{#} % met Bitcoin",
+"Search a compound (e.g. BPC-{#}, Semax…)": "Zoek een stof (bijv. BPC-{#}, Semax…)",
+"Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: {#}–{#} weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
+"View GLP-{#}RT {#} mg": "GLP-{#}RT {#} mg bekijken",
+"Halloween: −{#}% with code HALLOWEEN{#}, until {#} October": "Halloween: −{#}% met de code HALLOWEEN{#}, tot {#} oktober",
+"−5% with Bitcoin": "−5 % met Bitcoin",
+"you save": "u bespaart",
 "In stock only": "Alleen op voorraad",
 "Sort: default order": "Sorteren: standaard",
 "Price: low to high": "Prijs oplopend",

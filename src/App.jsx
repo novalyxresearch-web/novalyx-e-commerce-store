@@ -2249,6 +2249,8 @@ a{color:inherit}
 .pcard-sizes{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin-top:6px}
 .pcard-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid var(--line2)}
 .pcard-price{font-family:var(--serif);font-size:22px}
+.btc-note{flex-basis:100%;font-size:13px;font-weight:700;color:#7F2F51;margin:-8px 0 0}
+.pcard-btc{font-size:12.5px;font-weight:700;color:#7F2F51;margin-top:4px}
 .pcard-lot{font-family:var(--mono);font-size:11px;color:var(--bord,#7F2F51);margin-top:6px;letter-spacing:.01em}
 .qa{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .qa-sel{flex:1 1 100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:#fff;padding:11px 10px;font:inherit;font-size:14px;color:var(--ink)}
@@ -2701,6 +2703,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
         <div>
           <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}</div>
+          {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-btc">{FR ? "−5 % si vous payez en Bitcoin" : "−5% when you pay with Bitcoin"}</div>}
           {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
         <span className="link">{FR ? "Détails" : "Details"}</span>
@@ -2851,6 +2854,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                 <span>{qty}</span>
                 <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] / (isKit(p.id) ? (KIT_UNITS[p.id][v.size] || 1) : (v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
               </div>}
+              {CONFIG.BTC_ON && canBuy(p) && <div className="btc-note">{FR ? "−5 % si vous payez en Bitcoin, appliqué au paiement." : "−5% when you pay with Bitcoin, applied at checkout."}</div>}
               {canBuy(p) ? (
                 <>
                   <button className="btn btn-line buy-btn" onClick={() => addAll(false)}>{FR ? "Ajouter au panier" : "Add to cart"}</button>
@@ -3049,19 +3053,19 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                   </form>
                 )}
                 {(<>
-                {CONFIG.CARD_ON && (<>
-                  <button className="btn btn-ink" style={{ width: "100%", marginTop: 12 }} disabled={!ready || !tfReady} onClick={payCard}>
-                    {loading && busy === "card" ? (FR ? "Ouverture du paiement sécurisé…" : "Opening secure checkout…") : <>{FR ? "Payer par carte" : "Pay by card"} — {price(grand, "EUR", lang)}</>}
-                  </button>
-                  <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 8, letterSpacing: ".05em" }}>VISA · MASTERCARD · APPLE PAY · GOOGLE PAY</p>
-                  {cardErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{cardErr}</p>}
-                  <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>
-                </>)}
-                <button className={"btn " + (CONFIG.CARD_ON ? "btn-line" : "btn-ink")} style={{ width: "100%", marginTop: CONFIG.CARD_ON ? 0 : 12 }} disabled={!ready || !tfReady} onClick={payBtc}>
+                <button className="btn btn-ink" style={{ width: "100%", marginTop: 12 }} disabled={!ready || !tfReady} onClick={payBtc}>
                   {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(btcGrand, "EUR", lang)}</>}
                 </button>
                 {btcSave > 0 && <p style={{ textAlign: "center", fontSize: 12.5, fontWeight: 600, color: "var(--green)", margin: "8px 0 0" }}>{FR ? "−5 % en Bitcoin" : "−5% with Bitcoin"} · {FR ? "vous économisez" : "you save"} {price(btcSave, "EUR", lang)}</p>}
                 {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
+                {CONFIG.CARD_ON && <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>}
+                {CONFIG.CARD_ON && (<>
+                  <button className="btn btn-line" style={{ width: "100%", marginTop: 0 }} disabled={!ready || !tfReady} onClick={payCard}>
+                    {loading && busy === "card" ? (FR ? "Ouverture du paiement sécurisé…" : "Opening secure checkout…") : <>{FR ? "Payer par carte" : "Pay by card"} — {price(grand, "EUR", lang)}</>}
+                  </button>
+                  <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 8, letterSpacing: ".05em" }}>VISA · MASTERCARD · APPLE PAY · GOOGLE PAY</p>
+                  {cardErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{cardErr}</p>}
+                </>)}
                 <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 12, letterSpacing: ".05em" }}>
                   {FR ? "PAIEMENT BITCOIN DIRECT · FACTURÉ EN EUROS · FACTURE VALABLE 60 MIN" : "DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID 60 MIN"}
                 </p>
@@ -5022,6 +5026,7 @@ export default function App() {
                 "Usage recherche uniquement — pas pour usage humain ou vétérinaire",
                 "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
                 "Livraison offerte dès 100 € (France, UE)",
+                ...(CONFIG.BTC_ON ? ["Payez en Bitcoin : −5 % sur votre commande"] : []),
                 CONFIG.BTC_ON ? "Jusqu'à −20 % dès 2 flacons" : "Rapports d'analyse vérifiables",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Carte, Bitcoin ou virement" : "Carte bancaire ou Bitcoin") : "Paiement Bitcoin, facturé en euros") : "Paiement sécurisé",
                 "En stock : expédié sous 24 h",
@@ -5030,6 +5035,7 @@ export default function App() {
                 "Research use only — not for human or veterinary use",
                 "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
                 "Free shipping from €100 (France, EU)",
+                ...(CONFIG.BTC_ON ? ["Pay with Bitcoin: −5% on your order"] : []),
                 CONFIG.BTC_ON ? "Up to −20% from 2 vials" : "Verifiable analysis reports",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Card, Bitcoin or bank transfer" : "Card or Bitcoin") : "Bitcoin payment, billed in euros") : "Secure payment",
                 "In stock: ships within 24 h",
@@ -5056,6 +5062,9 @@ export default function App() {
 /* ─── DICTIONNAIRES DE TRADUCTION (clé = texte anglais affiché) ─── */
 /* Dictionnaire allemand : clé = texte anglais affiché (nombres → {#}, noms de produits → {N}). */
 const XL_DE = {
+  "−{#}% when you pay with Bitcoin": "−{#} % bei Zahlung mit Bitcoin",
+  "−{#}% when you pay with Bitcoin, applied at checkout.": "−{#} % bei Zahlung mit Bitcoin, wird an der Kasse abgezogen.",
+  "Pay with Bitcoin: −{#}% on your order": "Mit Bitcoin zahlen: −{#} % auf Ihre Bestellung",
 "−{#}% with Bitcoin": "−{#} % mit Bitcoin",
 "Search a compound (e.g. BPC-{#}, Semax…)": "Substanz suchen (z. B. BPC-{#}, Semax…)",
 "Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: {#}–{#} Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
@@ -5932,6 +5941,9 @@ const XL_DE = {
 };
 /* Dictionnaire néerlandais : même principe que XL_DE. */
 const XL_NL = {
+  "−{#}% when you pay with Bitcoin": "−{#} % bij betaling met Bitcoin",
+  "−{#}% when you pay with Bitcoin, applied at checkout.": "−{#} % bij betaling met Bitcoin, toegepast bij het afrekenen.",
+  "Pay with Bitcoin: −{#}% on your order": "Betaal met Bitcoin: −{#} % op uw bestelling",
 "−{#}% with Bitcoin": "−{#} % met Bitcoin",
 "Search a compound (e.g. BPC-{#}, Semax…)": "Zoek een stof (bijv. BPC-{#}, Semax…)",
 "Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: {#}–{#} weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",

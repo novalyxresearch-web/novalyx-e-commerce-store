@@ -2290,7 +2290,7 @@ a{color:inherit}
 .qty button{width:40px;height:46px;font-size:18px}
 .qty span{width:34px;text-align:center;font-family:var(--mono)}
 .x{width:40px;height:40px;font-size:22px;line-height:1;color:var(--mute)}
-.drawer{position:fixed;inset:0;z-index:90;background:rgba(11,27,46,.45)}
+.drawer{position:fixed;inset:0;z-index:100;background:rgba(11,27,46,.45)}
 .drawer-in{position:absolute;right:0;top:0;bottom:0;width:420px;max-width:100%;background:var(--paper);border-left:1px solid var(--line);display:flex;flex-direction:column;padding:22px;overflow-y:auto;animation:fade .25s ease}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink2);line-height:1.55;padding:12px;border:1px solid var(--line);background:var(--surface);margin-bottom:8px;cursor:pointer}
 .check input{margin-top:3px;accent-color:var(--green);flex-shrink:0}
@@ -2940,7 +2940,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const tfReady = !!(tf.firstName.trim() && tf.lastName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tf.email.trim()) && tf.address.trim() && tf.postcode.trim() && tf.city.trim());
   const payBtc = async () => {
     if (!ready || !tfReady) return;
-    setBusy("btc"); setLoading(true); setBtcErr(""); setTfErr("");
+    setBusy("btc"); setLoading(true); setBtcErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
@@ -2956,7 +2956,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   };
   const payCard = async () => {
     if (!ready || !tfReady) return;
-    setBusy("card"); setLoading(true); setCardErr(""); setBtcErr(""); setTfErr("");
+    setBusy("card"); setLoading(true); setCardErr(""); setBtcErr("");
     try {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });

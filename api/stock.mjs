@@ -40,7 +40,7 @@ async function soldStripe(key, sold) {
   do {
     const q = new URLSearchParams({ limit: "100", status: "complete", "created[gte]": String(startUnix()) });
     if (after) q.set("starting_after", after);
-    const r = await fetch("https://api.stripe.com/v1/checkout/sessions?" + q, { headers: { Authorization: "Bearer " + key } });
+    const r = await fetch("https://api.stripe.com/v1/checkout/sessions?" + q, { headers: { Authorization: "Bearer " + key }, signal: AbortSignal.timeout(4000) });
     if (!r.ok) throw new Error("stripe " + r.status);
     const d = await r.json();
     for (const s of d.data || []) {
@@ -56,7 +56,7 @@ async function soldBtc(env, sold) {
   if (!env.BTCPAY_URL || !env.BTCPAY_STORE_ID || !key) return;
   const base = env.BTCPAY_URL.replace(/\/+$/, "") + "/api/v1/stores/" + encodeURIComponent(env.BTCPAY_STORE_ID) + "/invoices";
   const q = "?status=Settled&status=Processing&take=500&startDate=" + startUnix();
-  const r = await fetch(base + q, { headers: { Authorization: "token " + key } });
+  const r = await fetch(base + q, { headers: { Authorization: "token " + key }, signal: AbortSignal.timeout(4000) });   // limite de temps : un serveur BTCPay qui ne répond pas ne doit pas bloquer les paiements
   if (!r.ok) throw new Error("btcpay " + r.status);
   const list = await r.json();
   for (const inv of Array.isArray(list) ? list : []) {

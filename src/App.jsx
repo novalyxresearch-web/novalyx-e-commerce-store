@@ -3053,26 +3053,26 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                   </form>
                 )}
                 {(<>
-                <button className="btn btn-ink" style={{ width: "100%", marginTop: 12 }} disabled={!ready || !tfReady} onClick={payBtc}>
-                  {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(btcGrand, "EUR", lang)}</>}
-                </button>
-                {btcSave > 0 && <p style={{ textAlign: "center", fontSize: 12.5, fontWeight: 600, color: "var(--green)", margin: "8px 0 0" }}>{FR ? "−5 % en Bitcoin" : "−5% with Bitcoin"} · {FR ? "vous économisez" : "you save"} {price(btcSave, "EUR", lang)}</p>}
-                {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
-                {CONFIG.CARD_ON && <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>}
                 {CONFIG.CARD_ON && (<>
-                  <button className="btn btn-line" style={{ width: "100%", marginTop: 0 }} disabled={!ready || !tfReady} onClick={payCard}>
+                  <button className="btn btn-ink" style={{ width: "100%", marginTop: 12 }} disabled={!ready || !tfReady} onClick={payCard}>
                     {loading && busy === "card" ? (FR ? "Ouverture du paiement sécurisé…" : "Opening secure checkout…") : <>{FR ? "Payer par carte" : "Pay by card"} — {price(grand, "EUR", lang)}</>}
                   </button>
                   <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 8, letterSpacing: ".05em" }}>VISA · MASTERCARD · APPLE PAY · GOOGLE PAY</p>
                   {cardErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{cardErr}</p>}
                 </>)}
+                {CONFIG.CARD_ON && <div className="mono muted" style={{ textAlign: "center", margin: "14px 0 10px", fontSize: 11 }}>{FR ? "— ou —" : "— or —"}</div>}
+                <button className="btn btn-line" style={{ width: "100%", marginTop: 0 }} disabled={!ready || !tfReady} onClick={payBtc}>
+                  {loading && busy === "btc" ? (FR ? "Création de la facture…" : "Creating invoice…") : <>{FR ? "Payer en Bitcoin" : "Pay with Bitcoin"} — {price(btcGrand, "EUR", lang)}</>}
+                </button>
+                {btcSave > 0 && <p style={{ textAlign: "center", fontSize: 12.5, fontWeight: 600, color: "var(--green)", margin: "8px 0 0" }}>{FR ? "−5 % en Bitcoin" : "−5% with Bitcoin"} · {FR ? "vous économisez" : "you save"} {price(btcSave, "EUR", lang)}</p>}
+                {btcErr && <p role="alert" style={{ color: "#9B2C2C", fontSize: 12.5, marginTop: 10, lineHeight: 1.5 }}>{btcErr}</p>}
                 <p className="mono muted" style={{ fontSize: 10.5, textAlign: "center", marginTop: 12, letterSpacing: ".05em" }}>
                   {FR ? "PAIEMENT BITCOIN DIRECT · FACTURÉ EN EUROS · FACTURE VALABLE 60 MIN" : "DIRECT BITCOIN PAYMENT · BILLED IN EUROS · INVOICE VALID 60 MIN"}
                 </p>
                 <p style={{ textAlign: "center", fontSize: 13, marginTop: 8 }}>
                   <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Première fois ? Comment payer en Bitcoin" : "First time? How to pay with Bitcoin"}</a>
                 </p>
-                {!tfReady && ready && <p className="muted" style={{ fontSize: 11.5, textAlign: "center", margin: "10px 0 0" }}>{FR ? "Remplissez l'adresse de livraison pour activer le paiement." : "Fill in the delivery address to enable payment."}</p>}
+                {(!tfReady || !ready) && !loading && <p role="status" style={{ fontSize: 12.5, fontWeight: 600, color: "#9B2C2C", textAlign: "center", margin: "10px 0 0", lineHeight: 1.5 }}>{(!ok1 || !ok2) ? (FR ? "Cochez les deux cases ci-dessus et remplissez l'adresse de livraison pour activer le paiement." : "Tick both boxes above and fill in the delivery address to enable payment.") : (FR ? "Remplissez l'adresse de livraison pour activer le paiement." : "Fill in the delivery address to enable payment.")}</p>}
                 </>)}
               </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>

@@ -1711,6 +1711,7 @@ const WS = true;
 /* Analyses prévues pour chaque lot sur commande (le rapport est publié à réception du lot). Le GLP-3RT 5 mg garde son rapport Janoshik. */
 const BATCH_TESTS_EN = "Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received.";
 const KIT_SIZE = 10;
+const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
 const WHOLESALE = {
   glp3rt:    { "5mg": 95, "10mg": 140 },
   ghk:       { "50mg": 95 },
@@ -2902,6 +2903,13 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               {p.commonSpecs.map(s => (
                 <div className="spec" key={s.label}><span>{tp(lang, s.label)}</span><span>{tp(lang, s.value)}</span></div>
               ))}
+              {WS && p.kitOf10 && p.id !== "glp3rt" && (
+                <p style={{ fontSize: 13, margin: "12px 0 0", lineHeight: 1.6 }}>
+                  {FR ? "Vérifiez le rapport de votre lot : " : "Check your batch report: "}
+                  <a href={LAB_VERIFY} target="_blank" rel="noopener noreferrer">{FR ? "vérifier sur le site du laboratoire ↗" : "verify on the laboratory's website ↗"}</a>
+                  <span className="muted">{FR ? " (saisissez le code indiqué sur le rapport joint à votre commande)" : " (enter the code shown on the report supplied with your order)"}</span>
+                </p>
+              )}
             </div>
 
             <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 26, flexWrap: "wrap" }}>

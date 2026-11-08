@@ -62,7 +62,7 @@ export default async function handler(req, res) {
   // Une ligne par article : le total de la ligne inclut déjà la remise par quantité.
   let i = 0;
   for (const l of order.lines) {
-    const label = (names[l.id + "|" + l.size] || l.id) + " " + l.size + " × " + l.qty;
+    const label = (names[l.id + "|" + l.size] || l.id) + " " + l.size + " × 10 (kit) × " + l.qty;
     p.append(`line_items[${i}][quantity]`, "1");
     p.append(`line_items[${i}][price_data][currency]`, "eur");
     p.append(`line_items[${i}][price_data][unit_amount]`, cents(l.total));

@@ -347,7 +347,7 @@ GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
 
 
 /* ─── PRODUCTS ───────────────────────────────────────────── */
-const PRODUCTS = [
+const PRODUCTS_ALL = [
   /* ─────────── REGENERATIVE RESEARCH ─────────── */
   {
     id: "bpc157",
@@ -1701,6 +1701,32 @@ const PRODUCTS = [
   },
 ];
 
+/* ─── MODE GROS (wholesale) ──────────────────────────────────
+   Le site ne vend plus que des KITS de 10 flacons. Un seul format par molécule (sauf GLP-3RT : 5 et 10 mg).
+   Le prix indiqué est le prix du KIT (10 flacons). Pour ajouter / retirer une molécule : modifier WHOLESALE.
+   ⚠ Les mêmes prix et formats sont dans api/checkout.mjs (PRICES) : ils doivent rester identiques. */
+const WS = true;
+const KIT_SIZE = 10;
+const WHOLESALE = {
+  glp3rt:    { "5mg": 95, "10mg": 140 },
+  ghk:       { "50mg": 95 },
+  motsc:     { "10mg": 130 },
+  bpc157:    { "10mg": 140 },
+  tb500:     { "5mg": 150 },
+  semax:     { "5mg": 90 },
+  selank:    { "5mg": 90 },
+  kpv:       { "10mg": 110 },
+  formula03: { "70mg total": 270 },
+  formula04: { "80mg total": 340 },
+  tesamorelin: { "5mg": 200 },
+  "bac-water": { "3ml vial": 38 },
+};
+const PRODUCTS = PRODUCTS_ALL.filter(p => WHOLESALE[p.id]).map(p => ({
+  ...p,
+  variants: p.variants.filter(v => WHOLESALE[p.id][v.size] != null).map(v => ({ ...v, price: WHOLESALE[p.id][v.size] })),
+  kitOf10: true,
+}));
+
 /* ─── HELPERS ────────────────────────────────────────────── */
 
 
@@ -1773,35 +1799,36 @@ const COAS = {
    Passe à true quand le paiement Bitcoin encaisse tout le panier d'un coup. */
 const XSELL_BAC = CONFIG.BTC_ON;
 /* Produits achetables en ligne. Pour en ouvrir un nouveau : ajoute son id ici. */
-const AVAILABLE = ["glp3rt", "bac-water", "kit-glp3rt"];
+const AVAILABLE = ["glp3rt", "bac-water"];
 /* Kit GLP-3RT : puise des flacons de GLP-3RT dans le stock (1 ou 2 selon le format). Garder identique dans api/stock.mjs. */
-const KIT_UNITS = { "kit-glp3rt": { "Kit · 1 + 1": 1, "Kit · 2 + 2": 2 } };
+const KIT_UNITS = {};
 const isKit = (id) => !!KIT_UNITS[id];
 const isAvail = (p) => AVAILABLE.includes(p.id);
 /* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
-const STOCK_SIZES = { glp3rt: ["5mg", "5mg · Pack de 2", "5mg · Pack de 3"] };
+/* Stock en KITS de 10 flacons (1 kit de GLP-3RT 5 mg et 1 kit d'eau 3 ml). Garder identique dans api/stock.mjs. */
+const STOCK_SIZES = { glp3rt: ["5mg"], "bac-water": ["3ml vial"] };
 const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.glp3rt != null && STOCK_LEFT.glp3rt < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
 /* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
-const BTC_ONLY_SIZES = { glp3rt: ["10mg", "20mg"] };
+const BTC_ONLY_SIZES = { glp3rt: ["10mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
    en stock (AVAILABLE) = expédié sous 24 h ; le reste = sur commande (~3 semaines). */
 const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
 /* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock
    (stock de départ − ventes payées par carte et Bitcoin) et se met à jour tout seul. */
-const STOCK_LEFT = { glp3rt: 17 };
+const STOCK_LEFT = { glp3rt: 1, "bac-water": 1 };
 /* Minimum de flacons pour un produit SUR COMMANDE : la commande rembourse au moins les 2 boîtes
    achetées au fournisseur (+ part de livraison). Le test Janoshik reste avancé par Novalyx.
    Recalculé à partir du fichier novalyx-calcul-prix.xlsx — à garder identique dans api/checkout.mjs. */
 const MIN_QTY = {"bpc157_5mg": 2, "bpc157_10mg": 2, "tb500_5mg": 3, "tb500_10mg": 3, "ghk_50mg": 2, "ghk_100mg": 2, "kpv_5mg": 2, "kpv_10mg": 2, "glp3rt_10mg": 2, "glp3rt_20mg": 2, "mazdutide_10mg": 4, "survodutide_10mg": 4, "cagrilintide_5mg": 4, "cagrilintide_10mg": 3, "tesamorelin_5mg": 4, "tesamorelin_10mg": 4, "ipamorelin_5mg": 2, "ipamorelin_10mg": 2, "sermorelin_5mg": 3, "cjc1295_10mg": 4, "nad_500mg": 3, "nad_1000mg": 3, "epitalon_10mg": 2, "epitalon_50mg": 2, "pinealon_5mg": 2, "pinealon_10mg": 2, "pinealon_20mg": 2, "motsc_10mg": 3, "motsc_40mg": 3, "ss31_10mg": 3, "ss31_50mg": 3, "thymosinalpha1_5mg": 3, "thymosinalpha1_10mg": 3, "thymalin_10mg": 3, "ll37_5mg": 3, "semax_5mg": 2, "semax_11mg": 2, "selank_5mg": 2, "selank_11mg": 2, "cerebrolysin_60mg": 2, "dsip_5mg": 2, "dsip_10mg": 2, "pt141_10mg": 3, "ara290_10mg": 3, "kisspeptin_5mg": 3, "kisspeptin_10mg": 2, "slupp322_5mg": 2, "slupp322_10mg": 2, "semaglutide_5mg": 2, "semaglutide_10mg": 2, "aod9604_5mg": 4, "aod9604_10mg": 4, "ghrp2_5mg": 2, "ghrp2_10mg": 2, "ghrp6_5mg": 2, "ghrp6_10mg": 2, "amino1mq_5mg": 2, "glutathione_600mg": 4, "glutathione_1500mg": 3, "hexarelin_5mg": 4, "formula01_10mg+10mg": 4, "formula02_5mg+5mg": 4, "formula03_70mg total": 4, "formula04_80mg total": 4, "melanotanii_10mg": 2, "melanotani_10mg": 3, "snap8_10mg": 2, "vip_5mg": 3, "vip_10mg": 3, "igf1lr3_1mg": 4, "igfdes_2mg": 3, "novalyxformula06_10mg total (BPC5+TB5)": 4, "novalyxformula06_20mg total (BPC10+TB10)": 4, "novalyxformula07cagrisema_2.5mg+2.5mg": 3, "novalyxformula07cagrisema_5mg+5mg": 4, "novalyxformula08semaxselank_10mg+10mg": 4, "novalyxformula09glp3rtcagri_5mg+5mg": 4, "dihexa_10mg": 4, "pe2228_10mg": 3, "adamax_5mg": 4, "nasemaxamidate_30mg": 4, "naselankamidate_30mg": 4, "cardiogen_20mg": 4, "cortagen_20mg": 4, "pancragen_20mg": 4, "cartalax_20mg": 4, "chonluten_20mg": 4, "ovagen_20mg": 4, "vesugen_20mg": 4, "testagen_20mg": 4, "prostamax_20mg": 4, "foxo4dri_10mg": 4, "humanin_10mg": 4, "aicar_50mg": 3, "cjc1295dac_5mg": 4, "pegmgf_2mg": 4, "hghfrag176191_5mg": 4, "ace031_1mg": 3, "eloralintide_5mg": 4, "adipotide_2mg": 3, "ahkcu_50mg": 2, "matrixyl_10mg": 2, "aceticwater_3ml": 4};
-const minQty = (p, size) => (CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size) && !isKit(p.id)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
+const minQty = (p, size) => (!WS && CONFIG.BTC_ON && !inStock(p, size) && !isPackSize(size) && !isKit(p.id)) ? (MIN_QTY[p.id + "_" + size] || 2) : 1;            // flacons restants du lot analysé (à mettre à jour à la main)
 const isPackSize = (s) => /pack/i.test(String(s));
 /* Remises par quantité (paiement Bitcoin). Les anciens « packs » du GLP-3RT et de l'eau sont remplacés par des
    paliers aux MÊMES prix (TIER_TOTALS). Règle identique dans api/checkout.mjs. */
 const TIER_TOTALS = { "glp3rt|5mg": { 2: 104.99, 3: 149.99 }, "bac-water|3ml vial": { 2: 12.99, 3: 18.99 } };
 const baseDisc = (q) => q >= 5 ? 0.2 : q >= 3 ? 0.15 : q >= 2 ? 0.1 : 0;
 const lineTotal = (unit, q, size, id) => {
-  if (!CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return Math.round(unit * q * 100) / 100;
+  if (WS || !CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return Math.round(unit * q * 100) / 100;
   const t = TIER_TOTALS[id + "|" + size];
   if (t && t[q]) return t[q];
   let d = baseDisc(q);
@@ -1809,7 +1836,7 @@ const lineTotal = (unit, q, size, id) => {
   return Math.round(unit * q * (1 - d) * 100) / 100;
 };
 const qtyDiscount = (q, size, id, unit) => {
-  if (!CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return 0;
+  if (WS || !CONFIG.BTC_ON || isPackSize(size) || isKit(id)) return 0;
   if (id && unit) return 1 - lineTotal(unit, q, size, id) / (unit * q);
   return baseDisc(q);
 };
@@ -2366,6 +2393,12 @@ a{color:inherit}
 .tier-pop{position:absolute;top:-9px;right:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;border-radius:999px}
 .saving{margin-top:12px;font-size:13.5px;color:var(--green)}
 .pcard-deal{margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--green)}
+.kitphoto{position:relative;display:inline-block;line-height:0}
+.kitbadge{position:absolute;top:8px;right:8px;background:#7F2F51;color:#fff;font:700 15px/1 Poppins,sans-serif;letter-spacing:.02em;padding:7px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(42,15,28,.28)}
+.kitbox{margin:18px 0 0;padding:12px 14px;border-radius:10px;background:#FBE9F0;border:1px solid #F2B5CE;color:#2A0F1C;display:flex;flex-direction:column;gap:3px;font-size:13px;line-height:1.5}
+.kitbox b{font-size:15px;color:#7F2F51}
+.ws-band{margin:0 auto;max-width:1100px;padding:14px 18px;background:#2A0F1C;color:#fff;border-radius:12px;font-size:14px;line-height:1.55;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ws-band b{color:#F2B5CE}
 .ship-note{margin-top:14px;padding:9px 12px;border-radius:8px;background:#FBF3E4;color:#7A4E0E;font-size:13px;line-height:1.45}
 .ship-note.ok{background:#FBE9F0;color:var(--green)}
 .freebar{margin:8px 0 6px}
@@ -2640,7 +2673,7 @@ const BESTSELLERS = ["glp3rt", "bpc157", "tb500", "ghk", "slupp322", "semaglutid
 /* Photos produits « à la façon d'Apple » : le navigateur choisit la bonne taille (WebP 480 px pour les cartes,
    1200 px pour la fiche et le zoom), et reprend automatiquement la photo JPG d'origine si un fichier WebP manque. */
 const webpFor = (jpg, w) => jpg ? jpg.replace(PHOTO_BASE, PHOTO_BASE + "w" + w + "/").replace(/\.jpg$/, ".webp") : "";
-const ProductPhoto = ({ p, size, h = 180, eager = false }) => {
+const ProductPhotoBase = ({ p, size, h = 180, eager = false }) => {
   const src = photoFor(p.id, size);
   const [mode, setMode] = useState("webp"); // webp → jpg → vial
   useEffect(() => { setMode("webp"); }, [src]);
@@ -2651,6 +2684,18 @@ const ProductPhoto = ({ p, size, h = 180, eager = false }) => {
   return (
     <img src={webpFor(src, h > 240 ? 1200 : 480)} srcSet={`${webpFor(src, 480)} 480w, ${webpFor(src, 1200)} 1200w`} sizes={`${h}px`}
       alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" width={h} height={h} onError={() => setMode("jpg")} style={style} />
+  );
+};
+
+/* Photo + pastille « ×10 » : chaque produit est vendu par kit de 10 flacons. */
+const ProductPhoto = (props) => {
+  const { p, h = 180 } = props;
+  if (!WS || !p || !p.kitOf10 || h < 120) return <ProductPhotoBase {...props} />;
+  return (
+    <span className="kitphoto" style={{ width: h, height: h }}>
+      <ProductPhotoBase {...props} />
+      <span className="kitbadge" aria-label="Kit de 10 flacons">×10</span>
+    </span>
   );
 };
 
@@ -2698,14 +2743,15 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{pn(p)}</div>
-      <div className="pcard-sizes">{isKit(p.id) ? (FR ? "GLP-3RT 5 mg + eau bactériostatique · 2 formats" : "GLP-3RT 5 mg + bacteriostatic water · 2 formats") : <>{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</>}</div>
+      <div className="pcard-sizes">{WS ? <>{FR ? "Kit de 10 flacons" : "Kit of 10 vials"} · {visVariants(p).map(v => v.size).join(" · ")}</> : isKit(p.id) ? (FR ? "GLP-3RT 5 mg + eau bactériostatique · 2 formats" : "GLP-3RT 5 mg + bacteriostatic water · 2 formats") : <>{visVariants(p).map(v => v.size).join(" · ")} · {FR ? "lyophilisé" : "lyophilised"}</>}</div>
       {coa && coa.batch && <div className="pcard-lot">{FR ? "Lot" : "Batch"} {coa.batch} · {FR ? "analysé par Janoshik" : "analysed by Janoshik"}</div>}
       <div className="pcard-foot">
         <div>
-          <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (FR ? "À partir de" : "From") : (FR ? "Bientôt disponible" : "Coming soon")}</div>
-          <div className="pcard-price">{price(min, cur, lang)}</div>
+          <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (WS ? (FR ? "Prix du kit (10 flacons)" : "Kit price (10 vials)") : (FR ? "À partir de" : "From")) : (FR ? "Bientôt disponible" : "Coming soon")}</div>
+          <div className="pcard-price">{price(min, cur, lang)}{WS && visVariants(p).length > 1 ? "+" : ""}</div>
+          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); return v1 ? (FR ? `En stock : ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `In stock: ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / vial`) : (FR ? `Sur commande · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `Made to order · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / vial`); })()}</div>}
           {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-btc">{FR ? "−5 % si vous payez en Bitcoin" : "−5% when you pay with Bitcoin"}</div>}
-          {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
+          {!WS && CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
         <span className="link">{FR ? "Détails" : "Details"}</span>
       </div>
@@ -2754,7 +2800,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const coaP = isKit(p.id) ? PRODUCTS.find(x => x.id === "glp3rt") : p;   // le kit contient du GLP-3RT : on montre son rapport d'analyse
   const coa = coaFor(coaP, isKit(p.id) ? "5mg" : v.size);
   const coaOther = !coa && COAS[coaP.id];
-  const showBac = XSELL_BAC && canBuy(p) && !isKit(p.id) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
+  const showBac = !WS && XSELL_BAC && canBuy(p) && !isKit(p.id) && p.id !== "bac-water" && !!bac && !!bacV && isAvail(bac);
   const bq = bacQty == null ? qty : bacQty;
   const bacTotal = bacV ? lineTotal(bacV.price, bq, bacV.size, "bac-water") : 0;
   const total = lineTotal(v.price, qty, v.size, p.id) + (showBac && withBac ? bacTotal : 0);
@@ -2784,11 +2830,15 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
             <h2 className="h2" style={{ fontSize: 40, margin: "6px 0 14px" }}>{pn(p)}</h2>
             <p style={{ color: "var(--ink2)", fontSize: 14.5, lineHeight: 1.75 }}>{FR && p.desc_fr ? p.desc_fr : p.desc}</p>
 
-            <div className="eyebrow" style={{ margin: "26px 0 10px" }}>{FR ? "Conditionnement" : "Size"}</div>
+            <div className="kitbox">
+              <b>{FR ? "1 kit = 10 flacons" : "1 kit = 10 vials"}</b>
+              <span>{FR ? "Vente en gros : vous commandez des kits de 10 flacons identiques, du même lot. Le prix affiché est le prix du kit entier." : "Wholesale: you order kits of 10 identical vials from the same batch. The price shown is for the whole kit."}</span>
+            </div>
+            <div className="eyebrow" style={{ margin: "26px 0 10px" }}>{FR ? "Format du kit" : "Kit format"}</div>
             <div className="sizes">
               {visVariants(p).map((x, i) => (
                 <button key={x.size} className={`size ${i === idx ? "on" : ""}`} onClick={() => setIdx(i)}>
-                  <div className="mono" style={{ fontSize: 12, color: "var(--mute)" }}>{x.size}</div>
+                  <div className="mono" style={{ fontSize: 12, color: "var(--mute)" }}>{x.size} {"× 10"}</div>
                   {isKit(p.id) && <div style={{ fontSize: 11.5, color: "var(--ink2)", margin: "2px 0 2px" }}>{(KIT_UNITS[p.id][x.size] || 1) + " × GLP-3RT + " + (KIT_UNITS[p.id][x.size] || 1) + " × " + (FR ? "eau" : "water")}</div>}
                   <div style={{ fontFamily: "var(--serif)", fontSize: 21 }}>{price(x.price, cur, lang)}</div>
                 </button>
@@ -2797,11 +2847,11 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
 
             {CONFIG.BTC_ON && canBuy(p) && (
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
-                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h" : "In stock · ships within 24 h") : (FR ? "Sur commande · 3 à 4 semaines · lot analysé par Janoshik avant expédition · suivi à chaque étape" : "Made to order · 3–4 weeks · batch analysed by Janoshik before shipping · tracked at every step")}
+                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Sur commande · livraison sous 3 à 4 semaines · lot analysé par un laboratoire indépendant avant expédition" : "Made to order · delivery within 3–4 weeks · batch analysed by an independent laboratory before shipping")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
               </div>
             )}
-            {CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && !isKit(p.id) && (
+            {!WS && CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && !isKit(p.id) && (
               <div className="tiers">
                 <div className="tag" style={{ marginBottom: 8 }}>{FR ? "Prix dégressif : plus vous en prenez, moins c'est cher" : "Volume pricing: the more you take, the less you pay"}</div>
                 <div className="tiers-row">
@@ -2861,7 +2911,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                   <button className="btn btn-line buy-btn" onClick={() => addAll(false)}>{FR ? "Ajouter au panier" : "Add to cart"}</button>
                   <button className="btn btn-ink buy-btn" onClick={() => addAll(true)}>{FR ? "Acheter maintenant" : "Buy now"} — {price(total, cur, lang)}</button>
                   <div className="mbar" role="region" aria-label={FR ? "Achat rapide" : "Quick buy"}>
-                    <div className="mbar-info"><b>{price(total, cur, lang)}</b><span>{v.size}{qty > 1 ? ` · ×${qty}` : ""}</span></div>
+                    <div className="mbar-info"><b>{price(total, cur, lang)}</b><span>{v.size} × 10{qty > 1 ? ` · ${qty} kits` : " · 1 kit"}</span></div>
                     <button className="btn btn-line" onClick={() => addAll(false)}>{FR ? "Ajouter" : "Add"}</button>
                     <button className="btn btn-ink" onClick={() => addAll(true)}>{FR ? "Acheter" : "Buy"}</button>
                   </div>
@@ -2989,7 +3039,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 <div key={i.lineId} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 0", borderBottom: "1px solid var(--line)" }}>
                   <div>
                     <div style={{ fontFamily: "var(--serif)", fontSize: 19 }}>{pnId(i.id, i.name)}</div>
-                    <div className="mono muted" style={{ fontSize: 11.5 }}>{i.size} · {FR ? "Qté" : "Qty"} {i.qty} · {price(lineTotal(i.price, i.qty, i.size, i.id), cur, lang)}{qtyDiscount(i.qty, i.size, i.id, i.price) > 0.0001 && <span style={{ color: "var(--green)" }}> · −{Math.round(qtyDiscount(i.qty, i.size, i.id, i.price) * 100)} %</span>}</div>
+                    <div className="mono muted" style={{ fontSize: 11.5 }}>{i.size} · {FR ? (i.qty > 1 ? `${i.qty} kits de 10 flacons` : "1 kit de 10 flacons") : (i.qty > 1 ? `${i.qty} kits of 10 vials` : "1 kit of 10 vials")} · {price(lineTotal(i.price, i.qty, i.size, i.id), cur, lang)}{qtyDiscount(i.qty, i.size, i.id, i.price) > 0.0001 && <span style={{ color: "var(--green)" }}> · −{Math.round(qtyDiscount(i.qty, i.size, i.id, i.price) * 100)} %</span>}</div>
                   </div>
                   <button className="x" style={{ width: 28, height: 28, fontSize: 16 }} onClick={() => onRemove(i.lineId)} aria-label={FR ? "Retirer" : "Remove"}>✕</button>
                 </div>
@@ -3032,7 +3082,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 )}
                 <div className="spec" style={{ borderBottom: "none" }}><span><b>Total</b></span><span style={{ fontFamily: "var(--serif)", fontSize: 24 }}>{price(grand, cur, lang)}</span></div>
                 <p className="muted" style={{ fontSize: 12, margin: "6px 0 14px" }}>
-                  {allStock ? (FR ? "En stock · expédié sous 24 h · livraison en 2 à 3 jours en France" : "In stock · ships within 24 h · 2–3 day delivery in France") : (FR ? "Votre panier contient des articles sur commande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
+                  {allStock ? (FR ? "En stock · 24 h en Île-de-France · 3 à 4 jours en France métropolitaine" : "In stock · 24 h in Île-de-France · 3–4 days in mainland France") : (FR ? "Votre panier contient des articles sur commande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
                 </p>
                 <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
                 <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
@@ -3077,7 +3127,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 </>)}
               </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>
-                {FR ? "Expédié sous 24 h · livraison en 2 à 3 jours maximum en France" : "Shipped within 24 h · delivery in 2–3 days maximum in France"}
+                {FR ? "Kits en stock : 24 h en Île-de-France, 3 à 4 jours en France métropolitaine · sur commande : 3 à 4 semaines" : "Kits in stock: 24 h in Île-de-France, 3–4 days in mainland France · made to order: 3–4 weeks"}
                 {shipEst !== null && <> · <b>{FR ? "Livraison : " : "Shipping: "}{shipEst === 0 ? (FR ? "offerte" : "free") : eur(shipEst)}</b></>}
               </p>
               <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
@@ -3195,7 +3245,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
                   <div className="hero-prod-name" style={{ fontFamily: "var(--serif)", fontSize: 30, lineHeight: 1.05, whiteSpace: "nowrap" }}>GLP-3RT 5 mg</div>
                   <div className="mono muted" style={{ fontSize: 11.5, marginTop: 5 }}>{FR ? "Peptide lyophilisé · usage recherche" : "Lyophilised peptide · research use"}</div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-                    <span className="tag">{FR ? "À partir de" : "From"}</span>
+                    <span className="tag">{WS ? (FR ? "Prix du kit de 10 flacons" : "Price per kit of 10 vials") : (FR ? "À partir de" : "From")}</span>
                     <span className="pcard-price">{price(heroMin, cur, lang)}</span>
                   </div>
                 </div>
@@ -3225,7 +3275,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
             [FR ? "Entreprise" : "Company", FR ? "Française · SIRET 898 509 369" : "French · SIRET 898 509 369"],
             [FR ? "Analyses" : "Analyses", FR ? `GLP-3RT : ${pct(COAS.glp3rt.purity, lang)} · Janoshik, clé publique` : `GLP-3RT: ${pct(COAS.glp3rt.purity, lang)} · Janoshik`],
             [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? (FR ? "Carte, Bitcoin ou virement" : "Card, Bitcoin or bank transfer") : (FR ? "Carte bancaire ou Bitcoin" : "Card or Bitcoin")) : (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros")) : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
-            [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h · sur commande : 3 à 4 semaines" : "In stock: 24 h · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
+            [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h en Île-de-France, 3 à 4 jours en France · sur commande : 3 à 4 semaines" : "In stock: 24 h Île-de-France, 3–4 days France · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
           ].map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
         </div>
       </div>
@@ -3387,7 +3437,8 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
           <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={FR ? "Rechercher un composé (ex. BPC-157, Semax…)" : "Search a compound (e.g. BPC-157, Semax…)"} aria-label={FR ? "Rechercher un composé" : "Search a compound"} />
           {q && <span className="search-n">{list.length} {FR ? (list.length > 1 ? "résultats" : "résultat") : (list.length === 1 ? "result" : "results")}</span>}
         </div>
-        <a href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download style={{ display: "inline-block", margin: "-14px 0 26px", fontSize: 14, fontWeight: 600, color: "var(--green)", textDecoration: "underline" }}>{FR ? "Télécharger le catalogue et les tarifs (PDF)" : "Download the catalogue and price list (PDF)"}</a>
+        {WS && <div className="ws-band" style={{ margin: "-10px 0 26px" }}><span><b>{FR ? "Vente en gros : 1 kit = 10 flacons." : "Wholesale: 1 kit = 10 vials."}</b> {FR ? "Les prix affichés sont ceux du kit entier. Kits en stock : expédition 24 h en Île-de-France, 3 à 4 jours en France métropolitaine. Les autres : sur commande, 3 à 4 semaines." : "Prices shown are for the whole kit. Kits in stock ship within 24 h in Île-de-France, 3–4 days in mainland France. Others are made to order, 3–4 weeks."}</span></div>}
+        {!WS && <a href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download style={{ display: "inline-block", margin: "-14px 0 26px", fontSize: 14, fontWeight: 600, color: "var(--green)", textDecoration: "underline" }}>{FR ? "Télécharger le catalogue et les tarifs (PDF)" : "Download the catalogue and price list (PDF)"}</a>}
         {!nq && <div className="filters">
           <button className={`fchip ${filter === "All" ? "on" : ""}`} onClick={() => change("All")}>{FR ? "Tout" : "All"} ({PRODUCTS.length})</button>
           {cats.map(c => (

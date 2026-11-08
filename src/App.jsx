@@ -2435,11 +2435,11 @@ const Logo = ({ s = 34, light = false }) => {
       <line x1="19" y1="20" x2="31" y2="15" stroke="#7F2F51" strokeWidth="2.2"/>
       <line x1="34" y1="14" x2="35" y2="28" stroke="#7F2F51" strokeWidth="2.2"/>
       <line x1="19" y1="20" x2="33" y2="30" stroke={node} strokeWidth="2.2"/>
-      <line x1="17" y1="21" x2="12" y2="30" stroke="#B4B9C9" strokeWidth="2.2"/>
+      <line x1="17" y1="21" x2="12" y2="30" stroke="#C87A9C" strokeWidth="2.2"/>
       <circle cx="34" cy="12" r="5.5" fill="#7F2F51"/>
       <circle cx="18" cy="19" r="5" fill={node}/>
       <circle cx="34" cy="31" r="5" fill={node}/>
-      <circle cx="11" cy="32" r="3.8" fill="#B4B9C9"/>
+      <circle cx="11" cy="32" r="3.8" fill="#C87A9C"/>
     </svg>
   );
 };
@@ -4790,7 +4790,7 @@ const setLink = (rel, href) => {
   if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
   el.setAttribute("href", href);
 };
-const FAVICON = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='#F5F3EE'/><line x1='19' y1='20' x2='31' y2='15' stroke='#7F2F51' stroke-width='2.2'/><line x1='34' y1='14' x2='35' y2='28' stroke='#7F2F51' stroke-width='2.2'/><line x1='19' y1='20' x2='33' y2='30' stroke='#2A0F1C' stroke-width='2.2'/><line x1='17' y1='21' x2='12' y2='30' stroke='#B4B9C9' stroke-width='2.2'/><circle cx='34' cy='12' r='5.5' fill='#7F2F51'/><circle cx='18' cy='19' r='5' fill='#2A0F1C'/><circle cx='34' cy='31' r='5' fill='#2A0F1C'/><circle cx='11' cy='32' r='3.8' fill='#B4B9C9'/></svg>");
+const FAVICON = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='10' fill='#F5F3EE'/><line x1='19' y1='20' x2='31' y2='15' stroke='#7F2F51' stroke-width='2.2'/><line x1='34' y1='14' x2='35' y2='28' stroke='#7F2F51' stroke-width='2.2'/><line x1='19' y1='20' x2='33' y2='30' stroke='#2A0F1C' stroke-width='2.2'/><line x1='17' y1='21' x2='12' y2='30' stroke='#C87A9C' stroke-width='2.2'/><circle cx='34' cy='12' r='5.5' fill='#7F2F51'/><circle cx='18' cy='19' r='5' fill='#2A0F1C'/><circle cx='34' cy='31' r='5' fill='#2A0F1C'/><circle cx='11' cy='32' r='3.8' fill='#C87A9C'/></svg>");
 
 /* ═══════════════════════════════════════════════════════════
    ROOT

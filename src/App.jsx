@@ -2192,9 +2192,9 @@ a{color:inherit}
 @media(min-width:1180px){.nav-links{display:flex}.lang,.cur{display:flex}.burger{display:none}}
 .nav-links{flex-shrink:0}.nav-links button,.cart-btn{white-space:nowrap}
 @media(min-width:1180px) and (max-width:1499px){.nav-links{gap:14px}.nav-links button{font-size:12.5px}.nav-tools{gap:10px}.brand-sub{display:none}.cart-btn{padding:7px 10px}}
-.menu{position:fixed;inset:0;z-index:80;background:var(--paper);display:flex;flex-direction:column;padding:20px}
+.menu{position:fixed;inset:0;z-index:80;background:var(--paper);display:flex;flex-direction:column;padding:20px;overflow-y:auto;-webkit-text-size-adjust:100%}
 .menu-top{display:flex;justify-content:space-between;align-items:center;height:46px;margin-bottom:28px}
-.menu a,.menu .mi{font-family:var(--serif);font-size:36px;font-weight:300;text-align:left;padding:10px 0;border-bottom:1px solid var(--line2);letter-spacing:-.01em}
+.menu a,.menu .mi{font-family:var(--serif);font-size:clamp(20px,5.6vw,26px);font-weight:400;text-align:left;padding:12px 0;border-bottom:1px solid var(--line2);letter-spacing:-.01em}
 .menu-foot{margin-top:auto;display:flex;gap:18px;align-items:center;padding-top:20px}
 
 /* hero */

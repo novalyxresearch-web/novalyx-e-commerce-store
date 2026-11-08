@@ -2652,7 +2652,9 @@ const photoDose = (s = "") => {
   if (/^3ml/.test(s)) return "3-ml";
   return null;
 };
-const photoFor = (id, size) => { if (isKit(id)) return `${PHOTO_BASE}${id}-${String(size).includes("2 + 2") ? 2 : 1}.jpg`; const d = photoDose(size); return d ? `${PHOTO_BASE}${id}-${d}.jpg` : null; };
+/* Visuels « kit de 10 flacons » (public/products/kit/). */
+const KIT_PHOTOS = new Set(["glp3rt-5-mg","glp3rt-10-mg","ghk-50-mg","motsc-10-mg","bpc157-10-mg","tb500-5-mg","semax-5-mg","selank-5-mg","kpv-10-mg","formula03-70-mg","formula04-80-mg","tesamorelin-5-mg","bac-water-3-ml"]);
+const photoFor = (id, size) => { if (isKit(id)) return `${PHOTO_BASE}${id}-${String(size).includes("2 + 2") ? 2 : 1}.jpg`; const d = photoDose(size); return d ? `${PHOTO_BASE}${WS && KIT_PHOTOS.has(id + "-" + d) ? "kit/" : ""}${id}-${d}.jpg` : null; };
 /* Chiffre qui défile jusqu'à sa valeur quand il apparaît à l'écran (ex. 99,008 % de pureté). */
 const CountUp = ({ value, lang }) => {
   const target = parseFloat(value); const dec = (String(value).split(".")[1] || "").length;

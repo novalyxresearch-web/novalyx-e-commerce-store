@@ -2401,12 +2401,13 @@ a{color:inherit}
 .cookie-in p{font-size:13px;color:var(--ink2);line-height:1.6;margin:6px 0 12px}
 .cookie-actions{display:flex;flex-wrap:wrap;gap:8px}
 .cookie-actions .btn{padding:11px 16px;font-size:13px;flex:1 1 auto}
+@media(max-width:600px){.cookie{padding:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}.cookie-in{padding:12px 14px;border-radius:16px}.cookie-in .eyebrow{display:none}.cookie-in p{font-size:12px;line-height:1.45;margin:0 0 10px}.cookie-actions{gap:6px}.cookie-actions .btn{padding:9px 8px;font-size:12px}}
 .cookie-row{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink2);line-height:1.5;padding:10px 0;border-top:1px solid var(--line2)}
 .cookie-row input{margin-top:3px;accent-color:var(--green);flex-shrink:0}
 .field select{width:100%;padding:12px 13px;border:1px solid var(--line);background:var(--surface);border-radius:2px;font-size:14px;color:var(--ink);outline:none}
 
 /* chatbot */
-.bot-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:85;background:var(--ink);color:#fff;border-radius:999px;padding:13px 20px;font-size:13.5px;font-weight:500;box-shadow:0 8px 24px rgba(11,27,46,.25);transition:background .18s}
+.bot-fab{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:85;background:var(--ink);color:#fff;border-radius:999px;padding:10px 16px;font-size:12.5px;opacity:.94;font-weight:500;box-shadow:0 8px 24px rgba(11,27,46,.25);transition:background .18s}
 .bot-fab:hover{background:var(--green)}
 .bot-panel{position:fixed;right:16px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:85;width:min(390px,calc(100vw - 32px));height:min(540px,calc(100vh - 150px));background:var(--surface);border:1px solid var(--line);box-shadow:0 16px 48px rgba(11,27,46,.22);display:flex;flex-direction:column}
 .bot-head{display:flex;justify-content:space-between;align-items:center;padding:12px 10px 12px 16px;border-bottom:1px solid var(--line)}
@@ -2503,7 +2504,7 @@ const Nav = ({ page, go, cur, setCur, cartCount, openCart, lang, setLang }) => {
             </div>
           </div>
           <div className="nav-links">
-            {NAV_ITEMS.map(([p, fr, en]) => (
+            {NAV_ITEMS.filter(([p]) => ["products", "coa", "learning", "about", "faq", "contact"].includes(p)).map(([p, fr, en]) => (
               <button key={p} className={page === p ? "on" : ""} onClick={() => nav(p)}>{FR ? fr : en}</button>
             ))}
           </div>

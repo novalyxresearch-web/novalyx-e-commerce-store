@@ -1708,7 +1708,7 @@ const PRODUCTS_ALL = [
    Le prix indiqué est le prix du KIT (10 flacons). Pour ajouter / retirer une molécule : modifier WHOLESALE.
    ⚠ Les mêmes prix et formats sont dans api/checkout.mjs (PRICES) : ils doivent rester identiques. */
 const WS = true;
-/* Analyses prévues pour chaque lot sur commande (le rapport est publié à réception du lot). Le GLP-3RT 5 mg garde son rapport Janoshik. */
+/* Analyses prévues pour chaque lot en précommande (le rapport est publié à réception du lot). Le GLP-3RT 5 mg garde son rapport Janoshik. */
 const BATCH_TESTS_EN = "Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received.";
 const KIT_SIZE = 10;
 const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
@@ -1810,7 +1810,7 @@ const AVAILABLE = ["glp3rt", "bac-water"];
 const KIT_UNITS = {};
 const isKit = (id) => !!KIT_UNITS[id];
 const isAvail = (p) => AVAILABLE.includes(p.id);
-/* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = sur commande). */
+/* Stock au niveau du FORMAT : seuls ces formats sont physiquement en stock (les autres formats = en précommande). */
 /* Stock en KITS de 10 flacons (1 kit de GLP-3RT 5 mg et 1 kit d'eau 3 ml). Garder identique dans api/stock.mjs. */
 const STOCK_SIZES = { glp3rt: ["5mg"], "bac-water": ["3ml vial"] };
 const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.glp3rt != null && STOCK_LEFT.glp3rt < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
@@ -1818,7 +1818,7 @@ const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.glp3r
 const BTC_ONLY_SIZES = { glp3rt: ["10mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
-   en stock (AVAILABLE) = expédié sous 24 h ; le reste = sur commande (~3 semaines). */
+   en stock (AVAILABLE) = expédié sous 24 h ; le reste = en précommande (~3 semaines). */
 const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
 /* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock
    (stock de départ − ventes payées par carte et Bitcoin) et se met à jour tout seul. */
@@ -2720,7 +2720,7 @@ const PhotoZoom = ({ p, size, onClose, lang }) => {
 };
 
 const QuickAddCtx = createContext(null);
-/* Ajout direct au panier depuis la carte : uniquement les formats en stock (les produits sur commande ont un minimum de flacons, ils passent par la fiche). */
+/* Ajout direct au panier depuis la carte : uniquement les formats en stock (les produits en précommande ont un minimum de flacons, ils passent par la fiche). */
 const QuickAdd = ({ p, cur, lang }) => {
   const FR = lang === "FR";
   const add = useContext(QuickAddCtx);
@@ -2747,7 +2747,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
     <div className="pcard" role="link" tabIndex={0} onClick={onClick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}>
       <div className="pcard-top">
         <span className="tag">{tp(lang, p.category)}</span>
-        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Sur commande" : "Made to order") : (FR ? "Bientôt" : "Soon")}</span>}
+        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Précommande" : "Pre-order") : (FR ? "Bientôt" : "Soon")}</span>}
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{pn(p)}</div>
@@ -2757,7 +2757,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
         <div>
           <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (WS ? (FR ? "Prix du kit (10 flacons)" : "Kit price (10 vials)") : (FR ? "À partir de" : "From")) : (FR ? "Bientôt disponible" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}{WS && visVariants(p).length > 1 ? "+" : ""}</div>
-          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); return v1 ? (FR ? `En stock : ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `In stock: ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / vial`) : (FR ? `Sur commande · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `Made to order · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / vial`); })()}</div>}
+          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); return v1 ? (FR ? `En stock : ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `In stock: ${v1.size} · ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} / vial`) : (FR ? `Précommande · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / flacon` : `Pre-order · ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} / vial`); })()}</div>}
           {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-btc">{FR ? "−5 % si vous payez en Bitcoin" : "−5% when you pay with Bitcoin"}</div>}
           {!WS && CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
@@ -2855,7 +2855,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
 
             {CONFIG.BTC_ON && canBuy(p) && (
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
-                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Sur commande · livraison sous 3 à 4 semaines · lot analysé par un laboratoire indépendant avant expédition" : "Made to order · delivery within 3–4 weeks · batch analysed by an independent laboratory before shipping")}
+                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Précommande · livraison sous 3 à 4 semaines · lot analysé par un laboratoire indépendant avant expédition" : "Pre-order · delivery within 3–4 weeks · batch analysed by an independent laboratory before shipping")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
               </div>
             )}
@@ -3097,7 +3097,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 )}
                 <div className="spec" style={{ borderBottom: "none" }}><span><b>Total</b></span><span style={{ fontFamily: "var(--serif)", fontSize: 24 }}>{price(grand, cur, lang)}</span></div>
                 <p className="muted" style={{ fontSize: 12, margin: "6px 0 14px" }}>
-                  {allStock ? (FR ? "En stock · 24 h en Île-de-France · 3 à 4 jours en France métropolitaine" : "In stock · 24 h in Île-de-France · 3–4 days in mainland France") : (FR ? "Votre panier contient des articles sur commande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
+                  {allStock ? (FR ? "En stock · 24 h en Île-de-France · 3 à 4 jours en France métropolitaine" : "In stock · 24 h in Île-de-France · 3–4 days in mainland France") : (FR ? "Votre panier contient des articles en précommande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains pre-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
                 </p>
                 <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
                 <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
@@ -3142,7 +3142,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 </>)}
               </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>
-                {FR ? "Kits en stock : 24 h en Île-de-France, 3 à 4 jours en France métropolitaine · sur commande : 3 à 4 semaines" : "Kits in stock: 24 h in Île-de-France, 3–4 days in mainland France · made to order: 3–4 weeks"}
+                {FR ? "Kits en stock : 24 h en Île-de-France, 3 à 4 jours en France métropolitaine · en précommande : 3 à 4 semaines" : "Kits in stock: 24 h in Île-de-France, 3–4 days in mainland France · pre-order: 3–4 weeks"}
                 {shipEst !== null && <> · <b>{FR ? "Livraison : " : "Shipping: "}{shipEst === 0 ? (FR ? "offerte" : "free") : eur(shipEst)}</b></>}
               </p>
               <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
@@ -3290,7 +3290,7 @@ const Home = ({ go, cur, openProduct, lang }) => {
             [FR ? "Entreprise" : "Company", FR ? "Française · SIRET 898 509 369" : "French · SIRET 898 509 369"],
             [FR ? "Analyses" : "Analyses", FR ? `GLP-3RT : ${pct(COAS.glp3rt.purity, lang)} · Janoshik, clé publique` : `GLP-3RT: ${pct(COAS.glp3rt.purity, lang)} · Janoshik`],
             [FR ? "Paiement" : "Payment", CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? (FR ? "Carte, Bitcoin ou virement" : "Card, Bitcoin or bank transfer") : (FR ? "Carte bancaire ou Bitcoin" : "Card or Bitcoin")) : (FR ? "Bitcoin, facturé en euros" : "Bitcoin, billed in euros")) : (FR ? "Stripe, carte bancaire" : "Stripe, card")],
-            [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h en Île-de-France, 3 à 4 jours en France · sur commande : 3 à 4 semaines" : "In stock: 24 h Île-de-France, 3–4 days France · made to order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
+            [FR ? "Expédition" : "Shipping", CONFIG.BTC_ON ? (FR ? "En stock : 24 h en Île-de-France, 3 à 4 jours en France · en précommande : 3 à 4 semaines" : "In stock: 24 h Île-de-France, 3–4 days France · pre-order: 3–4 weeks") : (FR ? "Sous 24 h, suivie, emballage neutre" : "Within 24 h, tracked, plain packaging")],
           ].map(([k, v]) => <div className={"fact" + (String(v).includes("@") ? " fact-wide" : "")} key={k}><div className="fact-k">{k}</div><div className="fact-v">{v}</div></div>)}
         </div>
       </div>
@@ -3452,7 +3452,7 @@ const ProductsPage = ({ cur, openProduct, initialFilter, setProductFilter, lang 
           <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={FR ? "Rechercher un composé (ex. BPC-157, Semax…)" : "Search a compound (e.g. BPC-157, Semax…)"} aria-label={FR ? "Rechercher un composé" : "Search a compound"} />
           {q && <span className="search-n">{list.length} {FR ? (list.length > 1 ? "résultats" : "résultat") : (list.length === 1 ? "result" : "results")}</span>}
         </div>
-        {WS && <div className="ws-band" style={{ margin: "-10px 0 26px" }}><span><b>{FR ? "Vente en gros : 1 kit = 10 flacons." : "Wholesale: 1 kit = 10 vials."}</b> {FR ? "Les prix affichés sont ceux du kit entier. Kits en stock : expédition 24 h en Île-de-France, 3 à 4 jours en France métropolitaine. Les autres : sur commande, 3 à 4 semaines." : "Prices shown are for the whole kit. Kits in stock ship within 24 h in Île-de-France, 3–4 days in mainland France. Others are made to order, 3–4 weeks."}</span></div>}
+        {WS && <div className="ws-band" style={{ margin: "-10px 0 26px" }}><span><b>{FR ? "Vente en gros : 1 kit = 10 flacons." : "Wholesale: 1 kit = 10 vials."}</b> {FR ? "Les prix affichés sont ceux du kit entier. Kits en stock : expédition 24 h en Île-de-France, 3 à 4 jours en France métropolitaine. Les autres : en précommande, 3 à 4 semaines." : "Prices shown are for the whole kit. Kits in stock ship within 24 h in Île-de-France, 3–4 days in mainland France. Others are pre-order, 3–4 weeks."}</span></div>}
         {!WS && <a href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download style={{ display: "inline-block", margin: "-14px 0 26px", fontSize: 14, fontWeight: 600, color: "var(--green)", textDecoration: "underline" }}>{FR ? "Télécharger le catalogue et les tarifs (PDF)" : "Download the catalogue and price list (PDF)"}</a>}
         {!nq && <div className="filters">
           <button className={`fchip ${filter === "All" ? "on" : ""}`} onClick={() => change("All")}>{FR ? "Tout" : "All"} ({PRODUCTS.length})</button>
@@ -3730,19 +3730,19 @@ const FAQPage = ({ lang, go }) => {
   if (CONFIG.BTC_ON) {
     const fix = (qStart, a) => { const i = faqs.findIndex(([q]) => q.startsWith(qStart)); if (i >= 0) faqs[i] = [faqs[i][0], a]; };
     if (FR) {
-      fix("Quel est le délai", "Produits en stock : expédiés sous 24 h après confirmation du paiement, livrés en 2 à 3 jours en France. Produits sur commande : 3 à 4 semaines, car le lot est d'abord reçu puis analysé par Janoshik avant de vous être expédié. Vous recevez un email à chaque étape, puis votre numéro de suivi.");
+      fix("Quel est le délai", "Produits en stock : expédiés sous 24 h après confirmation du paiement, livrés en 2 à 3 jours en France. Produits en précommande : 3 à 4 semaines, car le lot est d'abord reçu puis analysé par un laboratoire indépendant avant de vous être expédié. Vous recevez un email à chaque étape, puis votre numéro de suivi.");
       if (CONFIG.CARD_ON && !CONFIG.TRANSFER_ON) fix("Comment payer", "Directement depuis le panier, au choix : carte bancaire (Visa, Mastercard, Apple Pay, Google Pay, via Stripe : nous ne voyons jamais vos données de carte) ou Bitcoin (montant calculé en euros, facture valable 60 minutes). Première fois en Bitcoin ? Notre page « Payer en Bitcoin » explique tout en 3 étapes."); else if (CONFIG.CARD_ON) fix("Comment payer", "Directement depuis le panier, au choix : carte bancaire (Visa, Mastercard, Apple Pay, Google Pay, via Stripe : nous ne voyons jamais vos donn\u00e9es de carte), Bitcoin (montant calcul\u00e9 en euros, facture valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email, commande r\u00e9serv\u00e9e 48 heures). Premi\u00e8re fois en Bitcoin ? Notre page \u00ab Payer en Bitcoin \u00bb explique tout en 3 \u00e9tapes."); else fix("Comment payer", "Uniquement en Bitcoin, directement depuis le panier. Le montant est calculé en euros et la facture reste valable 60 minutes. Première fois ? Notre page « Payer en Bitcoin » explique tout en 3 étapes (Revolut, Kraken ou Coinbase).");
       faqs.splice(5, 0,
-        ["Que signifie « sur commande » ?", "Le produit est commandé auprès de notre fabricant dès votre paiement. À réception, nous envoyons un échantillon de ce lot chez Janoshik : votre flacon ne part qu'une fois l'analyse validée. Délai total : 3 à 4 semaines."],
-        ["Pourquoi un minimum de flacons sur certains produits ?", "Pour les produits sur commande, chaque lot est acheté et analysé spécialement. Le minimum (2 à 4 flacons selon le produit) permet de lancer ce lot ; il vous fait aussi bénéficier automatiquement de nos remises par quantité (−10 à −20 %)."],
-        ["Comment suivre ma commande ?", "Vous recevez un email à chaque étape : commande reçue, commandée auprès du fabricant, lot en analyse chez Janoshik, analyse validée (avec le lien du rapport), puis expédition avec votre numéro de suivi."]);
+        ["Que signifie « en précommande » ?", "Le produit est commandé auprès de notre fabricant dès votre paiement. À réception, nous envoyons un échantillon de ce lot chez un laboratoire indépendant : votre flacon ne part qu'une fois l'analyse validée. Délai total : 3 à 4 semaines."],
+        ["Pourquoi un minimum de flacons sur certains produits ?", "Pour les produits en précommande, chaque lot est acheté et analysé spécialement. Le minimum (2 à 4 flacons selon le produit) permet de lancer ce lot ; il vous fait aussi bénéficier automatiquement de nos remises par quantité (−10 à −20 %)."],
+        ["Comment suivre ma commande ?", "Vous recevez un email à chaque étape : commande reçue, commandée auprès du fabricant, lot en analyse chez un laboratoire indépendant, analyse validée (avec le lien du rapport), puis expédition avec votre numéro de suivi."]);
     } else {
-      fix("How long is delivery", "In-stock products ship within 24 h of payment confirmation and arrive in 2–3 days in France. Made-to-order products take 3–4 weeks: the batch is received, then analysed by Janoshik before it ships to you. You get an email at every step, then your tracking number.");
+      fix("How long is delivery", "In-stock products ship within 24 h of payment confirmation and arrive in 2–3 days in France. Made-to-order products take 3–4 weeks: the batch is received, then analysed by an independent laboratory before it ships to you. You get an email at every step, then your tracking number.");
       if (CONFIG.CARD_ON && !CONFIG.TRANSFER_ON) fix("How do I pay", "Straight from the cart, as you prefer: bank card (Visa, Mastercard, Apple Pay, Google Pay, through Stripe: we never see your card details) or Bitcoin (amount calculated in euros, invoice valid for 60 minutes). First time with Bitcoin? Our \"Pay with Bitcoin\" page explains everything in 3 steps."); else if (CONFIG.CARD_ON) fix("How do I pay", "Straight from the cart, as you prefer: bank card (Visa, Mastercard, Apple Pay, Google Pay, through Stripe: we never see your card details), Bitcoin (amount calculated in euros, invoice valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email, order reserved for 48 hours). First time with Bitcoin? Our \"Pay with Bitcoin\" page explains everything in 3 steps."); else fix("How do I pay", "Bitcoin only, straight from the cart. The amount is calculated in euros and the invoice is valid for 60 minutes. First time? Our \"Pay with Bitcoin\" page explains everything in 3 steps (Revolut, Kraken or Coinbase).");
       faqs.splice(5, 0,
-        ["What does \"made to order\" mean?", "The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to Janoshik: your vial only ships once the analysis is approved. Total time: 3–4 weeks."],
+        ["What does \"pre-order\" mean?", "The product is ordered from our manufacturer as soon as you pay. On arrival, we send a sample of that batch to an independent laboratory: your vial only ships once the analysis is approved. Total time: 3–4 weeks."],
         ["Why is there a minimum on some products?", "Made-to-order products are bought and analysed batch by batch. The minimum (2 to 4 vials depending on the product) lets us launch that batch, and automatically gives you our quantity discounts (−10 to −20%)."],
-        ["How do I track my order?", "You receive an email at every step: order received, ordered from the manufacturer, batch under analysis at Janoshik, analysis approved (with the report link), then shipped with your tracking number."]);
+        ["How do I track my order?", "You receive an email at every step: order received, ordered from the manufacturer, batch under analysis at an independent laboratory, analysis approved (with the report link), then shipped with your tracking number."]);
     }
   }
   return (
@@ -3922,7 +3922,7 @@ const TermsPage = ({ lang="EN" }) => {
     <S t={FR ? "2. Usage Recherche Uniquement" : "2. Research Use Only"}><p>{FR ? "Tous les produits sont destinés exclusivement à la recherche in-vitro en laboratoire. Pas pour usage humain ou vétérinaire. En achetant, vous confirmez être un chercheur qualifié agissant légalement." : "All products are for in-vitro laboratory research only. Not for human or veterinary use. By purchasing you confirm you are a qualified researcher acting lawfully."}</p></S>
     <S t={FR ? "3. Restriction d'Âge" : "3. Age Restriction"}><p>{FR ? "Vous devez avoir 18 ans ou plus pour acheter. Finaliser un achat confirme que vous remplissez cette condition." : "You must be 18+ to purchase. Completing a purchase confirms you meet this requirement."}</p></S>
     <S t={FR ? "4. Commandes & Paiement" : "4. Orders & Payment"}><p>{(CONFIG.CARD_ON && CONFIG.BTC_ON && !CONFIG.TRANSFER_ON) ? (FR ? "Les prix sont affichés en euros, TVA non applicable (art. 293 B du CGI, régime micro-entrepreneur). Le paiement se fait à la commande, au choix : par carte bancaire, traitée de manière sécurisée par Stripe (nous ne voyons ni ne stockons jamais vos données de carte), ou en Bitcoin, par une facture en euros valable 60 minutes. La vente est conclue à la confirmation du paiement, confirmée par email. Nous nous réservons le droit d'annuler une commande, avec remboursement intégral." : "Prices are shown in euros, VAT not applicable (art. 293 B of the French General Tax Code, micro-entrepreneur regime). Payment is made when ordering, as you prefer: by bank card, processed securely by Stripe (we never see or store your card details), or in Bitcoin, through an invoice in euros valid for 60 minutes. The sale is concluded when payment is confirmed, confirmed by email. We reserve the right to cancel an order, with a full refund.") : (CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON) ? (FR ? "Les prix sont affich\u00e9s en euros, TVA non applicable (art. 293 B du CGI, r\u00e9gime micro-entrepreneur). Le paiement se fait \u00e0 la commande, au choix : par carte bancaire, trait\u00e9e de mani\u00e8re s\u00e9curis\u00e9e par Stripe (nous ne voyons ni ne stockons jamais vos donn\u00e9es de carte) ; en Bitcoin, par une facture en euros valable 60 minutes . La vente est conclue \u00e0 la confirmation du paiement, confirm\u00e9e par email. Nous nous r\u00e9servons le droit d'annuler une commande, avec remboursement int\u00e9gral." : "Prices are shown in euros, VAT not applicable (art. 293 B of the French General Tax Code, micro-entrepreneur regime). Payment is made when ordering, as you prefer: by bank card, processed securely by Stripe (we never see or store your card details); in Bitcoin, through an invoice in euros valid for 60 minutes. The sale is concluded when payment is confirmed, confirmed by email. We reserve the right to cancel an order, with a full refund.") : (FR ? "Les prix sont affichés en EUR et n'incluent pas la TVA (TVA non applicable, art. 293B du CGI — régime micro-entrepreneur français). Le paiement par carte est traité de manière sécurisée par Stripe . Nous nous réservons le droit d'annuler des commandes, avec remboursement intégral." : "Prices are shown in EUR and do not include VAT (TVA non applicable, art. 293B du CGI — French micro-entrepreneur regime). Card payment is processed securely by Stripe. We reserve the right to cancel orders, with a full refund issued.")}</p></S>
-    <S t={FR ? "5. Livraison & Commandes Internationales" : "5. Shipping & International Orders"}><p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement. Les produits sur commande sont exp\u00e9di\u00e9s sous 3 \u00e0 4 semaines, apr\u00e8s r\u00e9ception et analyse du lot par un laboratoire ind\u00e9pendant ; vous \u00eates inform\u00e9 par email \u00e0 chaque \u00e9tape. La livraison prend g\u00e9n\u00e9ralement 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne et 7 \u00e0 14 jours ouvr\u00e9s pour les destinations internationales ; ces d\u00e9lais sont des estimations. Le risque de perte ou d'endommagement vous est transf\u00e9r\u00e9 au moment o\u00f9 vous prenez physiquement possession du colis." : "In-stock products are shipped from Paris within 24 h of payment confirmation. Made-to-order products are shipped within 3 to 4 weeks, after the batch has been received and analysed by an independent laboratory; you are informed by email at every step. Delivery usually takes 2 to 3 days in France, 3 to 5 business days in the rest of the European Union and 7 to 14 business days for international destinations; these timescales are estimates. The risk of loss or damage passes to you when you take physical possession of the parcel.") : (FR ? "Les commandes sont traitées dans des conditions d'expédition contrôlées avec approvisionnement par lot et par commande auprès de nos partenaires de laboratoire vérifiés. Les commandes sont expédiées sous 24 h après confirmation du paiement. La livraison en France prend généralement 2 à 3 jours ; le reste de l'Union européenne 3 à 5 jours ouvrés ; les destinations internationales 7 à 14 jours ouvrés. Les délais de livraison sont des estimations, pas des garanties. Le risque est transféré à l'acheteur dès l'expédition." : "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within 24 h of payment confirmation. Delivery within France typically takes 2–3 days; the rest of the EU 3–5 business days; international destinations 7–14 business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.")}</p><p>{FR ? "Pour les commandes internationales (hors Union Européenne), l'acheteur est seul responsable de vérifier que les produits peuvent être légalement importés dans sa juridiction, de payer les droits de douane, taxes ou frais de dédouanement applicables, et de respecter toutes les lois locales régissant les composés de recherche. Novalyx Research n'agit pas en tant qu'importateur officiel. Les colis saisis, détruits, refusés ou retournés par les autorités douanières dans toute juridiction hors UE ne sont pas remboursables. En passant une commande internationale, l'acheteur reconnaît et accepte expressément ces risques." : "For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks."}</p></S>
+    <S t={FR ? "5. Livraison & Commandes Internationales" : "5. Shipping & International Orders"}><p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement. Les produits en précommande sont exp\u00e9di\u00e9s sous 3 \u00e0 4 semaines, apr\u00e8s r\u00e9ception et analyse du lot par un laboratoire ind\u00e9pendant ; vous \u00eates inform\u00e9 par email \u00e0 chaque \u00e9tape. La livraison prend g\u00e9n\u00e9ralement 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne et 7 \u00e0 14 jours ouvr\u00e9s pour les destinations internationales ; ces d\u00e9lais sont des estimations. Le risque de perte ou d'endommagement vous est transf\u00e9r\u00e9 au moment o\u00f9 vous prenez physiquement possession du colis." : "In-stock products are shipped from Paris within 24 h of payment confirmation. Made-to-order products are shipped within 3 to 4 weeks, after the batch has been received and analysed by an independent laboratory; you are informed by email at every step. Delivery usually takes 2 to 3 days in France, 3 to 5 business days in the rest of the European Union and 7 to 14 business days for international destinations; these timescales are estimates. The risk of loss or damage passes to you when you take physical possession of the parcel.") : (FR ? "Les commandes sont traitées dans des conditions d'expédition contrôlées avec approvisionnement par lot et par commande auprès de nos partenaires de laboratoire vérifiés. Les commandes sont expédiées sous 24 h après confirmation du paiement. La livraison en France prend généralement 2 à 3 jours ; le reste de l'Union européenne 3 à 5 jours ouvrés ; les destinations internationales 7 à 14 jours ouvrés. Les délais de livraison sont des estimations, pas des garanties. Le risque est transféré à l'acheteur dès l'expédition." : "Orders are processed under controlled fulfillment conditions with per-order batch sourcing from our verified laboratory partners. Orders are shipped within 24 h of payment confirmation. Delivery within France typically takes 2–3 days; the rest of the EU 3–5 business days; international destinations 7–14 business days. Delivery timescales are estimates, not guarantees. Risk passes to buyer upon dispatch.")}</p><p>{FR ? "Pour les commandes internationales (hors Union Européenne), l'acheteur est seul responsable de vérifier que les produits peuvent être légalement importés dans sa juridiction, de payer les droits de douane, taxes ou frais de dédouanement applicables, et de respecter toutes les lois locales régissant les composés de recherche. Novalyx Research n'agit pas en tant qu'importateur officiel. Les colis saisis, détruits, refusés ou retournés par les autorités douanières dans toute juridiction hors UE ne sont pas remboursables. En passant une commande internationale, l'acheteur reconnaît et accepte expressément ces risques." : "For international orders (outside the European Union), the buyer is solely responsible for verifying that the products may be legally imported into their jurisdiction, for paying any applicable customs duties, taxes, or clearance fees, and for complying with all local laws governing research compounds. Novalyx Research does not act as an importer of record. Packages seized, destroyed, refused, or returned by customs authorities in any non-EU jurisdiction are non-refundable. By placing an international order, the buyer expressly acknowledges and accepts these risks."}</p></S>
     {CONFIG.BTC_ON ? (<>
     <S t={FR ? "6. Droit de rétractation et retours" : "6. Right of withdrawal and returns"}><p>{FR ? "Vous disposez de 14 jours \u00e0 compter de la r\u00e9ception de votre commande pour exercer votre droit de r\u00e9tractation, sans avoir \u00e0 vous justifier (art. L221-18 du Code de la consommation), en nous l'indiquant par email \u00e0 contact@novalyxresearch.com. Les produits doivent nous \u00eatre renvoy\u00e9s non ouverts, scell\u00e9s et dans leur emballage d'origine, au plus tard 14 jours apr\u00e8s votre demande ; les frais de retour restent \u00e0 votre charge. Nous vous remboursons toutes les sommes vers\u00e9es, livraison standard comprise, dans les 14 jours suivant votre demande ; ce remboursement peut \u00eatre diff\u00e9r\u00e9 jusqu'\u00e0 la r\u00e9ception du colis retourn\u00e9. Il est effectu\u00e9 avec le m\u00eame moyen de paiement, ou par virement pour un paiement en Bitcoin." : "You have 14 days from receipt of your order to exercise your right of withdrawal, without giving any reason (art. L221-18 of the French Consumer Code), by telling us by email at contact@novalyxresearch.com. The products must be sent back to us unopened, sealed and in their original packaging, no later than 14 days after your request; return costs are at your expense. We refund all sums paid, standard shipping included, within 14 days of your request; this refund may be deferred until the returned parcel is received. It is made with the same payment method, or by bank transfer for a Bitcoin payment."}</p><p>{FR ? "Conform\u00e9ment \u00e0 l'article L221-28, 5\u00b0 du Code de la consommation, le droit de r\u00e9tractation ne s'applique pas aux flacons descell\u00e9s apr\u00e8s la livraison, qui ne peuvent \u00eatre renvoy\u00e9s pour des raisons d'hygi\u00e8ne et de s\u00e9curit\u00e9." : "In accordance with article L221-28, 5\u00b0 of the French Consumer Code, the right of withdrawal does not apply to vials unsealed after delivery, which cannot be returned for hygiene and safety reasons."}</p><p>{FR ? "Produit endommag\u00e9 ou non conforme \u00e0 son rapport d'analyse : signalez-le-nous de pr\u00e9f\u00e9rence sous 7 jours, photos \u00e0 l'appui, \u00e0 contact@novalyxresearch.com ; nous le rempla\u00e7ons ou vous remboursons int\u00e9gralement. Vous b\u00e9n\u00e9ficiez en outre de la garantie l\u00e9gale de conformit\u00e9 (art. L217-3 et suivants du Code de la consommation) et de la garantie des vices cach\u00e9s (art. 1641 et suivants du Code civil)." : "Product damaged or not matching its analysis report: please report it to us, ideally within 7 days and with photos, at contact@novalyxresearch.com; we replace it or refund you in full. You also benefit from the legal guarantee of conformity (art. L217-3 et seq. of the French Consumer Code) and the guarantee against hidden defects (art. 1641 et seq. of the French Civil Code)."}</p></S>
     <S t={FR ? "7. Limitation de Responsabilité" : "7. Limitation of Liability"}><p>{FR ? "Novalyx n'est pas responsable de la mauvaise utilisation des produits, ni des dommages indirects ou consécutifs résultant de l'utilisation de ce site web ou des produits." : "Novalyx is not liable for misuse of products, or for indirect or consequential damages from use of this website or products."}</p></S>
@@ -3991,7 +3991,7 @@ const ShippingPage = ({ lang }) => {
   ];
   return (
     <Legal title={FR ? "Livraison & expédition" : "Shipping & delivery"}>
-      <p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement ; les produits sur commande sous 3 \u00e0 4 semaines, une fois le lot analys\u00e9 par un laboratoire ind\u00e9pendant. Livraison en 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne. Un num\u00e9ro de suivi vous est envoy\u00e9 \u00e0 l'exp\u00e9dition." : "In-stock products are shipped from Paris within 24 h of payment confirmation; made-to-order products within 3 to 4 weeks, once the batch has been analysed by an independent laboratory. Delivery in 2 to 3 days in France, 3 to 5 business days in the rest of the European Union. A tracking number is sent to you on dispatch.") : (FR ? "Chaque commande est expédiée depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France, 3 à 5 jours ouvrés pour le reste de l'Union européenne. Un numéro de suivi est communiqué à l'expédition." : "Each order is shipped from Paris within 24 h of payment confirmation. Delivery in 2–3 days maximum within France, 3–5 business days for the rest of the EU. A tracking number is sent on dispatch.")}</p>
+      <p>{CONFIG.BTC_ON ? (FR ? "Les produits en stock sont exp\u00e9di\u00e9s depuis Paris sous 24 h apr\u00e8s confirmation du paiement ; les produits en précommande sous 3 \u00e0 4 semaines, une fois le lot analys\u00e9 par un laboratoire ind\u00e9pendant. Livraison en 2 \u00e0 3 jours en France, 3 \u00e0 5 jours ouvr\u00e9s dans le reste de l'Union europ\u00e9enne. Un num\u00e9ro de suivi vous est envoy\u00e9 \u00e0 l'exp\u00e9dition." : "In-stock products are shipped from Paris within 24 h of payment confirmation; pre-order products within 3 to 4 weeks, once the batch has been analysed by an independent laboratory. Delivery in 2 to 3 days in France, 3 to 5 business days in the rest of the European Union. A tracking number is sent to you on dispatch.") : (FR ? "Chaque commande est expédiée depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France, 3 à 5 jours ouvrés pour le reste de l'Union européenne. Un numéro de suivi est communiqué à l'expédition." : "Each order is shipped from Paris within 24 h of payment confirmation. Delivery in 2–3 days maximum within France, 3–5 business days for the rest of the EU. A tracking number is sent on dispatch.")}</p>
       <h3>{FR ? "Zones et tarifs" : "Zones and rates"}</h3>
       <div style={{ borderTop: "1px solid var(--line)" }}>
         {zones.map(([z, r, d]) => (
@@ -4514,7 +4514,7 @@ const botPriceLine = (p, cur, lang) => {
   const avail = isAvail(p)
     ? (lang === "FR" ? "Disponible à l'achat en ligne." : "Available to order online.")
     : CONFIG.BTC_ON
-      ? (lang === "FR" ? "Disponible sur commande : 3 à 4 semaines, lot analysé par Janoshik avant expédition, suivi à chaque étape." : "Available to order: 3–4 weeks, batch analysed by Janoshik before shipping, tracked at every step.")
+      ? (lang === "FR" ? "Disponible en précommande : 3 à 4 semaines, lot analysé par un laboratoire indépendant avant expédition, suivi à chaque étape." : "Available to order: 3–4 weeks, batch analysed by an independent laboratory before shipping, tracked at every step.")
       : (lang === "FR" ? "Pas encore disponible à l'achat en ligne (bientôt)." : "Not yet available to order online (coming soon).");
   return pn(p) + "\n" + sizes + "\n\n" + avail;
 };
@@ -4718,7 +4718,7 @@ const BitcoinGuide = ({ lang, go }) => {
   const p = { fontSize: 15, lineHeight: 1.6, color: "var(--ink2)", margin: 0 };
   const after = FR
     ? [["Paiement envoyé", "depuis votre application"], ["Paiement confirmé", "en général en 10 à 60 minutes"], ["Email de confirmation", "votre commande est validée"],
-       ["Produit sur commande ?", "lot reçu puis analysé par Janoshik : un email à chaque étape"], ["Expédition", "avec votre numéro de suivi"]]
+       ["Produit en précommande ?", "lot reçu puis analysé par Janoshik : un email à chaque étape"], ["Expédition", "avec votre numéro de suivi"]]
     : [["Payment sent", "from your app"], ["Payment confirmed", "usually within 10 to 60 minutes"], ["Confirmation email", "your order is approved"],
        ["Made-to-order product?", "batch received, then analysed by Janoshik: an email at every step"], ["Shipped", "with your tracking number"]];
   const faq = FR ? [
@@ -5134,7 +5134,7 @@ const XL_DE = {
   "Pay with Bitcoin: −{#}% on your order": "Mit Bitcoin zahlen: −{#} % auf Ihre Bestellung",
 "−{#}% with Bitcoin": "−{#} % mit Bitcoin",
 "Search a compound (e.g. BPC-{#}, Semax…)": "Substanz suchen (z. B. BPC-{#}, Semax…)",
-"Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: {#}–{#} Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
+"Your cart contains pre-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: {#}–{#} Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
 "View GLP-{#}RT {#} mg": "GLP-{#}RT {#} mg ansehen",
 "Halloween: −{#}% with code HALLOWEEN{#}, until {#} October": "Halloween: −{#} % mit dem Code HALLOWEEN{#}, bis zum {#}. Oktober",
 "−5% with Bitcoin": "−5 % mit Bitcoin",
@@ -5177,7 +5177,7 @@ const XL_DE = {
 "Your mail app has opened.": "Ihre Mail-App wurde geöffnet.",
 "You're welcome. Feel free to ask anything else.": "Gern geschehen. Fragen Sie ruhig weiter.",
 "You must be 18+ to purchase. Completing a purchase confirms you meet this requirement.": "Sie müssen mindestens 18 Jahre alt sein. Mit dem Kauf bestätigen Sie dies.",
-"Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: 3–4 Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
+"Your cart contains pre-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Ihr Warenkorb enthält Artikel auf Bestellung: 3–4 Wochen, Charge wird vor dem Versand analysiert, mit einer E-Mail bei jedem Schritt.",
 "View GLP-3RT 5 mg": "GLP-3RT 5 mg ansehen",
 "Within 1 business day": "Innerhalb eines Werktags",
 "Help": "Hilfe",
@@ -5333,7 +5333,7 @@ const XL_DE = {
 "Immune": "Immunsystem",
 "Immune modulation, thymic pathways.": "Immunmodulation, Thymus-Signalwege.",
 "In stock: ships within {#} h": "Auf Lager: Versand innerhalb von {#} h",
-"In stock: {#} h · made to order: {#}–{#} weeks": "Auf Lager: {#} h · auf Bestellung: {#}–{#} Wochen",
+"In stock: {#} h · pre-order: {#}–{#} weeks": "Auf Lager: {#} h · auf Bestellung: {#}–{#} Wochen",
 "Independent analysis": "Unabhängige Analyse",
 "Janoshik, public key": "Janoshik, öffentlicher Schlüssel",
 "Lab Supplies": "Laborbedarf",
@@ -5452,7 +5452,7 @@ const XL_DE = {
 "METABOLIC RESEARCH": "STOFFWECHSELFORSCHUNG",
 "MITOCHONDRIAL RESEARCH": "MITOCHONDRIENFORSCHUNG",
 "MULTI-RECEPTOR RESEARCH": "MULTI-REZEPTOR-FORSCHUNG",
-"Made to order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Auf Bestellung · {#}–{#} Wochen · Charge vor dem Versand von Janoshik analysiert · Verfolgung bei jedem Schritt",
+"Pre-order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Auf Bestellung · {#}–{#} Wochen · Charge vor dem Versand von Janoshik analysiert · Verfolgung bei jedem Schritt",
 "Most popular": "Am beliebtesten",
 "NEUROMODULATION RESEARCH": "NEUROMODULATIONS-FORSCHUNG",
 "NEUROPEPTIDE RESEARCH": "NEUROPEPTID-FORSCHUNG",
@@ -5544,7 +5544,7 @@ const XL_DE = {
 "Glutathione": "Glutathion",
 "HGH Fragment {#}-{#}": "HGH-Fragment {#}-{#}",
 "Lyophilised peptides supplied exclusively for in-vitro research. Published analysis reports are marked COA.": "Lyophilisierte Peptide ausschließlich für die In-vitro-Forschung. Veröffentlichte Analyseberichte sind mit COA gekennzeichnet.",
-"Made to order": "Auf Bestellung",
+"Pre-order": "Auf Bestellung",
 "Research catalogue": "Forschungskatalog",
 "{#}mg total": "{#}mg gesamt",
 "{#}mg total (BPC{#}+TB{#}) · {#}mg total (BPC{#}+TB{#})": "{#}mg gesamt (BPC{#}+TB{#}) · {#}mg gesamt (BPC{#}+TB{#})",
@@ -5601,7 +5601,7 @@ const XL_DE = {
 "How should compounds be stored?": "Wie sollten die Verbindungen gelagert werden?",
 "Substances supplied exclusively for scientific laboratory research. They are not intended for human or veterinary use, consumption or therapeutic purposes.": "Substanzen, die ausschließlich für die wissenschaftliche Laborforschung geliefert werden. Sie sind nicht zur Anwendung am Menschen oder Tier, zum Verzehr oder für therapeutische Zwecke bestimmt.",
 "What are research peptides?": "Was sind Forschungspeptide?",
-"What does \"made to order\" mean?": "Was bedeutet „auf Bestellung“?",
+"What does \"pre-order\" mean?": "Was bedeutet „auf Bestellung“?",
 "What is a certificate of analysis (COA)?": "Was ist ein Analysezertifikat (COA)?",
 "What is your returns policy?": "Wie sieht Ihre Rückgaberegelung aus?",
 "Who can order from Novalyx?": "Wer kann bei Novalyx bestellen?",
@@ -5667,7 +5667,7 @@ const XL_DE = {
 "Order data is kept for {#} years, as required by accounting obligations (art. L{#}-{#} of the French Commercial Code). Other data is deleted {#} years after our last exchange.": "Bestelldaten werden {#} Jahre lang aufbewahrt, wie es die Buchhaltungspflichten verlangen (Art. L{#}-{#} des franz\u00f6sischen Handelsgesetzbuchs). Andere Daten werden {#} Jahre nach unserem letzten Austausch gel\u00f6scht.",
 "You may also lodge a complaint with the CNIL, the French data protection authority (cnil.fr).": "Sie k\u00f6nnen au\u00dferdem eine Beschwerde bei der CNIL, der franz\u00f6sischen Datenschutzbeh\u00f6rde, einreichen (cnil.fr).",
 "Data retention": "Speicherdauer",
-"In-stock products are shipped from Paris within {#} h of payment confirmation; made-to-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Lagerware wird innerhalb von {#} h nach Zahlungsbest\u00e4tigung aus Paris versendet; Produkte auf Bestellung innerhalb von {#} bis {#} Wochen, sobald die Charge von einem unabh\u00e4ngigen Labor analysiert wurde. Lieferung in {#} bis {#} Tagen in Frankreich, {#} bis {#} Werktage in der \u00fcbrigen Europ\u00e4ischen Union. Beim Versand erhalten Sie eine Sendungsnummer.",
+"In-stock products are shipped from Paris within {#} h of payment confirmation; pre-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Lagerware wird innerhalb von {#} h nach Zahlungsbest\u00e4tigung aus Paris versendet; Produkte auf Bestellung innerhalb von {#} bis {#} Wochen, sobald die Charge von einem unabh\u00e4ngigen Labor analysiert wurde. Lieferung in {#} bis {#} Tagen in Frankreich, {#} bis {#} Werktage in der \u00fcbrigen Europ\u00e4ischen Union. Beim Versand erhalten Sie eine Sendungsnummer.",
 "Free shipping in France and the European Union from {#}\u20ac of purchases. Bacteriostatic water ordered on its own: {#}\u20ac in France and the EU. We do not ship to Russia or Belarus.": "Kostenloser Versand in Frankreich und der Europ\u00e4ischen Union ab {#}\u20ac Einkaufswert. Bakteriostatisches Wasser allein bestellt: {#}\u20ac in Frankreich und der EU. Wir liefern nicht nach Russland oder Belarus.",
 "Operator": "Betreiber",
 "Legal status": "Rechtsform",
@@ -6013,7 +6013,7 @@ const XL_NL = {
   "Pay with Bitcoin: −{#}% on your order": "Betaal met Bitcoin: −{#} % op uw bestelling",
 "−{#}% with Bitcoin": "−{#} % met Bitcoin",
 "Search a compound (e.g. BPC-{#}, Semax…)": "Zoek een stof (bijv. BPC-{#}, Semax…)",
-"Your cart contains made-to-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: {#}–{#} weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
+"Your cart contains pre-order items: {#}–{#} weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: {#}–{#} weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
 "View GLP-{#}RT {#} mg": "GLP-{#}RT {#} mg bekijken",
 "Halloween: −{#}% with code HALLOWEEN{#}, until {#} October": "Halloween: −{#}% met de code HALLOWEEN{#}, tot {#} oktober",
 "−5% with Bitcoin": "−5 % met Bitcoin",
@@ -6056,7 +6056,7 @@ const XL_NL = {
 "Your mail app has opened.": "Uw mailapp is geopend.",
 "You're welcome. Feel free to ask anything else.": "Graag gedaan. Stel gerust nog een vraag.",
 "You must be 18+ to purchase. Completing a purchase confirms you meet this requirement.": "U moet 18+ zijn om te kopen. Met uw aankoop bevestigt u dit.",
-"Your cart contains made-to-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: 3–4 weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
+"Your cart contains pre-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.": "Uw winkelwagen bevat artikelen op bestelling: 3–4 weken, batch wordt voor verzending geanalyseerd, met een e-mail bij elke stap.",
 "View GLP-3RT 5 mg": "GLP-3RT 5 mg bekijken",
 "Within 1 business day": "Binnen 1 werkdag",
 ", documented, verifiable.": ", gedocumenteerd, verifieerbaar.",
@@ -6277,7 +6277,7 @@ const XL_NL = {
 "Order data is kept for {#} years, as required by accounting obligations (art. L{#}-{#} of the French Commercial Code). Other data is deleted {#} years after our last exchange.": "Bestelgegevens worden {#} jaar bewaard, zoals vereist door de boekhoudkundige verplichtingen (art. L{#}-{#} van het Franse wetboek van koophandel). Andere gegevens worden {#} jaar na ons laatste contact verwijderd.",
 "You may also lodge a complaint with the CNIL, the French data protection authority (cnil.fr).": "U kunt ook een klacht indienen bij de CNIL, de Franse gegevensbeschermingsautoriteit (cnil.fr).",
 "Data retention": "Bewaartermijn",
-"In-stock products are shipped from Paris within {#} h of payment confirmation; made-to-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Producten op voorraad worden binnen {#} u na bevestiging van de betaling vanuit Parijs verzonden; producten op bestelling binnen {#} tot {#} weken, zodra de batch door een onafhankelijk laboratorium is geanalyseerd. Levering in {#} tot {#} dagen in Frankrijk, {#} tot {#} werkdagen in de rest van de Europese Unie. Bij verzending ontvangt u een trackingnummer.",
+"In-stock products are shipped from Paris within {#} h of payment confirmation; pre-order products within {#} to {#} weeks, once the batch has been analysed by an independent laboratory. Delivery in {#} to {#} days in France, {#} to {#} business days in the rest of the European Union. A tracking number is sent to you on dispatch.": "Producten op voorraad worden binnen {#} u na bevestiging van de betaling vanuit Parijs verzonden; producten op bestelling binnen {#} tot {#} weken, zodra de batch door een onafhankelijk laboratorium is geanalyseerd. Levering in {#} tot {#} dagen in Frankrijk, {#} tot {#} werkdagen in de rest van de Europese Unie. Bij verzending ontvangt u een trackingnummer.",
 "Free shipping in France and the European Union from {#}\u20ac of purchases. Bacteriostatic water ordered on its own: {#}\u20ac in France and the EU. We do not ship to Russia or Belarus.": "Gratis verzending in Frankrijk en de Europese Unie vanaf {#}\u20ac aan aankopen. Bacteriostatisch water apart besteld: {#}\u20ac in Frankrijk en de EU. Wij verzenden niet naar Rusland of Belarus.",
 "Operator": "Exploitant",
 "Legal status": "Rechtsvorm",
@@ -6332,7 +6332,7 @@ const XL_NL = {
 "In stock · ships within {#} h": "Op voorraad · verzending binnen {#} u",
 "In stock · ships within {#} h · {#}–{#} day delivery in France": "Op voorraad · verzending binnen {#} u · levering in {#}–{#} dagen in Frankrijk",
 "In stock: ships within {#} h": "Op voorraad: verzending binnen {#} u",
-"In stock: {#} h · made to order: {#}–{#} weeks": "Op voorraad: {#} u · op bestelling: {#}–{#} weken",
+"In stock: {#} h · pre-order: {#}–{#} weeks": "Op voorraad: {#} u · op bestelling: {#}–{#} weken",
 "In the cart, choose": "Kies in de winkelwagen",
 "In your app, tap “Send” or “Withdraw”.": "Tik in uw app op „Verzenden” of „Opnemen”.",
 "Independent analysis": "Onafhankelijke analyse",
@@ -6370,8 +6370,8 @@ const XL_NL = {
 "METABOLIC RESEARCH": "METABOOL ONDERZOEK",
 "MITOCHONDRIAL RESEARCH": "MITOCHONDRIAAL ONDERZOEK",
 "MULTI-RECEPTOR RESEARCH": "ONDERZOEK MEERDERE RECEPTOREN",
-"Made to order": "Op bestelling",
-"Made to order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Op bestelling · {#}–{#} weken · batch vóór verzending door Janoshik geanalyseerd · gevolgd bij elke stap",
+"Pre-order": "Op bestelling",
+"Pre-order · {#}–{#} weeks · batch analysed by Janoshik before shipping · tracked at every step": "Op bestelling · {#}–{#} weken · batch vóór verzending door Janoshik geanalyseerd · gevolgd bij elke stap",
 "Made-to-order product?": "Product op bestelling?",
 "Manage cookies": "Cookies beheren",
 "Measured": "Gemeten",
@@ -6564,7 +6564,7 @@ const XL_NL = {
 "Was authorised in the United States (brand Geref) and later withdrawn for commercial reasons. Prohibited by WADA.": "Was toegelaten in de Verenigde Staten (merk Geref) en later om commerciële redenen teruggetrokken. Verboden door het WADA.",
 "We do not sell your data. We share only with logistics and payment partners (Stripe) under strict processing agreements.": "Wij verkopen uw gegevens niet. Wij delen ze alleen met logistieke en betaalpartners (Stripe) onder strikte verwerkersovereenkomsten.",
 "What are research peptides?": "Wat zijn onderzoekspeptiden?",
-"What does \"made to order\" mean?": "Wat betekent „op bestelling”?",
+"What does \"pre-order\" mean?": "Wat betekent „op bestelling”?",
 "What happens next?": "Wat gebeurt er daarna?",
 "What is a certificate of analysis (COA)?": "Wat is een analysecertificaat (COA)?",
 "What is your returns policy?": "Wat is uw retourbeleid?",

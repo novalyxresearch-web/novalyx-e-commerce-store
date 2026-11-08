@@ -27,7 +27,7 @@ const PRICES = {
  "formula03": { "70mg total": 270 },
  "formula04": { "80mg total": 340 },
  "tesamorelin": { "5mg": 200 },
- "bac-water": { "3ml vial": 38 }
+ "bac-water": { "3ml vial": 38, "10ml vial": 55 }
 };
 // MODE GROS : chaque quantité = un KIT de 10 flacons. Pas de remise par quantité, pas de minimum.
 

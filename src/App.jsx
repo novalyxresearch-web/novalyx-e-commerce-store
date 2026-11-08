@@ -344,6 +344,7 @@ GLOBAL_FR["Purity (HPLC):"] = "Pureté (HPLC) :";
 GLOBAL_FR["Endotoxins:"] = "Endotoxines :";
 GLOBAL_FR["RESEARCH USE DECLARATION"] = "DÉCLARATION D'USAGE RECHERCHE";
 GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
+GLOBAL_FR["Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received."] = "Analyses par lot : identité, pureté, quantité, endotoxines, métaux lourds. Rapport publié à réception du lot.";
 
 
 /* ─── PRODUCTS ───────────────────────────────────────────── */
@@ -1050,6 +1051,7 @@ const PRODUCTS_ALL = [
     desc_fr: "L'Eau Bactériostatique Novalyx Research est une eau stérile de qualité pharmaceutique contenant 0,9% d'alcool benzylique comme agent bactériostatique. Fournie exclusivement pour usage en laboratoire dans la reconstitution des peptides de recherche lyophilisés. Chaque flacon est scellé, stérile et prêt à l'emploi immédiat en laboratoire.",
     variants: [
       { size: "3ml vial",        price: 6.99 },
+      { size: "10ml vial",       price: 55 },
       { size: "3ml · Pack de 2", price: 12.99 },
       { size: "3ml · Pack de 3", price: 18.99 },
     ],
@@ -1706,6 +1708,8 @@ const PRODUCTS_ALL = [
    Le prix indiqué est le prix du KIT (10 flacons). Pour ajouter / retirer une molécule : modifier WHOLESALE.
    ⚠ Les mêmes prix et formats sont dans api/checkout.mjs (PRICES) : ils doivent rester identiques. */
 const WS = true;
+/* Analyses prévues pour chaque lot sur commande (le rapport est publié à réception du lot). Le GLP-3RT 5 mg garde son rapport Janoshik. */
+const BATCH_TESTS_EN = "Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received.";
 const KIT_SIZE = 10;
 const WHOLESALE = {
   glp3rt:    { "5mg": 95, "10mg": 140 },
@@ -1719,12 +1723,13 @@ const WHOLESALE = {
   formula03: { "70mg total": 270 },
   formula04: { "80mg total": 340 },
   tesamorelin: { "5mg": 200 },
-  "bac-water": { "3ml vial": 38 },
+  "bac-water": { "3ml vial": 38, "10ml vial": 55 },
 };
 const PRODUCTS = PRODUCTS_ALL.filter(p => WHOLESALE[p.id]).map(p => ({
   ...p,
   variants: p.variants.filter(v => WHOLESALE[p.id][v.size] != null).map(v => ({ ...v, price: WHOLESALE[p.id][v.size] })),
   kitOf10: true,
+  commonSpecs: p.commonSpecs.map(c => c.label === "COA" && p.id !== "glp3rt" ? { ...c, value: BATCH_TESTS_EN } : c),
 }));
 
 /* ─── HELPERS ────────────────────────────────────────────── */

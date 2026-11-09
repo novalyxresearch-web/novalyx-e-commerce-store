@@ -2721,11 +2721,11 @@ const PhotoZoom = ({ p, size, onClose, lang }) => {
 };
 
 const QuickAddCtx = createContext(null);
-/* Ajout direct au panier depuis la carte : uniquement les formats en stock (les produits en précommande ont un minimum de flacons, ils passent par la fiche). */
+/* Ajout direct au panier depuis la carte : tous les formats ; en vente en gros, un format hors stock s'ajoute comme précommande (3 à 4 semaines). */
 const QuickAdd = ({ p, cur, lang }) => {
   const FR = lang === "FR";
   const add = useContext(QuickAddCtx);
-  const opts = visVariants(p).filter(v => inStock(p, v.size));
+  const opts = WS ? [...visVariants(p)].sort((a, b) => (inStock(p, b.size) ? 1 : 0) - (inStock(p, a.size) ? 1 : 0)) : visVariants(p).filter(v => inStock(p, v.size));
   const [sz, setSz] = useState(opts[0] ? opts[0].size : "");
   const [done, setDone] = useState(false);
   if (!add || !canBuy(p) || opts.length === 0) return null;
@@ -2733,8 +2733,8 @@ const QuickAdd = ({ p, cur, lang }) => {
   const go = (e) => { e.stopPropagation(); add(p, v, 1, false); setDone(true); setTimeout(() => setDone(false), 1600); };
   return (
     <div className="qa" onClick={(e) => e.stopPropagation()}>
-      {opts.length > 1 && <select className="qa-sel" value={v.size} onChange={(e) => setSz(e.target.value)} aria-label={FR ? "Choisir le format" : "Choose the size"}>{opts.map(o => <option key={o.size} value={o.size}>{o.size.replace("mg", " mg")} · {price(o.price, cur, lang)}</option>)}</select>}
-      <button type="button" className={"qa-btn" + (done ? " ok" : "")} onClick={go}>{done ? (FR ? "✓ Ajouté" : "✓ Added") : (FR ? "Ajouter au panier" : "Add to cart")}{!done && opts.length === 1 ? ` · ${price(v.price, cur, lang)}` : ""}</button>
+      {opts.length > 1 && <select className="qa-sel" value={v.size} onChange={(e) => setSz(e.target.value)} aria-label={FR ? "Choisir le format" : "Choose the size"}>{opts.map(o => <option key={o.size} value={o.size}>{o.size.replace("mg", " mg")} · {price(o.price, cur, lang)}{WS && !inStock(p, o.size) ? (FR ? " · précommande" : " · pre-order") : ""}</option>)}</select>}
+      <button type="button" className={"qa-btn" + (done ? " ok" : "")} onClick={go}>{done ? (FR ? "✓ Ajouté" : "✓ Added") : (WS && !inStock(p, v.size) ? (FR ? "Précommander" : "Pre-order") : (FR ? "Ajouter au panier" : "Add to cart"))}{!done && opts.length === 1 ? ` · ${price(v.price, cur, lang)}` : ""}</button>
     </div>
   );
 };

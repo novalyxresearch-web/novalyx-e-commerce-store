@@ -34,7 +34,7 @@ const SHIP_ZONES = [
   ["USCA", "États-Unis, Canada", "United States, Canada"],
   ["WORLD", "Australie, Nouvelle-Zélande, autres pays", "Australia, New Zealand, other countries"],
 ];
-const ZONE_RATE = { FR: 7.9, OM: 12.9, EU: 15.9, CHUK: 19.9, USCA: 37.9, WORLD: 37.9 };   // OM : Colissimo Outre-mer 500 g (12,02 à 12,21 €) + emballage ; tarifs Colissimo 2026 + emballage (offerte dès 100 € en France/UE)
+const ZONE_RATE = { FR: 7.9, OM: 14.9, EU: 16.9, CHUK: 20.9, USCA: 37.9, WORLD: 37.9 };   // OM : Colissimo Outre-mer 500 g (12,02 à 12,21 €) + emballage ; tarifs Colissimo 2026 + emballage (offerte dès 100 € en France/UE)
 const BAC_ONLY_FR = 5.9;   // eau bactériostatique commandée seule, en France (Colissimo 250 g)
 const ZONE_LINKS = {
   "glp3rt_5mg": {
@@ -3983,9 +3983,9 @@ const ShippingPage = ({ lang }) => {
   const FR = lang === "FR";
   const zones = [
     ["France", "7,90 €", FR ? "2–3 jours max." : "2–3 days max."],
-    [FR ? "Outre-mer (Martinique, Guadeloupe, Guyane, Réunion, Mayotte…)" : "Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)", "12,90 €", FR ? "6–18 jours (variable)" : "6–18 days (variable)"],
-    [FR ? "Union européenne" : "European Union", "15,90 €", FR ? "3–5 j. ouvrés" : "3–5 business days"],
-    [FR ? "Suisse, Royaume-Uni" : "Switzerland, UK", "19,90 €", FR ? "5–8 j. ouvrés" : "5–8 business days"],
+    [FR ? "Outre-mer (Martinique, Guadeloupe, Guyane, Réunion, Mayotte…)" : "Overseas France (Martinique, Guadeloupe, French Guiana, Réunion, Mayotte…)", "14,90 €", FR ? "6–18 jours (variable)" : "6–18 days (variable)"],
+    [FR ? "Union européenne" : "European Union", "16,90 €", FR ? "3–5 j. ouvrés" : "3–5 business days"],
+    [FR ? "Suisse, Royaume-Uni" : "Switzerland, UK", "20,90 €", FR ? "5–8 j. ouvrés" : "5–8 business days"],
     [FR ? "États-Unis, Canada" : "USA, Canada", "37,90 €", FR ? "7–12 j. ouvrés" : "7–12 business days"],
     [FR ? "Australie, Nouvelle-Zélande et autres pays" : "Australia, New Zealand and other countries", "37,90 €", FR ? "7–14 j. ouvrés (variable)" : "7–14 business days (variable)"],
   ];
@@ -4589,8 +4589,8 @@ const botAnswer = (text, ctx) => {
       : "Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The GLP-3RT " + c.size + " report is published (HPLC purity " + c.purity + "%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.";
   }
   if (qShip) return FR
-    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 7,90 €, UE 15,90 €, Suisse/Royaume-Uni 19,90 €, États-Unis/Canada 37,90 €, Australie, Nouvelle-Zélande et autres pays 37,90 € (eau bactériostatique commandée seule : 5,90 € en France). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
-    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €7.90, EU €15.90, Switzerland/UK €19.90, USA/Canada €37.90, Australia, New Zealand and other countries €37.90 (bacteriostatic water ordered on its own: €5.90 in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
+    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 7,90 €, UE 16,90 €, Suisse/Royaume-Uni 20,90 €, États-Unis/Canada 37,90 €, Australie, Nouvelle-Zélande et autres pays 37,90 € (eau bactériostatique commandée seule : 5,90 € en France). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
+    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €7.90, EU €16.90, Switzerland/UK €20.90, USA/Canada €37.90, Australia, New Zealand and other countries €37.90 (bacteriostatic water ordered on its own: €5.90 in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
   if (qPay && CONFIG.CARD_ON && CONFIG.BTC_ON && !CONFIG.TRANSFER_ON) return FR ? "Deux moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos données de carte ne transitent jamais par nos serveurs) ou Bitcoin (facture en euros valable 60 minutes). Une question : " + email + "." : "Two payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers) or Bitcoin (invoice in euros valid for 60 minutes). Any question: " + email + ".";
   if (qPay && (CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON)) return FR ? "Trois moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos donn\u00e9es de carte ne transitent jamais par nos serveurs), Bitcoin (facture en euros valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email). Une question : " + email + "." : "Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: " + email + ".";
   if (qPay) return FR

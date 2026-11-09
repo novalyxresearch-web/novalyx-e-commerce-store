@@ -2371,6 +2371,7 @@ a{color:inherit}
 .gate.closing{opacity:0;pointer-events:none}
 .hero-prod{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;width:100%;margin-top:14px;padding:12px;border:1px solid var(--line);background:var(--paper);cursor:pointer;text-align:left;font:inherit;color:inherit;border-radius:2px;transition:border-color .2s}
 .hero-prod:hover{border-color:var(--ink)}
+@media (max-width:480px){.hero-prod .kitphoto{width:auto!important}.hero-prod .kitcap{font-size:9px;letter-spacing:.03em;white-space:nowrap}}
 .hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 .btc-callout{display:grid;gap:22px;padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface,#fff);align-items:center}
 @media(min-width:980px){.btc-callout{grid-template-columns:1.2fr 1fr auto}}
@@ -2432,7 +2433,7 @@ a{color:inherit}
 .hero-cta .btn{flex:1 1 170px;justify-content:center;text-align:center;text-decoration:none}
 @media (max-width:480px){.hero-prod{gap:12px;padding:10px}.hero-prod img{width:96px!important;height:96px!important}.hero-prod-name{font-size:24px!important}}
 @media (max-width:979px){.hero-grid > .sheet{order:-1}.hero-grid > .hero-vials{order:-2}}
-@media(min-width:980px){.hero-grid{grid-template-areas:"vials sheet" "text sheet";align-items:start;row-gap:26px}.hero-text{grid-area:text}.hero-grid > .sheet{grid-area:sheet}.hero-vials{grid-area:vials}}
+@media(min-width:980px){.hero-grid{grid-template-areas:"text sheet";align-items:start;row-gap:26px}.hero-text{grid-area:text}.hero-grid > .sheet{grid-area:sheet}.hero-vials{grid-area:vials}}
 
 /* cookies */
 .cookie{position:fixed;left:0;right:0;bottom:0;z-index:95;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none}
@@ -3229,12 +3230,6 @@ const Home = ({ go, cur, openProduct, lang }) => {
       {/* HERO */}
       <section className="hero">
         <div className="wrap hero-grid">
-          <div className="hero-vials">
-            <button ref={stackRef} className="hero-stack" onClick={() => go("products", "All")} aria-label={FR ? "Voir tout le catalogue" : "View the whole catalogue"}>
-              {HERO_STACK.map((id, i) => { const sp = PRODUCTS.find(x => x.id === id); return sp ? <span key={id} className={"hs hs" + i}><ProductPhoto p={sp} size={visVariants(sp)[0].size} h={200} /></span> : null; })}
-            </button>
-            <div className="hero-stack-cap">{FR ? `${PRODUCTS.length} composés lyophilisés · un rapport d'analyse par lot` : `${PRODUCTS.length} lyophilised compounds · one analysis report per batch`}</div>
-          </div>
           <div className="hero-text">
             <div className="eyebrow" style={{ marginBottom: 22 }}>Novalyx Research — Paris</div>
             <h1 className="display">

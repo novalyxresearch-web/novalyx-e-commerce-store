@@ -2399,8 +2399,8 @@ a{color:inherit}
 .tier-pop{position:absolute;top:-9px;right:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:#fff;padding:2px 7px;border-radius:999px}
 .saving{margin-top:12px;font-size:13.5px;color:var(--green)}
 .pcard-deal{margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--green)}
-.kitphoto{position:relative;display:inline-block;line-height:0}
-.kitbadge{position:absolute;top:8px;right:8px;background:#7F2F51;color:#fff;font:700 15px/1 Poppins,sans-serif;letter-spacing:.02em;padding:7px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(42,15,28,.28)}
+.kitphoto{display:inline-flex;flex-direction:column;align-items:center;gap:6px;line-height:0}
+.kitcap{font:600 11px/1 Poppins,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7F2F51}
 .kitbox{margin:18px 0 0;padding:12px 14px;border-radius:10px;background:#FBE9F0;border:1px solid #F2B5CE;color:#2A0F1C;display:flex;flex-direction:column;gap:3px;font-size:13px;line-height:1.5}
 .kitbox b{font-size:15px;color:#7F2F51}
 .ws-band{margin:0 auto;max-width:1100px;padding:14px 18px;background:#2A0F1C;color:#fff;border-radius:12px;font-size:14px;line-height:1.55;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
@@ -2695,14 +2695,14 @@ const ProductPhotoBase = ({ p, size, h = 180, eager = false }) => {
   );
 };
 
-/* Photo + pastille « ×10 » : chaque produit est vendu par kit de 10 flacons. */
+/* Photo + légende sous l'image « Kit de 10 flacons » (plus de pastille flottante). */
 const ProductPhoto = (props) => {
   const { p, h = 180 } = props;
   if (!WS || !p || !p.kitOf10 || h < 120) return <ProductPhotoBase {...props} />;
   return (
-    <span className="kitphoto" style={{ width: h, height: h }}>
+    <span className="kitphoto" style={{ width: h }}>
       <ProductPhotoBase {...props} />
-      <span className="kitbadge" aria-label="Kit de 10 flacons">×10</span>
+      <span className="kitcap">{String(props.lang || (typeof document !== "undefined" ? document.documentElement.lang : "fr")).toLowerCase().startsWith("fr") ? "Kit de 10 flacons" : "Kit of 10 vials"}</span>
     </span>
   );
 };

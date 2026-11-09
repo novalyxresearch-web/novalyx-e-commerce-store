@@ -1,6 +1,58 @@
 {
-  "updated": "2026-10-26",
+  "updated": "2026-11-09",
   "entries": [
+    {
+      "id": "2026-11-09-cagrisema-hypertension-registry",
+      "date": "2026-11-09",
+      "products": [
+        "novalyxformula07cagrisema",
+        "cagrilintide",
+        "semaglutide"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT07919405"
+        }
+      ],
+      "title": {
+        "fr": "CagriSema : nouvel essai de phase 3 chez des adultes hypertendus en situation d'obésité enregistré",
+        "en": "CagriSema: new phase 3 trial in adults with hypertension and obesity registered",
+        "de": "CagriSema: neue Phase-3-Studie bei Erwachsenen mit Hypertonie und Adipositas registriert",
+        "nl": "CagriSema: nieuwe fase 3-studie bij volwassenen met hypertensie en obesitas geregistreerd"
+      },
+      "summary": {
+        "fr": "Un essai randomisé de phase 3 (REDEFINE), promu par Novo Nordisk, prévoit d'inclure 1 408 adultes avec hypertension et obésité, avec ou sans diabète de type 2. Il comparera CagriSema au placebo, à la sémaglutide et à la cagrilintide ; le critère principal est la variation de la pression artérielle systolique à la semaine 32. Statut : pas encore en recrutement. Aucun résultat n'est disponible.",
+        "en": "A randomised phase 3 trial (REDEFINE), sponsored by Novo Nordisk, plans to enrol 1,408 adults with hypertension and obesity, with or without type 2 diabetes. It will compare CagriSema with placebo, semaglutide and cagrilintide; the primary outcome is the change in systolic blood pressure at week 32. Status: not yet recruiting. No results are available.",
+        "de": "Eine randomisierte Phase-3-Studie (REDEFINE) von Novo Nordisk plant den Einschluss von 1.408 Erwachsenen mit Hypertonie und Adipositas, mit oder ohne Typ-2-Diabetes. Verglichen werden CagriSema, Placebo, Semaglutid und Cagrilintid; primärer Endpunkt ist die Veränderung des systolischen Blutdrucks in Woche 32. Status: Rekrutierung noch nicht begonnen. Ergebnisse liegen nicht vor.",
+        "nl": "Een gerandomiseerde fase 3-studie (REDEFINE), gesponsord door Novo Nordisk, wil 1.408 volwassenen met hypertensie en obesitas includeren, met of zonder type 2-diabetes. CagriSema wordt vergeleken met placebo, semaglutide en cagrilintide; het primaire eindpunt is de verandering van de systolische bloeddruk in week 32. Status: werving nog niet gestart. Er zijn geen resultaten beschikbaar."
+      }
+    },
+    {
+      "id": "2026-11-09-thymalfasin-sepsis-registry",
+      "date": "2026-11-09",
+      "products": [
+        "thymosinalpha1"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT07922954"
+        }
+      ],
+      "title": {
+        "fr": "Thymosine alpha-1 : nouvel essai de phase 4 exploratoire dans le sepsis enregistré",
+        "en": "Thymosin alpha 1: new exploratory phase 4 trial in sepsis registered",
+        "de": "Thymosin alpha 1: neue explorative Phase-4-Studie bei Sepsis registriert",
+        "nl": "Thymosine alfa-1: nieuwe verkennende fase 4-studie bij sepsis geregistreerd"
+      },
+      "summary": {
+        "fr": "Une étude prospective à bras unique, exploratoire (phase 4), promue par l'Université du Sud-Est (Chine) avec un laboratoire pharmaceutique comme collaborateur, prévoit d'inclure 36 adultes atteints de sepsis. Le critère principal est l'évolution du taux sérique d'IgM mesuré avant et après traitement ; la mortalité à 28 jours figure parmi les critères secondaires. Statut : active, inclusions terminées. Aucun résultat n'est disponible.",
+        "en": "A prospective, single-arm, exploratory study (phase 4) sponsored by Southeast University (China), with a pharmaceutical company as collaborator, plans to enrol 36 adults with sepsis. The primary outcome is the change in serum IgM measured before and after treatment; 28-day mortality is a secondary outcome. Status: active, no longer recruiting. No results are available.",
+        "de": "Eine prospektive, einarmige, explorative Studie (Phase 4) der Southeast University (China) mit einem Pharmaunternehmen als Kooperationspartner plant den Einschluss von 36 Erwachsenen mit Sepsis. Primärer Endpunkt ist die Veränderung des Serum-IgM vor und nach der Behandlung; die 28-Tage-Mortalität ist ein sekundärer Endpunkt. Status: aktiv, Rekrutierung abgeschlossen. Ergebnisse liegen nicht vor.",
+        "nl": "Een prospectieve, verkennende studie met één arm (fase 4), gesponsord door Southeast University (China) met een farmaceutisch bedrijf als samenwerkingspartner, wil 36 volwassenen met sepsis includeren. Het primaire eindpunt is de verandering van serum-IgM vóór en na behandeling; sterfte na 28 dagen is een secundair eindpunt. Status: actief, werving afgerond. Er zijn geen resultaten beschikbaar."
+      }
+    },
     {
       "id": "2026-10-21-retatrutide-osa",
       "date": "2026-10-21",

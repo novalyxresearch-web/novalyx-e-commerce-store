@@ -1846,7 +1846,7 @@ const qtyDiscount = (q, size, id, unit) => {
   if (id && unit) return 1 - lineTotal(unit, q, size, id) / (unit * q);
   return baseDisc(q);
 };
-const FREE_SHIP_MIN = 100;                         // livraison offerte dès 100 € en France et dans l'UE ; ailleurs, frais payés par le client
+const FREE_SHIP_MIN = 0;                           // 0 = pas de livraison offerte : en vente en gros, la livraison est toujours payante (tarif selon le pays)
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
 const BTC_DISCOUNT = 0.05;   // −5 % en Bitcoin (doit rester égal à BTC_DISCOUNT dans api/checkout.mjs)
 const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
@@ -4001,7 +4001,7 @@ const ShippingPage = ({ lang }) => {
           </div>
         ))}
       </div>
-      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{CONFIG.BTC_ON ? (FR ? "Livraison offerte en France et dans l'Union européenne dès 100 € d'achat. En dessous, et hors Union européenne, les frais sont à la charge du client, selon le pays (Colissimo suivi). Eau bactériostatique commandée seule : 5,90 € en France. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the European Union from €100 of purchases. Below that, and outside the European Union, shipping is paid by the customer and depends on the country (tracked Colissimo). Bacteriostatic water ordered on its own: €5.90 in France. We do not ship to Russia or Belarus.") : (FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus.")}</p>
+      <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>{CONFIG.BTC_ON ? (FR ? "La livraison est payante : les frais sont à la charge du client, selon le pays (Colissimo suivi). Eau bactériostatique commandée seule : 5,90 € en France. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Shipping is paid by the customer and depends on the country (tracked Colissimo). Bacteriostatic water ordered on its own: €5.90 in France. We do not ship to Russia or Belarus.") : (FR ? "Livraison offerte en France et dans l'UE pour les Packs de 2 et de 3 de GLP-3RT. Eau bactériostatique : 3,99 € en France et dans l'UE. Nous n'expédions pas vers la Russie ni la Biélorussie." : "Free shipping in France and the EU on GLP-3RT Packs of 2 and 3. Bacteriostatic water: €3.99 in France and the EU. We do not ship to Russia or Belarus.")}</p>
       <h3>{FR ? "Commandes hors Union européenne" : "Orders outside the European Union"}</h3>
       <p>{FR ? "Les envois hors UE se font aux risques de l'acheteur. Il lui appartient de vérifier que les produits peuvent être importés légalement dans son pays et de régler les éventuels droits et taxes. Novalyx Research n'agit pas en tant qu'importateur. Les colis saisis, refusés ou détruits par les autorités douanières hors UE ne sont pas remboursables." : "Shipments outside the EU are at the buyer's risk. The buyer must check that the products may be lawfully imported and pay any duties or taxes. Novalyx Research does not act as importer of record. Parcels seized, refused or destroyed by customs outside the EU are non-refundable."}</p>
       <h3>{FR ? "Déclaration d'usage" : "Use declaration"}</h3>
@@ -4589,8 +4589,8 @@ const botAnswer = (text, ctx) => {
       : "Analyses are performed by Janoshik Analytical (Czech Republic), an independent laboratory. The GLP-3RT " + c.size + " report is published (HPLC purity " + c.purity + "%) with its verification key: see the Analyses page. For other compounds, the report will be published once the first batch has been analysed.";
   }
   if (qShip) return FR
-    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 7,90 €, UE 15,90 €, Suisse/Royaume-Uni 19,90 €, États-Unis/Canada 37,90 €, Australie, Nouvelle-Zélande et autres pays 37,90 € (offerte dès 100 € d'achat en France et dans l'UE ; eau bactériostatique commandée seule : 5,90 € en France). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
-    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €7.90, EU €15.90, Switzerland/UK €19.90, USA/Canada €37.90, Australia, New Zealand and other countries €37.90 (free from €100 of purchases in France and the EU; bacteriostatic water ordered on its own: €5.90 in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
+    ? "Les commandes sont expédiées depuis Paris sous 24 h après confirmation du paiement. Livraison en 2 à 3 jours maximum en France ; plus long pour le reste du monde (voir la page Livraison). Frais selon le pays : France 7,90 €, UE 15,90 €, Suisse/Royaume-Uni 19,90 €, États-Unis/Canada 37,90 €, Australie, Nouvelle-Zélande et autres pays 37,90 € (eau bactériostatique commandée seule : 5,90 € en France). Un numéro de suivi est communiqué à l'expédition. Hors Union européenne, l'acheteur est responsable des droits de douane et de la conformité locale."
+    : "Orders are shipped from Paris within 24 h of payment confirmation. Delivery in 2 to 3 days maximum within France; longer for the rest of the world (see the Shipping page). Shipping by country: France €7.90, EU €15.90, Switzerland/UK €19.90, USA/Canada €37.90, Australia, New Zealand and other countries €37.90 (bacteriostatic water ordered on its own: €5.90 in France). A tracking number is sent on dispatch. Outside the European Union, the buyer is responsible for customs duties and local compliance.";
   if (qPay && CONFIG.CARD_ON && CONFIG.BTC_ON && !CONFIG.TRANSFER_ON) return FR ? "Deux moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos données de carte ne transitent jamais par nos serveurs) ou Bitcoin (facture en euros valable 60 minutes). Une question : " + email + "." : "Two payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers) or Bitcoin (invoice in euros valid for 60 minutes). Any question: " + email + ".";
   if (qPay && (CONFIG.CARD_ON && CONFIG.BTC_ON && CONFIG.TRANSFER_ON)) return FR ? "Trois moyens de paiement, directement dans le panier : carte bancaire via Stripe (vos donn\u00e9es de carte ne transitent jamais par nos serveurs), Bitcoin (facture en euros valable 60 minutes) ou virement bancaire (IBAN et r\u00e9f\u00e9rence envoy\u00e9s aussit\u00f4t par email). Une question : " + email + "." : "Three payment methods, straight from the cart: bank card through Stripe (your card details never touch our servers), Bitcoin (invoice in euros valid for 60 minutes) or bank transfer (IBAN and reference sent immediately by email). Any question: " + email + ".";
   if (qPay) return FR
@@ -5092,18 +5092,18 @@ export default function App() {
               {(FR ? [
                 "Usage recherche uniquement — pas pour usage humain ou vétérinaire",
                 "GLP-3RT · lot NLR-2026-001 analysé par Janoshik : 99,008 %",
-                "Livraison offerte dès 100 € (France, UE)",
+                "Livraison suivie depuis Paris",
                 ...(CONFIG.BTC_ON ? ["Payez en Bitcoin : −5 % sur votre commande"] : []),
-                CONFIG.BTC_ON ? "Jusqu'à −20 % dès 2 flacons" : "Rapports d'analyse vérifiables",
+                CONFIG.BTC_ON ? "Vente en gros : kits de 10 flacons" : "Rapports d'analyse vérifiables",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Carte, Bitcoin ou virement" : "Carte bancaire ou Bitcoin") : "Paiement Bitcoin, facturé en euros") : "Paiement sécurisé",
                 "En stock : expédié sous 24 h",
                 "Entreprise française · Paris",
               ] : [
                 "Research use only — not for human or veterinary use",
                 "GLP-3RT · batch NLR-2026-001 analysed by Janoshik: 99.008%",
-                "Free shipping from €100 (France, EU)",
+                "Tracked shipping from Paris",
                 ...(CONFIG.BTC_ON ? ["Pay with Bitcoin: −5% on your order"] : []),
-                CONFIG.BTC_ON ? "Up to −20% from 2 vials" : "Verifiable analysis reports",
+                CONFIG.BTC_ON ? "Wholesale: kits of 10 vials" : "Verifiable analysis reports",
                 CONFIG.BTC_ON ? (CONFIG.CARD_ON ? (CONFIG.TRANSFER_ON ? "Card, Bitcoin or bank transfer" : "Card or Bitcoin") : "Bitcoin payment, billed in euros") : "Secure payment",
                 "In stock: ships within 24 h",
                 "French company · Paris",

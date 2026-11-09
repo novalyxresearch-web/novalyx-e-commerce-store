@@ -344,7 +344,7 @@ GLOBAL_FR["Purity (HPLC):"] = "Pureté (HPLC) :";
 GLOBAL_FR["Endotoxins:"] = "Endotoxines :";
 GLOBAL_FR["RESEARCH USE DECLARATION"] = "DÉCLARATION D'USAGE RECHERCHE";
 GLOBAL_FR["RESEARCH USE ONLY"] = "USAGE RECHERCHE UNIQUEMENT";
-GLOBAL_FR["Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received."] = "Analyses par lot : identité, pureté, quantité, endotoxines, métaux lourds. Rapport publié à réception du lot.";
+GLOBAL_FR["Per-batch COA: identity, purity, net content, endotoxins, heavy metals. Published when the batch is received."] = "COA par lot : identité, pureté, quantité, endotoxines, métaux lourds. Publié à réception du lot.";
 
 
 /* ─── PRODUCTS ───────────────────────────────────────────── */
@@ -1709,7 +1709,7 @@ const PRODUCTS_ALL = [
    ⚠ Les mêmes prix et formats sont dans api/checkout.mjs (PRICES) : ils doivent rester identiques. */
 const WS = true;
 /* Analyses prévues pour chaque lot en précommande (le rapport est publié à réception du lot). Le GLP-3RT 5 mg garde son rapport Janoshik. */
-const BATCH_TESTS_EN = "Per-batch analysis: identity, purity, net content, endotoxins, heavy metals. Report published when the batch is received.";
+const BATCH_TESTS_EN = "Per-batch COA: identity, purity, net content, endotoxins, heavy metals. Published when the batch is received.";
 const KIT_SIZE = 10;
 const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
 const WHOLESALE = {
@@ -3518,7 +3518,7 @@ const COAPage = ({ lang, openProduct }) => {
         </p>
 
         <div style={{ marginTop: 72 }}>
-          <div className="eyebrow" style={{ marginBottom: 18 }}>{FR ? "Analyse à venir" : "Analysis pending"} ({pending.length})</div>
+          <div className="eyebrow" style={{ marginBottom: 18 }}>{FR ? "COA à venir" : "COA pending"} ({pending.length})</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {pending.map(p => (
               <button key={p.id} className="fchip" onClick={() => openProduct(p)}>{pn(p)}</button>
@@ -5553,7 +5553,7 @@ const XL_DE = {
 "{N} {#}mg total — Novalyx Research": "{N} {#}mg gesamt — Novalyx Research",
 "{N} {#}ml vial — Novalyx Research": "{N} {#}-ml-Fläschchen — Novalyx Research",
 "Analyses ordered by Novalyx on its own batches. Each new batch is analysed in turn and its report is published here.": "Von Novalyx für die eigenen Chargen in Auftrag gegebene Analysen. Jede neue Charge wird ihrerseits analysiert und ihr Bericht hier veröffentlicht.",
-"Analysis pending": "Analyse ausstehend",
+"COA pending": "COA ausstehend",
 "Each report below was issued by Janoshik Analytical (Czech Republic). Each link opens the original report on Janoshik's website: it cannot be altered.": "Jeder der folgenden Berichte wurde von Janoshik Analytical (Tschechische Republik) ausgestellt. Jeder Link öffnet den Originalbericht auf der Website von Janoshik: Er kann nicht verändert werden.",
 "Measured": "Gemessen",
 "Name on report": "Name im Bericht",
@@ -6100,7 +6100,7 @@ const XL_NL = {
 "Analyses ordered by Novalyx on its own batches. Each new batch is analysed in turn and its report is published here.": "Analyses die Novalyx op zijn eigen batches laat uitvoeren. Elke nieuwe batch wordt op zijn beurt geanalyseerd en het rapport wordt hier gepubliceerd.",
 "Analysis date": "Analysedatum",
 "Analysis ordered by Novalyx on its {#}mg batch. The original report can be viewed at any time on Janoshik's website.": "Analyse die Novalyx op zijn batch van {#}mg liet uitvoeren. Het originele rapport is altijd in te zien op de website van Janoshik.",
-"Analysis pending": "Analyse in behandeling",
+"COA pending": "COA in behandeling",
 "Analysis report available for the {#}mg — select it to view.": "Analyserapport beschikbaar voor {#}mg — selecteer het om het te bekijken.",
 "Another question?": "Nog een vraag?",
 "Are these products legal in my country?": "Zijn deze producten legaal in mijn land?",

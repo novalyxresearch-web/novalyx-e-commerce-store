@@ -1713,13 +1713,13 @@ const BATCH_TESTS_EN = "Per-batch COA: identity, purity, net content, endotoxins
 const KIT_SIZE = 10;
 const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
 const WHOLESALE = {
-  glp3rt:    { "5mg": 95, "10mg": 140 },
+  glp3rt:    { "5mg": 100, "10mg": 140 },
   ghk:       { "50mg": 95 },
   motsc:     { "10mg": 130 },
   bpc157:    { "10mg": 140 },
   tb500:     { "5mg": 150 },
-  semax:     { "5mg": 90 },
-  selank:    { "5mg": 90 },
+  semax:     { "5mg": 100 },
+  selank:    { "5mg": 105 },
   kpv:       { "10mg": 110 },
   formula03: { "70mg total": 270 },
   formula04: { "80mg total": 340 },

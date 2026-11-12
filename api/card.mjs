@@ -83,6 +83,7 @@ export default async function handler(req, res) {
     address: cu.address, postcode: cu.postcode, city: cu.city, country: cu.country, phone: cu.phone,
     items: encodeItems(order.lines),     // lu par /api/stock pour décompter le stock
     promo: order.promo ? order.promo.code : "",
+    acks: body.acks ? "18+ pro recherche-seule CGV " + new Date().toISOString() : "",
     summary: order.lines.map((l) => (names[l.id + "|" + l.size] || l.id) + " " + l.size + " x" + l.qty).join(", ").slice(0, 490),
   };
   for (const [k, v] of Object.entries(meta)) {

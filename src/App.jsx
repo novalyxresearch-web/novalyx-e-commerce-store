@@ -137,7 +137,7 @@ const TRANSLATIONS = {
     age_check_age: "I confirm I am 18 years of age or older.",
     age_check_pro: "I am a qualified professional (researcher, laboratory, institution).",
     age_check_use: "This order is strictly for laboratory research — not for human or animal use.",
-    cart_confirm: "I confirm this order is strictly for laboratory research purposes only.",
+    cart_confirm: "I confirm these products are strictly for laboratory research and will not be used for any human or veterinary purpose.",
     intl_confirm: "I acknowledge this shipment may be subject to customs inspection and I am responsible for compliance with local regulations.",
   },
   FR: {
@@ -149,7 +149,7 @@ const TRANSLATIONS = {
     age_check_age: "Je certifie avoir 18 ans ou plus.",
     age_check_pro: "Je suis un professionnel qualifié (chercheur, laboratoire, institution).",
     age_check_use: "Cette commande est strictement destinée à la recherche en laboratoire — non à un usage humain ou animal.",
-    cart_confirm: "Je confirme que cette commande est strictement destinée à des fins de recherche en laboratoire uniquement.",
+    cart_confirm: "Je confirme que ces produits sont strictement destinés à la recherche en laboratoire et ne seront utilisés à aucun usage humain ou vétérinaire.",
     intl_confirm: "Je reconnais que cet envoi peut être soumis à une inspection douanière et que je suis responsable du respect des réglementations locales.",
   },
 };
@@ -2969,6 +2969,8 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const FR = lang === "FR";
   const [ok1, setOk1] = useState(false);
   const [ok2, setOk2] = useState(false);
+  const [ok3, setOk3] = useState(false);
+  const [ok4, setOk4] = useState(false);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState("");
   const [zone, setZone] = useState("FR");
@@ -2990,7 +2992,13 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
   const btcTotal = btcRate ? cart.reduce((s, i) => s + Math.round(lineTotal(i.price, i.qty, i.size, i.id) * (1 - btcRate) * 100) / 100, 0) : total;
   const applyPromo = () => { const c = promoIn.trim().toUpperCase(); if (!c) return; if (promoRateOf(c)) { setPromo(c); setPromoErr(""); } else { setPromo(""); setPromoErr(FR ? "Ce code n'est pas valide." : "This code is not valid."); } };
   const count = cart.reduce((s, i) => s + i.qty, 0);
-  const ready = ok1 && ok2 && !loading;
+  const ready = ok1 && ok2 && ok3 && ok4 && !loading;
+  const acks = (<>
+    <label className="check"><input type="checkbox" checked={ok3} onChange={e => setOk3(e.target.checked)} /><span>{FR ? "J'ai 18 ans ou plus et j'achète en tant que professionnel (vente réservée aux professionnels)." : "I am 18 or older and I am buying as a professional (sales reserved for professionals)."}</span></label>
+    <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
+    <label className="check"><input type="checkbox" checked={ok4} onChange={e => setOk4(e.target.checked)} /><span>{FR ? <>J'ai lu et j'accepte les <a href="/cgv" target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>conditions générales</a> et la <a href="/confidentialite" target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>politique de confidentialité</a>.</> : <>I have read and agree to the <a href="/cgv" target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>terms and conditions</a> and the <a href="/confidentialite" target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>privacy policy</a>.</>}</span></label>
+    <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
+  </>);
   // Virement : le montant est toujours en euros (compte en EUR) ; la livraison est confirmée par email
   const eur = (n) => price(n, "EUR", lang);
   const copy = (label, text) => { try { navigator.clipboard.writeText(text); setCopied(label); setTimeout(() => setCopied(""), 1500); } catch (e) {} };
@@ -3010,7 +3018,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("btc"); setLoading(true); setBtcErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setBtcErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
@@ -3026,7 +3034,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("card"); setLoading(true); setCardErr(""); setBtcErr("");
     try {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setCardErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "card");
@@ -3100,8 +3108,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 <p className="muted" style={{ fontSize: 12, margin: "6px 0 14px" }}>
                   {allStock ? (FR ? "En stock · 24 h en Île-de-France · 3 à 4 jours en France métropolitaine" : "In stock · 24 h in Île-de-France · 3–4 days in mainland France") : (FR ? "Votre panier contient des articles en précommande : 3 à 4 semaines, lot analysé avant expédition, avec un email à chaque étape." : "Your cart contains pre-order items: 3–4 weeks, batch analysed before shipping, with an email at every step.")}
                 </p>
-                <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
-                <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
+                {acks}
                 {(
                   <form className="sheet tf-form" style={{ padding: "18px 16px", marginTop: 10 }} onSubmit={e => e.preventDefault()} noValidate>
                     <div className="eyebrow" style={{ marginBottom: 4 }}>{FR ? "Adresse de livraison" : "Delivery address"}</div>
@@ -3139,15 +3146,14 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
                 <p style={{ textAlign: "center", fontSize: 13, marginTop: 8 }}>
                   <a href="#" onClick={e => { e.preventDefault(); onClose(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Première fois ? Comment payer en Bitcoin" : "First time? How to pay with Bitcoin"}</a>
                 </p>
-                {(!tfReady || !ready) && !loading && <p role="status" style={{ fontSize: 12.5, fontWeight: 600, color: "#9B2C2C", textAlign: "center", margin: "10px 0 0", lineHeight: 1.5 }}>{(!ok1 || !ok2) ? (FR ? "Cochez les deux cases ci-dessus et remplissez l'adresse de livraison pour activer le paiement." : "Tick both boxes above and fill in the delivery address to enable payment.") : (FR ? "Remplissez l'adresse de livraison pour activer le paiement." : "Fill in the delivery address to enable payment.")}</p>}
+                {(!tfReady || !ready) && !loading && <p role="status" style={{ fontSize: 12.5, fontWeight: 600, color: "#9B2C2C", textAlign: "center", margin: "10px 0 0", lineHeight: 1.5 }}>{(!ok1 || !ok2 || !ok3 || !ok4) ? (FR ? "Cochez toutes les cases ci-dessus et remplissez l'adresse de livraison pour activer le paiement." : "Tick all the boxes above and fill in the delivery address to enable payment.") : (FR ? "Remplissez l'adresse de livraison pour activer le paiement." : "Fill in the delivery address to enable payment.")}</p>}
                 </>)}
               </>) : (<>
               <p className="muted" style={{ fontSize: 12, marginBottom: 16 }}>
                 {FR ? "Kits en stock : 24 h en Île-de-France, 3 à 4 jours en France métropolitaine · en précommande : 3 à 4 semaines" : "Kits in stock: 24 h in Île-de-France, 3–4 days in mainland France · pre-order: 3–4 weeks"}
                 {shipEst !== null && <> · <b>{FR ? "Livraison : " : "Shipping: "}{shipEst === 0 ? (FR ? "offerte" : "free") : eur(shipEst)}</b></>}
               </p>
-              <label className="check"><input type="checkbox" checked={ok1} onChange={e => setOk1(e.target.checked)} /><span>{t(lang, "cart_confirm")}</span></label>
-              <label className="check"><input type="checkbox" checked={ok2} onChange={e => setOk2(e.target.checked)} /><span>{t(lang, "intl_confirm")}</span></label>
+              {acks}
               <button className="btn btn-ink" style={{ width: "100%", marginTop: 10 }} disabled={!ready} onClick={checkout}>
                 {loading ? (FR ? "Redirection…" : "Redirecting…") : (FR ? "Passer au paiement" : "Proceed to checkout")}
               </button>

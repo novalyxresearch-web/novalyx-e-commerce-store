@@ -148,6 +148,7 @@ export default async function handler(req, res) {
           buyerPhone: cu.phone || undefined,
           itemDesc: "Novalyx Research — " + orderId,
           zone: body.zone,
+          acks: body.acks ? "18+ pro recherche-seule CGV " + new Date().toISOString() : undefined,
           lines: order.lines.map((l) => ({ ...l, label: (names[l.id + "|" + l.size] || l.id) + " " + l.size + " × 10 (kit) × " + l.qty })),
           lang: String((body && body.lang) || "FR"),
           subtotal: order.subtotal,

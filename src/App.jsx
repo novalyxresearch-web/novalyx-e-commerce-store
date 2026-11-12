@@ -1712,8 +1712,10 @@ const WS = true;
 const BATCH_TESTS_EN = "Per-batch COA: identity, purity, net content, endotoxins, heavy metals. Published when the batch is received.";
 const KIT_SIZE = 10;
 const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
+// GLP-3RT 5 mg : 95 € jusqu'au 24 nov. 2026 inclus, puis 100 € à partir du 25 nov. 2026 à 00 h (Paris). Même règle dans api/checkout.mjs.
+const GLP5_RAISE_AT = Date.UTC(2026, 10, 24, 23, 0, 0);
 const WHOLESALE = {
-  glp3rt:    { "5mg": 100, "10mg": 140 },
+  glp3rt:    { get "5mg"() { return Date.now() >= GLP5_RAISE_AT ? 100 : 95; }, "10mg": 140 },
   ghk:       { "50mg": 95 },
   motsc:     { "10mg": 130 },
   bpc157:    { "10mg": 140 },

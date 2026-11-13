@@ -1815,6 +1815,9 @@ const isAvail = (p) => AVAILABLE.includes(p.id);
 const STOCK_SIZES = { glp3rt: ["5mg"], "bac-water": ["3ml vial"] };
 const inStock = (p, size) => KIT_UNITS[p.id] ? (isAvail(p) && !(STOCK_LEFT.glp3rt != null && STOCK_LEFT.glp3rt < (KIT_UNITS[p.id][size] || 1))) : isAvail(p) && (!STOCK_SIZES[p.id] || STOCK_SIZES[p.id].includes(size)) && !(STOCK_LEFT[p.id] != null && STOCK_LEFT[p.id] <= 0);
 /* Formats vendables uniquement avec le paiement Bitcoin (pas de lien Stripe) : cachés tant que BTC_ON est faux. */
+/* Stock faible : affiché seulement quand il reste LOW_STOCK kits ou moins (chiffre réel, issu de /api/stock). */
+const LOW_STOCK = 3;
+const lowStock = (p, size, FR) => { const n = STOCK_LEFT[p.id]; if (!WS || n == null || n < 1 || n > LOW_STOCK || !inStock(p, size)) return null; return FR ? `Stock faible · plus que ${n} kit${n > 1 ? "s" : ""}` : `Low stock · only ${n} kit${n > 1 ? "s" : ""} left`; };
 const BTC_ONLY_SIZES = { glp3rt: ["10mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
@@ -2768,7 +2771,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
         <div>
           <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (WS ? (FR ? "Prix du kit (10 flacons)" : "Kit price (10 vials)") : (FR ? "À partir de" : "From")) : (FR ? "À venir" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}{WS && visVariants(p).length > 1 ? "+" : ""}</div>
-          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); if (!v1 && !canBuy(p)) return soonLabel(p, FR); return v1 ? (FR ? `En stock : ${v1.size} · soit ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `In stock: ${v1.size} · i.e. ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`) : (FR ? `Précommande · soit ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `Pre-order · i.e. ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`); })()}</div>}
+          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); if (!v1 && !canBuy(p)) return soonLabel(p, FR); return v1 ? (FR ? `${lowStock(p, v1.size, true) || "En stock"} : ${v1.size} · soit ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `${lowStock(p, v1.size, false) || "In stock"}: ${v1.size} · i.e. ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`) : (FR ? `Précommande · soit ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `Pre-order · i.e. ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`); })()}</div>}
           {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-btc">{FR ? "−5 % si vous payez en Bitcoin" : "−5% when you pay with Bitcoin"}</div>}
           {!WS && CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
@@ -2867,7 +2870,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
 
             {CONFIG.BTC_ON && can && (
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
-                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Précommande · expédition dès l'arrivée du lot (environ 1 semaine) · lot analysé par un laboratoire indépendant avant expédition" : "Pre-order · ships when the batch arrives (about 1 week) · batch analysed by an independent laboratory before shipping")}
+                {inStock(p, v.size) ? (lowStock(p, v.size, FR) || (FR ? "En stock" : "In stock")) + (FR ? " · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : " · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Précommande · expédition dès l'arrivée du lot (environ 1 semaine) · lot analysé par un laboratoire indépendant avant expédition" : "Pre-order · ships when the batch arrives (about 1 week) · batch analysed by an independent laboratory before shipping")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
               </div>
             )}

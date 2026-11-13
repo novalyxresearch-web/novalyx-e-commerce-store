@@ -75,8 +75,16 @@ export async function getStock(env = process.env) {
   return { left, sold, ok: errors.length === 0, errors };
 }
 
-/* Vérifie qu'un panier ne dépasse pas le stock. Renvoie un message d'erreur, ou null si c'est bon. */
+/* Précommandes ouvertes (id → formats). Vide = seuls les produits EN STOCK sont commandables. Garder identique à PREORDER_OPEN dans src/App.jsx. */
+export const PREORDER_OPEN = {};
+
+/* Vérifie qu'un panier est commandable et ne dépasse pas le stock. Renvoie un message d'erreur, ou null si c'est bon. */
 export async function checkStock(lines, lang = "FR") {
+  const FR = lang === "FR";
+  // Un produit sans stock et sans précommande ouverte est « à venir » : on refuse la commande.
+  const closed = lines.filter((l) => !(PREORDER_OPEN[l.id] || []).includes(l.size));
+  const needStock = closed.filter((l) => !(UNITS[l.id] && UNITS[l.id][l.size]));
+  if (needStock.length) return FR ? "Ce produit n'est pas encore disponible à la commande (à venir)." : "This product is not yet available to order (coming soon).";
   const need = {};
   for (const l of lines) {
     if (UNITS[l.id] && UNITS[l.id][l.size]) need[l.id] = (need[l.id] || 0) + unitsOf(l.id, l.size, l.qty);
@@ -85,7 +93,8 @@ export async function checkStock(lines, lang = "FR") {
   if (!Object.keys(need).length) return null;
   const { left } = await getStock();
   for (const id of Object.keys(need)) {
-    // Stock à 0 : le produit est passé « sur commande » sur le site, la commande est acceptée normalement.
+    // Stock à 0 sans précommande ouverte : refusé (voir plus haut) ; avec précommande ouverte : accepté.
+    if (left[id] <= 0 && closed.some((l) => l.id === id)) return FR ? "Ce lot est épuisé : le prochain lot sera bientôt disponible." : "This batch is sold out: the next batch will be available soon.";
     if (left[id] > 0 && need[id] > left[id]) {
       return lang === "FR"
         ? `Il ne reste que ${left[id]} kit${left[id] > 1 ? "s" : ""} en stock. Réduisez la quantité.`

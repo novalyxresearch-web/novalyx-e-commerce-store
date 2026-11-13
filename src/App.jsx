@@ -1821,7 +1821,16 @@ const BTC_ONLY_SIZES = { glp3rt: ["10mg"] };
 const visVariants = (p) => CONFIG.BTC_ON ? p.variants.filter(v => !isPackSize(v.size)) : p.variants.filter(v => !(BTC_ONLY_SIZES[p.id] || []).includes(v.size));
 /* Avec le paiement Bitcoin, tout le catalogue devient commandable :
    en stock (AVAILABLE) = expédié sous 24 h ; le reste = en précommande (~3 semaines). */
-const canBuy = (p) => CONFIG.BTC_ON || isAvail(p);
+/* Mode « À venir » : un format n'est commandable que s'il est en stock OU si la précommande est ouverte pour lui.
+   Pour ouvrir une précommande (≈ 1 semaine avant l'arrivée d'un lot) : PREORDER_OPEN = { ghk: ["50mg"] } ici ET dans api/stock.mjs. */
+const PREORDER_OPEN = {};
+const preOpen = (p, size) => (PREORDER_OPEN[p.id] || []).includes(size);
+const orderable = (p, size) => inStock(p, size) || preOpen(p, size);
+/* Date annoncée du prochain lot (affichée à la place du bouton d'achat). */
+const NEXT_LOT = { glp3rt: { "5mg": ["fin décembre 2026", "end of December 2026"] }, ghk: { "*": ["fin janvier 2027", "end of January 2027"] } };
+const nextLot = (p, size, FR) => { const n = NEXT_LOT[p.id]; const x = n && (n[size] || n["*"]); return x ? x[FR ? 0 : 1] : null; };
+const soonLabel = (p, FR) => { const vs = visVariants(p); const vv = vs.find(v => nextLot(p, v.size, FR)); const d = vv ? nextLot(p, vv.size, FR) : null; return d ? (FR ? "Prochain lot : " : "Next batch: ") + d : (FR ? "À venir" : "Coming soon"); };
+const canBuy = (p) => visVariants(p).some(v => orderable(p, v.size));
 /* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock
    (stock de départ − ventes payées par carte et Bitcoin) et se met à jour tout seul. */
 const STOCK_LEFT = { glp3rt: 1, "bac-water": 1 };
@@ -2727,10 +2736,11 @@ const QuickAddCtx = createContext(null);
 const QuickAdd = ({ p, cur, lang }) => {
   const FR = lang === "FR";
   const add = useContext(QuickAddCtx);
-  const opts = WS ? [...visVariants(p)].sort((a, b) => (inStock(p, b.size) ? 1 : 0) - (inStock(p, a.size) ? 1 : 0)) : visVariants(p).filter(v => inStock(p, v.size));
+  const opts = WS ? [...visVariants(p)].filter(v => orderable(p, v.size)).sort((a, b) => (inStock(p, b.size) ? 1 : 0) - (inStock(p, a.size) ? 1 : 0)) : visVariants(p).filter(v => inStock(p, v.size));
   const [sz, setSz] = useState(opts[0] ? opts[0].size : "");
   const [done, setDone] = useState(false);
-  if (!add || !canBuy(p) || opts.length === 0) return null;
+  if (!add) return null;
+  if (opts.length === 0) return <div className="qa" onClick={(e) => e.stopPropagation()}><button type="button" className="qa-btn" disabled style={{ opacity: .6, cursor: "default" }}>{soonLabel(p, FR)}</button></div>;
   const v = opts.find(o => o.size === sz) || opts[0];
   const go = (e) => { e.stopPropagation(); add(p, v, 1, false); setDone(true); setTimeout(() => setDone(false), 1600); };
   return (
@@ -2750,7 +2760,7 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
     <div className="pcard" role="link" tabIndex={0} onClick={onClick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}>
       <div className="pcard-top">
         <span className="tag">{tp(lang, p.category)}</span>
-        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !isAvail(p) && <span className="chip-soon">{CONFIG.BTC_ON ? (FR ? "Précommande" : "Pre-order") : (FR ? "Bientôt" : "Soon")}</span>}
+        {coa ? <span className="chip-coa">COA {coa.size}{coa.purity ? ` · ${pct(coa.purity, lang)}` : ""}</span> : !inStock(p, main.size) && <span className="chip-soon">{canBuy(p) ? (FR ? "Précommande" : "Pre-order") : (FR ? "À venir" : "Coming soon")}</span>}
       </div>
       <div className="pcard-vial"><ProductPhoto p={p} size={main.size} h={190} /></div>
       <div className="pcard-name">{pn(p)}</div>
@@ -2758,9 +2768,9 @@ const ProductCard = ({ p, cur, onClick, lang }) => {
       {coa && coa.batch && <div className="pcard-lot">{FR ? "Lot" : "Batch"} {coa.batch} · {FR ? "analysé par Janoshik" : "analysed by Janoshik"}</div>}
       <div className="pcard-foot">
         <div>
-          <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (WS ? (FR ? "Prix du kit (10 flacons)" : "Kit price (10 vials)") : (FR ? "À partir de" : "From")) : (FR ? "Bientôt disponible" : "Coming soon")}</div>
+          <div className="tag" style={{ marginBottom: 2 }}>{canBuy(p) ? (WS ? (FR ? "Prix du kit (10 flacons)" : "Kit price (10 vials)") : (FR ? "À partir de" : "From")) : (FR ? "À venir" : "Coming soon")}</div>
           <div className="pcard-price">{price(min, cur, lang)}{WS && visVariants(p).length > 1 ? "+" : ""}</div>
-          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); return v1 ? (FR ? `En stock : ${v1.size} · soit ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `In stock: ${v1.size} · i.e. ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`) : (FR ? `Précommande · soit ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `Pre-order · i.e. ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`); })()}</div>}
+          {WS && <div className="pcard-btc">{(() => { const v1 = visVariants(p).find(v => inStock(p, v.size)); if (!v1 && !canBuy(p)) return soonLabel(p, FR); return v1 ? (FR ? `En stock : ${v1.size} · soit ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `In stock: ${v1.size} · i.e. ${price(Math.round(v1.price / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`) : (FR ? `Précommande · soit ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} par flacon · vendu par kit de 10` : `Pre-order · i.e. ${price(Math.round(min / KIT_SIZE * 100) / 100, cur, lang)} per vial · sold by kit of 10`); })()}</div>}
           {CONFIG.BTC_ON && canBuy(p) && <div className="pcard-btc">{FR ? "−5 % si vous payez en Bitcoin" : "−5% when you pay with Bitcoin"}</div>}
           {!WS && CONFIG.BTC_ON && canBuy(p) && <div className="pcard-deal">{isKit(p.id) ? (FR ? "Moins cher qu'en achetant séparément" : "Cheaper than buying separately") : (FR ? "Jusqu'à −20 % dès 2 flacons" : "Up to −20% from 2 vials")}</div>}
         </div>
@@ -2808,6 +2818,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const bacV = bac && bac.variants.find(x => !/pack/i.test(x.size));
   const [idx, setIdx] = useState(Math.max(0, p.variants.findIndex(x => COAS[p.id] && x.size === COAS[p.id].size)));
   const v = visVariants(p)[idx] || visVariants(p)[0];
+  const can = orderable(p, v.size);
   const coaP = isKit(p.id) ? PRODUCTS.find(x => x.id === "glp3rt") : p;   // le kit contient du GLP-3RT : on montre son rapport d'analyse
   const coa = coaFor(coaP, isKit(p.id) ? "5mg" : v.size);
   const coaOther = !coa && COAS[coaP.id];
@@ -2856,13 +2867,13 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
               ))}
             </div>
 
-            {CONFIG.BTC_ON && canBuy(p) && (
+            {CONFIG.BTC_ON && can && (
               <div className={"ship-note" + (inStock(p, v.size) ? " ok" : "")}>
-                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Précommande · livraison sous 3 à 4 semaines · lot analysé par un laboratoire indépendant avant expédition" : "Pre-order · delivery within 3–4 weeks · batch analysed by an independent laboratory before shipping")}
+                {inStock(p, v.size) ? (FR ? "En stock · expédié sous 24 h en Île-de-France, 3 à 4 jours en France métropolitaine" : "In stock · ships within 24 h in Île-de-France, 3–4 days in mainland France") : (FR ? "Précommande · expédition dès l'arrivée du lot (environ 1 semaine) · lot analysé par un laboratoire indépendant avant expédition" : "Pre-order · ships when the batch arrives (about 1 week) · batch analysed by an independent laboratory before shipping")}
                 {!inStock(p, v.size) && minQty(p, v.size) > 1 ? (FR ? ` · format recherche : ${minQty(p, v.size)} flacons minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)` : ` · research format: ${minQty(p, v.size)} vials minimum (−${Math.round(qtyDiscount(minQty(p, v.size), v.size, p.id, v.price) * 100)} %)`) : ""}
               </div>
             )}
-            {!WS && CONFIG.BTC_ON && canBuy(p) && !isPackSize(v.size) && !isKit(p.id) && (
+            {!WS && CONFIG.BTC_ON && can && !isPackSize(v.size) && !isKit(p.id) && (
               <div className="tiers">
                 <div className="tag" style={{ marginBottom: 8 }}>{FR ? "Prix dégressif : plus vous en prenez, moins c'est cher" : "Volume pricing: the more you take, the less you pay"}</div>
                 <div className="tiers-row">
@@ -2918,13 +2929,13 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
             </div>
 
             <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 26, flexWrap: "wrap" }}>
-              {canBuy(p) && <div className="qty">
+              {can && <div className="qty">
                 <button onClick={() => setQty(Math.max(minQty(p, v.size), qty - 1))} aria-label="-">−</button>
                 <span>{qty}</span>
                 <button onClick={() => setQty(inStock(p, v.size) && STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] != null ? Math.min(qty + 1, Math.floor(STOCK_LEFT[isKit(p.id) ? "glp3rt" : p.id] / (isKit(p.id) ? (KIT_UNITS[p.id][v.size] || 1) : (v.size.match(/Pack de (\d)/) || [0, 1])[1]))) : qty + 1)} aria-label="+">+</button>
               </div>}
-              {CONFIG.BTC_ON && canBuy(p) && <div className="btc-note">{FR ? "−5 % si vous payez en Bitcoin, appliqué au paiement." : "−5% when you pay with Bitcoin, applied at checkout."}</div>}
-              {canBuy(p) ? (
+              {CONFIG.BTC_ON && can && <div className="btc-note">{FR ? "−5 % si vous payez en Bitcoin, appliqué au paiement." : "−5% when you pay with Bitcoin, applied at checkout."}</div>}
+              {can ? (
                 <>
                   <button className="btn btn-line buy-btn" onClick={() => addAll(false)}>{FR ? "Ajouter au panier" : "Add to cart"}</button>
                   <button className="btn btn-ink buy-btn" onClick={() => addAll(true)}>{FR ? "Acheter maintenant" : "Buy now"} — {price(total, cur, lang)}</button>
@@ -2936,16 +2947,16 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                 </>
               ) : (
                 <a className="btn btn-line" style={{ flex: 1 }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent((FR ? "Disponibilité " : "Availability ") + pn(p) + " " + v.size)}`}>
-                  {FR ? "Bientôt disponible — me prévenir" : "Coming soon — notify me"}
+                  {soonLabel(p, FR)} — {FR ? "me prévenir" : "notify me"}
                 </a>
               )}
             </div>
-            {CONFIG.BTC_ON && canBuy(p) && (
+            {CONFIG.BTC_ON && can && (
               <p style={{ fontSize: 13, marginTop: 12 }}>
                 <a href="/payer-en-bitcoin" onClick={e => { e.preventDefault(); window.dispatchEvent(new CustomEvent("nvx-go", { detail: "bitcoin" })); }}>{FR ? "Paiement en Bitcoin : comment ça marche ? (3 étapes)" : "Bitcoin payment: how does it work? (3 steps)"}</a>
               </p>
             )}
-            {CONFIG.BTC_ON && canBuy(p) && qtyDiscount(qty, v.size, p.id, v.price) > 0.0001 && (
+            {CONFIG.BTC_ON && can && qtyDiscount(qty, v.size, p.id, v.price) > 0.0001 && (
               <div className="saving">{FR ? "Vous économisez " : "You save "}<b>{price(Math.round((v.price * qty - lineTotal(v.price, qty, v.size, p.id)) * 100) / 100, cur, lang)}</b>{FR ? ` · au lieu de ${price(v.price * qty, cur, lang)}` : ` · instead of ${price(v.price * qty, cur, lang)}`}</div>
             )}
             {added && (
@@ -4514,11 +4525,11 @@ const botStorage = (p, lang) => {
 
 const botPriceLine = (p, cur, lang) => {
   const sizes = visVariants(p).map((v) => v.size + " : " + price(v.price, cur, lang)).join("\n");
-  const avail = isAvail(p)
+  const avail = visVariants(p).some(v => inStock(p, v.size))
     ? (lang === "FR" ? "Disponible à l'achat en ligne." : "Available to order online.")
-    : CONFIG.BTC_ON
-      ? (lang === "FR" ? "Disponible en précommande : 3 à 4 semaines, lot analysé par un laboratoire indépendant avant expédition, suivi à chaque étape." : "Available to order: 3–4 weeks, batch analysed by an independent laboratory before shipping, tracked at every step.")
-      : (lang === "FR" ? "Pas encore disponible à l'achat en ligne (bientôt)." : "Not yet available to order online (coming soon).");
+    : canBuy(p)
+      ? (lang === "FR" ? "Précommande ouverte : expédition dès l'arrivée du lot, analysé par un laboratoire indépendant avant expédition." : "Pre-order open: ships when the batch arrives, analysed by an independent laboratory before shipping.")
+      : soonLabel(p, lang === "FR") + (lang === "FR" ? " (pas encore commandable)." : " (not yet orderable).");
   return pn(p) + "\n" + sizes + "\n\n" + avail;
 };
 
@@ -4628,7 +4639,7 @@ const botAnswer = (text, ctx) => {
     const kb = BOT_KB[p.id];
     if (kb) {
       const d = kb[FR ? "fr" : "en"];
-      const avail = AVAILABLE.indexOf(p.id) >= 0;
+      const avail = canBuy(p);
       const stock = avail
         ? (FR ? "Sur Novalyx : disponible à l'achat." : "On Novalyx: available to order.")
         : (FR ? "Sur Novalyx : bientôt disponible (non achetable pour le moment)." : "On Novalyx: coming soon (not yet available to order).");
@@ -4947,7 +4958,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).map(i => (i && i.id === "retatrutide" ? { ...i, id: "glp3rt" } : i)).filter(i => CONFIG.BTC_ON || AVAILABLE.includes(i.id)));
+      const c = localStorage.getItem("novalyx_cart"); if (c) setCart(JSON.parse(c).map(i => (i && i.id === "retatrutide" ? { ...i, id: "glp3rt" } : i)).filter(i => { const q = PRODUCTS.find(x => x.id === i.id); return !!q && orderable(q, i.size); }));
       const k = localStorage.getItem("novalyx_currency"); if (k && CURRENCIES[k]) setCur(k);
       const l = localStorage.getItem("novalyx_lang"); if (LANGS.includes(l)) setLang(l);
       if (sessionStorage.getItem("novalyx_gate") === "1") setAgeOk(true);
@@ -5003,7 +5014,7 @@ export default function App() {
     } catch (e) {}
   }, []);
   const addToCart = (p, v, q = 1, open = true) => {
-    if (!canBuy(p)) return;
+    if (!orderable(p, v.size)) return;
     const lineId = `${p.id}-${v.size}`;
     setCart(prev => {
       const ex = prev.find(i => i.lineId === lineId);

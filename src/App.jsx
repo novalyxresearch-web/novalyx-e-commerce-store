@@ -1724,7 +1724,6 @@ const WHOLESALE = {
   formula03: { "70mg total": 270 },
   formula04: { "80mg total": 340 },
   tesamorelin: { "5mg": 200 },
-  "bac-water": { "3ml vial": 38, "10ml vial": 55 },
 };
 const PRODUCTS = PRODUCTS_ALL.filter(p => WHOLESALE[p.id]).map(p => ({
   ...p,
@@ -1805,7 +1804,7 @@ const COAS = {
    Passe à true quand le paiement Bitcoin encaisse tout le panier d'un coup. */
 const XSELL_BAC = CONFIG.BTC_ON;
 /* Produits achetables en ligne. Pour en ouvrir un nouveau : ajoute son id ici. */
-const AVAILABLE = ["glp3rt", "bac-water"];
+const AVAILABLE = ["glp3rt"];
 /* Kit GLP-3RT : puise des flacons de GLP-3RT dans le stock (1 ou 2 selon le format). Garder identique dans api/stock.mjs. */
 const KIT_UNITS = {};
 const isKit = (id) => !!KIT_UNITS[id];
@@ -2618,7 +2617,7 @@ const Footer = ({ go, lang, onCookies }) => {
           </div>
           <div>
             <h4>{FR ? "Catalogue" : "Catalogue"}</h4>
-            {CATEGORY_ORDER.slice(0, 5).map(c => <button key={c} onClick={() => go("products", c)}>{tp(lang, c)}</button>)}
+            {CATEGORY_ORDER.filter(c => PRODUCTS.some(p => p.category === c)).slice(0, 5).map(c => <button key={c} onClick={() => go("products", c)}>{tp(lang, c)}</button>)}
             <button onClick={() => go("products", "All")}>{FR ? "Tout le catalogue" : "Full catalogue"}</button>
             <a className="dl" href={FR ? "/novalyx-catalogue.pdf" : "/novalyx-catalogue-en.pdf"} download>{FR ? "Télécharger le catalogue (PDF)" : "Download the catalogue (PDF)"}</a>
           </div>
@@ -4579,8 +4578,8 @@ const botAnswer = (text, ctx) => {
     if (qPrice || qAvail) return botPriceLine(p, cur, lang) + "\n\n" + note;
     if (qStorage) return botStorage(p, lang) + "\n\n" + note;
     if (qRecon) return (FR
-      ? "Les composés sont fournis sous forme lyophilisée ; la reconstitution se fait en laboratoire avec un solvant stérile adapté (par exemple notre eau bactériostatique). Nous ne fournissons ni protocole ni volumes. Après reconstitution, conservation entre 2 et 8 °C."
-      : "Compounds are supplied lyophilised; reconstitution is done in the laboratory with a suitable sterile solvent (for example our bacteriostatic water). We provide no protocol or volumes. After reconstitution, store between 2 and 8 °C.") + "\n\n" + note;
+      ? "Les composés sont fournis sous forme lyophilisée ; la reconstitution se fait en laboratoire avec un solvant stérile adapté. Nous ne fournissons ni protocole ni volumes. Après reconstitution, conservation entre 2 et 8 °C."
+      : "Compounds are supplied lyophilised; reconstitution is done in the laboratory with a suitable sterile solvent. We provide no protocol or volumes. After reconstitution, store between 2 and 8 °C.") + "\n\n" + note;
     if (qCoa) {
       const c = COAS[p.id];
       return (c
@@ -4594,8 +4593,8 @@ const botAnswer = (text, ctx) => {
 
   // 3) sujets généraux
   if (qRecon) return FR
-    ? "Les composés sont fournis sous forme lyophilisée ; la reconstitution se fait en laboratoire avec un solvant stérile adapté (par exemple notre eau bactériostatique). Nous ne fournissons ni protocole ni volumes. Après reconstitution, conservation entre 2 et 8 °C."
-    : "Compounds are supplied lyophilised; reconstitution is done in the laboratory with a suitable sterile solvent (for example our bacteriostatic water). We provide no protocol or volumes. After reconstitution, store between 2 and 8 °C.";
+    ? "Les composés sont fournis sous forme lyophilisée ; la reconstitution se fait en laboratoire avec un solvant stérile adapté. Nous ne fournissons ni protocole ni volumes. Après reconstitution, conservation entre 2 et 8 °C."
+    : "Compounds are supplied lyophilised; reconstitution is done in the laboratory with a suitable sterile solvent. We provide no protocol or volumes. After reconstitution, store between 2 and 8 °C.";
   if (qStorage) return botStorage(p, lang);
   if (qCoa) {
     const c = COAS.glp3rt;

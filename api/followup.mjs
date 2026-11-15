@@ -15,7 +15,7 @@ const FOLLOWUPS = [
       `Bonjour Madame ${String(m.name || "").trim().split(/\s+/).slice(-1)[0] || ""},`.replace(" ,", ","), "",
       "Votre colis (commande NVX-GYGVMW) doit vous être livré aujourd'hui. Vous pouvez suivre son trajet ici :",
       "https://www.laposte.fr/outils/suivre-vos-envois?code=8J02327842738", "",
-      "Le numéro de lot est imprimé sur chaque flacon. Le rapport d'analyse du laboratoire Janoshik pour ce lot est publié sur la fiche du produit, et vous pouvez le vérifier sur le site de Janoshik avec la clé X9RYPGHBIEGS.", "",
+      "Le numéro de lot est imprimé sur chaque flacon. Le rapport d'analyse du laboratoire Janoshik pour ce lot est publié sur la fiche du produit, et vous pouvez le vérifier sur le site de Janoshik avec la clé X9RYPGHB1EGS.", "",
       "À réception, nous vous conseillons de conserver les flacons au sec et à l'abri de la lumière.", "",
       "Une petite question, si vous avez une minute : comment avez-vous connu Novalyx Research ? Votre réponse nous aide beaucoup. Et si quelque chose ne va pas avec votre colis, répondez simplement à ce message, nous nous en occupons tout de suite.", "",
       "Merci encore pour votre confiance.", "",

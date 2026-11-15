@@ -7,14 +7,15 @@
 import { smtpSend } from "./_smtp.mjs";
 
 /* Ajout automatique dans Hostinger Reach (liste « prevenez-moi-site »), si HOSTINGER_API_TOKEN est défini dans Vercel. */
-const REACH_TAG = "ee24fd2d-d6ef-4c9a-a0c4-8c0ed29ad2a9";
-async function addToReach(token, email, note) {
+const REACH_TAG = "ee24fd2d-d6ef-4c9a-a0c4-8c0ed29ad2a9";      // prevenez-moi-site
+const REACH_TAG_GUIDE = "24b2e7c3-c224-4280-bd66-77e1150cf64b"; // guide-coa
+async function addToReach(token, email, note, tag) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
   try {
     const r = await fetch("https://developers.hostinger.com/api/reach/v1/contacts", {
       method: "POST", signal: ctl.signal,
       headers: { Authorization: "Bearer " + token, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ email, note, tag_uuids: [REACH_TAG] }),
+      body: JSON.stringify({ email, note, tag_uuids: [tag || REACH_TAG] }),
     });
     return r.ok ? "ok" : "http " + r.status;
   } catch (e) { return "erreur " + ((e && e.name) || "?"); } finally { clearTimeout(t); }
@@ -37,19 +38,20 @@ export default async function handler(req, res) {
   const product = clean(body.product, 80) || "(produit non précisé)";
   const size = clean(body.size, 30);
   const lang = body.lang === "EN" ? "EN" : "FR";
+  const guide = body.kind === "guide";
 
-  const reach = HOSTINGER_API_TOKEN ? await addToReach(HOSTINGER_API_TOKEN, email, `Me prévenir : ${product}${size ? " " + size : ""} (${lang})`) : "non configuré";
+  const reach = HOSTINGER_API_TOKEN ? await addToReach(HOSTINGER_API_TOKEN, email, guide ? `Guide COA (${lang})` : `Me prévenir : ${product}${size ? " " + size : ""} (${lang})`, guide ? REACH_TAG_GUIDE : REACH_TAG) : "non configuré";
 
   try {
     await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, [{
       to: ORDER_EMAIL || SMTP_USER, replyTo: email, fromName: "Novalyx Research — alertes",
-      subject: `Me prévenir : ${product}${size ? " " + size : ""} — ${email}`,
+      subject: guide ? `Guide COA téléchargé — ${email}` : `Me prévenir : ${product}${size ? " " + size : ""} — ${email}`,
       text: [
-        "Nouvelle demande « Me prévenir » depuis le site.", "",
+        guide ? "Nouvelle inscription : guide « Lire un COA en 5 minutes »." : "Nouvelle demande « Me prévenir » depuis le site.", "",
         `E-mail : ${email}`, `Produit : ${product}${size ? " " + size : ""}`, `Langue : ${lang}`,
         `Date : ${new Date().toISOString()}`, "",
-        "La personne a coché la case : elle accepte de recevoir un e-mail à l'arrivée du lot.",
-        reach === "ok" ? "Ajouté automatiquement à Hostinger Reach (étiquette prevenez-moi-site)." : `Hostinger Reach : ${reach} — à ajouter à la main dans Reach.`,
+        guide ? "La personne a coché la case : elle accepte de recevoir les e-mails de Novalyx (guide, nouveaux lots)." : "La personne a coché la case : elle accepte de recevoir un e-mail à l'arrivée du lot.",
+        reach === "ok" ? `Ajouté automatiquement à Hostinger Reach (étiquette ${guide ? "guide-coa" : "prevenez-moi-site"}).` : `Hostinger Reach : ${reach} — à ajouter à la main dans Reach.`,
       ].join("\n"),
     }]);
     return res.status(200).json({ ok: true });

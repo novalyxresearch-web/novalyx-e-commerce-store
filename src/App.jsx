@@ -2816,6 +2816,57 @@ const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
 } catch (e) {} })();
 const visitSource = () => { try { const u = JSON.parse(sessionStorage.getItem("nvx_utm") || "null"); return u ? [u.utm_source, u.utm_medium, u.utm_campaign, u.utm_content].filter(Boolean).join(" / ") + (u.landing ? " (arrivée " + u.landing + ")" : "") : (document.referrer ? "lien depuis " + new URL(document.referrer).hostname : "accès direct"); } catch (e) { return ""; } };
 
+/* ─── GUIDE GRATUIT « Lire un COA en 5 minutes » : e-mail contre le PDF (envoyé à /api/alert, étiquette guide-coa) ─── */
+const GUIDE_PDF = "/guide-lire-un-coa.pdf";
+const GuideBox = ({ lang }) => {
+  const FR = lang === "FR";
+  const [email, setEmail] = useState("");
+  const [ok, setOk] = useState(false);
+  const [trap, setTrap] = useState("");
+  const [state, setState] = useState("idle");
+  const [err, setErr] = useState("");
+  const send = async (e) => {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { setErr(FR ? "Adresse e-mail invalide." : "Invalid email address."); return; }
+    if (!ok) { setErr(FR ? "Cochez la case pour recevoir le guide." : "Tick the box to get the guide."); return; }
+    setErr(""); setState("sending");
+    try {
+      const r = await fetch("/api/alert", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: "guide", email: email.trim(), consent: true, product: "Guide COA", lang, website: trap }) });
+      if (!r.ok) throw new Error("x");
+      setState("done");
+    } catch (x) { setState("error"); }
+  };
+  return (
+    <div style={{ display: "grid", gap: 22, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", alignItems: "center", background: "#2A0F1C", color: "#fff", borderRadius: 22, padding: "30px 24px" }}>
+      <div style={{ minWidth: 0 }}>
+        <span style={{ display: "inline-block", background: "#7F2F51", borderRadius: 99, padding: "5px 12px", fontSize: 11, fontWeight: 600, letterSpacing: ".1em" }}>{FR ? "GUIDE GRATUIT · PDF" : "FREE GUIDE · PDF"}</span>
+        <h2 style={{ fontSize: 30, lineHeight: 1.15, margin: "14px 0 10px", fontWeight: 700 }}>{FR ? <>Lire un COA en <span style={{ color: "#F2B5CE" }}>5 minutes</span>.</> : <>Read a COA in <span style={{ color: "#F2B5CE" }}>5 minutes</span>.</>}</h2>
+        <p style={{ fontSize: 15, lineHeight: 1.6, color: "#e9d6de", margin: 0 }}>{FR ? "Les 5 lignes à regarder, les 6 signaux d'un faux rapport, et comment vérifier un rapport en 30 secondes. Avec un exemple réel, ligne par ligne." : "The 5 lines to check, the 6 signs of a fake report, and how to verify a report in 30 seconds. With a real example, line by line."}</p>
+      </div>
+      {state === "done" ? (
+        <div role="status" style={{ background: "#FBEDEC", color: "#2A0F1C", borderRadius: 16, padding: 20 }}>
+          <b style={{ color: "#7F2F51", fontSize: 17 }}>{FR ? "C'est à vous." : "It's yours."}</b>
+          <p style={{ fontSize: 14, lineHeight: 1.55, margin: "6px 0 14px" }}>{FR ? "Votre guide est prêt. Vous recevrez aussi un e-mail à chaque nouveau lot, avec son rapport." : "Your guide is ready. You will also get an email for each new batch, with its report."}</p>
+          <a className="btn btn-ink" style={{ width: "100%" }} href={GUIDE_PDF} target="_blank" rel="noopener">{FR ? "Ouvrir le guide (PDF)" : "Open the guide (PDF)"}</a>
+        </div>
+      ) : (
+        <form onSubmit={send} noValidate style={{ background: "#FBEDEC", color: "#2A0F1C", borderRadius: 16, padding: 20, minWidth: 0 }}>
+          <input type="email" inputMode="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={FR ? "Votre adresse e-mail" : "Your email address"} aria-label={FR ? "Votre adresse e-mail" : "Your email address"}
+            style={{ width: "100%", boxSizing: "border-box", padding: "12px 14px", fontSize: 16, border: "1px solid #7F2F51", borderRadius: 10, background: "#fff", color: "#2A0F1C", fontFamily: "inherit" }} />
+          <input type="text" name="website" value={trap} onChange={e => setTrap(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
+          <label style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12, lineHeight: 1.5, color: "#4A2A38", margin: "10px 0", cursor: "pointer" }}>
+            <input type="checkbox" checked={ok} onChange={e => setOk(e.target.checked)} style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0, accentColor: "#7F2F51" }} />
+            <span>{FR ? "J'accepte de recevoir les e-mails de Novalyx Research (guide, nouveaux lots). Désinscription possible à tout moment." : "I agree to receive emails from Novalyx Research (guide, new batches). I can unsubscribe at any time."}</span>
+          </label>
+          {err && <div role="alert" style={{ fontSize: 12, color: "#B3261E", marginBottom: 8 }}>{err}</div>}
+          {state === "error" && <div role="alert" style={{ fontSize: 12, color: "#B3261E", marginBottom: 8 }}>{FR ? "L'envoi n'a pas fonctionné. Réessayez dans un instant." : "Sending failed. Please try again shortly."}</div>}
+          <button type="submit" className="btn btn-ink" style={{ width: "100%" }} disabled={state === "sending"}>{state === "sending" ? (FR ? "Envoi…" : "Sending…") : (FR ? "Recevoir le guide" : "Get the guide")}</button>
+        </form>
+      )}
+    </div>
+  );
+};
+
 /* ─── « ME PRÉVENIR » : e-mail laissé sur un produit à venir (envoyé à /api/alert) ─── */
 const NotifyBox = ({ p, v, FR, lang }) => {
   const [email, setEmail] = useState("");
@@ -3429,6 +3480,11 @@ const Home = ({ go, cur, openProduct, lang }) => {
             {withCoa.map(p => <ProductCard key={p.id} p={p} cur={cur} lang={lang} onClick={() => openProduct(p)} />)}
           </div>
         </div>
+      </section>
+
+      {/* GUIDE GRATUIT */}
+      <section className="sec" style={{ paddingTop: 0 }}>
+        <div className="wrap"><GuideBox lang={lang} /></div>
       </section>
 
       {/* INDEX */}

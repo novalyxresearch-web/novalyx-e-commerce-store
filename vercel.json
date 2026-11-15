@@ -1,6 +1,14 @@
-
 {
   "rewrites": [
-    { "source": "/((?!api/|products/|assets/)[^.]*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/|products/|assets/)[^.]*)",
+      "destination": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/followup",
+      "schedule": "0 11 16 11 *"
+    }
   ]
 }

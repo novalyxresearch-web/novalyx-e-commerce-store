@@ -186,6 +186,7 @@ export default async function handler(req, res) {
           summary: desc.slice(0, 500),
           promo: order.promo ? order.promo.code : (order.btcRate ? "BITCOIN-5" : undefined),
           source: clean(body.source, 200) || undefined,
+          news: body && body.news === true ? "1" : undefined,
         },
         checkout: {
           expirationMinutes: 60,

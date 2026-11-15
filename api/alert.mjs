@@ -6,20 +6,7 @@
 ═══════════════════════════════════════════════════════════ */
 import { smtpSend } from "./_smtp.mjs";
 
-/* Ajout automatique dans Hostinger Reach (liste « prevenez-moi-site »), si HOSTINGER_API_TOKEN est défini dans Vercel. */
-const REACH_TAG = "ee24fd2d-d6ef-4c9a-a0c4-8c0ed29ad2a9";      // prevenez-moi-site
-const REACH_TAG_GUIDE = "24b2e7c3-c224-4280-bd66-77e1150cf64b"; // guide-coa
-async function addToReach(token, email, note, tag) {
-  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
-  try {
-    const r = await fetch("https://developers.hostinger.com/api/reach/v1/contacts", {
-      method: "POST", signal: ctl.signal,
-      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ email, note, tag_uuids: [tag || REACH_TAG] }),
-    });
-    return r.ok ? "ok" : "http " + r.status;
-  } catch (e) { return "erreur " + ((e && e.name) || "?"); } finally { clearTimeout(t); }
-}
+import { addToReach, REACH_TAGS } from "./_reach.mjs";
 
 const clean = (v, n) => String(v == null ? "" : v).replace(/[\r\n<>]/g, " ").trim().slice(0, n);
 
@@ -40,7 +27,7 @@ export default async function handler(req, res) {
   const lang = body.lang === "EN" ? "EN" : "FR";
   const guide = body.kind === "guide";
 
-  const reach = HOSTINGER_API_TOKEN ? await addToReach(HOSTINGER_API_TOKEN, email, guide ? `Guide COA (${lang})` : `Me prévenir : ${product}${size ? " " + size : ""} (${lang})`, guide ? REACH_TAG_GUIDE : REACH_TAG) : "non configuré";
+  const reach = HOSTINGER_API_TOKEN ? await addToReach(email, guide ? `Guide COA (${lang})` : `Me prévenir : ${product}${size ? " " + size : ""} (${lang})`, guide ? REACH_TAGS.guide : REACH_TAGS.prevenir) : "non configuré";
 
   try {
     await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, [{

@@ -11,6 +11,7 @@
    Variables d'environnement déjà présentes : STRIPE_SECRET_KEY, SMTP_USER, SMTP_PASS
    (facultatif : ORDER_EMAIL, SMTP_HOST, SMTP_PORT).
 ═══════════════════════════════════════════════════════════ */
+import { addToReach, REACH_TAGS } from "./_reach.mjs";
 import { smtpSend } from "./_smtp.mjs";
 import { buildCustomerMail } from "./_mail.mjs";
 
@@ -30,6 +31,7 @@ export function buildOwnerMail(s, to) {
       "Articles : " + (m.summary || "(voir Stripe)"),
       m.promo ? "Code promo : " + m.promo : null,
       m.source ? "Source de la visite : " + m.source : null,
+      "Nouveaux lots par e-mail : " + (m.news === "1" ? "oui (ajouté à Reach)" : "non"),
       `Zone de livraison : ${m.zone || "?"}`,
       `TOTAL ENCAISSÉ : ${eur(total)}`, "",
       "À expédier à :", ...addr, `Email : ${m.email || (s.customer_details && s.customer_details.email) || "?"}`, "",
@@ -84,5 +86,7 @@ export default async function handler(req, res) {
     if (cm) mails.push(cm);
     await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, mails);
   } catch (e) { return res.status(502).json({ error: "email non envoyé" }); }   // Stripe réessaiera
+  const m = s.metadata || {};
+  if (m.news === "1" && m.email) await addToReach(m.email, `Client ${m.orderId} (carte) : nouveaux lots`, REACH_TAGS.clients);
   return res.status(200).json({ ok: true });
 }

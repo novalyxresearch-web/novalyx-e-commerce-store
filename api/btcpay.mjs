@@ -8,6 +8,7 @@
 
    Variables d'environnement : BTCPAY_WEBHOOK_SECRET (nouveau), SMTP_USER, SMTP_PASS (déjà là), SITE_URL (déjà là).
 ═══════════════════════════════════════════════════════════ */
+import { addToReach, REACH_TAGS } from "./_reach.mjs";
 import crypto from "node:crypto";
 import { smtpSend } from "./_smtp.mjs";
 import { buildCustomerMail } from "./_mail.mjs";
@@ -40,6 +41,7 @@ export function buildFromInvoice(ev, ownerTo, replyTo, site) {
       "Articles : " + (m.summary || "(voir BTCPay)"),
       m.promo ? "Code promo : " + m.promo : null,
       m.source ? "Source de la visite : " + m.source : null,
+      "Nouveaux lots par e-mail : " + (m.news === "1" ? "oui (ajouté à Reach)" : "non"),
       `Zone de livraison : ${m.zone || "?"}`, `TOTAL : ${eur(total)}`, "",
       "À expédier à :", ...addr.filter(Boolean), m.buyerPhone ? "Tél. " + m.buyerPhone : null, `Email : ${m.buyerEmail}`, "",
       "À faire : préparer le colis, expédier, puis envoyer le numéro de suivi au client (répondre à cet e-mail écrit directement au client).",
@@ -62,5 +64,7 @@ export default async function handler(req, res) {
   if (!mails) return res.status(422).json({ error: "métadonnées de commande absentes" });
   try { await smtpSend({ host: SMTP_HOST || "smtp.hostinger.com", port: Number(SMTP_PORT) || 465, user: SMTP_USER, pass: SMTP_PASS }, mails); }
   catch (e) { return res.status(502).json({ error: "email non envoyé" }); }   // BTCPay réessaiera
+  const bm = ev.metadata || {};
+  if (bm.news === "1" && bm.buyerEmail) await addToReach(bm.buyerEmail, `Client ${bm.orderId} (Bitcoin) : nouveaux lots`, REACH_TAGS.clients);
   return res.status(200).json({ ok: true });
 }

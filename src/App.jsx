@@ -2807,6 +2807,49 @@ const CoaBlock = ({ coa, lang, compact = false }) => {
   );
 };
 
+/* ─── « ME PRÉVENIR » : e-mail laissé sur un produit à venir (envoyé à /api/alert) ─── */
+const NotifyBox = ({ p, v, FR, lang }) => {
+  const [email, setEmail] = useState("");
+  const [ok, setOk] = useState(false);
+  const [trap, setTrap] = useState("");
+  const [state, setState] = useState("idle"); // idle | sending | done | error
+  const [err, setErr] = useState("");
+  const send = async (e) => {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { setErr(FR ? "Adresse e-mail invalide." : "Invalid email address."); return; }
+    if (!ok) { setErr(FR ? "Cochez la case pour être prévenu." : "Tick the box to be notified."); return; }
+    setErr(""); setState("sending");
+    try {
+      const r = await fetch("/api/alert", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.trim(), consent: true, product: pn(p), size: v.size, lang, website: trap }) });
+      if (!r.ok) throw new Error("x");
+      setState("done");
+    } catch (x) { setState("error"); }
+  };
+  const box = { flex: 1, minWidth: 0, background: "#FBEDEC", border: "1px solid rgba(127,47,81,.35)", borderRadius: 14, padding: "16px 16px 14px", textAlign: "left" };
+  if (state === "done") return (
+    <div style={box} role="status">
+      <b style={{ color: "#7F2F51" }}>{FR ? "C'est noté." : "You're on the list."}</b>
+      <div style={{ fontSize: 13, lineHeight: 1.55, marginTop: 4, color: "#4A2A38" }}>{FR ? `Vous recevrez un e-mail dès que le lot de ${pn(p)} sera disponible, avec son rapport d'analyse.` : `You will get an email as soon as the ${pn(p)} batch is available, with its analysis report.`}</div>
+    </div>
+  );
+  return (
+    <form style={box} onSubmit={send} noValidate>
+      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".08em", color: "#7F2F51" }}>{soonLabel(p, FR).toUpperCase()}</div>
+      <div style={{ fontSize: 15, fontWeight: 600, margin: "4px 0 10px", color: "#2A0F1C" }}>{FR ? "Être prévenu à l'arrivée du lot" : "Get notified when the batch arrives"}</div>
+      <input type="email" inputMode="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder={FR ? "Votre adresse e-mail" : "Your email address"} aria-label={FR ? "Votre adresse e-mail" : "Your email address"}
+        style={{ width: "100%", boxSizing: "border-box", padding: "12px 14px", fontSize: 16, border: "1px solid #7F2F51", borderRadius: 10, background: "#fff", color: "#2A0F1C", fontFamily: "inherit" }} />
+      <input type="text" name="website" value={trap} onChange={e => setTrap(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
+      <label style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12, lineHeight: 1.5, color: "#4A2A38", margin: "10px 0", cursor: "pointer" }}>
+        <input type="checkbox" checked={ok} onChange={e => setOk(e.target.checked)} style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0, accentColor: "#7F2F51" }} />
+        <span>{FR ? "J'accepte de recevoir un e-mail de Novalyx Research à l'arrivée de ce lot. Désinscription possible à tout moment." : "I agree to receive an email from Novalyx Research when this batch arrives. I can unsubscribe at any time."}</span>
+      </label>
+      {err && <div role="alert" style={{ fontSize: 12, color: "#B3261E", marginBottom: 8 }}>{err}</div>}
+      {state === "error" && <div role="alert" style={{ fontSize: 12, color: "#B3261E", marginBottom: 8 }}>{FR ? "L'envoi n'a pas fonctionné. Réessayez, ou écrivez-nous à " : "Sending failed. Try again, or write to "}<a href={`mailto:${CONFIG.EMAIL}`}>{CONFIG.EMAIL}</a>.</div>}
+      <button type="submit" className="btn btn-ink" style={{ width: "100%" }} disabled={state === "sending"}>{state === "sending" ? (FR ? "Envoi…" : "Sending…") : (FR ? "Me prévenir" : "Notify me")}</button>
+    </form>
+  );
+};
+
 /* ─── PRODUCT MODAL ──────────────────────────────────────── */
 const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
   const FR = lang === "FR";
@@ -2946,9 +2989,7 @@ const ProductModal = ({ p, cur, onAdd, onOpenCart, onClose, lang }) => {
                   </div>
                 </>
               ) : (
-                <a className="btn btn-line" style={{ flex: 1 }} href={`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent((FR ? "Disponibilité " : "Availability ") + pn(p) + " " + v.size)}`}>
-                  {soonLabel(p, FR)} — {FR ? "me prévenir" : "notify me"}
-                </a>
+                <NotifyBox p={p} v={v} FR={FR} lang={lang} />
               )}
             </div>
             {CONFIG.BTC_ON && can && (

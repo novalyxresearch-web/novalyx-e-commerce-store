@@ -25,10 +25,11 @@ export function buildMessage({ from, fromName, to, replyTo, subject, text, html 
 }
 export function smtpSend(cfg, mails, connect = tls.connect) {
   return new Promise((resolve, reject) => {
-    const sock = connect({ host: cfg.host, port: cfg.port, servername: cfg.host });
+    let stage = "connexion";
+    const sock = connect({ host: cfg.host, port: cfg.port, servername: cfg.host, family: 4 });
     let buf = "", waiting = null, done = false;
     const fail = (e) => { if (done) return; done = true; try { sock.destroy(); } catch (x) {} reject(e instanceof Error ? e : new Error(String(e))); };
-    const timer = setTimeout(() => fail(new Error("délai SMTP dépassé")), 20000);
+    const timer = setTimeout(() => fail(new Error("delai SMTP depasse a l etape " + stage)), 20000);
     sock.setEncoding("utf8");
     sock.on("error", fail);
     sock.on("data", (d) => {
@@ -42,11 +43,12 @@ export function smtpSend(cfg, mails, connect = tls.connect) {
     const expect = (codes) => new Promise((res, rej) => { waiting = (code, msg) => codes.includes(code) ? res(code) : rej(new Error("SMTP " + code + " " + msg)); if (buf) sock.emit("data", ""); });
     const cmd = (line, codes) => { const p = expect(codes); sock.write(line + "\r\n"); return p; };
     (async () => {
-      await expect([220]);
+      stage = "accueil"; await expect([220]);
       await cmd("EHLO novalyxresearch.com", [250]);
-      await cmd("AUTH LOGIN", [334]);
+      stage = "identification"; await cmd("AUTH LOGIN", [334]);
       await cmd(b64(cfg.user), [334]);
       await cmd(b64(cfg.pass), [235]);
+      stage = "envoi";
       for (const m of mails) {
         await cmd(`MAIL FROM:<${cfg.user}>`, [250]);
         await cmd(`RCPT TO:<${m.to}>`, [250, 251]);

@@ -39,6 +39,7 @@ export function buildFromInvoice(ev, ownerTo, replyTo, site) {
       `Nouvelle commande PAYÉE en Bitcoin : ${m.orderId}`, "",
       "Articles : " + (m.summary || "(voir BTCPay)"),
       m.promo ? "Code promo : " + m.promo : null,
+      m.source ? "Source de la visite : " + m.source : null,
       `Zone de livraison : ${m.zone || "?"}`, `TOTAL : ${eur(total)}`, "",
       "À expédier à :", ...addr.filter(Boolean), m.buyerPhone ? "Tél. " + m.buyerPhone : null, `Email : ${m.buyerEmail}`, "",
       "À faire : préparer le colis, expédier, puis envoyer le numéro de suivi au client (répondre à cet e-mail écrit directement au client).",

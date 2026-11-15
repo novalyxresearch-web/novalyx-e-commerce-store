@@ -29,6 +29,7 @@ export function buildOwnerMail(s, to) {
       `Nouvelle commande PAYÉE par carte : ${m.orderId}`, "",
       "Articles : " + (m.summary || "(voir Stripe)"),
       m.promo ? "Code promo : " + m.promo : null,
+      m.source ? "Source de la visite : " + m.source : null,
       `Zone de livraison : ${m.zone || "?"}`,
       `TOTAL ENCAISSÉ : ${eur(total)}`, "",
       "À expédier à :", ...addr, `Email : ${m.email || (s.customer_details && s.customer_details.email) || "?"}`, "",

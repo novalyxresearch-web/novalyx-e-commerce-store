@@ -2807,6 +2807,15 @@ const CoaBlock = ({ coa, lang, compact = false }) => {
   );
 };
 
+/* ─── Source de la visite (UTM) : mémorisée pour la session, jointe à la commande. Aucune donnée personnelle. ─── */
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+(() => { try {
+  const q = new URLSearchParams(window.location.search); const got = {};
+  UTM_KEYS.forEach(k => { const v = q.get(k); if (v) got[k] = v.replace(/[^\w\-.]/g, "").slice(0, 60); });
+  if (Object.keys(got).length) sessionStorage.setItem("nvx_utm", JSON.stringify({ ...got, landing: window.location.pathname.slice(0, 80) }));
+} catch (e) {} })();
+const visitSource = () => { try { const u = JSON.parse(sessionStorage.getItem("nvx_utm") || "null"); return u ? [u.utm_source, u.utm_medium, u.utm_campaign, u.utm_content].filter(Boolean).join(" / ") + (u.landing ? " (arrivée " + u.landing + ")" : "") : (document.referrer ? "lien depuis " + new URL(document.referrer).hostname : "accès direct"); } catch (e) { return ""; } };
+
 /* ─── « ME PRÉVENIR » : e-mail laissé sur un produit à venir (envoyé à /api/alert) ─── */
 const NotifyBox = ({ p, v, FR, lang }) => {
   const [email, setEmail] = useState("");
@@ -3072,7 +3081,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("btc"); setLoading(true); setBtcErr("");
     try {
       const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true, source: visitSource() }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setBtcErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "checkout");
@@ -3088,7 +3097,7 @@ const Cart = ({ cart, cur, onClose, onRemove, lang }) => {
     setBusy("card"); setLoading(true); setCardErr(""); setBtcErr("");
     try {
       const r = await fetch("/api/card", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true }) });
+        body: JSON.stringify({ items: cart.map(i => ({ id: i.id, size: i.size, qty: i.qty, name: pnId(i.id, i.name) })), zone, lang, customer: { ...tf, country: tf.country.trim() || (FR ? zoneRow[1] : zoneRow[2]) }, website: tf.website, promo, acks: true, source: visitSource() }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 409 && d.error) { setCardErr(d.error); setLoading(false); return; }
       if (!r.ok || !d.url) throw new Error(d.error || "card");

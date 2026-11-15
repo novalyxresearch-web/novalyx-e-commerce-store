@@ -154,6 +154,7 @@ export default async function handler(req, res) {
           shipping: order.shipping,
           summary: desc.slice(0, 500),
           promo: order.promo ? order.promo.code : (order.btcRate ? "BITCOIN-5" : undefined),
+          source: clean(body.source, 200) || undefined,
         },
         checkout: {
           expirationMinutes: 60,

@@ -2821,7 +2821,7 @@ const NotifyBox = ({ p, v, FR, lang }) => {
     setErr(""); setState("sending");
     try {
       const r = await fetch("/api/alert", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.trim(), consent: true, product: pn(p), size: v.size, lang, website: trap }) });
-      if (!r.ok) { let c = String(r.status); try { const j = await r.json(); if (j && j.code) c += " " + j.code; } catch (y) {} setErr("code : " + c); throw new Error("x"); }
+      if (!r.ok) { try { const j = await r.json(); console.warn("alert", r.status, j && j.code); } catch (y) {} throw new Error("x"); }
       setState("done");
     } catch (x) { setState("error"); }
   };

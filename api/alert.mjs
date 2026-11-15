@@ -11,7 +11,7 @@ const clean = (v, n) => String(v == null ? "" : v).replace(/[\r\n<>]/g, " ").tri
 export default async function handler(req, res) {
   if (req.method !== "POST") { res.setHeader("Allow", "POST"); return res.status(405).json({ error: "méthode non autorisée" }); }
   const { SMTP_USER, SMTP_PASS, ORDER_EMAIL, SMTP_HOST, SMTP_PORT } = process.env;
-  if (!SMTP_USER || !SMTP_PASS) return res.status(503).json({ error: "non configuré" });
+  if (!SMTP_USER || !SMTP_PASS) return res.status(503).json({ error: "non configuré", code: "ENV-" + (SMTP_USER ? "" : "U") + (SMTP_PASS ? "" : "P") });
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch (e) { body = {}; } }
@@ -38,6 +38,6 @@ export default async function handler(req, res) {
     }]);
     return res.status(200).json({ ok: true });
   } catch (e) {
-    return res.status(502).json({ error: "envoi impossible" });
+    return res.status(502).json({ error: "envoi impossible", code: String((e && e.message) || "?").replace(/[^\x20-\x7E]/g, "").slice(0, 60) });
   }
 }

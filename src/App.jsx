@@ -1829,7 +1829,7 @@ const orderable = (p, size) => inStock(p, size) || preOpen(p, size);
 /* Date annoncée du prochain lot (affichée à la place du bouton d'achat). */
 const NEXT_LOT = { glp3rt: { "5mg": ["fin décembre 2026", "end of December 2026"] }, ghk: { "*": ["fin janvier 2027", "end of January 2027"] } };
 const nextLot = (p, size, FR) => { const n = NEXT_LOT[p.id]; const x = n && (n[size] || n["*"]); return x ? x[FR ? 0 : 1] : null; };
-const NOTIFY_FORM = "https://cdn-reach.hostinger.com/storage/1021439281/9197a6bd-228c-48db-af8b-c51ca9299755/forms/950e7442-62aa-4ac4-ad5d-a3d3d7e30b1c/9fc76b05-6c02-4480-b5b8-719f6cbd199a.html";
+const NOTIFY_FORM = "https://cdn-reach.hostinger.com/storage/1021439281/9197a6bd-228c-48db-af8b-c51ca9299755/forms/950e7442-62aa-4ac4-ad5d-a3d3d7e30b1c/781e1f5c-0528-4978-8dc3-0c9a69e6b962.html";
 const soonLabel = (p, FR) => { const vs = visVariants(p); const vv = vs.find(v => nextLot(p, v.size, FR)); const d = vv ? nextLot(p, vv.size, FR) : null; return d ? (FR ? "Prochain lot : " : "Next batch: ") + d : (FR ? "À venir" : "Coming soon"); };
 const canBuy = (p) => visVariants(p).some(v => orderable(p, v.size));
 /* Flacons restants du lot analysé. Valeur de secours ; le vrai chiffre arrive de /api/stock

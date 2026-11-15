@@ -58,10 +58,39 @@ const round2 = (n) => Math.round(n * 100) / 100;
 
 /* Codes promo : CODE → remise sur les articles (pas sur la livraison), cumulée avec les remises par quantité.
    ⚠ Garder identique à PROMOS dans src/App.jsx. Pour supprimer un code : retirer sa ligne. */
-export const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
+export const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15, BIENVENUE10: 0.10 };
 /* HALLOWEEN15 expire le 31 octobre 2026 à 23 h 59 (heure de Paris, UTC+1). */
 export const PROMO_END = { HALLOWEEN15: Date.UTC(2026, 9, 31, 22, 59, 59) };
 export const promoOf = (code) => { const c = String(code || "").trim().toUpperCase(); if (PROMO_END[c] && Date.now() >= PROMO_END[c]) return null; return PROMOS[c] ? { code: c, rate: PROMOS[c] } : null; };
+
+/* Codes réservés à une PREMIÈRE commande : refusés si l'e-mail, ou la même adresse de livraison,
+   a déjà une commande payée (carte via Stripe, Bitcoin via BTCPay). */
+export const FIRST_ORDER_ONLY = ["BIENVENUE10"];
+export async function alreadyCustomer(cu) {
+  const { STRIPE_SECRET_KEY, BTCPAY_URL, BTCPAY_STORE_ID, BTCPAY_API_KEY } = process.env;
+  const q = (v) => String(v || "").replace(/'/g, "\\'");
+  const hits = [];
+  if (STRIPE_SECRET_KEY) {
+    const queries = [`status:'succeeded' AND metadata['email']:'${q(cu.email)}'`];
+    if (cu.phone && cu.phone.replace(/\D/g, "").length >= 9) queries.push(`status:'succeeded' AND metadata['phone']:'${q(cu.phone)}'`);
+    if (cu.address && cu.postcode) queries.push(`status:'succeeded' AND metadata['address']:'${q(cu.address)}' AND metadata['postcode']:'${q(cu.postcode)}'`);
+    for (const query of queries) {
+      try {
+        const r = await fetch("https://api.stripe.com/v1/payment_intents/search?limit=1&query=" + encodeURIComponent(query), { headers: { Authorization: "Bearer " + STRIPE_SECRET_KEY } });
+        if (r.ok && ((await r.json()).data || []).length) hits.push("stripe");
+      } catch (e) {}
+    }
+  }
+  if (BTCPAY_URL && BTCPAY_STORE_ID && BTCPAY_API_KEY) {
+    try {
+      const u = BTCPAY_URL.replace(/\/+$/, "") + "/api/v1/stores/" + encodeURIComponent(BTCPAY_STORE_ID) + "/invoices?status=Settled&take=50&textSearch=" + encodeURIComponent(cu.email);
+      const r = await fetch(u, { headers: { Authorization: "token " + BTCPAY_API_KEY } });
+      if (r.ok) { const list = await r.json(); if ((Array.isArray(list) ? list : []).some((i) => String((i.metadata && i.metadata.buyerEmail) || "").toLowerCase() === cu.email)) hits.push("btc"); }
+    } catch (e) {}
+  }
+  return hits.length > 0;
+}
+export const FIRST_ORDER_MSG = { FR: "Le code BIENVENUE10 est réservé à une première commande. Retirez-le pour continuer.", EN: "The BIENVENUE10 code is for a first order only. Remove it to continue." };
 
 /* Remise de 5 % pour un paiement en Bitcoin (frais évités, paiement définitif). Pas de cumul avec un code promo : le code, toujours ≥ 5 %, s'applique seul. */
 export const BTC_DISCOUNT = 0.05;
@@ -117,6 +146,8 @@ export default async function handler(req, res) {
   };
   if (!cu.firstName || !cu.lastName || !cu.address || !cu.postcode || !cu.city) return res.status(400).json({ error: "adresse incomplète" });
   if (!/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/.test(cu.email)) return res.status(400).json({ error: "email invalide" });
+
+  if (order.promo && FIRST_ORDER_ONLY.includes(order.promo.code) && await alreadyCustomer(cu)) return res.status(409).json({ error: FIRST_ORDER_MSG[lang === "FR" ? "FR" : "EN"] });
 
   // Stock du lot analysé : on refuse de vendre plus de flacons qu'il n'en reste.
   const { checkStock } = await import("./stock.mjs");

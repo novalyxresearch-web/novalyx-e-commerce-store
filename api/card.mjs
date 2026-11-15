@@ -11,7 +11,7 @@
      SITE_URL            https://novalyxresearch.com (déjà créée pour le Bitcoin)
    ⚠ Ne jamais écrire la clé dans ce fichier : il est public sur GitHub.
 ═══════════════════════════════════════════════════════════ */
-import { computeOrder } from "./checkout.mjs";
+import { computeOrder, FIRST_ORDER_ONLY, alreadyCustomer, FIRST_ORDER_MSG } from "./checkout.mjs";
 import { checkStock, encodeItems } from "./stock.mjs";
 
 const clean = (v, max) => String(v == null ? "" : v).replace(/[\r\n\t]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
@@ -43,6 +43,7 @@ export default async function handler(req, res) {
   const lang = ["EN", "DE", "NL"].includes(body.lang) ? body.lang : "FR";
   const FR = lang === "FR";
   // Stock du lot analysé : on refuse de vendre plus de flacons qu'il n'en reste.
+  if (order.promo && FIRST_ORDER_ONLY.includes(order.promo.code) && await alreadyCustomer(cu)) return res.status(409).json({ error: FIRST_ORDER_MSG[FR ? "FR" : "EN"] });
   const short = await checkStock(order.lines, FR ? "FR" : "EN").catch(() => null);
   if (short) return res.status(409).json({ error: short });
   const names = {};

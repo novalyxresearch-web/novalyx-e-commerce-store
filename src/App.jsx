@@ -1860,7 +1860,7 @@ const qtyDiscount = (q, size, id, unit) => {
 const FREE_SHIP_MIN = 0;                           // 0 = pas de livraison offerte : en vente en gros, la livraison est toujours payante (tarif selon le pays)
 /* Codes promo (remise sur les articles, cumulée avec les remises par quantité). ⚠ Identique à PROMOS dans api/checkout.mjs. */
 const BTC_DISCOUNT = 0.05;   // −5 % en Bitcoin (doit rester égal à BTC_DISCOUNT dans api/checkout.mjs)
-const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15 };
+const PROMOS = { SHINY10: 0.10, HALLOWEEN15: 0.15, BIENVENUE10: 0.10 };
 /* Offre Halloween : le code HALLOWEEN15 et le décor s'arrêtent seuls le 31 octobre 2026 à 23 h 59 (heure de Paris, UTC+1). */
 const HW_END = Date.UTC(2026, 9, 31, 22, 59, 59);
 const HW_CODE = "HALLOWEEN15";

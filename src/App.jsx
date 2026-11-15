@@ -1714,7 +1714,7 @@ const KIT_SIZE = 10;
 const LAB_VERIFY = "https://www.pristinbio.com/verifyrpt";   // page de vérification des rapports du laboratoire
 const WHOLESALE = {
   glp3rt:    { "5mg": 100, "10mg": 140 },
-  ghk:       { "50mg": 95 },
+  ghk:       { "50mg": 100 },
   motsc:     { "10mg": 130 },
   bpc157:    { "10mg": 140 },
   tb500:     { "5mg": 150 },

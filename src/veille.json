@@ -1,6 +1,183 @@
 {
-  "updated": "2026-11-09",
+  "updated": "2026-11-16",
   "entries": [
+    {
+      "id": "2026-11-16-mazdutide-t1d-registry",
+      "date": "2026-11-16",
+      "products": [
+        "mazdutide"
+      ],
+      "sources": [
+        {
+          "name": "ClinicalTrials.gov",
+          "url": "https://clinicaltrials.gov/study/NCT07924553"
+        }
+      ],
+      "title": {
+        "fr": "Mazdutide : nouvel essai randomisé enregistré dans le diabète de type 1",
+        "en": "Mazdutide: new randomised trial registered in type 1 diabetes",
+        "de": "Mazdutid: neue randomisierte Studie bei Typ-1-Diabetes registriert",
+        "nl": "Mazdutide: nieuwe gerandomiseerde studie bij type 1-diabetes geregistreerd"
+      },
+      "summary": {
+        "fr": "Un essai multicentrique randomisé en double aveugle contre placebo (programme TIMES), promu par le Peking University People's Hospital, prévoit d'inclure 182 adultes atteints de diabète de type 1. Le critère principal de la première phase est le temps passé dans la cible glycémique à 16 semaines ; une seconde phase évaluera le volume de plaque coronarienne à 52 semaines. Statut : pas encore en recrutement. Aucun résultat n'est disponible.",
+        "en": "A multicentre, randomised, double-blind, placebo-controlled trial (TIMES programme), sponsored by Peking University People's Hospital, plans to enrol 182 adults with type 1 diabetes. The primary outcome of stage 1 is time in glucose range at 16 weeks; a second stage will assess coronary plaque volume at 52 weeks. Status: not yet recruiting. No results are available.",
+        "de": "Eine multizentrische, randomisierte, doppelblinde, placebokontrollierte Studie (TIMES-Programm) des Peking University People's Hospital plant den Einschluss von 182 Erwachsenen mit Typ-1-Diabetes. Primärer Endpunkt der ersten Phase ist die Zeit im Glukosezielbereich nach 16 Wochen; eine zweite Phase untersucht das koronare Plaquevolumen nach 52 Wochen. Status: Rekrutierung noch nicht begonnen. Ergebnisse liegen nicht vor.",
+        "nl": "Een multicentrische, gerandomiseerde, dubbelblinde, placebogecontroleerde studie (TIMES-programma) van het Peking University People's Hospital wil 182 volwassenen met type 1-diabetes includeren. Het primaire eindpunt van fase 1 is de tijd in het glucosedoelbereik na 16 weken; een tweede fase beoordeelt het coronaire plaquevolume na 52 weken. Status: werving nog niet gestart. Er zijn geen resultaten beschikbaar."
+      }
+    },
+    {
+      "id": "2026-11-16-retatrutide-antidoping",
+      "date": "2026-11-16",
+      "products": [
+        "glp3rt",
+        "kit-glp3rt"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.1002/rcm.70179"
+        }
+      ],
+      "title": {
+        "fr": "Rétatrutide : une méthode LC-HRMS d'analyse antidopage décrite chez l'humain",
+        "en": "Retatrutide: an LC-HRMS anti-doping detection method described in humans",
+        "de": "Retatrutid: LC-HRMS-Nachweismethode für die Dopinganalytik beim Menschen beschrieben",
+        "nl": "Retatrutide: LC-HRMS-detectiemethode voor antidopinganalyse bij mensen beschreven"
+      },
+      "summary": {
+        "fr": "Cette étude analytique (Rapid Communications in Mass Spectrometry) décrit une méthode de chromatographie liquide couplée à la spectrométrie de masse haute résolution, validée selon les critères de l'AMA, pour détecter le rétatrutide dans le plasma et l'urine. Chez quatre utilisateurs, le composé a été quantifiable dans le plasma mais ni le composé intact ni des signaux de métabolites n'ont été détectés dans l'urine. Étude de très petite taille, à visée analytique uniquement.",
+        "en": "This analytical study (Rapid Communications in Mass Spectrometry) describes a liquid chromatography–high-resolution mass spectrometry method, validated to WADA criteria, for detecting retatrutide in plasma and urine. In four users, the compound was measurable in plasma, but neither intact retatrutide nor metabolite signals were detected in urine. A very small study with an analytical purpose only.",
+        "de": "Diese analytische Studie (Rapid Communications in Mass Spectrometry) beschreibt eine nach WADA-Kriterien validierte Methode der Flüssigchromatographie mit hochauflösender Massenspektrometrie zum Nachweis von Retatrutid in Plasma und Urin. Bei vier Anwendern war die Substanz im Plasma messbar, im Urin wurden jedoch weder intaktes Retatrutid noch Metabolitensignale gefunden. Sehr kleine Studie mit rein analytischer Zielsetzung.",
+        "nl": "Deze analytische studie (Rapid Communications in Mass Spectrometry) beschrijft een volgens WADA-criteria gevalideerde methode met vloeistofchromatografie en hoogresolutie-massaspectrometrie om retatrutide in plasma en urine aan te tonen. Bij vier gebruikers was de stof in plasma meetbaar, maar in urine werden noch intact retatrutide noch metabolietsignalen gevonden. Zeer kleine studie met uitsluitend een analytisch doel."
+      }
+    },
+    {
+      "id": "2026-11-11-tesamorelin-antidoping",
+      "date": "2026-11-11",
+      "products": [
+        "tesamorelin"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.1002/dta.70189"
+        }
+      ],
+      "title": {
+        "fr": "Tésamoréline : détection de la molécule et de ses métabolites dans le sérum et l'urine",
+        "en": "Tesamorelin: detection of the compound and its metabolites in serum and urine",
+        "de": "Tesamorelin: Nachweis der Substanz und ihrer Metaboliten in Serum und Urin",
+        "nl": "Tesamorelin: detectie van de stof en haar metabolieten in serum en urine"
+      },
+      "summary": {
+        "fr": "Une étude d'administration chez six volontaires sains (Drug Testing and Analysis) a évalué une méthode LC-HRMS/MS pour détecter la tésamoréline et cinq métabolites nouvellement identifiés. Dans l'urine, la molécule n'a pas été détectée ; dans le sérum, des métabolites l'ont été jusqu'à 2 h après l'injection. Les auteurs concluent à une fenêtre de détection courte et recommandent de cibler les métabolites sériques.",
+        "en": "An administration study in six healthy volunteers (Drug Testing and Analysis) evaluated an LC-HRMS/MS method for detecting tesamorelin and five newly identified metabolites. Tesamorelin was not detected in urine; in serum, metabolites were detected up to 2 hours after injection. The authors conclude that the detection window is short and that testing should target serum metabolites.",
+        "de": "Eine Anwendungsstudie mit sechs gesunden Freiwilligen (Drug Testing and Analysis) prüfte eine LC-HRMS/MS-Methode zum Nachweis von Tesamorelin und fünf neu identifizierten Metaboliten. Im Urin war Tesamorelin nicht nachweisbar; im Serum wurden Metaboliten bis zu 2 Stunden nach der Injektion gefunden. Die Autoren folgern, dass das Nachweisfenster kurz ist und Tests auf Metaboliten im Serum zielen sollten.",
+        "nl": "Een toedieningsstudie bij zes gezonde vrijwilligers (Drug Testing and Analysis) evalueerde een LC-HRMS/MS-methode om tesamorelin en vijf nieuw geïdentificeerde metabolieten aan te tonen. In urine werd tesamorelin niet gedetecteerd; in serum werden metabolieten tot 2 uur na injectie gevonden. De auteurs concluderen dat het detectievenster kort is en dat tests zich op serummetabolieten moeten richten."
+      }
+    },
+    {
+      "id": "2026-10-29-thymosin-colorectal-meta",
+      "date": "2026-10-29",
+      "products": [
+        "thymosinalpha1"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.3389/fonc.2026.1957041"
+        }
+      ],
+      "title": {
+        "fr": "Préparations de thymosine associées au traitement du cancer colorectal : revue systématique et méta-analyse",
+        "en": "Thymosin preparations added to colorectal cancer therapy: systematic review and meta-analysis",
+        "de": "Thymosin-Präparate zusätzlich zur Darmkrebstherapie: systematische Übersicht und Metaanalyse",
+        "nl": "Thymosinepreparaten naast darmkankertherapie: systematische review en meta-analyse"
+      },
+      "summary": {
+        "fr": "Cette revue systématique (Frontiers in Oncology) regroupe 30 études et 2 514 participants, dont 25 essais randomisés. Les auteurs rapportent des différences sur certains indices immunitaires circulants et sur un score de statut fonctionnel, mais la certitude des preuves est faible à très faible et les données de survie sont limitées. Ils jugent les preuves insuffisantes pour conclure et appellent à des essais supplémentaires. Les préparations de thymosine étudiées ne sont pas toutes identiques à la thymosine alpha-1.",
+        "en": "This systematic review (Frontiers in Oncology) pools 30 studies with 2,514 participants, including 25 randomised trials. The authors report differences in some circulating immune indices and in a performance-status score, but certainty of evidence is low to very low and survival data are limited. They consider the evidence insufficient for conclusions and call for further trials. The thymosin preparations studied are not all identical to thymosin alpha-1.",
+        "de": "Diese systematische Übersicht (Frontiers in Oncology) fasst 30 Studien mit 2.514 Teilnehmenden zusammen, darunter 25 randomisierte Studien. Die Autoren berichten Unterschiede bei einigen zirkulierenden Immunparametern und einem Leistungsstatus-Score, die Evidenzsicherheit ist jedoch niedrig bis sehr niedrig und Überlebensdaten sind begrenzt. Sie halten die Evidenz für nicht ausreichend und fordern weitere Studien. Die untersuchten Thymosin-Präparate sind nicht alle mit Thymosin alpha-1 identisch.",
+        "nl": "Deze systematische review (Frontiers in Oncology) bundelt 30 studies met 2.514 deelnemers, waaronder 25 gerandomiseerde studies. De auteurs melden verschillen in enkele circulerende immuunparameters en in een score voor functionele status, maar de zekerheid van het bewijs is laag tot zeer laag en overlevingsgegevens zijn beperkt. Zij achten het bewijs onvoldoende voor conclusies en vragen om verdere studies. De onderzochte thymosinepreparaten zijn niet allemaal identiek aan thymosine alfa-1."
+      }
+    },
+    {
+      "id": "2026-10-27-bpc157-tb500-orthopaedic-review",
+      "date": "2026-10-27",
+      "products": [
+        "bpc157",
+        "tb500"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.5435/JAAOS-D-26-00049"
+        }
+      ],
+      "title": {
+        "fr": "BPC-157, thymosine bêta-4 et TB-500 en orthopédie : revue narrative des preuves et de la qualité des produits",
+        "en": "BPC-157, thymosin beta-4 and TB-500 in orthopaedics: narrative review of evidence and product quality",
+        "de": "BPC-157, Thymosin beta-4 und TB-500 in der Orthopädie: narrative Übersicht zu Evidenz und Produktqualität",
+        "nl": "BPC-157, thymosine bèta-4 en TB-500 in de orthopedie: narratieve review van bewijs en productkwaliteit"
+      },
+      "summary": {
+        "fr": "Cette revue narrative (Journal of the American Academy of Orthopaedic Surgeons) note que les données musculo-squelettiques du BPC-157 sont surtout précliniques (petits animaux), avec une seule petite série de cas rétrospective chez l'humain. Pour la thymosine bêta-4 et le TB-500, un fragment distinct, les données directes se limitent à l'in vitro et au rongeur. Les auteurs soulignent l'absence de données validées de dosage et de sécurité à long terme, des questions de qualité des produits commercialisés et le statut antidopage.",
+        "en": "This narrative review (Journal of the American Academy of Orthopaedic Surgeons) notes that musculoskeletal data for BPC-157 are mostly preclinical (small animals), with a single small retrospective human case series. For thymosin beta-4 and TB-500, a distinct fragment, direct data are limited to in vitro and rodent studies. The authors highlight the lack of validated dosing and long-term safety data, product-quality concerns for commercial products, and anti-doping status.",
+        "de": "Diese narrative Übersicht (Journal of the American Academy of Orthopaedic Surgeons) stellt fest, dass die muskuloskelettalen Daten zu BPC-157 überwiegend präklinisch (Kleintiere) sind, mit nur einer kleinen retrospektiven Fallserie beim Menschen. Für Thymosin beta-4 und TB-500, ein eigenständiges Fragment, beschränken sich die direkten Daten auf In-vitro- und Nagetierstudien. Die Autoren betonen fehlende validierte Dosierungs- und Langzeitsicherheitsdaten, Qualitätsprobleme kommerzieller Produkte und den Dopingstatus.",
+        "nl": "Deze narratieve review (Journal of the American Academy of Orthopaedic Surgeons) merkt op dat de musculoskeletale gegevens over BPC-157 vooral preklinisch zijn (kleine dieren), met slechts één kleine retrospectieve patiëntenreeks bij mensen. Voor thymosine bèta-4 en TB-500, een afzonderlijk fragment, beperken de directe gegevens zich tot in-vitro- en knaagdierstudies. De auteurs wijzen op het ontbreken van gevalideerde dosering en langetermijnveiligheidsgegevens, kwaliteitsproblemen bij commerciële producten en de antidopingstatus."
+      }
+    },
+    {
+      "id": "2026-10-01-bpc157-liver-review",
+      "date": "2026-10-01",
+      "products": [
+        "bpc157"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.3390/ph19101559"
+        }
+      ],
+      "title": {
+        "fr": "BPC-157 et protection du foie : revue narrative des modèles expérimentaux (préclinique)",
+        "en": "BPC-157 and liver protection: narrative review of experimental models (preclinical)",
+        "de": "BPC-157 und Leberschutz: narrative Übersicht experimenteller Modelle (präklinisch)",
+        "nl": "BPC-157 en leverbescherming: narratieve review van experimentele modellen (preklinisch)"
+      },
+      "summary": {
+        "fr": "Cette revue narrative (Pharmaceuticals) compare, dans des modèles expérimentaux de lésion hépatique, le BPC-157 à d'autres agents cytoprotecteurs tels que la N-acétylcystéine ou l'acide ursodésoxycholique. Elle s'appuie sur des données précliniques (animaux) et ne porte pas sur des essais chez l'humain. Les conclusions sont celles des auteurs de la revue et restent à confirmer par des travaux indépendants.",
+        "en": "This narrative review (Pharmaceuticals) compares BPC-157 with other cytoprotective agents, such as N-acetylcysteine and ursodeoxycholic acid, across experimental models of liver injury. It draws on preclinical (animal) data and does not cover human trials. The conclusions are those of the review authors and remain to be confirmed by independent work.",
+        "de": "Diese narrative Übersicht (Pharmaceuticals) vergleicht BPC-157 in experimentellen Modellen der Leberschädigung mit anderen zytoprotektiven Substanzen wie N-Acetylcystein und Ursodeoxycholsäure. Sie stützt sich auf präklinische (tierexperimentelle) Daten und umfasst keine Studien am Menschen. Die Schlussfolgerungen stammen von den Autoren der Übersicht und bedürfen unabhängiger Bestätigung.",
+        "nl": "Deze narratieve review (Pharmaceuticals) vergelijkt BPC-157 in experimentele modellen van leverschade met andere cytoprotectieve middelen zoals N-acetylcysteïne en ursodeoxycholzuur. Zij berust op preklinische (dierlijke) gegevens en omvat geen studies bij mensen. De conclusies zijn die van de auteurs van de review en moeten door onafhankelijk onderzoek worden bevestigd."
+      }
+    },
+    {
+      "id": "2026-10-08-tirzepatide-masld-mouse",
+      "date": "2026-10-08",
+      "products": [
+        "slupp322"
+      ],
+      "sources": [
+        {
+          "name": "PubMed",
+          "url": "https://doi.org/10.1016/j.ejphar.2026.179418"
+        }
+      ],
+      "title": {
+        "fr": "Tirzépatide et inflammation hépatique dans un modèle murin de MASLD (préclinique)",
+        "en": "Tirzepatide and liver inflammation in a mouse model of MASLD (preclinical)",
+        "de": "Tirzepatid und Leberentzündung in einem Mausmodell der MASLD (präklinisch)",
+        "nl": "Tirzepatide en leverontsteking in een muismodel van MASLD (preklinisch)"
+      },
+      "summary": {
+        "fr": "Cette étude préclinique (European Journal of Pharmacology) a utilisé des souris nourries avec un régime riche en graisses et en fructose, ainsi que des cellules de macrophages en culture. Les auteurs rapportent, dans ce modèle, une moindre stéatose et inflammation hépatiques, associées à une moindre activation de la voie Dectin-1/Syk/NF-κB dans les macrophages. Résultats obtenus chez l'animal et in vitro, non transposables à l'humain.",
+        "en": "This preclinical study (European Journal of Pharmacology) used mice fed a high-fat, high-fructose diet and cultured macrophage cells. In this model, the authors report reduced liver steatosis and inflammation, associated with lower activation of the Dectin-1/Syk/NF-κB pathway in macrophages. Findings come from animal and in vitro work and cannot be extrapolated to humans.",
+        "de": "Diese präklinische Studie (European Journal of Pharmacology) verwendete Mäuse unter fett- und fruktosereicher Diät sowie kultivierte Makrophagenzellen. Die Autoren berichten in diesem Modell über geringere Leberverfettung und -entzündung, verbunden mit einer geringeren Aktivierung des Dectin-1/Syk/NF-κB-Signalwegs in Makrophagen. Die Ergebnisse stammen aus Tier- und In-vitro-Versuchen und sind nicht auf den Menschen übertragbar.",
+        "nl": "Deze preklinische studie (European Journal of Pharmacology) gebruikte muizen op een vet- en fructoserijk dieet en gekweekte macrofaagcellen. In dit model melden de auteurs minder leversteatose en -ontsteking, samen met een lagere activering van de Dectin-1/Syk/NF-κB-route in macrofagen. De bevindingen komen uit dier- en in-vitro-onderzoek en zijn niet naar mensen te extrapoleren."
+      }
+    },
     {
       "id": "2026-11-09-cagrisema-hypertension-registry",
       "date": "2026-11-09",

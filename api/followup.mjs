@@ -23,6 +23,23 @@ const FOLLOWUPS = [
       "Produits destinés exclusivement à la recherche en laboratoire.",
     ].join("\n"),
   },
+  {
+    orderId: "NVX-GYGVMW", from: "2026-11-16T19:00:00Z", until: "2026-11-16T22:00:00Z",
+    subject: "Re : Votre colis Novalyx · NVX-GYGVMW",
+    text: (m) => [
+      `Bonjour Madame ${String(m.name || "").trim().split(/\s+/).slice(-1)[0] || ""},`.replace(" ,", ","), "",
+      "Merci beaucoup pour votre message, ça nous fait vraiment plaisir.", "",
+      "C'est noté : vous serez prévenue en priorité. Voici ce qui arrive :",
+      "• un nouveau lot de GLP-3RT, prévu pour mi-décembre ;",
+      "• le GHK-Cu, notre prochaine molécule, prévu pour fin janvier.",
+      "Nous vous enverrons un e-mail dès l'ouverture des précommandes.", "",
+      "Un petit conseil en attendant : ne vous précipitez pas sur des flacons vendus à l'unité à des prix très élevés. Un peu de patience vaut le coup : chez nous, chaque lot est analysé chez Janoshik avant tout envoi, le rapport est publié sur le site, et le prix reste le même pour tout le monde.", "",
+      "Si vous connaissez des personnes qui cherchent une source fiable et des prix justes, n'hésitez pas à partager notre site autour de vous, c'est ce qui nous aide le plus.", "",
+      "À noter : nous ne proposons plus l'eau bactériostatique sur Novalyx, nous nous concentrons désormais uniquement sur les peptides.", "",
+      "Merci encore pour votre confiance, et à très bientôt.", "",
+      "L'équipe Novalyx Research", "novalyxresearch.com",
+    ].join("\n"),
+  },
 ];
 
 export default async function handler(req, res) {

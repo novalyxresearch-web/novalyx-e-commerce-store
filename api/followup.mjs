@@ -60,6 +60,19 @@ const FOLLOWUPS = [
       "L'équipe Novalyx Research", "novalyxresearch.com",
     ].join("\n"),
   },
+  {
+    orderId: "NVX-GYGVMW", from: "2026-11-17T15:00:00Z", until: "2026-11-17T18:00:00Z",
+    subject: "Votre flacon GLP-3RT est en route · NVX-GYGVMW",
+    text: (m) => [
+      `Bonjour Madame ${String(m.name || "").trim().split(/\s+/).slice(-1)[0] || ""},`.replace(" ,", ","), "",
+      "Toutes nos excuses pour la confusion : le flacon manquant était bien le GLP-3RT, et non l'eau bactériostatique.", "",
+      "Le flacon manquant, issu du même lot que le reste de votre kit (NLR-2026-001), vient de partir aujourd'hui en Colissimo, à nos frais. Livraison prévue sous 2 jours ouvrés.", "",
+      "Numéro de suivi : 8J02330312594",
+      "Suivre le colis : https://www.laposte.fr/outils/suivre-vos-envois?code=8J02330312594", "",
+      "Encore désolés pour cet oubli, et merci pour votre patience et votre confiance.", "",
+      "L'équipe Novalyx Research", "novalyxresearch.com",
+    ].join("\n"),
+  },
 ];
 
 export default async function handler(req, res) {

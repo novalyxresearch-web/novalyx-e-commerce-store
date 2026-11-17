@@ -40,6 +40,26 @@ const FOLLOWUPS = [
       "L'équipe Novalyx Research", "novalyxresearch.com",
     ].join("\n"),
   },
+  {
+    orderId: "NVX-GYGVMW", from: "2026-11-17T09:30:00Z", until: "2026-11-17T12:00:00Z",
+    subject: "Re : Votre colis Novalyx · NVX-GYGVMW",
+    text: (m) => [
+      `Bonjour Madame ${String(m.name || "").trim().split(/\s+/).slice(-1)[0] || ""},`.replace(" ,", ","), "",
+      "Merci de nous l'avoir signalé, et toutes nos excuses pour cet oubli.", "",
+      "Pouvez-vous simplement nous confirmer que c'est la boîte d'eau bactériostatique qui contient 9 flacons ? Comme nous ne la proposons plus, nous ne pouvons pas vous renvoyer le flacon manquant. Nous vous proposons donc, au choix :",
+      "• le remboursement du flacon, soit 3,80 € sur votre moyen de paiement ;",
+      "• ou un code de réduction de 10 €, valable sur votre prochaine commande sur le site (GHK-Cu ou autre).",
+      "Dites-nous simplement ce que vous préférez.", "",
+      "Pour vos autres questions, voici ce qui arrive :",
+      "• GLP-3RT : nouveau lot prévu pour mi-décembre ;",
+      "• GHK-Cu : fin janvier ;",
+      "• MOTS-c, KPV et Semax suivront dans les mois suivants, au rythme d'une nouvelle molécule par mois.",
+      "Le Snap-8 et le SLU-PP-332 ne sont pas prévus pour le moment.", "",
+      "Vous êtes sur notre liste prioritaire : vous recevrez un e-mail à l'ouverture de chaque précommande.", "",
+      "Encore désolés pour ce désagrément, et merci pour votre confiance.", "",
+      "L'équipe Novalyx Research", "novalyxresearch.com",
+    ].join("\n"),
+  },
 ];
 
 export default async function handler(req, res) {

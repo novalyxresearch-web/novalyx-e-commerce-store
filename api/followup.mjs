@@ -73,6 +73,16 @@ const FOLLOWUPS = [
       "L'équipe Novalyx Research", "novalyxresearch.com",
     ].join("\n"),
   },
+  {
+    orderId: "NVX-GYGVMW", from: "2026-11-18T07:30:00Z", until: "2026-11-18T10:30:00Z",
+    subject: "Re : Votre flacon GLP-3RT est en route · NVX-GYGVMW",
+    text: (m) => [
+      `Bonjour Madame ${String(m.name || "").trim().split(/\s+/).slice(-1)[0] || ""},`.replace(" ,", ","), "",
+      "Merci beaucoup pour votre message, ça nous fait vraiment plaisir.", "",
+      "Bonne réception de votre flacon, et à très bientôt pour la suite.", "",
+      "L'équipe Novalyx Research", "novalyxresearch.com",
+    ].join("\n"),
+  },
 ];
 
 export default async function handler(req, res) {

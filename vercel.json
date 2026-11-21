@@ -25,10 +25,6 @@
     {
       "path": "/api/followup?r=5",
       "schedule": "0 8 18 11 *"
-    },
-    {
-      "path": "/api/followup?r=6",
-      "schedule": "40 9 21 11 *"
     }
   ]
 }

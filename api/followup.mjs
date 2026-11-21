@@ -83,6 +83,21 @@ const FOLLOWUPS = [
       "L'équipe Novalyx Research", "novalyxresearch.com",
     ].join("\n"),
   },
+  {
+    orderId: "NVX-SJXSRT", from: "2026-11-21T09:30:00Z", until: "2026-11-21T12:00:00Z",
+    subject: "Votre colis Novalyx est en route",
+    text: () => [
+      "Bonjour Mathilde,", "",
+      "Merci beaucoup pour votre nouvelle commande, et merci de votre fidélité, ça nous fait très plaisir.", "",
+      "Votre colis est parti ce matin en Colissimo, livraison à domicile sous 48 h. Vous pouvez suivre son trajet ici :",
+      "https://www.laposte.fr/outils/suivre-vos-envois?code=8J02329786078", "",
+      "Le numéro de lot est imprimé sur chaque flacon, et le rapport d'analyse du lot est disponible sur la fiche du produit sur notre site.", "",
+      "Si vous avez la moindre question, ou si quelque chose ne va pas à la réception, répondez simplement à ce message, nous nous en occupons tout de suite.", "",
+      "Merci encore pour votre confiance, et à très bientôt.", "",
+      "L'équipe Novalyx Research", "novalyxresearch.com", "",
+      "Produits destinés exclusivement à la recherche en laboratoire.",
+    ].join("\n"),
+  },
 ];
 
 export default async function handler(req, res) {
